@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profilesXml xmlns="http://maven.apache.org/PROFILES/1.0.0"
+			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xsi:schemaLocation="http://maven.apache.org/PROFILES/1.0.0 http://maven.apache.org/xsd/profiles-1.0.0.xsd">
+	<profiles>
+		<profile>
+			<id>debug</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+				<release.url>file:/home/sody/development/temp-repo</release.url>
+                <snapshot.url>file:/home/sody/development/temp-repo</snapshot.url>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>release</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<maven.javadoc.skip>false</maven.javadoc.skip>
+				<release.url>file://d:/projects/great-age/repositories/release</release.url>
+				<snapshot.url>file://d:/projects/great-age/repositories/snapshot</snapshot.url>
+			</properties>
+		</profile>
+	</profiles>
+</profilesXml>

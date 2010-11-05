@@ -1,0 +1,23 @@
+package org.greatage.security.auth;
+
+/**
+ * @author Ivan Khalopik
+ * @since 1.0
+ */
+public class DefaultAuthenticationToken implements AuthenticationToken {
+	private final String name;
+	private final String password;
+
+	public DefaultAuthenticationToken(final String name, final String password) {
+		this.name = name;
+		this.password = password;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+}

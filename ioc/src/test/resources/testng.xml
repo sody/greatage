@@ -1,0 +1,14 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="IoC suite" parallel="none">
+	<test name="Module tests" verbose="1" annotations="JDK">
+		<groups>
+			<run>
+				<exclude name="integration"/>
+			</run>
+		</groups>
+
+		<packages>
+			<package name="org.greatage.ioc.*"/>
+		</packages>
+	</test>
+</suite>
