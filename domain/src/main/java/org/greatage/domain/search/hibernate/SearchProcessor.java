@@ -1,11 +1,12 @@
 /*
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
+
 package org.greatage.domain.search.hibernate;
 
+import org.apache.lucene.search.BooleanQuery;
 import org.greatage.domain.Entity;
 import org.greatage.domain.repository.EntityFilter;
-import org.apache.lucene.search.BooleanQuery;
 
 import java.io.Serializable;
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.resource;
 
 import org.greatage.util.I18nUtils;

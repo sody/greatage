@@ -1,5 +1,5 @@
 /*
- * Copyright 2000 - 2009 Ivan Khalopik. All Rights Reserved.
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
 package org.greatage.domain.i18n;

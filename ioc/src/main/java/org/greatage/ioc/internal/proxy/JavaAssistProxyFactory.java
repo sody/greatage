@@ -1,10 +1,14 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.ioc.internal.proxy;
 
+import javassist.ClassPool;
 import org.greatage.ioc.services.ObjectBuilder;
 import org.greatage.util.ClassBuilder;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
-import javassist.ClassPool;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;

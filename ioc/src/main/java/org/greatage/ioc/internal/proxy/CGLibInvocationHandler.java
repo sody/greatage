@@ -1,3 +1,7 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.ioc.internal.proxy;
 
 import com.google.inject.internal.cglib.proxy.InvocationHandler;

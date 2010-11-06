@@ -1,7 +1,11 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.ioc.internal.logging;
 
-import org.greatage.ioc.services.Logger;
 import org.apache.log4j.LogManager;
+import org.greatage.ioc.services.Logger;
 
 /**
  * This class represents logger source implementation for Log4j logging API.

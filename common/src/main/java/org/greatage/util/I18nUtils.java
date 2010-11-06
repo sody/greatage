@@ -1,11 +1,8 @@
 /*
- * Copyright 2000 - 2009 Ivan Khalopik. All Rights Reserved.
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
 package org.greatage.util;
-
-import org.greatage.resource.DefaultMessagesSource;
-import org.greatage.resource.MessagesSource;
 
 import java.io.*;
 import java.util.*;
@@ -18,7 +15,6 @@ import java.util.*;
  */
 public abstract class I18nUtils {
 	public static final Locale ROOT_LOCALE = new Locale("");
-	public static final MessagesSource DEFAULT_MESSAGES = new DefaultMessagesSource();
 
 	private static final String DEFAULT_CHARSET = "UTF-8";
 	private static final int DEFAULT_BUFFER_SIZE = 2000;
