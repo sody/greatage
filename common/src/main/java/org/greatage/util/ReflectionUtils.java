@@ -40,7 +40,7 @@ public abstract class ReflectionUtils {
 	 * @param <T>        new instance type
 	 * @return new instance of class or its implementation if interface
 	 */
-	public static <T> T newInstance(Class<T> clazz, Object... parameters) {
+	public static <T> T newInstance(final Class<T> clazz, final Object... parameters) {
 		final Class<?>[] parameterTypes = new Class<?>[parameters.length];
 		for (int i = 0; i < parameters.length; i++) {
 			parameterTypes[i] = parameters[i] != null ? parameters[i].getClass() : null;
@@ -54,7 +54,7 @@ public abstract class ReflectionUtils {
 				lastException = e;
 			}
 		}
-		throw new RuntimeException(CommonMessages.canNotCreateNewInstance(clazz), lastException);
+		throw new RuntimeException(String.format("Can't create new instance of class '%s'", clazz), lastException);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public abstract class ReflectionUtils {
 	 * @return list of constructors for class with specified parameter types or empty list if no suitable constructors
 	 *         found
 	 */
-	public static <T> List<Constructor<T>> findConstructors(Class<T> clazz, Class<?>... parameterTypes) {
+	public static <T> List<Constructor<T>> findConstructors(final Class<T> clazz, final Class<?>... parameterTypes) {
 		final List<Constructor<T>> constructors = new ArrayList<Constructor<T>>();
 		for (Constructor<?> constructor : clazz.getConstructors()) {
 			if (isConstructorSuitable(constructor, parameterTypes)) {
@@ -77,7 +77,7 @@ public abstract class ReflectionUtils {
 		return constructors;
 	}
 
-	private static boolean isConstructorSuitable(Constructor<?> constructor, Class<?>... parameterTypes) {
+	private static boolean isConstructorSuitable(final Constructor<?> constructor, final Class<?>... parameterTypes) {
 		final Class<?>[] constructorParameterTypes = constructor.getParameterTypes();
 		if (parameterTypes.length != constructorParameterTypes.length) return false;
 

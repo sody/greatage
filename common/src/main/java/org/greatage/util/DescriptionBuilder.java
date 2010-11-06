@@ -40,7 +40,7 @@ public class DescriptionBuilder {
 	 * @param value value
 	 * @return this description builder instance
 	 */
-	public DescriptionBuilder append(String key, Object value) {
+	public DescriptionBuilder append(final String key, final Object value) {
 		parameters.add(key + "=" + value);
 		return this;
 	}
@@ -51,7 +51,7 @@ public class DescriptionBuilder {
 	 * @param value value
 	 * @return this description builder instance
 	 */
-	public DescriptionBuilder append(Object value) {
+	public DescriptionBuilder append(final Object value) {
 		parameters.add(String.valueOf(value));
 		return this;
 	}

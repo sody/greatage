@@ -19,18 +19,18 @@ public class MapMessages extends AbstractMessages {
 	 * @param locale   messages locale
 	 * @param messages values to initialize messages with
 	 */
-	public MapMessages(Locale locale, Map<String, String> messages) {
+	public MapMessages(final Locale locale, final Map<String, String> messages) {
 		super(locale);
 		this.messages = messages;
 	}
 
 	@Override
-	public boolean contains(String key) {
+	public boolean contains(final String key) {
 		return messages.containsKey(key);
 	}
 
 	@Override
-	protected String getMessage(String key) {
+	protected String getMessage(final String key) {
 		return messages.get(key);
 	}
 }

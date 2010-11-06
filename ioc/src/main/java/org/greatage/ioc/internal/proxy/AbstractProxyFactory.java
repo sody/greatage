@@ -2,7 +2,6 @@ package org.greatage.ioc.internal.proxy;
 
 import org.greatage.ioc.services.ObjectBuilder;
 import org.greatage.ioc.services.ProxyFactory;
-import org.greatage.util.CommonMessages;
 import org.greatage.util.DescriptionBuilder;
 
 /**
@@ -23,17 +22,17 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
 	 */
 	protected <T> void validate(final ObjectBuilder<T> builder) {
 		if (builder == null) {
-			throw new IllegalArgumentException(CommonMessages.nullObjectBuilder());
+			throw new IllegalArgumentException("Object builder must be specified");
 		}
 		final Class<T> proxyClass = builder.getObjectClass();
 		if (proxyClass == null) {
-			throw new IllegalArgumentException(CommonMessages.nullProxyClass());
+			throw new IllegalArgumentException("Object builder must be configured with proxy class");
 		}
 		if (!proxyClass.isInterface()) {
 			try {
 				proxyClass.getConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException(CommonMessages.proxyClassMustHaveDefaultConstructor(proxyClass), e);
+				throw new IllegalArgumentException(String.format("Proxy class '%s' must have default constructor", proxyClass), e);
 			}
 		}
 	}

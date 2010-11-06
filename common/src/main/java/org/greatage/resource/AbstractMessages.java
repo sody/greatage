@@ -20,7 +20,7 @@ public abstract class AbstractMessages implements Messages {
 	 *
 	 * @param locale messages locale
 	 */
-	protected AbstractMessages(Locale locale) {
+	protected AbstractMessages(final Locale locale) {
 		this.locale = locale;
 	}
 
@@ -28,11 +28,11 @@ public abstract class AbstractMessages implements Messages {
 		return getMessage(key) != null;
 	}
 
-	public String get(String key) {
+	public String get(final String key) {
 		return contains(key) ? getMessage(key) : String.format(MISSING_KEY_PLACEHOLDER, key);
 	}
 
-	public String format(String key, Object... parameters) {
+	public String format(final String key, final Object... parameters) {
 		final String format = get(key);
 		return String.format(locale, format, parameters);
 	}
@@ -43,7 +43,7 @@ public abstract class AbstractMessages implements Messages {
 	 * @param key localized string key
 	 * @return localized string or null if doesn't contain key
 	 */
-	protected abstract String getMessage(String key);
+	protected abstract String getMessage(final String key);
 
 	@Override
 	public String toString() {

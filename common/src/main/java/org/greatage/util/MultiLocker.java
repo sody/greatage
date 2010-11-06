@@ -7,7 +7,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class MultiLocker<K> {
-	private final Map<K, Locker> lockers = CollectionUtils.newMap();
+	private final Map<K, Locker> lockers = CollectionUtils.newConcurrentMap();
 
 	public synchronized void check(final K key) {
 		if (lockers.containsKey(key)) {

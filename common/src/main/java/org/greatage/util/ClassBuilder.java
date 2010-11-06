@@ -103,7 +103,7 @@ public class ClassBuilder<T> {
 			field.setModifiers(modifiers);
 			ctClass.addField(field);
 		} catch (CannotCompileException ex) {
-			throw new RuntimeException(CommonMessages.canNotAddField(name, ctClass), ex);
+			throw new RuntimeException(String.format("Can't add field '%s' to class '%s'", name, ctClass), ex);
 		}
 		return this;
 	}
@@ -126,7 +126,7 @@ public class ClassBuilder<T> {
 			constructor.setBody(body);
 			ctClass.addConstructor(constructor);
 		} catch (Exception ex) {
-			throw new RuntimeException(CommonMessages.canNotAddConstructor(ctClass), ex);
+			throw new RuntimeException(String.format("Can't add constructor to class '%s'", ctClass), ex);
 		}
 		return this;
 	}
@@ -155,7 +155,7 @@ public class ClassBuilder<T> {
 			method.setExceptionTypes(ctExceptionTypes);
 			ctClass.addMethod(method);
 		} catch (Exception ex) {
-			throw new RuntimeException(CommonMessages.canNotAddMethod(name, ctClass), ex);
+			throw new RuntimeException(String.format("Can't add method '%s' to class '%s'", name, ctClass), ex);
 		}
 		return this;
 	}
@@ -186,7 +186,7 @@ public class ClassBuilder<T> {
 		try {
 			return pool.getCtClass(toClassName(inputClass));
 		} catch (NotFoundException ex) {
-			throw new RuntimeException(CommonMessages.canNotConvertClass(inputClass), ex);
+			throw new RuntimeException(String.format("Can't convert class '%s'", inputClass), ex);
 		}
 	}
 
@@ -200,7 +200,7 @@ public class ClassBuilder<T> {
 		try {
 			return pool.toClass(ctClass);
 		} catch (CannotCompileException ex) {
-			throw new RuntimeException(CommonMessages.canNotConvertClass(ctClass), ex);
+			throw new RuntimeException(String.format("Can't convert class '%s'", ctClass), ex);
 		}
 	}
 

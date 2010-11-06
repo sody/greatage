@@ -16,7 +16,7 @@ public class Locker {
 	 */
 	public synchronized void check() {
 		if (lock) {
-			throw new IllegalStateException(CommonMessages.locked());
+			throw new IllegalStateException("Locked");
 		}
 	}
 

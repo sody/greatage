@@ -13,7 +13,7 @@ import java.util.Locale;
  */
 public abstract class AbstractMessagesSource implements MessagesSource {
 
-	public Messages getMessages(Class clazz, Locale locale) {
+	public Messages getMessages(final Class clazz, final Locale locale) {
 		return getMessages(clazz.getName(), locale);
 	}
 

@@ -18,7 +18,7 @@ public abstract class StringUtils {
 	 * @param sequence sequence to check empty state
 	 * @return true if sequence is empty, false otherwise
 	 */
-	public static boolean isEmpty(CharSequence sequence) {
+	public static boolean isEmpty(final CharSequence sequence) {
 		return sequence == null || sequence.length() <= 0;
 	}
 

@@ -5,7 +5,6 @@
 package org.greatage.util;
 
 import org.greatage.resource.DefaultMessagesSource;
-import org.greatage.resource.Messages;
 import org.greatage.resource.MessagesSource;
 
 import java.io.*;
@@ -122,15 +121,5 @@ public abstract class I18nUtils {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Loads localized messages from resource bundle for specified class.
-	 *
-	 * @param clazz messages class
-	 * @return localized messages from resource bundle for specified class
-	 */
-	public static Messages getMessages(Class clazz) {
-		return DEFAULT_MESSAGES.getMessages(clazz, Locale.getDefault());
 	}
 }

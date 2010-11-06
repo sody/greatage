@@ -42,12 +42,4 @@ public class TestDefaultMessagesSource extends Assert {
 		}
 	}
 
-//	@Test(expectedExceptions = RuntimeException.class)
-//	public void testGetMessagesWrong() {
-//		//todo: fix this
-//		I18nUtils.getMessages(I18nUtils.class);
-//		I18nUtils.getMessages(I18nUtils.class, null);
-//		I18nUtils.getMessages(I18nUtils.class, I18nUtils.ROOT_LOCALE);
-//		I18nUtils.getMessages(I18nUtils.class, Locale.ENGLISH);
-//	}
 }
