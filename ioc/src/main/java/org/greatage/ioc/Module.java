@@ -18,4 +18,6 @@ public interface Module {
 
 	<T> List<Decorator<T>> getDecorators(Service<T> service);
 
+	<T> List<Interceptor<T>> getInterceptors(Service<T> service);
+
 }

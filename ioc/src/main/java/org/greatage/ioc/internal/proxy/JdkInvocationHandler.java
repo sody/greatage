@@ -4,10 +4,11 @@
 
 package org.greatage.ioc.internal.proxy;
 
+import org.greatage.ioc.services.MethodAdvice;
 import org.greatage.ioc.services.ObjectBuilder;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * This class represents implementation of invocation handler for JDK proxy objects.
@@ -15,21 +16,22 @@ import java.lang.reflect.Method;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T> implements InvocationHandler {
+public class JdkInvocationHandler<T> extends InvocationHandler<T> implements java.lang.reflect.InvocationHandler {
 
 	/**
 	 * Creates new instance of invocation handler for JDK proxy objects.
 	 *
 	 * @param builder object builder
+	 * @param advices method advices
 	 */
-	JdkInvocationHandler(final ObjectBuilder<T> builder) {
-		super(builder);
+	JdkInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+		super(builder, advices);
 	}
 
 	/**
 	 * Delegates all method invocations to delegate instance.
 	 */
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-		return method.invoke(getDelegate(), args);
+		return invoke(method, args);
 	}
 }

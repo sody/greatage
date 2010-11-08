@@ -43,11 +43,13 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			final Service<?> service = entry.getValue();
 			final List<Configurator<?>> configurators = CollectionUtils.newList();
 			final List<Decorator<?>> decorators = CollectionUtils.newList();
+			final List<Interceptor<?>> interceptors = CollectionUtils.newList();
 			for (Module module : modules) {
 				configurators.addAll(module.getConfigurators(service));
 				decorators.addAll(module.getDecorators(service));
+				interceptors.addAll(module.getInterceptors(service));
 			}
-			final ServiceHolder<?> holder = createServiceHolder(service, configurators, decorators, internalScope);
+			final ServiceHolder<?> holder = createServiceHolder(service, configurators, decorators, interceptors, internalScope);
 			servicesById.put(serviceId, holder);
 
 			statisticsBuilder.append(String.format("\t%s[ %s ]( %s )\n", serviceId, service.getScope(), service.getServiceClass()));
@@ -94,12 +96,13 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	private ServiceHolder createServiceHolder(final Service<?> service,
 											  final List<Configurator<?>> configurators,
 											  final List<Decorator<?>> decorators,
+											  final List<Interceptor<?>> interceptors,
 											  final Scope internalScope) {
 		final ServiceResources resources = new ServiceInitialResources(this, service);
 		final ObjectBuilder builder = new ServiceBuilder(service, resources, configurators, decorators);
 
 		return new ServiceHolder(resources,
-				service.isLazy() ? new LazyBuilder(resources, builder) : builder,
+				service.isLazy() ? new LazyBuilder(resources, builder, interceptors) : builder,
 				ScopeConstants.INTERNAL.equals(service.getScope()) ? internalScope : null);
 	}
 }

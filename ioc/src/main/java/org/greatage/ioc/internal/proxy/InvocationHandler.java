@@ -4,9 +4,15 @@
 
 package org.greatage.ioc.internal.proxy;
 
+import org.greatage.ioc.services.Invocation;
+import org.greatage.ioc.services.MethodAdvice;
 import org.greatage.ioc.services.ObjectBuilder;
+import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.Locker;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * This class represents utility for lazy creation of object from object builder.
@@ -14,8 +20,9 @@ import org.greatage.util.Locker;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AbstractInvocationHandler<T> {
+public abstract class InvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
+	private final List<MethodAdvice> advices;
 	private final Locker locker = new Locker();
 	private T delegate;
 
@@ -23,9 +30,11 @@ public abstract class AbstractInvocationHandler<T> {
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
 	 * @param builder object builder
+	 * @param advices method advices
 	 */
-	protected AbstractInvocationHandler(final ObjectBuilder<T> builder) {
+	protected InvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		this.builder = builder;
+		this.advices = CollectionUtils.isEmpty(advices) ? null : advices;
 	}
 
 	/**
@@ -40,6 +49,22 @@ public abstract class AbstractInvocationHandler<T> {
 			delegate = builder.build();
 		}
 		return delegate;
+	}
+
+	protected Object invoke(final Method method, final Object... parameters) throws Throwable {
+		if (advices != null) {
+			final Method realMethod = getDelegate().getClass().getMethod(method.getName(), method.getParameterTypes());
+			return getInvocation(realMethod).proceed(parameters);
+		}
+		return method.invoke(getDelegate(), parameters);
+	}
+
+	private Invocation getInvocation(final Method method) {
+		Invocation invocation = new MethodInvocation(getDelegate(), method);
+		for (MethodAdvice advice : advices) {
+			invocation = new AdvisedInvocation(invocation, advice);
+		}
+		return invocation;
 	}
 
 	@Override

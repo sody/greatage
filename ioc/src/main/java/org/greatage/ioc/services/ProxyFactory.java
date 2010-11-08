@@ -4,6 +4,8 @@
 
 package org.greatage.ioc.services;
 
+import java.util.List;
+
 /**
  * This class represents utility producing proxy creation around object builders.
  *
@@ -17,10 +19,11 @@ public interface ProxyFactory {
 	 * object.
 	 *
 	 * @param objectBuilder object builder
+	 * @param advices	   method advices
 	 * @param <T>           type of proxy object
 	 * @return proxy around specified object builder
 	 * @throws RuntimeException if proxy creation is impossible
 	 */
-	<T> T createProxy(ObjectBuilder<T> objectBuilder);
+	<T> T createProxy(ObjectBuilder<T> objectBuilder, List<MethodAdvice> advices);
 
 }

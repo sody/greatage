@@ -4,10 +4,12 @@
 
 package org.greatage.ioc.internal.proxy;
 
+import org.greatage.ioc.services.MethodAdvice;
 import org.greatage.ioc.services.ObjectBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Proxy;
+import java.util.List;
 
 /**
  * This class represents proxy factory implementation using JDK.
@@ -34,12 +36,12 @@ public class JdkProxyFactory extends AbstractProxyFactory {
 		this.classLoader = classLoader;
 	}
 
-	public <T> T createProxy(final ObjectBuilder<T> builder) {
+	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		validate(builder);
 
 		final Object proxyInstance = Proxy.newProxyInstance(classLoader,
 				new Class<?>[]{builder.getObjectClass()},
-				new JdkInvocationHandler<T>(builder));
+				new JdkInvocationHandler<T>(builder, advices));
 		return builder.getObjectClass().cast(proxyInstance);
 	}
 

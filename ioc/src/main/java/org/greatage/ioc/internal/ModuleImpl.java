@@ -5,10 +5,7 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.*;
-import org.greatage.ioc.annotations.Bind;
-import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Configure;
-import org.greatage.ioc.annotations.Decorate;
+import org.greatage.ioc.annotations.*;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;
@@ -22,6 +19,7 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Service> services = CollectionUtils.newList();
 	private final List<Configurator> configurators = CollectionUtils.newList();
 	private final List<Decorator> decorators = CollectionUtils.newList();
+	private final List<Interceptor> interceptors = CollectionUtils.newList();
 
 	ModuleImpl(final Class<T> moduleClass) {
 		super(moduleClass.getSimpleName(), moduleClass, ScopeConstants.INTERNAL, false, true);
@@ -33,6 +31,8 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 				configurators.add(new ConfiguratorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
 				decorators.add(new DecoratorImpl(moduleClass, method));
+			} else if (method.isAnnotationPresent(Intercept.class)) {
+				interceptors.add(new InterceptorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
@@ -66,6 +66,17 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 			if (decorator.supports(service)) {
 				//noinspection unchecked
 				result.add(decorator);
+			}
+		}
+		return result;
+	}
+
+	public <T> List<Interceptor<T>> getInterceptors(final Service<T> service) {
+		final List<Interceptor<T>> result = CollectionUtils.newList();
+		for (Interceptor interceptor : interceptors) {
+			if (interceptor.supports(service)) {
+				//noinspection unchecked
+				result.add(interceptor);
 			}
 		}
 		return result;

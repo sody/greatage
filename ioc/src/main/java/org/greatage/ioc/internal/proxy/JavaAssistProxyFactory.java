@@ -5,6 +5,7 @@
 package org.greatage.ioc.internal.proxy;
 
 import javassist.ClassPool;
+import org.greatage.ioc.services.MethodAdvice;
 import org.greatage.ioc.services.ObjectBuilder;
 import org.greatage.util.ClassBuilder;
 import org.greatage.util.DescriptionBuilder;
@@ -12,6 +13,7 @@ import org.greatage.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 
@@ -24,9 +26,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class JavaAssistProxyFactory extends AbstractProxyFactory {
 	private static final AtomicLong UID_GENERATOR = new AtomicLong(System.currentTimeMillis());
 
-	private static final String BUILDER_FIELD = "_builder";
-	private static final String DELEGATE_FIELD = "_delegate";
-	private static final String DELEGATE_METHOD = "_getDelegate";
+	private static final String HANDLER_FIELD = "_handler";
 
 	private final ClassPool pool;
 
@@ -46,18 +46,17 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 		this.pool = pool;
 	}
 
-	public <T> T createProxy(final ObjectBuilder<T> builder) {
+	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		validate(builder);
 
 		final Class<T> proxyClass = createProxyClass(builder);
-		return ReflectionUtils.newInstance(proxyClass, builder);
+		return ReflectionUtils.newInstance(proxyClass, builder, advices);
 	}
 
 	/**
 	 * Generates proxy class around specified object builder.
 	 *
 	 * @param builder object builder
-	 * @param <T>     type of proxy class
 	 * @return proxy class around specified object builder
 	 */
 	private <T> Class<T> createProxyClass(final ObjectBuilder<T> builder) {
@@ -66,20 +65,29 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 
 		final ClassBuilder<T> classBuilder = new ClassBuilder<T>(pool, className, false, proxyClass);
 
-		classBuilder.addField(BUILDER_FIELD, Modifier.PRIVATE | Modifier.FINAL, ObjectBuilder.class);
-		classBuilder.addField(DELEGATE_FIELD, Modifier.PRIVATE, proxyClass);
-
-		classBuilder.addConstructor(new Class[]{ObjectBuilder.class}, null, String.format("%s = $1;", BUILDER_FIELD));
-
-		final String delegateBody = String.format("{ if (%s == null) { %s = (%s) %s.build(); } return %s; }",
-				DELEGATE_FIELD, DELEGATE_FIELD, proxyClass.getName(), BUILDER_FIELD, DELEGATE_FIELD);
-		classBuilder.addMethod(DELEGATE_METHOD, Modifier.PRIVATE, proxyClass, null, null, delegateBody);
+		classBuilder.addField(HANDLER_FIELD, Modifier.PRIVATE | Modifier.FINAL, JavaAssistInvocationHandler.class);
+		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, List.class}, null, String.format("%s = new %s($$);", HANDLER_FIELD, JavaAssistInvocationHandler.class.getName()));
 
 		for (Method method : proxyClass.getMethods()) {
 			final int modifiers = method.getModifiers();
 			if (Modifier.isPublic(modifiers) && !Modifier.isFinal(modifiers)) {
 				final String methodName = method.getName();
-				final String methodBody = String.format("return ($r) %s().%s($$);", DELEGATE_METHOD, methodName);
+				final StringBuilder parameterTypeNames = new StringBuilder();
+				for (Class<?> parameterType : method.getParameterTypes()) {
+					if (parameterTypeNames.length() > 0) {
+						parameterTypeNames.append(",");
+					}
+					parameterTypeNames.append(parameterType.getName()).append(".class");
+				}
+				final String parameterTypes = parameterTypeNames.length() > 0 ?
+						"new Class[]{" + parameterTypeNames.toString() + "}" :
+						"null";
+				final String parameters = parameterTypeNames.length() > 0 ?
+						"new Object[]{ $$ }" :
+						"null";
+
+				final String methodBody = String.format("{ %s realMethod = %s.getDelegate().getClass().getMethod(\"%s\", $sig); return ($r) %s.invoke(realMethod, $args); }",
+						Method.class.getName(), HANDLER_FIELD, methodName, HANDLER_FIELD);
 				classBuilder.addMethod(methodName, Modifier.PUBLIC, method.getReturnType(),
 						method.getParameterTypes(), method.getExceptionTypes(), methodBody);
 			}
