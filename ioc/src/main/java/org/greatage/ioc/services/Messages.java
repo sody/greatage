@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.resource;
+package org.greatage.ioc.services;
 
 /**
  * This class represents localized strings mapped by keys for particular locale.

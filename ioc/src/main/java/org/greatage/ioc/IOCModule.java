@@ -7,6 +7,7 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Configure;
 import org.greatage.ioc.internal.logging.Log4jLoggerSource;
+import org.greatage.ioc.internal.message.MessagesSourceImpl;
 import org.greatage.ioc.internal.proxy.JavaAssistProxyFactory;
 import org.greatage.ioc.internal.scope.GlobalScope;
 import org.greatage.ioc.internal.scope.PrototypeScope;
@@ -31,6 +32,7 @@ public class IOCModule {
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withScope(ScopeConstants.INTERNAL);
+		binder.bind(MessagesSource.class, MessagesSourceImpl.class).withScope(ScopeConstants.GLOBAL);
 	}
 
 

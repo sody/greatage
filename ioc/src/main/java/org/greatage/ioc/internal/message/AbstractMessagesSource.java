@@ -2,11 +2,17 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.resource;
+package org.greatage.ioc.internal.message;
 
+import org.greatage.ioc.services.Messages;
+import org.greatage.ioc.services.MessagesSource;
+import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 
+import java.io.*;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * This class represents abstract implementation of messages source that delegates messages creation by class to
@@ -16,7 +22,6 @@ import java.util.Locale;
  * @since 1.0
  */
 public abstract class AbstractMessagesSource implements MessagesSource {
-
 	public Messages getMessages(final Class clazz, final Locale locale) {
 		return getMessages(clazz.getName(), locale);
 	}

@@ -2,14 +2,15 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.resource;
+package org.greatage.ioc.internal.message;
 
+import org.greatage.ioc.services.Messages;
 import org.greatage.util.DescriptionBuilder;
 
 import java.util.Locale;
 
 /**
- * This class represents abstract implementation of {@link Messages} returns placeholder if doesn't
+ * This class represents abstract implementation of {@link org.greatage.ioc.services.Messages} returns placeholder if doesn't
  * contain localized string key and uses {@link String#format(java.util.Locale, String, Object...)} for formatting.
  *
  * @author Ivan Khalopik

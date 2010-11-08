@@ -2,19 +2,19 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.resource;
+package org.greatage.ioc.internal.message;
 
 import java.util.Locale;
 import java.util.Map;
 
 /**
- * This class represents default implementation of {@link Messages} that uses map for storing localized
+ * This class represents default implementation of {@link org.greatage.ioc.services.Messages} that uses map for storing localized
  * string.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class MapMessages extends AbstractMessages {
+public class MessagesImpl extends AbstractMessages {
 	private final Map<String, String> messages;
 
 	/**
@@ -23,7 +23,7 @@ public class MapMessages extends AbstractMessages {
 	 * @param locale   messages locale
 	 * @param messages values to initialize messages with
 	 */
-	public MapMessages(final Locale locale, final Map<String, String> messages) {
+	public MessagesImpl(final Locale locale, final Map<String, String> messages) {
 		super(locale);
 		this.messages = messages;
 	}

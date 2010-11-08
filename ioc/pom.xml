@@ -82,6 +82,12 @@
 			<artifactId>tapestry-ioc</artifactId>
 			<scope>provided</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-core</artifactId>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 
 </project>
