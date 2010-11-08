@@ -7,7 +7,7 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Configure;
 import org.greatage.ioc.internal.logging.Log4jLoggerSource;
-import org.greatage.ioc.internal.message.MessagesSourceImpl;
+import org.greatage.ioc.internal.resource.MessagesSourceImpl;
 import org.greatage.ioc.internal.proxy.JavaAssistProxyFactory;
 import org.greatage.ioc.internal.scope.GlobalScope;
 import org.greatage.ioc.internal.scope.PrototypeScope;

@@ -2,8 +2,9 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.resource;
+package org.greatage.ioc.internal.resource;
 
+import org.greatage.ioc.services.Resource;
 import org.greatage.util.I18nUtils;
 import org.greatage.util.StringUtils;
 

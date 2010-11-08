@@ -1,6 +1,6 @@
 package org.greatage.ioc.services;
 
-import org.greatage.ioc.internal.message.MessagesSourceImpl;
+import org.greatage.ioc.internal.resource.MessagesSourceImpl;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.I18nUtils;
 import org.testng.Assert;

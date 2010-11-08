@@ -2,7 +2,9 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.resource;
+package org.greatage.ioc.internal.resource;
+
+import org.greatage.ioc.services.Resource;
 
 import java.net.URL;
 import java.util.Locale;

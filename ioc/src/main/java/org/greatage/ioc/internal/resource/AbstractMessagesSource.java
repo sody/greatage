@@ -2,17 +2,13 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc.internal.message;
+package org.greatage.ioc.internal.resource;
 
 import org.greatage.ioc.services.Messages;
 import org.greatage.ioc.services.MessagesSource;
-import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 
-import java.io.*;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * This class represents abstract implementation of messages source that delegates messages creation by class to
