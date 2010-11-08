@@ -16,7 +16,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdkInvocationHandler<T> extends InvocationHandler<T> implements java.lang.reflect.InvocationHandler {
+public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T> implements java.lang.reflect.InvocationHandler {
 
 	/**
 	 * Creates new instance of invocation handler for JDK proxy objects.

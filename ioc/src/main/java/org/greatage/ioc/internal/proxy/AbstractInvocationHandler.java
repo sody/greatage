@@ -20,7 +20,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class InvocationHandler<T> {
+public abstract class AbstractInvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
 	private final List<MethodAdvice> advices;
 	private final Locker locker = new Locker();
@@ -32,7 +32,7 @@ public abstract class InvocationHandler<T> {
 	 * @param builder object builder
 	 * @param advices method advices
 	 */
-	protected InvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		this.builder = builder;
 		this.advices = CollectionUtils.isEmpty(advices) ? null : advices;
 	}

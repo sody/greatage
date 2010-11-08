@@ -16,7 +16,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class CGLibInvocationHandler<T> extends InvocationHandler<T> implements com.google.inject.internal.cglib.proxy.InvocationHandler {
+public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> implements com.google.inject.internal.cglib.proxy.InvocationHandler {
 
 	/**
 	 * Creates new instance of invocation handler for CGLib proxy objects.
