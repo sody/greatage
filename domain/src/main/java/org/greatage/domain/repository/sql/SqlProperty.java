@@ -6,11 +6,13 @@ package org.greatage.domain.repository.sql;
 
 import org.greatage.domain.repository.EntityCriterion;
 import org.greatage.domain.repository.EntityProperty;
+import org.greatage.util.DescriptionBuilder;
 
 import java.util.Collection;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public abstract class SqlProperty implements EntityProperty {
 
@@ -92,5 +94,11 @@ public abstract class SqlProperty implements EntityProperty {
 
 	public EntityCriterion isNotEmpty() {
 		return null;  //todo: change default method body
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		return builder.toString();
 	}
 }

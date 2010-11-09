@@ -5,9 +5,11 @@
 package org.greatage.domain.repository.sql;
 
 import org.greatage.domain.repository.EntityCriterion;
+import org.greatage.util.DescriptionBuilder;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public class SqlCriterion implements EntityCriterion {
 	private final String sql;
@@ -20,7 +22,7 @@ public class SqlCriterion implements EntityCriterion {
 		return sql;
 	}
 
-	public EntityCriterion or(EntityCriterion... criterions) {
+	public EntityCriterion or(final EntityCriterion... criterions) {
 		final StringBuilder sb = new StringBuilder(getSql());
 		for (EntityCriterion criterion : criterions) {
 			sb.append(" or ");
@@ -29,7 +31,7 @@ public class SqlCriterion implements EntityCriterion {
 		return new SqlCriterion(sb.toString());
 	}
 
-	public EntityCriterion and(EntityCriterion... criterions) {
+	public EntityCriterion and(final EntityCriterion... criterions) {
 		final StringBuilder sb = new StringBuilder(getSql());
 		for (EntityCriterion criterion : criterions) {
 			sb.append(" and ");
@@ -42,4 +44,10 @@ public class SqlCriterion implements EntityCriterion {
 		return new SqlCriterion("not " + getSql());
 	}
 
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(sql);
+		return builder.toString();
+	}
 }
