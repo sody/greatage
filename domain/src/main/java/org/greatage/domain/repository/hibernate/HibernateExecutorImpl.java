@@ -6,6 +6,7 @@ package org.greatage.domain.repository.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  * @author Ivan Khalopik
@@ -15,6 +16,7 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 	private final SessionFactory sessionFactory;
 
 	private Session session;
+	private Transaction transaction;
 
 	public HibernateExecutorImpl(final SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -29,6 +31,18 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 		} catch (Throwable throwable) {
 			throw new RuntimeException(throwable);
 		}
+	}
+
+	public void begin() {
+		transaction = getSession().beginTransaction();
+	}
+
+	public void commit() {
+		transaction.commit();
+	}
+
+	public void rollback() {
+		transaction.rollback();
 	}
 
 	private Session getSession() {
