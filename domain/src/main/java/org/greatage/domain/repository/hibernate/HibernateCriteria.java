@@ -9,11 +9,12 @@ import org.greatage.domain.Pagination;
 import org.greatage.domain.repository.EntityCriteria;
 import org.greatage.domain.repository.EntityCriterion;
 import org.greatage.domain.repository.EntityProperty;
+import org.greatage.util.DescriptionBuilder;
+import org.greatage.util.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.engine.SessionImplementor;
 import org.hibernate.impl.CriteriaImpl;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,24 +23,25 @@ import java.util.Map;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
-public class HibernateEntityCriteria implements EntityCriteria {
+public class HibernateCriteria implements EntityCriteria {
 	private final Criteria criteria;
 	private final EntityCriteria root;
 
 	private final Map<String, EntityProperty> properties = new HashMap<String, EntityProperty>();
-	private final Map<String, HibernateEntityCriteria> criterias = new HashMap<String, HibernateEntityCriteria>();
+	private final Map<String, HibernateCriteria> criterias = new HashMap<String, HibernateCriteria>();
 
 	private final List<String> names = new ArrayList<String>();
 
-	private HibernateEntityCriteria(Criteria criteria, EntityCriteria root) {
+	private HibernateCriteria(final Criteria criteria, final EntityCriteria root) {
 		this.criteria = criteria;
 		this.root = root;
 	}
 
-	public static HibernateEntityCriteria forClass(Class<? extends Entity> entityClass) {
+	public static HibernateCriteria forClass(final Class<? extends Entity> entityClass) {
 		final CriteriaImpl criteria = new CriteriaImpl(entityClass.getName(), null);
-		return new HibernateEntityCriteria(criteria, null);
+		return new HibernateCriteria(criteria, null);
 	}
 
 	public String getAlias() {
@@ -50,25 +52,25 @@ public class HibernateEntityCriteria implements EntityCriteria {
 		return root != null ? root : this;
 	}
 
-	public HibernateEntityCriteria getCriteria(String path) {
+	public HibernateCriteria getCriteria(final String path) {
 		if (!criterias.containsKey(path)) {
 			criterias.put(path, createCriteria(path));
 		}
 		return criterias.get(path);
 	}
 
-	public EntityProperty getProperty(String path) {
+	public EntityProperty getProperty(final String path) {
 		if (!properties.containsKey(path)) {
 			properties.put(path, createProperty(path));
 		}
 		return properties.get(path);
 	}
 
-	public void add(EntityCriterion criterion) {
-		criteria.add(((HibernateEntityCriterion) criterion).getCriterion());
+	public void add(final EntityCriterion criterion) {
+		criteria.add(((HibernateCriterion) criterion).getCriterion());
 	}
 
-	public void setPagination(Pagination pagination) {
+	public void setPagination(final Pagination pagination) {
 		if (pagination.getStart() > 0) {
 			criteria.setFirstResult(pagination.getStart());
 		}
@@ -77,33 +79,33 @@ public class HibernateEntityCriteria implements EntityCriteria {
 		}
 	}
 
-	Criteria assign(Session session) {
+	Criteria assign(final Session session) {
 		CriteriaImpl criteriaImpl = (CriteriaImpl) criteria;
 		criteriaImpl.setSession((SessionImplementor) session);
 		return criteriaImpl;
 	}
 
-	private HibernateEntityCriteria createCriteria(String path) {
-		if (!StringUtils.hasText(path)) {
+	private HibernateCriteria createCriteria(final String path) {
+		if (!StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
 		final int i = path.lastIndexOf('.');
 		final String property = i > 0 ? path.substring(i + 1) : path;
 		final Criteria subCriteria = criteria.createCriteria(path, allocateName(property));
-		return new HibernateEntityCriteria(subCriteria, root());
+		return new HibernateCriteria(subCriteria, root());
 	}
 
-	private EntityProperty createProperty(String path) {
-		if (!StringUtils.hasText(path)) {
+	private EntityProperty createProperty(final String path) {
+		if (!StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
 		final int i = path.lastIndexOf('.');
-		final HibernateEntityCriteria entityCriteria = i > 0 ? getCriteria(path.substring(0, i)) : this;
+		final HibernateCriteria entityCriteria = i > 0 ? getCriteria(path.substring(0, i)) : this;
 		final String property = i > 0 ? path.substring(i + 1) : path;
-		return new HibernateEntityProperty(entityCriteria.criteria, property);
+		return new HibernateProperty(entityCriteria.criteria, property);
 	}
 
-	private String allocateName(String name) {
+	private String allocateName(final String name) {
 		String result = name;
 		int i = 0;
 		while (names.contains(result)) {
@@ -111,5 +113,12 @@ public class HibernateEntityCriteria implements EntityCriteria {
 		}
 		names.add(result);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(criteria);
+		return builder.toString();
 	}
 }

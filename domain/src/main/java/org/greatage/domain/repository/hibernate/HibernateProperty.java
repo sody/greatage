@@ -6,6 +6,7 @@ package org.greatage.domain.repository.hibernate;
 
 import org.greatage.domain.repository.EntityCriterion;
 import org.greatage.domain.repository.EntityProperty;
+import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
@@ -16,12 +17,13 @@ import java.util.Collection;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
-public class HibernateEntityProperty implements EntityProperty {
+public class HibernateProperty implements EntityProperty {
 	private final Criteria criteria;
 	private final String property;
 
-	public HibernateEntityProperty(Criteria criteria, String property) {
+	public HibernateProperty(final Criteria criteria, final String property) {
 		this.criteria = criteria;
 		this.property = property;
 	}
@@ -34,8 +36,8 @@ public class HibernateEntityProperty implements EntityProperty {
 		return Property.forName(criteria.getAlias() + "." + getProperty());
 	}
 
-	private HibernateEntityCriterion criterion(Criterion criterion) {
-		return new HibernateEntityCriterion(criterion);
+	private HibernateCriterion criterion(final Criterion criterion) {
+		return new HibernateCriterion(criterion);
 	}
 
 	public EntityCriterion alwaysTrue() {
@@ -46,73 +48,73 @@ public class HibernateEntityProperty implements EntityProperty {
 		return criterion(Restrictions.sqlRestriction("1=2"));
 	}
 
-	public EntityCriterion in(Collection values) {
+	public EntityCriterion in(final Collection values) {
 		return values.isEmpty() ? alwaysFalse() : criterion(property().in(values));
 	}
 
-	public EntityCriterion in(Object[] values) {
+	public EntityCriterion in(final Object[] values) {
 		return values.length == 0 ? alwaysFalse() : criterion(property().in(values));
 	}
 
-	public EntityCriterion like(Object value) {
+	public EntityCriterion like(final Object value) {
 		return criterion(property().like(value));
 	}
 
-	public EntityCriterion eq(Object value) {
+	public EntityCriterion eq(final Object value) {
 		return criterion(property().eq(value));
 	}
 
-	public EntityCriterion ne(Object value) {
+	public EntityCriterion ne(final Object value) {
 		return criterion(property().ne(value));
 	}
 
-	public EntityCriterion gt(Object value) {
+	public EntityCriterion gt(final Object value) {
 		return criterion(property().gt(value));
 	}
 
-	public EntityCriterion lt(Object value) {
+	public EntityCriterion lt(final Object value) {
 		return criterion(property().lt(value));
 	}
 
-	public EntityCriterion le(Object value) {
+	public EntityCriterion le(final Object value) {
 		return criterion(property().le(value));
 	}
 
-	public EntityCriterion ge(Object value) {
+	public EntityCriterion ge(final Object value) {
 		return criterion(property().ge(value));
 	}
 
-	public EntityCriterion between(Object min, Object max) {
+	public EntityCriterion between(final Object min, final Object max) {
 		return criterion(property().between(min, max));
 	}
 
-	public EntityCriterion eqProperty(EntityProperty other) {
-		final Property otherProperty = ((HibernateEntityProperty) other).property();
+	public EntityCriterion eqProperty(final EntityProperty other) {
+		final Property otherProperty = ((HibernateProperty) other).property();
 		return criterion(property().eqProperty(otherProperty));
 	}
 
-	public EntityCriterion neProperty(EntityProperty other) {
-		final Property otherProperty = ((HibernateEntityProperty) other).property();
+	public EntityCriterion neProperty(final EntityProperty other) {
+		final Property otherProperty = ((HibernateProperty) other).property();
 		return criterion(property().neProperty(otherProperty));
 	}
 
-	public EntityCriterion leProperty(EntityProperty other) {
-		final Property otherProperty = ((HibernateEntityProperty) other).property();
+	public EntityCriterion leProperty(final EntityProperty other) {
+		final Property otherProperty = ((HibernateProperty) other).property();
 		return criterion(property().leProperty(otherProperty));
 	}
 
-	public EntityCriterion geProperty(EntityProperty other) {
-		final Property otherProperty = ((HibernateEntityProperty) other).property();
+	public EntityCriterion geProperty(final EntityProperty other) {
+		final Property otherProperty = ((HibernateProperty) other).property();
 		return criterion(property().geProperty(otherProperty));
 	}
 
-	public EntityCriterion ltProperty(EntityProperty other) {
-		final Property otherProperty = ((HibernateEntityProperty) other).property();
+	public EntityCriterion ltProperty(final EntityProperty other) {
+		final Property otherProperty = ((HibernateProperty) other).property();
 		return criterion(property().ltProperty(otherProperty));
 	}
 
-	public EntityCriterion gtProperty(EntityProperty other) {
-		final Property otherProperty = ((HibernateEntityProperty) other).property();
+	public EntityCriterion gtProperty(final EntityProperty other) {
+		final Property otherProperty = ((HibernateProperty) other).property();
 		return criterion(property().gtProperty(otherProperty));
 	}
 
@@ -136,15 +138,22 @@ public class HibernateEntityProperty implements EntityProperty {
 		sort(true);
 	}
 
-	public void sort(boolean ascending) {
+	public void sort(final boolean ascending) {
 		sort(ascending, true);
 	}
 
-	public void sort(boolean ascending, boolean ignoreCase) {
+	public void sort(final boolean ascending, final boolean ignoreCase) {
 		final Order order = ascending ? property().asc() : property().desc();
 		if (ignoreCase) {
 			order.ignoreCase();
 		}
 		criteria.addOrder(order);
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(property);
+		return builder.toString();
 	}
 }

@@ -9,46 +9,35 @@ import org.greatage.domain.Pagination;
 import org.greatage.domain.repository.AbstractEntityRepository;
 import org.greatage.domain.repository.EntityFilter;
 import org.greatage.domain.repository.EntityFilterProcessor;
+import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Criteria;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 /**
- * This class represents hibernate based implementation of {@link org.greatage.domain.repository.EntityRepository}. Selection
- * methods based on filterProcessor parameter.
+ * This class represents hibernate based implementation of {@link org.greatage.domain.repository.EntityRepository}.
+ * Selection methods based on filterProcessor parameter.
  *
  * @author Ivan Khalopik
  * @see org.greatage.domain.repository.EntityFilterProcessor
  * @since 1.0
  */
-public class HibernateEntityRepository extends AbstractEntityRepository {
-	private HibernateTemplate hibernateTemplate;
-	private EntityFilterProcessor filterProcessor;
+public class HibernateRepository extends AbstractEntityRepository {
+	private final HibernateExecutor executor;
+	private final EntityFilterProcessor filterProcessor;
 
-	/**
-	 * Sets filter processor for work with entity filters.
-	 *
-	 * @param filterProcessor filter processor
-	 */
-	public void setFilterProcessor(EntityFilterProcessor filterProcessor) {
+	public HibernateRepository(final HibernateExecutor executor, final EntityFilterProcessor filterProcessor) {
+		this.executor = executor;
 		this.filterProcessor = filterProcessor;
 	}
 
-	public void setHibernateTemplate(HibernateTemplate hibernateTemplate) {
-		this.hibernateTemplate = hibernateTemplate;
-	}
-
 	public <PK extends Serializable, E extends Entity<PK>>
-	int count(EntityFilter<PK, E> filter) {
+	int count(final EntityFilter<PK, E> filter) {
 		return execute(filter, Pagination.ALL, new CriteriaCallback<Number>() {
 			public Number doInCriteria(Criteria criteria) {
 				return (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
@@ -57,7 +46,7 @@ public class HibernateEntityRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	List<E> find(EntityFilter<PK, E> filter, Pagination pagination) {
+	List<E> find(final EntityFilter<PK, E> filter, final Pagination pagination) {
 		return execute(filter, pagination, new CriteriaCallback<List<E>>() {
 			@SuppressWarnings({"unchecked"})
 			public List<E> doInCriteria(Criteria criteria) {
@@ -67,7 +56,7 @@ public class HibernateEntityRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	List<PK> findKeys(EntityFilter<PK, E> filter, Pagination pagination) {
+	List<PK> findKeys(final EntityFilter<PK, E> filter, final Pagination pagination) {
 		return execute(filter, pagination, new CriteriaCallback<List<PK>>() {
 			@SuppressWarnings({"unchecked"})
 			public List<PK> doInCriteria(final Criteria criteria) {
@@ -77,12 +66,12 @@ public class HibernateEntityRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	List<Map<String, Object>> findValueObjects(EntityFilter<PK, E> filter, final Map<String, String> projection, Pagination pagination) {
+	List<Map<String, Object>> findValueObjects(final EntityFilter<PK, E> filter, final Map<String, String> projection, final Pagination pagination) {
 		throw new UnsupportedOperationException();
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	E findUnique(EntityFilter<PK, E> filter) {
+	E findUnique(final EntityFilter<PK, E> filter) {
 		return execute(filter, Pagination.UNIQUE, new CriteriaCallback<E>() {
 			@SuppressWarnings({"unchecked"})
 			public E doInCriteria(final Criteria criteria) {
@@ -92,29 +81,54 @@ public class HibernateEntityRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	E get(Class<E> entityClass, PK pk) {
-		return hibernateTemplate.get(getImplementation(entityClass), pk);
+	E get(final Class<E> entityClass, final PK pk) {
+		return executor.execute(new HibernateCallback<E>() {
+			@SuppressWarnings({"unchecked"})
+			public E doInSession(final Session session) throws Throwable {
+				return (E) session.get(entityClass, pk);
+			}
+		});
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void save(E entity) {
-		hibernateTemplate.save(entity);
+	void save(final E entity) {
+		executor.execute(new HibernateCallback<Object>() {
+			public Object doInSession(final Session session) throws Throwable {
+				session.save(entity);
+				return null;
+			}
+		});
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void update(E entity) {
-		hibernateTemplate.update(entity);
+	void update(final E entity) {
+		executor.execute(new HibernateCallback<Object>() {
+			public Object doInSession(final Session session) throws Throwable {
+				session.update(entity);
+				return null;
+			}
+		});
 	}
 
 	@Override
 	public <PK extends Serializable, E extends Entity<PK>>
-	void saveOrUpdate(E entity) {
-		hibernateTemplate.saveOrUpdate(entity);
+	void saveOrUpdate(final E entity) {
+		executor.execute(new HibernateCallback<Object>() {
+			public Object doInSession(final Session session) throws Throwable {
+				session.saveOrUpdate(entity);
+				return null;
+			}
+		});
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void delete(E entity) {
-		hibernateTemplate.delete(entity);
+	void delete(final E entity) {
+		executor.execute(new HibernateCallback<Object>() {
+			public Object doInSession(final Session session) throws Throwable {
+				session.delete(entity);
+				return null;
+			}
+		});
 	}
 
 	/**
@@ -124,30 +138,41 @@ public class HibernateEntityRepository extends AbstractEntityRepository {
 	 * @param filter	 selection filter
 	 * @param pagination selection pagination
 	 * @param callback   criteria callback
-	 * @param <R>        type of returned value
+	 * @param <T>        type of returned value
 	 * @param <PK>       type of entities primary key
 	 * @param <E>        type of entities
 	 * @return criteria execution result
 	 */
-	protected <R, PK extends Serializable, E extends Entity<PK>>
-	R execute(final EntityFilter<PK, E> filter, final Pagination pagination, final CriteriaCallback<R> callback) {
-		final HibernateEntityCriteria entityCriteria = HibernateEntityCriteria.forClass(getImplementation(filter.getEntityClass()));
+	private <T, PK extends Serializable, E extends Entity<PK>>
+	T execute(final EntityFilter<PK, E> filter, final Pagination pagination, final CriteriaCallback<T> callback) {
+		final HibernateCriteria entityCriteria = HibernateCriteria.forClass(getImplementation(filter.getEntityClass()));
 		if (filterProcessor != null) {
 			filterProcessor.process(entityCriteria, filter, pagination);
 		}
-		return hibernateTemplate.execute(new HibernateCallback<R>() {
-			public R doInHibernate(final Session session) throws HibernateException, SQLException {
+		return executor.execute(new HibernateCallback<T>() {
+			public T doInSession(final Session session) throws Throwable {
 				return callback.doInCriteria(entityCriteria.assign(session));
 			}
 		});
 	}
 
+	public static interface CriteriaCallback<T> {
+
+		/**
+		 * Executes some logic for returning values from criteria.
+		 *
+		 * @param criteria hibernate criteria holder
+		 * @return criteria execution result
+		 */
+		T doInCriteria(Criteria criteria);
+
+	}
+
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("HibernateEntityRepository(");
-		sb.append("hibernateTemplate=").append(hibernateTemplate);
-		sb.append("filterProcessor=").append(filterProcessor);
-		sb.append(")");
+		final DescriptionBuilder sb = new DescriptionBuilder(getClass());
+		sb.append("executor", executor);
+		sb.append("filterProcessor", filterProcessor);
 		return sb.toString();
 	}
 }
