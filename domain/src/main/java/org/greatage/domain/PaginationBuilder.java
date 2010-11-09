@@ -4,18 +4,17 @@
 
 package org.greatage.domain;
 
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.SortDefinition;
+import org.greatage.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * This class represents featured implementation of {@link org.greatage.domain.Pagination} with programmatic build and lazy
- * initialization.
+ * This class represents featured implementation of {@link org.greatage.domain.Pagination} with programmatic build and
+ * lazy initialization.
  *
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public class PaginationBuilder implements Pagination {
 	private int start;
@@ -25,7 +24,7 @@ public class PaginationBuilder implements Pagination {
 	private int to;
 	private int page;
 	private int size = -1;
-	private final List<SortDefinition> sortDefinitions = new ArrayList<SortDefinition>();
+	private final List<SortConstraint> sortDefinitions = CollectionUtils.newList();
 
 	private boolean modified = true;
 
@@ -39,7 +38,7 @@ public class PaginationBuilder implements Pagination {
 		return count;
 	}
 
-	public Collection<SortDefinition> getSortDefinitions() {
+	public Collection<SortConstraint> getSortConstraints() {
 		lazyBuild();
 		return sortDefinitions;
 	}
@@ -141,7 +140,7 @@ public class PaginationBuilder implements Pagination {
 	 * @return this
 	 */
 	public PaginationBuilder sort(String property, boolean ascending, boolean ignoreCase) {
-		sortDefinitions.add(new MutableSortDefinition(property, ignoreCase, ascending));
+		sortDefinitions.add(new SortConstraintImpl(property, ascending, ignoreCase));
 		return modify();
 	}
 

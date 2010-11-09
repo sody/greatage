@@ -6,8 +6,8 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.domain.SortConstraint;
 import org.greatage.util.DescriptionBuilder;
-import org.springframework.beans.support.SortDefinition;
 
 import java.io.Serializable;
 
@@ -29,14 +29,14 @@ public class DefaultFilterProcessor implements EntityFilterProcessor {
 	protected void processPagination(final EntityCriteria criteria, final Pagination pagination) {
 		criteria.setPagination(pagination);
 
-		if (pagination.getSortDefinitions() != null) {
-			for (SortDefinition definition : pagination.getSortDefinitions()) {
+		if (pagination.getSortConstraints() != null) {
+			for (SortConstraint definition : pagination.getSortConstraints()) {
 				processSort(criteria, definition);
 			}
 		}
 	}
 
-	protected void processSort(final EntityCriteria criteria, final SortDefinition sort) {
+	protected void processSort(final EntityCriteria criteria, final SortConstraint sort) {
 		final String property = sort.getProperty();
 		criteria.getProperty(property).sort(sort.isAscending(), sort.isIgnoreCase());
 	}

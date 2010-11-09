@@ -11,6 +11,7 @@ import java.io.Serializable;
  *
  * @author Ivan Khalopik
  * @param <PK>       type of entity primary key
+ * @since 1.0
  */
 public interface Entity<PK extends Serializable> extends Serializable {
 

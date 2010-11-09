@@ -6,7 +6,14 @@ package org.greatage.domain;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.1
  */
-@Deprecated
-public interface GenericEntity extends Entity<Long> {
+public interface SortConstraint {
+
+	String getProperty();
+
+	boolean isIgnoreCase();
+
+	boolean isAscending();
+
 }

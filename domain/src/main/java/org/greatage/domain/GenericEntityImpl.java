@@ -9,6 +9,7 @@ package org.greatage.domain;
  *
  * @author Ivan Khalopik
  */
+@Deprecated
 public class GenericEntityImpl extends AbstractEntity<Long> implements GenericEntity {
 	@SuppressWarnings({"UnusedDeclaration"})
 	private Long id;

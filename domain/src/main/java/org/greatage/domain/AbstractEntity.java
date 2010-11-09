@@ -4,6 +4,8 @@
 
 package org.greatage.domain;
 
+import org.greatage.util.DescriptionBuilder;
+
 import java.io.Serializable;
 
 /**
@@ -11,6 +13,7 @@ import java.io.Serializable;
  *
  * @author Ivan Khalopik
  * @param <PK> type of entity primary key
+ * @since 1.0
  */
 public abstract class AbstractEntity<PK extends Serializable> implements Entity<PK> {
 
@@ -37,9 +40,9 @@ public abstract class AbstractEntity<PK extends Serializable> implements Entity<
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(getClass().getSimpleName());
-		sb.append("#").append(isNew() ? "new" : getId());
-		return sb.toString();
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("id", isNew() ? "new" : getId());
+		return builder.toString();
 	}
 
 }

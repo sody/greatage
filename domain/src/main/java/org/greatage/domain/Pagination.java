@@ -4,8 +4,6 @@
 
 package org.greatage.domain;
 
-import org.springframework.beans.support.SortDefinition;
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,7 +37,7 @@ public interface Pagination extends Serializable {
 	 *
 	 * @return selection sort orders or empty list if without sortings
 	 */
-	Collection<SortDefinition> getSortDefinitions();
+	Collection<SortConstraint> getSortConstraints();
 
 	Pagination ALL = new Pagination() {
 		public int getStart() {
@@ -50,7 +48,7 @@ public interface Pagination extends Serializable {
 			return -1;
 		}
 
-		public Collection<SortDefinition> getSortDefinitions() {
+		public Collection<SortConstraint> getSortConstraints() {
 			return Collections.emptyList();
 		}
 	};
@@ -64,7 +62,7 @@ public interface Pagination extends Serializable {
 			return 1;
 		}
 
-		public Collection<SortDefinition> getSortDefinitions() {
+		public Collection<SortConstraint> getSortConstraints() {
 			return Collections.emptyList();
 		}
 	};
