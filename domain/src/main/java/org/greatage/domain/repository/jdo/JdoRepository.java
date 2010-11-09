@@ -34,8 +34,8 @@ public class JdoRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	int count(EntityFilter<PK, E> filter) {
-		return execute(filter, Pagination.ALL, new JdoQueryCallback<Integer>() {
+	int count(final EntityFilter<PK, E> filter) {
+		return execute(filter, Pagination.ALL, new QueryCallback<Integer>() {
 			public Integer doInQuery(final Query query) {
 				query.setResult(COUNT_RESULT);
 				return (Integer) query.execute();
@@ -44,10 +44,10 @@ public class JdoRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	List<E> find(EntityFilter<PK, E> filter, Pagination pagination) {
-		return execute(filter, pagination, new JdoQueryCallback<List<E>>() {
+	List<E> find(final EntityFilter<PK, E> filter, final Pagination pagination) {
+		return execute(filter, pagination, new QueryCallback<List<E>>() {
 			@SuppressWarnings({"unchecked"})
-			public List<E> doInQuery(Query query) {
+			public List<E> doInQuery(final Query query) {
 				return (List<E>) query.execute();
 			}
 		});
@@ -56,24 +56,24 @@ public class JdoRepository extends AbstractEntityRepository {
 	//todo: implement this
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	List<PK> findKeys(EntityFilter<PK, E> filter, Pagination pagination) {
+	List<PK> findKeys(final EntityFilter<PK, E> filter, final Pagination pagination) {
 		throw new UnsupportedOperationException("cannot find keys");
 	}
 
 	//todo: implement this
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	List<Map<String, Object>> findValueObjects(EntityFilter<PK, E> filter, Map<String, String> projection, Pagination pagination) {
+	List<Map<String, Object>> findValueObjects(final EntityFilter<PK, E> filter, final Map<String, String> projection, final Pagination pagination) {
 		throw new UnsupportedOperationException("cannot find value objects");
 	}
 
 	//todo: not tested
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	E findUnique(EntityFilter<PK, E> filter) {
-		return execute(filter, Pagination.UNIQUE, new JdoQueryCallback<E>() {
+	E findUnique(final EntityFilter<PK, E> filter) {
+		return execute(filter, Pagination.UNIQUE, new QueryCallback<E>() {
 			@SuppressWarnings({"unchecked"})
-			public E doInQuery(Query query) {
+			public E doInQuery(final Query query) {
 				query.setUnique(true);
 				return (E) query.execute();
 			}
@@ -119,10 +119,10 @@ public class JdoRepository extends AbstractEntityRepository {
 		});
 	}
 
-	protected <R, PK extends Serializable, E extends Entity<PK>>
-	R execute(final EntityFilter<PK, E> filter, final Pagination pagination, final JdoQueryCallback<R> callback) {
-		return executor.execute(new JdoCallback<R>() {
-			public R doInJdo(final PersistenceManager pm) throws JDOException {
+	private <T, PK extends Serializable, E extends Entity<PK>>
+	T execute(final EntityFilter<PK, E> filter, final Pagination pagination, final QueryCallback<T> callback) {
+		return executor.execute(new JdoCallback<T>() {
+			public T doInJdo(final PersistenceManager pm) throws JDOException {
 				final JdoCriteria criteria = JdoCriteria.forClass(pm, getImplementation(filter.getEntityClass()));
 				if (filterProcessor != null) {
 					filterProcessor.process(criteria, filter, pagination);
@@ -132,9 +132,9 @@ public class JdoRepository extends AbstractEntityRepository {
 		});
 	}
 
-	public static interface JdoQueryCallback<R> {
+	public static interface QueryCallback<T> {
 
-		R doInQuery(Query query);
+		T doInQuery(Query query);
 
 	}
 
