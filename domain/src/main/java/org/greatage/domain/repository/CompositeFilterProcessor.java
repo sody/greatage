@@ -6,15 +6,17 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * This class represents implementation of {@link org.greatage.domain.repository.EntityFilterProcessor} that combines logic of
- * child filter processors.
+ * This class represents implementation of {@link org.greatage.domain.repository.EntityFilterProcessor} that combines
+ * logic of child filter processors.
  *
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public class CompositeFilterProcessor implements EntityFilterProcessor {
 	private final List<EntityFilterProcessor> processors;
@@ -24,24 +26,21 @@ public class CompositeFilterProcessor implements EntityFilterProcessor {
 	 *
 	 * @param processors child filter processors
 	 */
-	public CompositeFilterProcessor(List<EntityFilterProcessor> processors) {
+	public CompositeFilterProcessor(final List<EntityFilterProcessor> processors) {
 		this.processors = processors;
+	}
+
+	public <PK extends Serializable, E extends Entity<PK>>
+	void process(final EntityCriteria criteria, final EntityFilter<PK, E> filter, final Pagination pagination) {
+		for (EntityFilterProcessor processor : processors) {
+			processor.process(criteria, filter, pagination);
+		}
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("CompositeFilterProcessor[");
-		for (EntityFilterProcessor processor : processors) {
-			sb.append(processor).append(",");
-		}
-		sb.append("]");
-		return sb.toString();
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	void process(EntityCriteria criteria, EntityFilter<PK, E> filter, Pagination pagination) {
-		for (EntityFilterProcessor processor : processors) {
-			processor.process(criteria, filter, pagination);
-		}
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(processors);
+		return builder.toString();
 	}
 }

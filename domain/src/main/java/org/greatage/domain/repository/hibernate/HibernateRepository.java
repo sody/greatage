@@ -31,7 +31,10 @@ public class HibernateRepository extends AbstractEntityRepository {
 	private final HibernateExecutor executor;
 	private final EntityFilterProcessor filterProcessor;
 
-	public HibernateRepository(final HibernateExecutor executor, final EntityFilterProcessor filterProcessor) {
+	public HibernateRepository(final Map<Class, Class> entityMapping,
+							   final HibernateExecutor executor,
+							   final EntityFilterProcessor filterProcessor) {
+		super(entityMapping);
 		this.executor = executor;
 		this.filterProcessor = filterProcessor;
 	}

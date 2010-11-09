@@ -28,7 +28,10 @@ public class JdoRepository extends AbstractEntityRepository {
 	private final JdoExecutor executor;
 	private final EntityFilterProcessor filterProcessor;
 
-	public JdoRepository(final JdoExecutor executor, final EntityFilterProcessor filterProcessor) {
+	public JdoRepository(final Map<Class, Class> entityMapping,
+						 final JdoExecutor executor,
+						 final EntityFilterProcessor filterProcessor) {
+		super(entityMapping);
 		this.executor = executor;
 		this.filterProcessor = filterProcessor;
 	}

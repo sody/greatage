@@ -18,6 +18,7 @@ import java.util.Collection;
  * @see EntityRepository
  * @see org.greatage.domain.search.SearchEngine
  * @see org.greatage.domain.services.EntityService
+ * @since 1.0
  */
 public interface EntityFilter<PK extends Serializable, E extends Entity<PK>> {
 

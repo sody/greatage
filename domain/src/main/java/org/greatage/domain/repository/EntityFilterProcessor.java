@@ -14,6 +14,7 @@ import java.io.Serializable;
  *
  * @author Ivan Khalopik
  * @see EntityRepository
+ * @since 1.0
  */
 public interface EntityFilterProcessor {
 

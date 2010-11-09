@@ -6,6 +6,7 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extends EntityQuery<PK, E, Q>>
 		implements EntityFilter<PK, E> {
@@ -24,11 +26,11 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 	private List<PK> includeKeys;
 	private List<PK> excludeKeys;
 
-	public EntityQuery(Class<E> entityClass) {
+	public EntityQuery(final Class<E> entityClass) {
 		this.entityClass = entityClass;
 	}
 
-	public EntityQuery(EntityRepository repository, Class<E> entityClass) {
+	public EntityQuery(final EntityRepository repository, final Class<E> entityClass) {
 		this.repository = repository;
 		this.entityClass = entityClass;
 	}
@@ -75,7 +77,7 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 	 * @param queryString search query string for entity full-text search
 	 * @return the same query instance
 	 */
-	public Q setQueryString(String queryString) {
+	public Q setQueryString(final String queryString) {
 		this.queryString = queryString;
 		return query();
 	}
@@ -86,7 +88,7 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 	 * @param keys collection of entity primary keys that will be included into select result
 	 * @return the same query instance
 	 */
-	public Q includeKeys(Collection<PK> keys) {
+	public Q includeKeys(final Collection<PK> keys) {
 		if (includeKeys == null) {
 			includeKeys = new ArrayList<PK>();
 		}
@@ -100,7 +102,7 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 	 * @param keys collection of entity primary keys that will be excluded from select result
 	 * @return the same query instance
 	 */
-	public Q excludeKeys(Collection<PK> keys) {
+	public Q excludeKeys(final Collection<PK> keys) {
 		if (excludeKeys == null) {
 			excludeKeys = new ArrayList<PK>();
 		}
@@ -108,7 +110,7 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 		return query();
 	}
 
-	public Q assign(EntityRepository repository) {
+	public Q assign(final EntityRepository repository) {
 		this.repository = repository;
 		return query();
 	}
@@ -128,7 +130,7 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 	 * @param pagination selection pagination
 	 * @return paginated list of entities selected by this query instance or empty list if not found
 	 */
-	public List<E> list(Pagination pagination) {
+	public List<E> list(final Pagination pagination) {
 		return repository().find(this, pagination);
 	}
 
@@ -175,10 +177,9 @@ public class EntityQuery<PK extends Serializable, E extends Entity<PK>, Q extend
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("EntityQuery(");
-		sb.append("class=").append(entityClass);
-		sb.append(",queryString=").append(queryString);
-		sb.append(")");
-		return sb.toString();
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("class", entityClass);
+		builder.append("queryString", queryString);
+		return builder.toString();
 	}
 }

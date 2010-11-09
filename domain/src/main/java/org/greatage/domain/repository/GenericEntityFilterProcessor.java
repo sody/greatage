@@ -9,7 +9,9 @@ import org.greatage.domain.GenericEntity;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
+@Deprecated
 public abstract class GenericEntityFilterProcessor<E extends GenericEntity, F extends GenericEntityFilter<E>>
 		extends AbstractFilterProcessor<Long, E, F> {
 	/**

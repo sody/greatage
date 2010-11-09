@@ -6,6 +6,7 @@ package org.greatage.domain.repository;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public interface EntityCriterion {
 

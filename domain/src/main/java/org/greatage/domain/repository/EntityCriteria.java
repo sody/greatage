@@ -8,6 +8,7 @@ import org.greatage.domain.Pagination;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public interface EntityCriteria {
 

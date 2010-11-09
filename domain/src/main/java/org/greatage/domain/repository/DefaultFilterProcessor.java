@@ -6,25 +6,27 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.util.DescriptionBuilder;
 import org.springframework.beans.support.SortDefinition;
 
 import java.io.Serializable;
 
 /**
- * This class represents implementation if {@link org.greatage.domain.repository.EntityFilterProcessor} that processes existing,
- * includeKeys and excludeKeys filter parameters.
+ * This class represents implementation if {@link org.greatage.domain.repository.EntityFilterProcessor} that processes
+ * existing, includeKeys and excludeKeys filter parameters.
  *
  * @author Ivan Khalopik
+ * @since 1.0
  */
 public class DefaultFilterProcessor implements EntityFilterProcessor {
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void process(EntityCriteria criteria, EntityFilter<PK, E> filter, Pagination pagination) {
+	void process(final EntityCriteria criteria, final EntityFilter<PK, E> filter, final Pagination pagination) {
 		processPagination(criteria, pagination);
 		processFilter(criteria, filter);
 	}
 
-	protected void processPagination(EntityCriteria criteria, Pagination pagination) {
+	protected void processPagination(final EntityCriteria criteria, final Pagination pagination) {
 		criteria.setPagination(pagination);
 
 		if (pagination.getSortDefinitions() != null) {
@@ -34,13 +36,13 @@ public class DefaultFilterProcessor implements EntityFilterProcessor {
 		}
 	}
 
-	protected void processSort(EntityCriteria criteria, SortDefinition sort) {
+	protected void processSort(final EntityCriteria criteria, final SortDefinition sort) {
 		final String property = sort.getProperty();
 		criteria.getProperty(property).sort(sort.isAscending(), sort.isIgnoreCase());
 	}
 
 	protected <PK extends Serializable, E extends Entity<PK>>
-	void processFilter(EntityCriteria criteria, EntityFilter<PK, E> filter) {
+	void processFilter(final EntityCriteria criteria, final EntityFilter<PK, E> filter) {
 		if (filter.getIncludeKeys() != null) {
 			criteria.add(criteria.getProperty(Entity.ID_PROPERTY).in(filter.getIncludeKeys()));
 		}
@@ -52,6 +54,7 @@ public class DefaultFilterProcessor implements EntityFilterProcessor {
 
 	@Override
 	public String toString() {
-		return "DefaultFilterProcessor";
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		return builder.toString();
 	}
 }

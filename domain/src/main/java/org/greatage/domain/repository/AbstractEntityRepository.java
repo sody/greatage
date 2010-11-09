@@ -6,10 +6,10 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,11 +18,10 @@ import java.util.Map;
  * @since 1.0
  */
 public abstract class AbstractEntityRepository implements EntityRepository {
-	private final Map<Class, Class> entityMapping = new HashMap<Class, Class>();
+	private final Map<Class, Class> entityMapping;
 
-	public void setEntityMapping(final Map<Class, Class> entityMapping) {
-		this.entityMapping.clear();
-		this.entityMapping.putAll(entityMapping);
+	protected AbstractEntityRepository(final Map<Class, Class> entityMapping) {
+		this.entityMapping = entityMapping;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
@@ -76,5 +75,12 @@ public abstract class AbstractEntityRepository implements EntityRepository {
 	protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
 		final Class implementation = entityMapping.get(entityClass);
 		return implementation != null ? implementation : entityClass;
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("mapping", entityMapping);
+		return builder.toString();
 	}
 }

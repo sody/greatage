@@ -6,17 +6,19 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
 
 /**
- * This class represents abstract implementation of {@link org.greatage.domain.repository.EntityFilterProcessor} that works only
- * with filters of specified class.
+ * This class represents abstract implementation of {@link org.greatage.domain.repository.EntityFilterProcessor} that
+ * works only with filters of specified class.
  *
  * @author Ivan Khalopik
  * @param <PK>       type of entities primary key
  * @param <E>        type of entities
  * @param <F>        type of entities filter
+ * @since 1.0
  */
 public abstract class AbstractFilterProcessor<PK extends Serializable, E extends Entity<PK>, F extends EntityFilter<PK, E>>
 		implements EntityFilterProcessor {
@@ -28,7 +30,7 @@ public abstract class AbstractFilterProcessor<PK extends Serializable, E extends
 	 *
 	 * @param supportedEntityClass supported entity class
 	 */
-	protected AbstractFilterProcessor(Class<? extends Entity> supportedEntityClass) {
+	protected AbstractFilterProcessor(final Class<? extends Entity> supportedEntityClass) {
 		this.supportedEntityClass = supportedEntityClass;
 	}
 
@@ -44,7 +46,7 @@ public abstract class AbstractFilterProcessor<PK extends Serializable, E extends
 	 */
 	@SuppressWarnings({"unchecked"})
 	public <SPK extends Serializable, SE extends Entity<SPK>>
-	void process(EntityCriteria criteria, EntityFilter<SPK, SE> filter, Pagination pagination) {
+	void process(final EntityCriteria criteria, final EntityFilter<SPK, SE> filter, final Pagination pagination) {
 		if (supports(filter)) {
 			processFilter(criteria, (F) filter);
 		}
@@ -59,7 +61,7 @@ public abstract class AbstractFilterProcessor<PK extends Serializable, E extends
 	 * @return true if filter is supported, false otherwise
 	 */
 	protected <SPK extends Serializable, SE extends Entity<SPK>>
-	boolean supports(EntityFilter<SPK, SE> filter) {
+	boolean supports(final EntityFilter<SPK, SE> filter) {
 		return supportedEntityClass.isAssignableFrom(filter.getEntityClass());
 	}
 
@@ -69,13 +71,12 @@ public abstract class AbstractFilterProcessor<PK extends Serializable, E extends
 	 * @param criteria entity criteria
 	 * @param filter   processed entity filter
 	 */
-	protected abstract void processFilter(EntityCriteria criteria, F filter);
+	protected abstract void processFilter(final EntityCriteria criteria, final F filter);
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("FilterProcessor(");
-		sb.append(supportedEntityClass);
-		sb.append(")");
-		return sb.toString();
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(supportedEntityClass);
+		return builder.toString();
 	}
 }

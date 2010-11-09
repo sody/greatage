@@ -26,8 +26,10 @@ public class JpaRepository extends AbstractEntityRepository {
 	private final JpaExecutor executor;
 	private final EntityFilterProcessor filterProcessor;
 
-
-	public JpaRepository(final JpaExecutor executor, final EntityFilterProcessor filterProcessor) {
+	public JpaRepository(final Map<Class, Class> entityMapping,
+						 final JpaExecutor executor,
+						 final EntityFilterProcessor filterProcessor) {
+		super(entityMapping);
 		this.executor = executor;
 		this.filterProcessor = filterProcessor;
 	}

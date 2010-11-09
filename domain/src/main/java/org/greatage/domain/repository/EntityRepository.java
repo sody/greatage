@@ -6,7 +6,6 @@ package org.greatage.domain.repository;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
-import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,8 +16,8 @@ import java.util.Map;
  *
  * @author Ivan Khalopik
  * @see org.greatage.domain.services.EntityService
+ * @since 1.0
  */
-@Repository
 public interface EntityRepository {
 
 	/**
