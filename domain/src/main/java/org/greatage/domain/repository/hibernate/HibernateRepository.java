@@ -39,7 +39,7 @@ public class HibernateRepository extends AbstractEntityRepository {
 	public <PK extends Serializable, E extends Entity<PK>>
 	int count(final EntityFilter<PK, E> filter) {
 		return execute(filter, Pagination.ALL, new CriteriaCallback<Number>() {
-			public Number doInCriteria(Criteria criteria) {
+			public Number doInCriteria(final Criteria criteria) {
 				return (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 			}
 		}).intValue();
@@ -49,7 +49,7 @@ public class HibernateRepository extends AbstractEntityRepository {
 	List<E> find(final EntityFilter<PK, E> filter, final Pagination pagination) {
 		return execute(filter, pagination, new CriteriaCallback<List<E>>() {
 			@SuppressWarnings({"unchecked"})
-			public List<E> doInCriteria(Criteria criteria) {
+			public List<E> doInCriteria(final Criteria criteria) {
 				return criteria.list();
 			}
 		});
@@ -85,7 +85,7 @@ public class HibernateRepository extends AbstractEntityRepository {
 		return executor.execute(new HibernateCallback<E>() {
 			@SuppressWarnings({"unchecked"})
 			public E doInSession(final Session session) throws Throwable {
-				return (E) session.get(entityClass, pk);
+				return (E) session.get(getImplementation(entityClass), pk);
 			}
 		});
 	}
