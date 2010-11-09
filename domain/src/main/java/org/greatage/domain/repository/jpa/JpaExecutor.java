@@ -4,13 +4,12 @@
 
 package org.greatage.domain.repository.jpa;
 
-import javax.persistence.Query;
-
 /**
  * @author Ivan Khalopik
+ * @since 1.1
  */
-public interface JpaQueryCallback<R> {
+public interface JpaExecutor {
 
-	R doInQuery(Query query);
+	<T> T execute(JpaCallback<T> callback);
 
 }
