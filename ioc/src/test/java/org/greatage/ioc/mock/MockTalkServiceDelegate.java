@@ -1,4 +1,8 @@
-package org.greatage.mock;
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+package org.greatage.ioc.mock;
 
 /**
  * @author Ivan Khalopik
@@ -15,6 +19,7 @@ public class MockTalkServiceDelegate implements MockTalkService {
 		this.suffix = suffix;
 	}
 
+	@Deprecated
 	public String say() {
 		return prefix + delegate.say() + suffix;
 	}

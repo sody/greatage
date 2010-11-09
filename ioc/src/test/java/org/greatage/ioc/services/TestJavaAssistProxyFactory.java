@@ -5,7 +5,7 @@
 package org.greatage.ioc.services;
 
 import org.greatage.ioc.internal.proxy.JavaAssistProxyFactory;
-import org.greatage.mock.*;
+import org.greatage.ioc.mock.*;
 import org.greatage.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

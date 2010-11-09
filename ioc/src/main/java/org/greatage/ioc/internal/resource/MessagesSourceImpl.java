@@ -5,11 +5,14 @@
 package org.greatage.ioc.internal.resource;
 
 import org.greatage.ioc.services.Messages;
+import org.greatage.ioc.services.Resource;
+import org.greatage.ioc.services.ResourceLocator;
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.I18nUtils;
-import org.greatage.util.StringUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -22,47 +25,32 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 	private static final String DEFAULT_CHARSET = "UTF-8";
 	private static final int DEFAULT_BUFFER_SIZE = 2000;
 
-	private final ClassLoader classLoader;
+	private final ResourceLocator resourceLocator;
 
-	public MessagesSourceImpl() {
-		this(ClassLoader.getSystemClassLoader());
-	}
-
-	public MessagesSourceImpl(final ClassLoader classLoader) {
-		this.classLoader = classLoader;
+	public MessagesSourceImpl(final ResourceLocator resourceLocator) {
+		this.resourceLocator = resourceLocator;
 	}
 
 	public Messages getMessages(final String name, final Locale locale) {
-		for (Locale candidateLocale : I18nUtils.getCandidateLocales(locale)) {
-			final String resourceName = toResourceName(name, candidateLocale);
-			final InputStream stream = classLoader.getResourceAsStream(resourceName);
-			if (stream != null) {
-				return new MessagesImpl(locale, getProperties(stream));
-			}
+		final Resource resource = resourceLocator.getResource(name + ".properties").inLocale(locale);
+		if (resource != null) {
+			final Map<String, String> properties = readProperties(resource);
+			return new MessagesImpl(locale, properties);
 		}
 		throw new RuntimeException(String.format("Can't find messages for %s", name));
 	}
 
-	private static String toResourceName(String name, Locale locale) {
-		final StringBuilder sb = new StringBuilder(name.replace('.', '/'));
-		if (!StringUtils.isEmpty(locale.toString())) {
-			sb.append("_").append(locale);
-		}
-		sb.append('.').append("properties");
-		return sb.toString();
-	}
-
 	/**
-	 * Gets string properties from input stream. Input stream must contain properties in UTF-8 encoding.
+	 * Gets string properties from resource. Resource must contain properties in UTF-8 encoding.
 	 *
-	 * @param inputStream inputStream
-	 * @return string properties from input stream
+	 * @param resource resource
+	 * @return string properties from resource
 	 */
-	private Map<String, String> getProperties(final InputStream inputStream) {
+	private Map<String, String> readProperties(final Resource resource) {
 		Reader reader = null;
 		final StringBuilder builder;
 		try {
-			reader = new InputStreamReader(inputStream, DEFAULT_CHARSET);
+			reader = new InputStreamReader(resource.open(), DEFAULT_CHARSET);
 			builder = new StringBuilder(DEFAULT_BUFFER_SIZE);
 			final char[] buffer = new char[DEFAULT_BUFFER_SIZE];
 

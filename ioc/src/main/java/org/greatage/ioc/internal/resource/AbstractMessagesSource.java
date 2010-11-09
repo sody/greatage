@@ -19,7 +19,8 @@ import java.util.Locale;
  */
 public abstract class AbstractMessagesSource implements MessagesSource {
 	public Messages getMessages(final Class clazz, final Locale locale) {
-		return getMessages(clazz.getName(), locale);
+		final String resourceName = clazz.getName().replace('.', '/');
+		return getMessages(resourceName, locale);
 	}
 
 	@Override

@@ -1,5 +1,10 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.ioc.services;
 
+import org.greatage.ioc.internal.resource.ClasspathResourceLocator;
 import org.greatage.ioc.internal.resource.MessagesSourceImpl;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.I18nUtils;
@@ -20,7 +25,8 @@ public class TestMessagesSource extends Assert {
 
 	@BeforeClass
 	public void setupMessagesSource() {
-		messagesSource = new MessagesSourceImpl();
+		final ClasspathResourceLocator resourceLocator = new ClasspathResourceLocator(ClassLoader.getSystemClassLoader());
+		messagesSource = new MessagesSourceImpl(resourceLocator);
 	}
 
 	@DataProvider

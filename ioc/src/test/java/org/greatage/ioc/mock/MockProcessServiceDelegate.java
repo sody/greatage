@@ -1,4 +1,8 @@
-package org.greatage.mock;
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+package org.greatage.ioc.mock;
 
 /**
  * @author Ivan Khalopik
@@ -11,7 +15,7 @@ public class MockProcessServiceDelegate implements MockProcessService {
 		this.delegate = delegate;
 	}
 
-	public void process() {
-		delegate.process();
+	public void process(final String message) {
+		delegate.process(message);
 	}
 }

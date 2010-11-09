@@ -5,10 +5,12 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Bind;
+import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Configure;
 import org.greatage.ioc.internal.logging.Log4jLoggerSource;
-import org.greatage.ioc.internal.resource.MessagesSourceImpl;
 import org.greatage.ioc.internal.proxy.JavaAssistProxyFactory;
+import org.greatage.ioc.internal.resource.ClasspathResourceLocator;
+import org.greatage.ioc.internal.resource.MessagesSourceImpl;
 import org.greatage.ioc.internal.scope.GlobalScope;
 import org.greatage.ioc.internal.scope.PrototypeScope;
 import org.greatage.ioc.internal.scope.ScopeManagerImpl;
@@ -32,9 +34,14 @@ public class IOCModule {
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withScope(ScopeConstants.INTERNAL);
+		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class).withScope(ScopeConstants.GLOBAL);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class).withScope(ScopeConstants.GLOBAL);
 	}
 
+	@Build(scope = ScopeConstants.GLOBAL)
+	public static ClassLoader buildClassLoader() {
+		return Thread.currentThread().getContextClassLoader();
+	}
 
 	@Configure(ScopeManager.class)
 	public static void configureScopeManager(final MappedConfiguration<String, Scope> configuration) {

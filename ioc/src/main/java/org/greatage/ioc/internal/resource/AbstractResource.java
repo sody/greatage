@@ -31,6 +31,8 @@ public abstract class AbstractResource implements Resource {
 	private final String name;
 	private final Locale locale;
 
+	private String path;
+
 	protected AbstractResource(final AbstractResource parent, final String name, final Locale locale) {
 		this.parent = parent;
 		this.name = name;
@@ -52,10 +54,10 @@ public abstract class AbstractResource implements Resource {
 	public Resource inLocale(final Locale locale) {
 		final List<Locale> locales = I18nUtils.getCandidateLocales(locale);
 		for (Locale candidate : locales) {
-			if (candidate.equals(this.locale)) {
+			if (candidate.equals(this.locale) && exists()) {
 				return this;
 			}
-			final Resource resource = createResource(parent, name, locale);
+			final Resource resource = createResource(parent, name, candidate);
 			if (resource.exists()) {
 				return resource;
 			}
@@ -73,7 +75,7 @@ public abstract class AbstractResource implements Resource {
 
 		final int slashIndex = path.indexOf(FOLDER_DELIMITER);
 		if (slashIndex == -1) {
-			return createResource(name.lastIndexOf(FILE_DELIMITER) < 0 ? parent : this, path, locale);
+			return createResource(name.lastIndexOf(FILE_DELIMITER) < 0 ? this : parent, path, locale);
 		} else {
 			final Resource child = getChild(path.substring(0, slashIndex));
 			return child.getChild(path.substring(slashIndex + 1));
@@ -92,27 +94,30 @@ public abstract class AbstractResource implements Resource {
 		return new BufferedInputStream(url.openStream());
 	}
 
-	protected String getFullName() {
-		final StringBuilder builder = new StringBuilder();
+	protected String getPath() {
+		if (path == null) {
+			final StringBuilder builder = new StringBuilder();
 
-		final String folder = parent != null ? parent.getFullName() : null;
-		if (!StringUtils.isEmpty(folder)) {
-			builder.append(folder).append(FOLDER_DELIMITER);
+			final String folder = parent != null ? parent.getPath() : null;
+			if (!StringUtils.isEmpty(folder)) {
+				builder.append(folder).append(FOLDER_DELIMITER);
+			}
+
+			final int dotPosition = name.lastIndexOf(FILE_DELIMITER);
+			final String file = dotPosition != -1 ? name.substring(0, dotPosition) : name;
+			final String extension = dotPosition != -1 ? name.substring(dotPosition) : null;
+			builder.append(file);
+
+			if (locale != null && !StringUtils.isEmpty(locale.toString())) {
+				builder.append(LOCALE_DELIMITER).append(locale);
+			}
+
+			if (!StringUtils.isEmpty(extension)) {
+				builder.append(extension);
+			}
+			path = builder.toString();
 		}
-
-		final int dotPosition = name.lastIndexOf(FILE_DELIMITER);
-		final String file = dotPosition != -1 ? name.substring(0, dotPosition) : name;
-		final String extension = dotPosition != -1 ? name.substring(dotPosition) : null;
-		builder.append(file);
-
-		if (locale != null && !StringUtils.isEmpty(locale.toString())) {
-			builder.append(LOCALE_DELIMITER).append(locale);
-		}
-
-		if (!StringUtils.isEmpty(extension)) {
-			builder.append(FILE_DELIMITER).append(extension);
-		}
-		return builder.toString();
+		return path;
 	}
 
 	protected abstract URL toURL();

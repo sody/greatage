@@ -23,7 +23,8 @@ public class ClasspathResource extends AbstractResource {
 
 	@Override
 	protected URL toURL() {
-		return classLoader.getResource(getFullName());
+		final String path = getPath();
+		return classLoader.getResource(path);
 	}
 
 	@Override

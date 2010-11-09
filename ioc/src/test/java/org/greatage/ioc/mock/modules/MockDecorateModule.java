@@ -1,8 +1,13 @@
-package org.greatage.mock;
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+package org.greatage.ioc.mock.modules;
 
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
+import org.greatage.ioc.mock.*;
 
 /**
  * @author Ivan Khalopik

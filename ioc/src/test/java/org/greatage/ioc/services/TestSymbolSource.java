@@ -1,3 +1,7 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.ioc.services;
 
 import org.greatage.ioc.internal.symbol.DefaultSymbolProvider;
@@ -7,6 +11,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.util.List;
 
 /**
  * @author Ivan Khalopik
@@ -22,7 +28,8 @@ public class TestSymbolSource extends Assert {
 				"s2", "test2",
 				"s3", "test3"
 		));
-		symbolSource = new SymbolSourceImpl(CollectionUtils.newList(symbolProvider));
+		final List<SymbolProvider> providers = CollectionUtils.newList(symbolProvider);
+		symbolSource = new SymbolSourceImpl(providers);
 	}
 
 	@DataProvider

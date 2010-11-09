@@ -1,8 +1,16 @@
-package org.greatage.mock;
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+package org.greatage.ioc.mock.modules;
 
 import org.greatage.ioc.OrderedConfiguration;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Configure;
+import org.greatage.ioc.mock.MockMessageService;
+import org.greatage.ioc.mock.MockMessageServiceImpl;
+import org.greatage.ioc.mock.MockTalkService;
+import org.greatage.ioc.mock.MockTalkServiceImpl;
 
 import java.util.List;
 

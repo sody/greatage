@@ -1,9 +1,17 @@
-package org.greatage.mock;
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+package org.greatage.ioc.mock.modules;
 
 import org.greatage.ioc.ScopeConstants;
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
+import org.greatage.ioc.mock.MockMessageService;
+import org.greatage.ioc.mock.MockMessageServiceImpl;
+import org.greatage.ioc.mock.MockTalkService;
+import org.greatage.ioc.mock.MockTalkServiceImpl;
 
 /**
  * @author Ivan Khalopik

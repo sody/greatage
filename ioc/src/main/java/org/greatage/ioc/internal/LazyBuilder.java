@@ -9,6 +9,7 @@ import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.services.MethodAdvice;
 import org.greatage.ioc.services.ObjectBuilder;
 import org.greatage.ioc.services.ProxyFactory;
+import org.greatage.util.OrderingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,8 @@ public class LazyBuilder<T> implements ObjectBuilder<T> {
 
 	private List<MethodAdvice> createAdvices() {
 		final List<MethodAdvice> advices = new ArrayList<MethodAdvice>();
-		for (Interceptor<T> interceptor : interceptors) {
+		final List<Interceptor<T>> ordered = OrderingUtils.order(interceptors);
+		for (Interceptor<T> interceptor : ordered) {
 			final MethodAdvice advice = interceptor.intercept(resources);
 			advices.add(advice);
 		}

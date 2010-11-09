@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.mock;
+package org.greatage.ioc.mock;
 
 /**
  * @author Ivan Khalopik
