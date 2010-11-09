@@ -4,13 +4,12 @@
 
 package org.greatage.domain.repository.jdo;
 
-import javax.jdo.Query;
-
 /**
  * @author Ivan Khalopik
+ * @since 1.1
  */
-public interface JdoQueryCallback<R> {
+public interface JdoExecutor {
 
-	R doInQuery(Query query);
+	<T> T execute(JdoCallback<T> callback);
 
 }
