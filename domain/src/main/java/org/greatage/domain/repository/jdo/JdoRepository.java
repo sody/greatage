@@ -22,13 +22,13 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoEntityRepository extends AbstractEntityRepository {
+public class JdoRepository extends AbstractEntityRepository {
 	private static final String COUNT_RESULT = "count()";
 
 	private final JdoExecutor executor;
 	private final EntityFilterProcessor filterProcessor;
 
-	public JdoEntityRepository(final JdoExecutor executor, final EntityFilterProcessor filterProcessor) {
+	public JdoRepository(final JdoExecutor executor, final EntityFilterProcessor filterProcessor) {
 		this.executor = executor;
 		this.filterProcessor = filterProcessor;
 	}
@@ -123,7 +123,7 @@ public class JdoEntityRepository extends AbstractEntityRepository {
 	R execute(final EntityFilter<PK, E> filter, final Pagination pagination, final JdoQueryCallback<R> callback) {
 		return executor.execute(new JdoCallback<R>() {
 			public R doInJdo(final PersistenceManager pm) throws JDOException {
-				final JdoEntityCriteria criteria = JdoEntityCriteria.forClass(pm, getImplementation(filter.getEntityClass()));
+				final JdoCriteria criteria = JdoCriteria.forClass(pm, getImplementation(filter.getEntityClass()));
 				if (filterProcessor != null) {
 					filterProcessor.process(criteria, filter, pagination);
 				}

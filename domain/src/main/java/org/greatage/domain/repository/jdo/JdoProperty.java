@@ -13,12 +13,12 @@ import javax.jdo.Query;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoEntityProperty extends SqlProperty {
+public class JdoProperty extends SqlProperty {
 	private final String property;
 	private final String fullProperty;
 	private final Query query;
 
-	public JdoEntityProperty(final Query query, final String path, final String property) {
+	public JdoProperty(final Query query, final String path, final String property) {
 		this.query = query;
 		this.property = property;
 		this.fullProperty = path != null ? path + "." + property : property;

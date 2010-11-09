@@ -23,24 +23,24 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoEntityCriteria implements EntityCriteria {
+public class JdoCriteria implements EntityCriteria {
 	private final Query query;
 	private final String alias;
 
 	private final Map<String, EntityProperty> properties = new HashMap<String, EntityProperty>();
-	private final Map<String, JdoEntityCriteria> criterias = new HashMap<String, JdoEntityCriteria>();
+	private final Map<String, JdoCriteria> criterias = new HashMap<String, JdoCriteria>();
 
 	private SqlCriterion filter;
 
-	private JdoEntityCriteria(final Query query, final String alias) {
+	private JdoCriteria(final Query query, final String alias) {
 		this.query = query;
 		this.alias = alias;
 	}
 
-	public static JdoEntityCriteria forClass(final PersistenceManager pm, final Class<? extends Entity> entityClass) {
+	public static JdoCriteria forClass(final PersistenceManager pm, final Class<? extends Entity> entityClass) {
 		final Extent<? extends Entity> extent = pm.getExtent(entityClass, true);
 		final Query query = pm.newQuery(extent);
-		return new JdoEntityCriteria(query, null);
+		return new JdoCriteria(query, null);
 	}
 
 	Query assign() {
@@ -58,7 +58,7 @@ public class JdoEntityCriteria implements EntityCriteria {
 		return this;
 	}
 
-	public JdoEntityCriteria getCriteria(final String path) {
+	public JdoCriteria getCriteria(final String path) {
 		if (!criterias.containsKey(path)) {
 			criterias.put(path, createCriteria(path));
 		}
@@ -88,11 +88,11 @@ public class JdoEntityCriteria implements EntityCriteria {
 		}
 	}
 
-	private JdoEntityCriteria createCriteria(final String path) {
+	private JdoCriteria createCriteria(final String path) {
 		if (!StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
-		return new JdoEntityCriteria(query, path);
+		return new JdoCriteria(query, path);
 	}
 
 	private EntityProperty createProperty(final String path) {
@@ -100,9 +100,9 @@ public class JdoEntityCriteria implements EntityCriteria {
 			throw new IllegalArgumentException("Empty path");
 		}
 		final int i = path.lastIndexOf('.');
-		final JdoEntityCriteria entityCriteria = i > 0 ? getCriteria(path.substring(0, i)) : this;
+		final JdoCriteria entityCriteria = i > 0 ? getCriteria(path.substring(0, i)) : this;
 		final String property = i > 0 ? path.substring(i + 1) : path;
-		return new JdoEntityProperty(entityCriteria.query, entityCriteria.getAlias(), property);
+		return new JdoProperty(entityCriteria.query, entityCriteria.getAlias(), property);
 	}
 
 	@Override
