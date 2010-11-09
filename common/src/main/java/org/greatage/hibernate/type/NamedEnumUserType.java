@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.hibernate;
+package org.greatage.hibernate.type;
 
 import org.hibernate.HibernateException;
 
@@ -20,7 +20,7 @@ public class NamedEnumUserType<E extends Enum> extends AbstractEnumUserType<E, S
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
+	public void nullSafeSet(final PreparedStatement st, final Object value, final int index) throws HibernateException, SQLException {
 		if (value == null) {
 			st.setNull(index, getSqlType());
 		} else {
@@ -29,17 +29,17 @@ public class NamedEnumUserType<E extends Enum> extends AbstractEnumUserType<E, S
 	}
 
 	@Override
-	public String get(ResultSet rs, String name) throws HibernateException, SQLException {
+	public String get(final ResultSet rs, final String name) throws HibernateException, SQLException {
 		return rs.getString(name);
 	}
 
 	@Override
-	public void set(PreparedStatement st, String value, int index) throws HibernateException, SQLException {
+	public void set(final PreparedStatement st, final String value, final int index) throws HibernateException, SQLException {
 		st.setString(index, value);
 	}
 
 	@Override
-	protected String enumToValue(E e) {
+	protected String enumToValue(final E e) {
 		return e instanceof NamedEnum ? ((NamedEnum) e).getName() : e.name();
 	}
 }

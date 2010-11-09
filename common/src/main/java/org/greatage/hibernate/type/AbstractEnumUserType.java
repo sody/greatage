@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.hibernate;
+package org.greatage.hibernate.type;
 
 import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
@@ -32,7 +32,7 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public void setParameterValues(Properties parameters) {
+	public void setParameterValues(final Properties parameters) {
 		final String enumClassName = parameters.getProperty("enumClass");
 		if (enumClassName == null) {
 			throw new MappingException("enumClassName parameter not specified");
@@ -48,7 +48,7 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		}
 	}
 
-	public void setEnumClass(Class<E> enumClass) {
+	public void setEnumClass(final Class<E> enumClass) {
 		this.enumClass = enumClass;
 		constantsByValue.clear();
 		for (E e : enumClass.getEnumConstants()) {
@@ -66,13 +66,13 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		return sqlType;
 	}
 
-	public Object nullSafeGet(ResultSet rs, String[] names, Object owner) throws HibernateException, SQLException {
+	public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws HibernateException, SQLException {
 		final V value = get(rs, names[0]);
 		return value == null || rs.wasNull() ? null : getEnum(value);
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public void nullSafeSet(PreparedStatement st, Object value, int index) throws HibernateException, SQLException {
+	public void nullSafeSet(final PreparedStatement st, final Object value, final int index) throws HibernateException, SQLException {
 		if (value == null) {
 			st.setNull(index, getSqlType());
 		} else {
@@ -89,11 +89,11 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		return new int[]{sqlType};
 	}
 
-	public Object deepCopy(Object value) throws HibernateException {
+	public Object deepCopy(final Object value) throws HibernateException {
 		return value;
 	}
 
-	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+	public Object replace(final Object original, final Object target, final Object owner) throws HibernateException {
 		return original;
 	}
 
@@ -101,33 +101,33 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		return false;
 	}
 
-	public Serializable disassemble(Object value) throws HibernateException {
+	public Serializable disassemble(final Object value) throws HibernateException {
 		return (Enum) value;
 	}
 
-	public Object assemble(Serializable cached, Object owner) throws HibernateException {
+	public Object assemble(final Serializable cached, final Object owner) throws HibernateException {
 		return cached;
 	}
 
-	public boolean equals(Object x, Object y) throws HibernateException {
+	public boolean equals(final Object x, final Object y) throws HibernateException {
 		return x == y;
 	}
 
-	public int hashCode(Object x) throws HibernateException {
+	public int hashCode(final Object x) throws HibernateException {
 		return x.hashCode();
 	}
 
-	protected E getEnum(V order) {
+	protected E getEnum(final V order) {
 		return constantsByValue.get(order);
 	}
 
-	protected V getValue(E e) {
+	protected V getValue(final E e) {
 		return constantsByEnum.get(e);
 	}
 
-	public abstract V get(ResultSet rs, String name) throws HibernateException, SQLException;
+	public abstract V get(final ResultSet rs, final String name) throws HibernateException, SQLException;
 
-	public abstract void set(PreparedStatement st, V value, int index) throws HibernateException, SQLException;
+	public abstract void set(final PreparedStatement st, final V value, final int index) throws HibernateException, SQLException;
 
-	protected abstract V enumToValue(E e);
+	protected abstract V enumToValue(final E e);
 }

@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.hibernate;
+package org.greatage.hibernate.type;
 
 import org.hibernate.HibernateException;
 
@@ -21,17 +21,17 @@ public class OrderedEnumUserType<E extends Enum> extends AbstractEnumUserType<E,
 	}
 
 	@Override
-	public Integer get(ResultSet rs, String name) throws HibernateException, SQLException {
+	public Integer get(final ResultSet rs, final String name) throws HibernateException, SQLException {
 		return rs.getInt(name);
 	}
 
 	@Override
-	public void set(PreparedStatement st, Integer value, int index) throws HibernateException, SQLException {
+	public void set(final PreparedStatement st, final Integer value, final int index) throws HibernateException, SQLException {
 		st.setInt(index, value);
 	}
 
 	@Override
-	protected Integer enumToValue(E e) {
+	protected Integer enumToValue(final E e) {
 		return e instanceof OrderedEnum ? ((OrderedEnum) e).getOrder() : e.ordinal();
 	}
 }

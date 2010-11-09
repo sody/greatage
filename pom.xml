@@ -38,7 +38,7 @@
 	<repositories>
 		<repository>
 			<id>jboss</id>
-			<url>http://repository.jboss.com/maven2/</url>
+			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
 		</repository>
 		<repository>
 			<id>apache-snapshot</id>
@@ -304,7 +304,7 @@
 	</dependencyManagement>
 
 	<properties>
-		<hibernate.version>3.5.1-Final</hibernate.version>
+		<hibernate.version>3.6.0.Final</hibernate.version>
 		<hibernate.search.version>3.1.1.GA</hibernate.search.version>
 		<spring.version>3.0.2.RELEASE</spring.version>
 		<tapestry.version>5.2.2</tapestry.version>
