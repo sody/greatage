@@ -86,7 +86,7 @@ public class HibernateCriteria implements EntityCriteria {
 	}
 
 	private HibernateCriteria createCriteria(final String path) {
-		if (!StringUtils.isEmpty(path)) {
+		if (StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
 		final int i = path.lastIndexOf('.');
@@ -96,7 +96,7 @@ public class HibernateCriteria implements EntityCriteria {
 	}
 
 	private EntityProperty createProperty(final String path) {
-		if (!StringUtils.isEmpty(path)) {
+		if (StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
 		final int i = path.lastIndexOf('.');

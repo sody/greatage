@@ -4,17 +4,20 @@
 
 package org.greatage.domain.search.hibernate;
 
-import org.greatage.domain.Entity;
-import org.greatage.domain.repository.DefaultEntityFilter;
-import org.greatage.domain.repository.EntityFilter;
-import org.greatage.domain.search.SearchEngine;
-import org.greatage.util.CollectionUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.MapFieldSelector;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.greatage.domain.Entity;
+import org.greatage.domain.repository.DefaultEntityFilter;
+import org.greatage.domain.repository.EntityFilter;
+import org.greatage.domain.repository.hibernate.HibernateCallback;
+import org.greatage.domain.repository.hibernate.HibernateExecutor;
+import org.greatage.domain.search.SearchEngine;
+import org.greatage.util.CollectionUtils;
+import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -27,8 +30,6 @@ import org.hibernate.search.backend.WorkType;
 import org.hibernate.search.backend.impl.EventSourceTransactionContext;
 import org.hibernate.search.engine.DocumentBuilderIndexedEntity;
 import org.hibernate.search.engine.SearchFactoryImplementor;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -37,28 +38,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents hibernate based implementation of {@link org.greatage.domain.search.SearchEngine}. Search methods based
- * on searchProcessor parameter.
+ * This class represents hibernate based implementation of {@link org.greatage.domain.search.SearchEngine}. Search
+ * methods based on searchProcessor parameter.
  *
  * @author Ivan Khalopik
  * @see SearchProcessor
  */
-public class HibernateSearchEngine extends HibernateDaoSupport implements SearchEngine {
-	private SearchProcessor searchProcessor;
+public class HibernateSearchEngine implements SearchEngine {
+	private final HibernateExecutor executor;
+	private final SearchProcessor searchProcessor;
 
-	/**
-	 * Sets search processor for work with entity filters.
-	 *
-	 * @param searchProcessor search processor
-	 */
-	public void setSearchProcessor(SearchProcessor searchProcessor) {
+	public HibernateSearchEngine(final HibernateExecutor executor, final SearchProcessor searchProcessor) {
+		this.executor = executor;
 		this.searchProcessor = searchProcessor;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void index(final Class<E> entityClass) {
-		final int size = getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-			public Integer doInHibernate(Session session) throws HibernateException, SQLException {
+		final int size = executor.execute(new HibernateCallback<Integer>() {
+			public Integer doInSession(Session session) throws HibernateException, SQLException {
 				final Criteria criteria = DetachedCriteria.forClass(entityClass).getExecutableCriteria(session);
 				return (Integer) criteria.setProjection(Projections.rowCount()).uniqueResult();
 			}
@@ -67,9 +65,9 @@ public class HibernateSearchEngine extends HibernateDaoSupport implements Search
 
 		for (int i = 0; i < size; i += batchSize) {
 			final int first = i;
-			final List<E> entities = getHibernateTemplate().execute(new HibernateCallback<List<E>>() {
+			final List<E> entities = executor.execute(new HibernateCallback<List<E>>() {
 				@SuppressWarnings({"unchecked"})
-				public List<E> doInHibernate(Session session) throws HibernateException, SQLException {
+				public List<E> doInSession(Session session) throws HibernateException, SQLException {
 					final Criteria criteria = DetachedCriteria.forClass(entityClass).getExecutableCriteria(session);
 					criteria.setFirstResult(first);
 					criteria.setMaxResults(batchSize);
@@ -82,8 +80,8 @@ public class HibernateSearchEngine extends HibernateDaoSupport implements Search
 
 	protected <PK extends Serializable, E extends Entity<PK>>
 	void index(final Class<E> entityClass, final List<E> entities) {
-		getHibernateTemplate().execute(new HibernateCallback<Object>() {
-			public Object doInHibernate(Session session) throws HibernateException, SQLException {
+		executor.execute(new HibernateCallback<Object>() {
+			public Object doInSession(Session session) throws HibernateException, SQLException {
 				final SearchFactoryImplementor searchFactory = (SearchFactoryImplementor) Search.getFullTextSession(session).getSearchFactory();
 				final DocumentBuilderIndexedEntity<E> builderIndexedEntity = searchFactory.getDocumentBuilderIndexedEntity(entityClass);
 				final EventSourceTransactionContext transactionContext = new EventSourceTransactionContext((EventSource) session);
@@ -107,9 +105,9 @@ public class HibernateSearchEngine extends HibernateDaoSupport implements Search
 		if (searchProcessor != null) {
 			searchProcessor.process(luceneQuery, filter);
 			if (!CollectionUtils.isEmpty(luceneQuery.clauses())) {
-				return getHibernateTemplate().execute(new HibernateCallback<List<PK>>() {
+				return executor.execute(new HibernateCallback<List<PK>>() {
 					@SuppressWarnings({"unchecked"})
-					public List<PK> doInHibernate(Session session) throws HibernateException, SQLException {
+					public List<PK> doInSession(Session session) throws HibernateException, SQLException {
 						final ArrayList<PK> result = new ArrayList<PK>();
 						final SearchFactoryImplementor searchFactory = (SearchFactoryImplementor) Search.getFullTextSession(session).getSearchFactory();
 						final DocumentBuilderIndexedEntity<E> builderIndexedEntity = searchFactory.getDocumentBuilderIndexedEntity(filter.getEntityClass());
@@ -153,10 +151,9 @@ public class HibernateSearchEngine extends HibernateDaoSupport implements Search
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("HibernateSearchEngine(");
-		sb.append("hibernateTemplate=").append(getHibernateTemplate());
-		sb.append("searchProcessor=").append(searchProcessor);
-		sb.append(")");
-		return sb.toString();
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("executor", executor);
+		builder.append("searchProcessor", searchProcessor);
+		return builder.toString();
 	}
 }

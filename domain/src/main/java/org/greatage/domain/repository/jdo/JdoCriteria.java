@@ -89,14 +89,14 @@ public class JdoCriteria implements EntityCriteria {
 	}
 
 	private JdoCriteria createCriteria(final String path) {
-		if (!StringUtils.isEmpty(path)) {
+		if (StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
 		return new JdoCriteria(query, path);
 	}
 
 	private EntityProperty createProperty(final String path) {
-		if (!StringUtils.isEmpty(path)) {
+		if (StringUtils.isEmpty(path)) {
 			throw new IllegalArgumentException("Empty path");
 		}
 		final int i = path.lastIndexOf('.');

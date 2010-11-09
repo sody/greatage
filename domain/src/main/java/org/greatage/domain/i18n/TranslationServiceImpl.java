@@ -4,9 +4,9 @@
 
 package org.greatage.domain.i18n;
 
+import org.greatage.domain.annotations.Transactional;
 import org.greatage.domain.repository.EntityRepository;
 import org.greatage.domain.services.GenericEntityServiceImpl;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 

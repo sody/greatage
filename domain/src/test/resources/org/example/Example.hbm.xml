@@ -1,4 +1,8 @@
 <?xml version="1.0"?>
+<!--
+  ~ Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+  -->
+
 <!DOCTYPE hibernate-mapping PUBLIC
 		"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 		"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
@@ -10,7 +14,6 @@
 		<id name="id" column="ID" type="long" access="field">
 			<generator class="increment"/>
 		</id>
-		<property name="deletedAt" column="DELETED" not-null="false"/>
 		<!--<version name="version" access="field" column="VERSION"/>-->
 
 		<property name="name" column="NAME" not-null="true"/>

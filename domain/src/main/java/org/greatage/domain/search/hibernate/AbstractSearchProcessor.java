@@ -4,10 +4,10 @@
 
 package org.greatage.domain.search.hibernate;
 
+import org.apache.lucene.search.BooleanQuery;
 import org.greatage.domain.Entity;
 import org.greatage.domain.repository.EntityFilter;
-import org.apache.lucene.search.BooleanQuery;
-import org.springframework.util.StringUtils;
+import org.greatage.util.StringUtils;
 
 import java.io.Serializable;
 
@@ -54,7 +54,7 @@ public abstract class AbstractSearchProcessor implements SearchProcessor {
 	 */
 	protected <PK extends Serializable, E extends Entity<PK>>
 	boolean supports(EntityFilter<PK, E> filter) {
-		return StringUtils.hasText(filter.getQueryString()) && supportedEntityClass.isAssignableFrom(filter.getEntityClass());
+		return !StringUtils.isEmpty(filter.getQueryString()) && supportedEntityClass.isAssignableFrom(filter.getEntityClass());
 	}
 
 	/**

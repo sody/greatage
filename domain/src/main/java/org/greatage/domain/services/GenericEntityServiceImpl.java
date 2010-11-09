@@ -11,6 +11,7 @@ import org.greatage.domain.repository.GenericEntityQuery;
 /**
  * @author Ivan Khalopik
  */
+@Deprecated
 public class GenericEntityServiceImpl<E extends GenericEntity, Q extends GenericEntityQuery<E, Q>>
 		extends EntityServiceImpl<Long, E, Q>
 		implements GenericEntityService<E> {

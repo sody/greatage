@@ -7,7 +7,6 @@ package org.greatage.domain.services;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
-import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,8 +18,8 @@ import java.util.List;
  * @param <PK>       type of entities primary key
  * @param <E>        type of entities
  * @see org.greatage.domain.repository.EntityRepository
+ * @since 1.0
  */
-@Service
 public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 
 	/**

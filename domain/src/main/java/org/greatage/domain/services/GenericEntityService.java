@@ -9,6 +9,7 @@ import org.greatage.domain.GenericEntity;
 /**
  * @author Ivan Khalopik
  */
+@Deprecated
 public interface GenericEntityService<E extends GenericEntity>
 		extends EntityService<Long, E> {
 }

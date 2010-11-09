@@ -7,10 +7,11 @@ package org.greatage.domain.services;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
 import org.greatage.domain.PaginationBuilder;
+import org.greatage.domain.annotations.Transactional;
 import org.greatage.domain.repository.EntityQuery;
 import org.greatage.domain.repository.EntityRepository;
+import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
  * @param <PK>       type of entities primary key
  * @param <E>        type of entities
  * @param <Q>        type of entities query
+ * @since 1.0
  */
 public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q extends EntityQuery<PK, E, Q>>
 		implements EntityService<PK, E> {
@@ -37,7 +39,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	 * @param repository  entity repository
 	 * @param entityClass entity class
 	 */
-	public EntityServiceImpl(EntityRepository repository, Class<E> entityClass) {
+	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass) {
 		this(repository, entityClass, null);
 	}
 
@@ -48,7 +50,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	 * @param entityClass entity class
 	 * @param queryClass  entity filter class
 	 */
-	public EntityServiceImpl(EntityRepository repository, Class<E> entityClass, Class<Q> queryClass) {
+	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass, final Class<Q> queryClass) {
 		this(repository, entityClass, queryClass, null);
 	}
 
@@ -60,7 +62,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	 * @param queryClass  entity filter class
 	 * @param entityName  entity name
 	 */
-	public EntityServiceImpl(EntityRepository repository, Class<E> entityClass, Class<Q> queryClass, String entityName) {
+	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass, final Class<Q> queryClass, final String entityName) {
 		this.repository = repository;
 		this.entityClass = entityClass;
 		this.queryClass = queryClass;
@@ -80,7 +82,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	}
 
 	@Transactional
-	public void saveOrUpdate(E entity) {
+	public void saveOrUpdate(final E entity) {
 		if (entity.isNew()) {
 			save(entity);
 		} else {
@@ -89,21 +91,21 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	}
 
 	@Transactional
-	public void save(E entity) {
+	public void save(final E entity) {
 		repository().save(entity);
 	}
 
 	@Transactional
-	public void update(E entity) {
+	public void update(final E entity) {
 		repository().update(entity);
 	}
 
 	@Transactional
-	public void delete(E entity) {
+	public void delete(final E entity) {
 		repository().delete(entity);
 	}
 
-	public E get(PK pk) {
+	public E get(final PK pk) {
 		return repository().get(getEntityClass(), pk);
 	}
 
@@ -115,7 +117,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 		return createQuery().list();
 	}
 
-	public List<E> getEntities(Pagination pagination) {
+	public List<E> getEntities(final Pagination pagination) {
 		return createQuery().list(pagination);
 	}
 
@@ -148,10 +150,9 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("EntityService(");
-		sb.append("class=").append(entityClass);
-		sb.append(", name=").append(entityName);
-		sb.append(")");
-		return sb.toString();
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("class", entityClass);
+		builder.append("name", entityName);
+		return builder.toString();
 	}
 }
