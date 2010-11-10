@@ -67,14 +67,19 @@ public class DescriptionBuilder {
 	 * @return entity description built according to configured earlier entity name and entity parameters
 	 */
 	public String toString() {
-		final StringBuilder sb = new StringBuilder(entityName);
+		final StringBuilder builder = new StringBuilder(entityName);
 		if (!CollectionUtils.isEmpty(parameters)) {
-			sb.append("(");
+			builder.append("(");
+			final StringBuilder parametersBuilder = new StringBuilder();
 			for (String parameter : parameters) {
-				sb.append(parameter).append(",");
+				if (parametersBuilder.length() > 0) {
+					parametersBuilder.append(", ");
+				}
+				parametersBuilder.append(parameter);
 			}
-			sb.append(")");
+			builder.append(parametersBuilder.toString());
+			builder.append(")");
 		}
-		return sb.toString();
+		return builder.toString();
 	}
 }
