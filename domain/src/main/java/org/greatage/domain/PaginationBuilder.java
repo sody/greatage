@@ -5,6 +5,7 @@
 package org.greatage.domain;
 
 import org.greatage.util.CollectionUtils;
+import org.greatage.util.DescriptionBuilder;
 
 import java.util.Collection;
 import java.util.List;
@@ -49,7 +50,7 @@ public class PaginationBuilder implements Pagination {
 	 * @param start start pagination position
 	 * @return this
 	 */
-	public PaginationBuilder start(int start) {
+	public PaginationBuilder start(final int start) {
 		this.from = start;
 		return modify();
 	}
@@ -61,7 +62,7 @@ public class PaginationBuilder implements Pagination {
 	 * @return this
 	 * @throws UnsupportedOperationException if page or size parameter are specified
 	 */
-	public PaginationBuilder end(int end) {
+	public PaginationBuilder end(final int end) {
 		if (page > 0 || size > 0) {
 			throw new UnsupportedOperationException("page or size attributes already exists");
 		}
@@ -76,7 +77,7 @@ public class PaginationBuilder implements Pagination {
 	 * @return this
 	 * @see #size(int)
 	 */
-	public PaginationBuilder count(int count) {
+	public PaginationBuilder count(final int count) {
 		return size(count);
 	}
 
@@ -87,7 +88,7 @@ public class PaginationBuilder implements Pagination {
 	 * @return this
 	 * @throws UnsupportedOperationException if end parameter are specified
 	 */
-	public PaginationBuilder size(int size) {
+	public PaginationBuilder size(final int size) {
 		if (to > 0) {
 			throw new UnsupportedOperationException("to attribute already exists");
 		}
@@ -102,7 +103,7 @@ public class PaginationBuilder implements Pagination {
 	 * @return this
 	 * @throws UnsupportedOperationException if end parameter are specified
 	 */
-	public PaginationBuilder page(int page) {
+	public PaginationBuilder page(final int page) {
 		if (to > 0) {
 			throw new UnsupportedOperationException("to attribute already exists");
 		}
@@ -116,7 +117,7 @@ public class PaginationBuilder implements Pagination {
 	 * @param property sort property
 	 * @return this
 	 */
-	public PaginationBuilder sort(String property) {
+	public PaginationBuilder sort(final String property) {
 		return sort(property, true);
 	}
 
@@ -127,7 +128,7 @@ public class PaginationBuilder implements Pagination {
 	 * @param ascending ascending sort order
 	 * @return this
 	 */
-	public PaginationBuilder sort(String property, boolean ascending) {
+	public PaginationBuilder sort(final String property, final boolean ascending) {
 		return sort(property, ascending, true);
 	}
 
@@ -139,7 +140,7 @@ public class PaginationBuilder implements Pagination {
 	 * @param ignoreCase ignore case
 	 * @return this
 	 */
-	public PaginationBuilder sort(String property, boolean ascending, boolean ignoreCase) {
+	public PaginationBuilder sort(final String property, final boolean ascending, final boolean ignoreCase) {
 		sortDefinitions.add(new SortConstraintImpl(property, ascending, ignoreCase));
 		return modify();
 	}
@@ -185,11 +186,10 @@ public class PaginationBuilder implements Pagination {
 
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder("Pagination(");
-		sb.append("start=").append(start);
-		sb.append(",count=").append(count);
-		sb.append(")");
-		return sb.toString();
+		final DescriptionBuilder builder = new DescriptionBuilder(Pagination.class);
+		builder.append("start", start);
+		builder.append("count", count);
+		return builder.toString();
 	}
 
 	/**
