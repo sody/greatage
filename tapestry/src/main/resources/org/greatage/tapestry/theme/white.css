@@ -1,0 +1,320 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+/* Default menu styles */
+ul.t-menu {
+	background: #FFFFFF;
+	border: 0;
+	margin: 0;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	list-style: none none inside;
+}
+
+ul.t-menu > li {
+	border: 1px solid #C0C0C0;
+	margin: 1px;
+	display: block;
+	position: relative;
+	cursor: pointer;
+	line-height: 150%;
+}
+
+ul.t-menu > li:hover {
+	background: #ECF4FE;
+}
+
+ul.t-menu > li > a,
+ul.t-menu > li > span {
+	padding: 3px 20px 3px 30px;
+	color: #000000;
+	display: block;
+	position: relative;
+	text-decoration: none;
+}
+
+ul.t-menu > li.collapsed > a,
+ul.t-menu > li.collapsed > span {
+	background: transparent url("white/collapsed.gif") no-repeat right center;
+}
+
+ul.t-menu > li.expanded > a,
+ul.t-menu > li.expanded > span {
+	background: transparent url("white/expanded.gif") no-repeat right center;
+}
+
+ul.t-menu > li.separator {
+	background: #E0E0E0;
+	border: 1px solid #C2CBD2;
+	border-bottom: 1px solid #FFFFFF;
+	padding: 0;
+	font-size: 1px;
+	line-height: 1px;
+	margin: 2px 3px;
+	overflow: hidden;
+}
+
+/* SideBar Menu styles */
+ul.t-menu.sidebar {
+	border: 1px solid #BED6F8;
+}
+
+ul.t-menu.sidebar > li {
+	background: #BED6F8 url(white/header.gif) repeat-x 0 -1px;
+}
+
+ul.t-menu.sidebar > li:hover {
+	background: #ECF4FE;
+}
+
+/* PopUp Menu styles */
+ul.t-menu.popup {
+	background: #FFFFFF url("white/menu.png") repeat-y scroll 0 0;
+	border: 1px solid #BED6F8;
+	padding: 2px;
+	z-index: 1000;
+	position: absolute;
+}
+
+ul.t-menu.popup > li {
+	background: transparent;
+	border: 0;
+	margin: 0;
+	padding: 1px;
+}
+
+ul.t-menu.popup > li:hover {
+	border: 1px solid #C2CBD2;
+	padding: 0;
+}
+
+ul.t-menu.popup > li.separator {
+	border: 1px solid #C2CBD2;
+	border-bottom: 1px solid #FFFFFF;
+	padding: 0;
+}
+
+/* Locale Menu styles */
+ul.t-menu.locale,
+ul.t-menu.locale > li {
+	border: 0;
+	float: left;
+}
+
+ul.t-menu.locale > li {
+	margin: 1px;
+	opacity: 0.5;
+}
+
+ul.t-menu.locale > li.selected {
+	opacity: 1;
+}
+
+ul.t-menu.locale > li > a,
+ul.t-menu.locale > li > span {
+	padding: 0;
+}
+
+/* Toolbar Menu styles */
+ul.t-menu.toolbar,
+ul.t-menu.toolbar > li {
+	float: left;
+}
+
+ul.t-menu.toolbar {
+	margin: 3px;
+	padding: 1px;
+}
+
+ul.t-menu.toolbar > li {
+	border: 1px solid #BED6F8;
+	margin-right: 1px;
+	width: 25px;
+}
+
+ul.t-menu.toolbar > li > a,
+ul.t-menu.toolbar > li > span {
+	color: #1975D7;
+	padding: 2px;
+	text-align: center;
+}
+
+ul.t-menu.toolbar > li > span {
+	background-color: #ECF4FE;
+}
+
+ul.t-menu.toolbar > li.selected {
+	border-top-color: #000000;
+}
+
+ul.t-menu.toolbar > li.selected > a,
+ul.t-menu.toolbar > li.selected > span {
+	color: #000000;
+}
+
+/* Menu button styles */
+div.t-menu-button {
+	border: 1px solid #C0C0C0;
+	background: #BED6F8 url(white/header.gif) repeat-x 0 -1px;
+	margin: 1px;
+	padding: 3px 20px 3px 30px;
+	display: block;
+	position: relative;
+	cursor: pointer;
+	line-height: 150%;
+	color: #000000;
+	text-decoration: none;
+}
+
+/* Panel styles */
+div.t-panel {
+	background-color: #FFFFFF;
+	color: #000000;
+	border: 1px solid #BED6F8;
+	margin: 10px;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+}
+
+div.t-panel-body {
+	padding: 10px;
+}
+
+div.t-panel-header {
+	background: #BED6F8 url(white/header.gif) repeat-x 0 -1px;
+	border: 1px solid #C0C0C0;
+	margin: 1px;
+	font-weight: bold;
+	line-height: 150%;
+}
+
+div.t-panel-title {
+	float: left;
+}
+
+/* Panel Menu styles */
+ul.t-menu.panel,
+ul.t-menu.panel > li {
+	background-color: transparent;
+	border: 0;
+	float: right;
+}
+
+ul.t-menu.panel > li {
+	border-left: 1px solid #C0C0C0;
+	margin: 0;
+}
+
+ul.t-menu.panel > li:hover {
+	background-color: #ECF4FE;
+}
+
+ul.t-menu.panel > li > a,
+ul.t-menu.panel > li > span,
+div.t-panel-title {
+	padding: 5px 10px;
+}
+
+/* Box styles */
+fieldset.t-box {
+	background-color: #FFFFFF;
+	color: #000000;
+	border: 1px solid #BED6F8;
+	margin: 10px;
+	padding: 10px;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+}
+
+fieldset.t-box > legend {
+	font-weight: bold;
+	color: #15428B;
+	padding: 0 3px;
+}
+
+/* Details styles */
+div.t-beaneditor {
+	background: inherit;
+	border: 0;
+	margin: 5px;
+}
+
+div.t-beaneditor-row > label,
+div.t-beaneditor-row > .label {
+	width: 120px;
+	display: block;
+	float: left;
+	text-align: right;
+	clear: left;
+	padding-right: 10px;
+	vertical-align: middle;
+}
+
+div.t-beaneditor-row > label:after,
+div.t-beaneditor-row > .label:after {
+	content: ":";
+}
+
+/* Grid styles */
+table.t-data-grid {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 0;
+}
+
+table.t-data-grid > thead > tr {
+	background: #BED6F8 repeat-x left top url("white/grid_header.gif");
+}
+
+table.t-data-grid > thead > tr > th {
+	border: 1px solid #C0C0C0;
+	color: #000000;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	padding: 4px;
+	text-align: center;
+	white-space: nowrap;
+}
+
+table.t-data-grid > thead > tr > th > a {
+	text-decoration: none;
+	color: #000000;
+}
+
+th.t-sort-column-unsorted > a {
+	background: transparent url("white/unsorted.gif") no-repeat right top;
+	padding-right: 15px;
+}
+
+th.t-sort-column-ascending > a {
+	background: transparent url("white/ascending.gif") no-repeat right top;
+	padding-right: 15px;
+}
+
+th.t-sort-column-descending > a {
+	background: transparent url("white/descending.gif") no-repeat right top;
+	padding-right: 15px;
+}
+
+table.t-data-grid > tbody > tr {
+	background-color: #FFFFFF;
+}
+
+table.t-data-grid > tbody > tr:hover {
+	background-color: #F1F1F1;
+}
+
+table.t-data-grid > tbody > tr > td {
+	border: 1px solid #C0C0C0;
+	color: #000000;
+	font-family: Arial, Verdana, sans-serif;
+	font-size: 11px;
+	padding: 4px;
+}
+
+img.t-sort-icon {
+	width: 0;
+	height: 0;
+	display: none;
+}

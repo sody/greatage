@@ -1,0 +1,31 @@
+<div xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+	<t:block id="text">
+		<input t:id="textField"/>
+	</t:block>
+
+	<t:block id="number">
+		<input t:id="numberField" class="t-number"/>
+	</t:block>
+
+	<t:block id="enum">
+		<input t:id="enumSelect"/>
+	</t:block>
+
+	<t:block id="boolean">
+		<input t:id="checkboxField"/>
+	</t:block>
+
+	<t:block id="date">
+		<input t:id="dateField"/>
+	</t:block>
+
+	<t:block id="password">
+		<input t:id="passwordField"/>
+	</t:block>
+
+	<t:block id="longtext">
+		<textarea t:id="textarea"/>
+	</t:block>
+
+</div>

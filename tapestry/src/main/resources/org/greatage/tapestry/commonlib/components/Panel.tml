@@ -1,0 +1,12 @@
+<div t:id="border"
+	 xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
+
+	<div class="${panelHeaderClass}">
+		<div class="${panelTitleClass}">${title}</div>
+		<ul t:id="panelMenu"/>
+	</div>
+	<div class="${panelBodyClass}">
+		<t:body/>
+	</div>
+
+</div>

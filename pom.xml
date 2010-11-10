@@ -1,7 +1,3 @@
-<!--
-  ~ Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
-  -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
@@ -33,6 +29,7 @@
 		<module>ioc</module>
 		<module>security</module>
 		<module>domain</module>
+		<module>tapestry</module>
 	</modules>
 
 	<repositories>
@@ -170,84 +167,6 @@
 			</dependency>
 
 			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-entitymanager</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-annotations</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.lucene</groupId>
-				<artifactId>lucene-core</artifactId>
-				<version>${lucene.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-envers</artifactId>
-				<version>${hibernate.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.hibernate</groupId>
-				<artifactId>hibernate-search</artifactId>
-				<version>${hibernate.search.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-core</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-beans</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-context-support</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-orm</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-tx</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.springframework</groupId>
-				<artifactId>spring-test</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-
-			<dependency>
 				<groupId>org.drools</groupId>
 				<artifactId>drools-api</artifactId>
 				<version>${drools.version}</version>
@@ -268,12 +187,6 @@
 			<dependency>
 				<groupId>org.apache.tapestry</groupId>
 				<artifactId>tapestry-ioc</artifactId>
-				<version>${tapestry.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.apache.tapestry</groupId>
-				<artifactId>tapestry-spring</artifactId>
 				<version>${tapestry.version}</version>
 			</dependency>
 
@@ -305,13 +218,10 @@
 
 	<properties>
 		<hibernate.version>3.6.0.Final</hibernate.version>
-		<hibernate.search.version>3.1.1.GA</hibernate.search.version>
-		<spring.version>3.0.2.RELEASE</spring.version>
 		<tapestry.version>5.2.2</tapestry.version>
 		<drools.version>5.0.1</drools.version>
 		<javassist.version>3.11.0.GA</javassist.version>
 		<cglib.version>2.2</cglib.version>
-		<lucene.version>3.0.1</lucene.version>
 
 		<log4j.version>1.2.16</log4j.version>
 		<slf4j.version>1.6.1</slf4j.version>

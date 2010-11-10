@@ -13,13 +13,14 @@ import org.greatage.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
 public class ServiceLocatorImpl implements ServiceLocator {
-	private final Map<String, ServiceHolder<?>> servicesById = CollectionUtils.newMap();
+	private final Map<String, ServiceHolder<?>> servicesById = CollectionUtils.newConcurrentMap();
 	private final Logger logger;
 
 	ServiceLocatorImpl(final List<Module> modules) {
@@ -59,7 +60,19 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		logger.info(statisticsBuilder.toString());
 	}
 
-	public <T> T getService(String id, Class<T> serviceClass) {
+	public Set<String> getServiceIds() {
+		return CollectionUtils.newSet(servicesById.keySet());
+	}
+
+	public Class<?> getServiceClass(final String id) {
+		if (servicesById.containsKey(id)) {
+			final ServiceHolder holder = servicesById.get(id);
+			return holder.getServiceClass();
+		}
+		throw new IllegalStateException(String.format("Can't find service with id %s", id));
+	}
+
+	public <T> T getService(final String id, final Class<T> serviceClass) {
 		if (servicesById.containsKey(id)) {
 			final ServiceHolder holder = servicesById.get(id);
 			final Object service = holder.getService();
@@ -68,16 +81,16 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		throw new IllegalStateException(String.format("Can't find service with id %s", id));
 	}
 
-	public <T> T getService(Class<T> serviceClass) {
-		final List<T> services = findServices(serviceClass);
+	public <T> T getService(final Class<T> serviceClass) {
+		final Set<T> services = findServices(serviceClass);
 		if (services.size() == 1) {
-			return services.get(0);
+			return services.iterator().next();
 		}
 		throw new IllegalStateException(String.format("Can't find service of class %s", serviceClass));
 	}
 
-	public <T> List<T> findServices(Class<T> serviceClass) {
-		final List<T> result = CollectionUtils.newList();
+	public <T> Set<T> findServices(final Class<T> serviceClass) {
+		final Set<T> result = CollectionUtils.newSet();
 		for (ServiceHolder serviceHolder : servicesById.values()) {
 			if (serviceClass.isAssignableFrom(serviceHolder.getServiceClass())) {
 				final Object service = serviceHolder.getService();

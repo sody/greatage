@@ -1,0 +1,16 @@
+<html
+		xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+		xmlns:c="tapestry-library:common"
+		xmlns:p="tapestry:parameter">
+
+<p>
+	<span id="test1"><c:box/></span>
+	<span id="test3"><c:box class="foo"/></span>
+	<span id="test4"><c:box class="foo bar"/></span>
+	<span id="test5"><c:box style="width: 10px;"/></span>
+	<span id="test6"><c:box></c:box></span>
+	<span id="test7"><c:box>text</c:box></span>
+	<span id="test8"><c:box title="test"/></span>
+	<span id="test9"><c:box title="test" class="foo bar" att1="1" att2="2">text</c:box></span>
+</p>
+</html>

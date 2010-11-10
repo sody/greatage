@@ -1,0 +1,19 @@
+<div class="t-beaneditor-row"
+	 xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
+	 xmlns:p="tapestry:parameter">
+	<t:delegate to="header"/>
+	<t:delegate to="body"/>
+
+	<t:block id="defaultBody">
+		<span t:id="beanProperty"/>
+	</t:block>
+
+	<t:block id="defaultHeader">
+		<t:if test="editable">
+			<t:label for="beanProperty"/>
+			<p:else>
+				<div class="label">${model.label}</div>
+			</p:else>
+		</t:if>
+	</t:block>
+</div>

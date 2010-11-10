@@ -1,0 +1,137 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+/*
+	todo: build all images with one file.
+	todo: change classes to country codes.
+*/
+
+.flag {
+	width: 32px;
+	height: 32px;
+	background: transparent no-repeat top left;
+
+}
+
+.flag.en {
+	background-image: url("flags/en.png");
+}
+
+.flag.en_GB {
+	background-image: url("flags/en_GB.png");
+}
+
+.flag.en_US {
+	background-image: url("flags/en_US.png");
+}
+
+.flag.ru {
+	background-image: url("flags/ru.png");
+}
+
+.flag.az {
+	background-image: url("flags/az.png");
+}
+
+.flag.be {
+	background-image: url("flags/be.png");
+}
+
+.flag.bg {
+	background-image: url("flags/bg.png");
+}
+
+.flag.bs {
+	background-image: url("flags/bs.png");
+}
+
+.flag.cs {
+	background-image: url("flags/cs.png");
+}
+
+.flag.da {
+	background-image: url("flags/da.png");
+}
+
+.flag.de {
+	background-image: url("flags/de.png");
+}
+
+.flag.el {
+	background-image: url("flags/el.png");
+}
+
+.flag.es {
+	background-image: url("flags/es.png");
+}
+
+.flag.fi {
+	background-image: url("flags/fi.png");
+}
+
+.flag.fi_FI {
+	background-image: url("flags/fi_FI.png");
+}
+
+.flag.fr {
+	background-image: url("flags/fr.png");
+}
+
+.flag.fr_FR {
+	background-image: url("flags/fr_FR.png");
+}
+
+.flag.hr {
+	background-image: url("flags/hr.png");
+}
+
+.flag.hy {
+	background-image: url("flags/hy.png");
+}
+
+.flag.it {
+	background-image: url("flags/it.png");
+}
+
+.flag.ja {
+	background-image: url("flags/ja.png");
+}
+
+.flag.nl {
+	background-image: url("flags/nl.png");
+}
+
+.flag.pt {
+	background-image: url("flags/pt.png");
+}
+
+.flag.pt_PT {
+	background-image: url("flags/pt_PT.png");
+}
+
+.flag.pt_BR {
+	background-image: url("flags/pt_BR.png");
+}
+
+.flag.sq {
+	background-image: url("flags/sq.png");
+}
+
+.flag.sv {
+	background-image: url("flags/sv.png");
+}
+
+.flag.sv_SE {
+	background-image: url("flags/sv_SE.png");
+}
+
+.flag.zh {
+	background-image: url("flags/zh.png");
+}
+
+.flag.zh_CN {
+	background-image: url("flags/zh_CN.png");
+}
+
+

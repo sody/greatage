@@ -30,7 +30,7 @@ public class IOCModule {
 		binder.bind(ProxyFactory.class, JavaAssistProxyFactory.class).withScope(ScopeConstants.INTERNAL).lazy(false);
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withScope(ScopeConstants.INTERNAL);
+		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withScope(ScopeConstants.INTERNAL).withId("GASymbolSource");
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class).withScope(ScopeConstants.GLOBAL);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class).withScope(ScopeConstants.GLOBAL);
