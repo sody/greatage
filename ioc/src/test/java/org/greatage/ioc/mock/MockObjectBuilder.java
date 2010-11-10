@@ -4,7 +4,7 @@
 
 package org.greatage.ioc.mock;
 
-import org.greatage.ioc.services.ObjectBuilder;
+import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 

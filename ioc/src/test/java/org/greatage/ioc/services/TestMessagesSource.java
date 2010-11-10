@@ -4,8 +4,10 @@
 
 package org.greatage.ioc.services;
 
-import org.greatage.ioc.internal.resource.ClasspathResourceLocator;
-import org.greatage.ioc.internal.resource.MessagesSourceImpl;
+import org.greatage.ioc.resource.ClasspathResourceLocator;
+import org.greatage.ioc.resource.Messages;
+import org.greatage.ioc.resource.MessagesSource;
+import org.greatage.ioc.resource.MessagesSourceImpl;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.I18nUtils;
 import org.testng.Assert;

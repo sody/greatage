@@ -4,7 +4,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.internal.ServiceLocatorBuilder;
 import org.greatage.ioc.mock.MockTalkService;
 import org.greatage.ioc.mock.modules.MockBindModule;
 import org.greatage.ioc.mock.modules.MockConfigureModule;

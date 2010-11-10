@@ -4,8 +4,10 @@
 
 package org.greatage.ioc.services;
 
-import org.greatage.ioc.internal.symbol.DefaultSymbolProvider;
-import org.greatage.ioc.internal.symbol.SymbolSourceImpl;
+import org.greatage.ioc.symbol.DefaultSymbolProvider;
+import org.greatage.ioc.symbol.SymbolProvider;
+import org.greatage.ioc.symbol.SymbolSource;
+import org.greatage.ioc.symbol.SymbolSourceImpl;
 import org.greatage.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;

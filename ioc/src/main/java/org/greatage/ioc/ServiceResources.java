@@ -4,7 +4,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.services.Logger;
+import org.greatage.ioc.logging.Logger;
 
 import java.lang.annotation.Annotation;
 

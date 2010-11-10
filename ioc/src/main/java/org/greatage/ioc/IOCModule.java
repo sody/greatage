@@ -7,18 +7,16 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Configure;
-import org.greatage.ioc.internal.logging.Log4jLoggerSource;
-import org.greatage.ioc.internal.proxy.JavaAssistProxyFactory;
-import org.greatage.ioc.internal.resource.ClasspathResourceLocator;
-import org.greatage.ioc.internal.resource.MessagesSourceImpl;
-import org.greatage.ioc.internal.scope.GlobalScope;
-import org.greatage.ioc.internal.scope.PrototypeScope;
-import org.greatage.ioc.internal.scope.ScopeManagerImpl;
-import org.greatage.ioc.internal.scope.ThreadScope;
-import org.greatage.ioc.internal.symbol.DefaultSymbolProvider;
-import org.greatage.ioc.internal.symbol.SymbolSourceImpl;
-import org.greatage.ioc.internal.symbol.SystemSymbolProvider;
-import org.greatage.ioc.services.*;
+import org.greatage.ioc.logging.Log4jLoggerSource;
+import org.greatage.ioc.logging.LoggerSource;
+import org.greatage.ioc.proxy.JavaAssistProxyFactory;
+import org.greatage.ioc.proxy.ProxyFactory;
+import org.greatage.ioc.resource.ClasspathResourceLocator;
+import org.greatage.ioc.resource.MessagesSource;
+import org.greatage.ioc.resource.MessagesSourceImpl;
+import org.greatage.ioc.resource.ResourceLocator;
+import org.greatage.ioc.scope.*;
+import org.greatage.ioc.symbol.*;
 import org.greatage.util.Ordered;
 
 /**

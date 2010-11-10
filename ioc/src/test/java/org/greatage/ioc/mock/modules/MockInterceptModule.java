@@ -8,8 +8,8 @@ import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.mock.*;
-import org.greatage.ioc.services.Invocation;
-import org.greatage.ioc.services.MethodAdvice;
+import org.greatage.ioc.proxy.Invocation;
+import org.greatage.ioc.proxy.MethodAdvice;
 
 /**
  * @author Ivan Khalopik

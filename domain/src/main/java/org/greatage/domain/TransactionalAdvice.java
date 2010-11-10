@@ -5,8 +5,8 @@
 package org.greatage.domain;
 
 import org.greatage.domain.annotations.Transactional;
-import org.greatage.ioc.services.Invocation;
-import org.greatage.ioc.services.MethodAdvice;
+import org.greatage.ioc.proxy.Invocation;
+import org.greatage.ioc.proxy.MethodAdvice;
 
 /**
  * @author Ivan Khalopik

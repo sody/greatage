@@ -4,7 +4,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.services.MethodAdvice;
+import org.greatage.ioc.proxy.MethodAdvice;
 import org.greatage.util.Ordered;
 
 /**
