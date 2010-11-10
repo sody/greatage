@@ -60,11 +60,11 @@ public class PaginationBuilder implements Pagination {
 	 *
 	 * @param end end pagination position
 	 * @return this
-	 * @throws UnsupportedOperationException if page or size parameter are specified
+	 * @throws IllegalStateException if page or size parameter are specified
 	 */
 	public PaginationBuilder end(final int end) {
 		if (page > 0 || size > 0) {
-			throw new UnsupportedOperationException("page or size attributes already exists");
+			throw new IllegalStateException("page or size attributes already exists");
 		}
 		this.to = end;
 		return modify();
@@ -86,11 +86,11 @@ public class PaginationBuilder implements Pagination {
 	 *
 	 * @param size pagination size of selection
 	 * @return this
-	 * @throws UnsupportedOperationException if end parameter are specified
+	 * @throws IllegalStateException if end parameter are specified
 	 */
 	public PaginationBuilder size(final int size) {
 		if (to > 0) {
-			throw new UnsupportedOperationException("to attribute already exists");
+			throw new IllegalStateException("to attribute already exists");
 		}
 		this.size = size;
 		return modify();
@@ -101,11 +101,11 @@ public class PaginationBuilder implements Pagination {
 	 *
 	 * @param page selection page
 	 * @return this
-	 * @throws UnsupportedOperationException if end parameter are specified
+	 * @throws IllegalStateException if end parameter are specified
 	 */
 	public PaginationBuilder page(final int page) {
 		if (to > 0) {
-			throw new UnsupportedOperationException("to attribute already exists");
+			throw new IllegalStateException("to attribute already exists");
 		}
 		this.page = page;
 		return modify();
