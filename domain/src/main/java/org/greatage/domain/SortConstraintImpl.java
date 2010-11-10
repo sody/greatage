@@ -6,7 +6,7 @@ package org.greatage.domain;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class SortConstraintImpl implements SortConstraint {
 	private String property;

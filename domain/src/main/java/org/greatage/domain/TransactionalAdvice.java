@@ -5,7 +5,6 @@
 package org.greatage.domain;
 
 import org.greatage.domain.annotations.Transactional;
-import org.greatage.domain.repository.EntityTransactionManager;
 import org.greatage.ioc.services.Invocation;
 import org.greatage.ioc.services.MethodAdvice;
 

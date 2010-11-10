@@ -8,12 +8,12 @@ package org.greatage.domain;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface SortConstraint {
+public interface EntityTransactionManager {
 
-	String getProperty();
+	void begin();
 
-	boolean isIgnoreCase();
+	void commit();
 
-	boolean isAscending();
+	void rollback();
 
 }

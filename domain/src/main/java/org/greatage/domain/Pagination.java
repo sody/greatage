@@ -13,8 +13,8 @@ import java.util.Collections;
  *
  * @author Ivan Khalopik
  * @see org.greatage.domain.PaginationBuilder
- * @see org.greatage.domain.services.EntityService
- * @see org.greatage.domain.repository.EntityRepository
+ * @see EntityService
+ * @see EntityRepository
  */
 public interface Pagination extends Serializable {
 
