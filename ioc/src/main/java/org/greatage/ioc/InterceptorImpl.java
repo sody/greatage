@@ -52,7 +52,7 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 	public boolean supports(final Service service) {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
-				service.getServiceClass().isAssignableFrom(serviceClass);
+				serviceClass.isAssignableFrom(service.getServiceClass());
 	}
 
 	public String getOrderId() {

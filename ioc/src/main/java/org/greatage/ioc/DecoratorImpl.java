@@ -55,7 +55,7 @@ public class DecoratorImpl<T> implements Decorator<T> {
 	public boolean supports(final Service service) {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
-				service.getServiceClass().isAssignableFrom(serviceClass);
+				serviceClass.isAssignableFrom(service.getServiceClass());
 	}
 
 	public String getOrderId() {

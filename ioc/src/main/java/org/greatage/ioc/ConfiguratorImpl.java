@@ -39,7 +39,7 @@ public class ConfiguratorImpl<T> implements Configurator<T> {
 	public boolean supports(final Service service) {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
-				service.getServiceClass().isAssignableFrom(serviceClass);
+				serviceClass.isAssignableFrom(service.getServiceClass());
 	}
 
 	public void configure(final ServiceResources<T> resources) {
