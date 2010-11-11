@@ -10,8 +10,8 @@ package org.greatage.ioc.resource;
  */
 public class ClasspathResourceLocator extends AbstractResourceLocator {
 
-	public ClasspathResourceLocator(final ClassLoader classLoader) {
-		super(new ClasspathResource(classLoader, null, "", null));
+	public ClasspathResourceLocator() {
+		super(new ClasspathResource(Thread.currentThread().getContextClassLoader(), null, "", null));
 	}
 
 }

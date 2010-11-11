@@ -27,7 +27,7 @@ public class TestMessagesSource extends Assert {
 
 	@BeforeClass
 	public void setupMessagesSource() {
-		final ClasspathResourceLocator resourceLocator = new ClasspathResourceLocator(ClassLoader.getSystemClassLoader());
+		final ClasspathResourceLocator resourceLocator = new ClasspathResourceLocator();
 		messagesSource = new MessagesSourceImpl(resourceLocator);
 	}
 
