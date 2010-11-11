@@ -5,7 +5,6 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Bind;
-import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Configure;
 import org.greatage.ioc.logging.Log4jLoggerSource;
 import org.greatage.ioc.logging.LoggerSource;
@@ -26,7 +25,7 @@ import org.greatage.util.Ordered;
 public class IOCModule {
 
 	@Bind
-	public static void bind(ServiceBinder binder) {
+	public static void bind(final ServiceBinder binder) {
 		binder.bind(ProxyFactory.class, JavaAssistProxyFactory.class).withScope(ScopeConstants.INTERNAL).lazy(false);
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class).withScope(ScopeConstants.INTERNAL);
@@ -34,11 +33,6 @@ public class IOCModule {
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withScope(ScopeConstants.INTERNAL);
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class).withScope(ScopeConstants.GLOBAL);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class).withScope(ScopeConstants.GLOBAL);
-	}
-
-	@Build(scope = ScopeConstants.GLOBAL)
-	public static ClassLoader buildClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
 	}
 
 	@Configure(ScopeManager.class)

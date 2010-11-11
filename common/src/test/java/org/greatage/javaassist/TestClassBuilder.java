@@ -1,8 +1,11 @@
-package org.greatage.util;
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
+package org.greatage.javaassist;
 
 import org.greatage.mock.MockInterface;
 import org.greatage.mock.MockInterfaceImpl2;
-import javassist.ClassPool;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -13,11 +16,11 @@ import org.testng.annotations.Test;
  * @since 1.0
  */
 public class TestClassBuilder extends Assert {
-	private ClassPool pool;
+	private ClassPoolEx pool;
 
 	@BeforeClass
 	public void setupClassPool() {
-		pool = ClassPool.getDefault();
+		pool = new ClassPoolEx();
 	}
 
 	@DataProvider

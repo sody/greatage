@@ -2,9 +2,10 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.util;
+package org.greatage.javaassist;
 
 import javassist.*;
+import org.greatage.util.DescriptionBuilder;
 
 /**
  * This class represents utility that helps to create classes in runtime uses javaassist.
@@ -14,17 +15,17 @@ import javassist.*;
  * @since 1.0
  */
 public class ClassBuilder<T> {
-	private final ClassPool pool;
+	private final ClassPoolEx pool;
 	private final CtClass ctClass;
 
 	/**
 	 * Constructor that creates class builder and initializes it with specified class name. Class instance will be always
 	 * created by {@link #build()} method. {@link Object} will be a superclass of created class.
 	 *
-	 * @param pool ClassPool instance
+	 * @param pool ClassPoolEx instance
 	 * @param name class name
 	 */
-	public ClassBuilder(final ClassPool pool, final String name) {
+	public ClassBuilder(final ClassPoolEx pool, final String name) {
 		this(pool, name, false);
 	}
 
@@ -33,11 +34,11 @@ public class ClassBuilder<T> {
 	 * isInterface parameter is true interface instance will be created by {@link #build()} method. For class creation
 	 * {@link Object} will be a superclass of created class.
 	 *
-	 * @param pool		ClassPool instance
+	 * @param pool		ClassPoolEx instance
 	 * @param name		class name
 	 * @param isInterface isInterface parameter
 	 */
-	public ClassBuilder(final ClassPool pool, final String name, final boolean isInterface) {
+	public ClassBuilder(final ClassPoolEx pool, final String name, final boolean isInterface) {
 		this(pool, name, isInterface, null);
 	}
 
@@ -48,12 +49,12 @@ public class ClassBuilder<T> {
 	 * is interface {@link Object} will be a superclass of created class and specified superClass parameter will be added
 	 * to this class like a implemented interface.
 	 *
-	 * @param pool		ClassPool instance
+	 * @param pool		ClassPoolEx instance
 	 * @param name		class name
 	 * @param isInterface isInterface parameter
 	 * @param superClass  superClass parameter, may be null
 	 */
-	public ClassBuilder(final ClassPool pool, final String name, final boolean isInterface, final Class<T> superClass) {
+	public ClassBuilder(final ClassPoolEx pool, final String name, final boolean isInterface, final Class<T> superClass) {
 		this.pool = pool;
 
 		if (isInterface) {
@@ -188,6 +189,7 @@ public class ClassBuilder<T> {
 	 */
 	private CtClass toCtClass(final Class inputClass) {
 		try {
+			pool.importClass(inputClass);
 			return pool.getCtClass(toClassName(inputClass));
 		} catch (NotFoundException ex) {
 			throw new RuntimeException(String.format("Can't convert class '%s'", inputClass), ex);

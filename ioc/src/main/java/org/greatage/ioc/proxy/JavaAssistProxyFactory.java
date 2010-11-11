@@ -4,8 +4,8 @@
 
 package org.greatage.ioc.proxy;
 
-import javassist.ClassPool;
-import org.greatage.util.ClassBuilder;
+import org.greatage.javaassist.ClassBuilder;
+import org.greatage.javaassist.ClassPoolEx;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
@@ -26,13 +26,13 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 
 	private static final String HANDLER_FIELD = "_handler";
 
-	private final ClassPool pool;
+	private final ClassPoolEx pool;
 
 	/**
 	 * Creates new instance of java assist proxy factory with default class pool.
 	 */
 	public JavaAssistProxyFactory() {
-		this(ClassPool.getDefault());
+		this(new ClassPoolEx());
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 	 *
 	 * @param pool class pool
 	 */
-	public JavaAssistProxyFactory(final ClassPool pool) {
+	public JavaAssistProxyFactory(final ClassPoolEx pool) {
 		this.pool = pool;
 	}
 
@@ -70,20 +70,6 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 			final int modifiers = method.getModifiers();
 			if (Modifier.isPublic(modifiers) && !Modifier.isFinal(modifiers)) {
 				final String methodName = method.getName();
-				final StringBuilder parameterTypeNames = new StringBuilder();
-				for (Class<?> parameterType : method.getParameterTypes()) {
-					if (parameterTypeNames.length() > 0) {
-						parameterTypeNames.append(",");
-					}
-					parameterTypeNames.append(parameterType.getName()).append(".class");
-				}
-				final String parameterTypes = parameterTypeNames.length() > 0 ?
-						"new Class[]{" + parameterTypeNames.toString() + "}" :
-						"null";
-				final String parameters = parameterTypeNames.length() > 0 ?
-						"new Object[]{ $$ }" :
-						"null";
-
 				final String methodBody = String.format("{ %s realMethod = %s.getDelegate().getClass().getMethod(\"%s\", $sig); return ($r) %s.invoke(realMethod, $args); }",
 						Method.class.getName(), HANDLER_FIELD, methodName, HANDLER_FIELD);
 				classBuilder.addMethod(methodName, Modifier.PUBLIC, method.getReturnType(),

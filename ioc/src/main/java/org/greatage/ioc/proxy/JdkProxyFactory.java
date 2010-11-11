@@ -16,26 +16,11 @@ import java.util.List;
  * @since 1.0
  */
 public class JdkProxyFactory extends AbstractProxyFactory {
-	private final ClassLoader classLoader;
-
-	/**
-	 * Creates new instance of JDK proxy factory with system class loader.
-	 */
-	public JdkProxyFactory() {
-		this(ClassLoader.getSystemClassLoader());
-	}
-
-	/**
-	 * Creates new instance of JDK proxy factory with specified class loader.
-	 *
-	 * @param classLoader class loader
-	 */
-	public JdkProxyFactory(final ClassLoader classLoader) {
-		this.classLoader = classLoader;
-	}
 
 	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		validate(builder);
+
+		final ClassLoader classLoader = builder.getObjectClass().getClassLoader();
 
 		final Object proxyInstance = Proxy.newProxyInstance(classLoader,
 				new Class<?>[]{builder.getObjectClass()},
@@ -60,8 +45,6 @@ public class JdkProxyFactory extends AbstractProxyFactory {
 
 	@Override
 	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("classLoader", classLoader);
-		return builder.toString();
+		return new DescriptionBuilder(getClass()).toString();
 	}
 }
