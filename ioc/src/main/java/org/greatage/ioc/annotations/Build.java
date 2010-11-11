@@ -4,6 +4,8 @@
 
 package org.greatage.ioc.annotations;
 
+import org.greatage.ioc.ScopeConstants;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -24,8 +26,6 @@ public @interface Build {
 
 	boolean override() default false;
 
-	boolean lazy() default true;
-
-	String scope() default "";
+	String scope() default ScopeConstants.GLOBAL;
 
 }

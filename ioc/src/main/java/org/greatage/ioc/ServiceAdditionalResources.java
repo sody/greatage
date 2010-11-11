@@ -4,8 +4,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.logging.Logger;
-
 import java.lang.annotation.Annotation;
 
 /**
@@ -33,10 +31,6 @@ public abstract class ServiceAdditionalResources<T> implements ServiceResources<
 
 	public String getServiceScope() {
 		return delegate.getServiceScope();
-	}
-
-	public Logger getLogger() {
-		return delegate.getLogger();
 	}
 
 	public <E> E getResource(final Class<E> resourceClass, final Annotation... annotations) {

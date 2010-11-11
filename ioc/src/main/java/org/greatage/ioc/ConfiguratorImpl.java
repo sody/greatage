@@ -43,10 +43,8 @@ public class ConfiguratorImpl<T> implements Configurator<T> {
 	}
 
 	public void configure(final ServiceResources<T> resources) {
-		final Logger logger = resources.getLogger();
-		if (logger != null) {
-			logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, configureMethod);
-		}
+		final Logger logger = resources.getResource(Logger.class);
+		logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, configureMethod);
 
 		try {
 			final Object moduleInstance = Modifier.isStatic(configureMethod.getModifiers()) ? null : resources.getResource(moduleClass);

@@ -4,8 +4,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.logging.Logger;
-
 import java.util.Set;
 
 /**
@@ -23,7 +21,5 @@ public interface ServiceLocator {
 	<T> T getService(Class<T> serviceClass);
 
 	<T> Set<T> findServices(Class<T> serviceClass);
-
-	Logger getLogger();
 
 }

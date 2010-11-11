@@ -21,7 +21,7 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Interceptor> interceptors = CollectionUtils.newList();
 
 	ModuleImpl(final Class<T> moduleClass) {
-		super(moduleClass.getSimpleName(), moduleClass, ScopeConstants.INTERNAL, false, true);
+		super(moduleClass.getSimpleName(), moduleClass, ScopeConstants.GLOBAL, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {

@@ -67,10 +67,8 @@ public class DecoratorImpl<T> implements Decorator<T> {
 	}
 
 	public T decorate(final ServiceResources<T> resources) {
-		final Logger logger = resources.getLogger();
-		if (logger != null) {
-			logger.info("Decorating service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, decorateMethod);
-		}
+		final Logger logger = resources.getResource(Logger.class);
+		logger.info("Decorating service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, decorateMethod);
 
 		final Class<T> serviceClass = resources.getServiceClass();
 		try {

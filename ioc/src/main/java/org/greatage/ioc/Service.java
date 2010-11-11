@@ -16,8 +16,6 @@ public interface Service<T> {
 
 	boolean isOverride();
 
-	boolean isLazy();
-
 	String getScope();
 
 	T build(ServiceResources<T> resources);

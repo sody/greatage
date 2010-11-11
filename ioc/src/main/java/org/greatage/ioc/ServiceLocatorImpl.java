@@ -6,9 +6,8 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.LoggerSource;
-import org.greatage.ioc.proxy.ObjectBuilder;
-import org.greatage.ioc.scope.GlobalScope;
-import org.greatage.ioc.scope.Scope;
+import org.greatage.ioc.proxy.ProxyFactory;
+import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.util.CollectionUtils;
 
 import java.util.List;
@@ -20,7 +19,9 @@ import java.util.Set;
  * @since 1.0
  */
 public class ServiceLocatorImpl implements ServiceLocator {
-	private final Map<String, ServiceHolder<?>> servicesById = CollectionUtils.newConcurrentMap();
+	private final Map<String, ServiceStatus<?>> servicesById = CollectionUtils.newConcurrentMap();
+	private final Set<Class<?>> internalServices = CollectionUtils.newSet();
+
 	private final Logger logger;
 
 	ServiceLocatorImpl(final List<Module> modules) {
@@ -35,7 +36,9 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			}
 		}
 
-		final Scope internalScope = new GlobalScope();
+		internalServices.add(LoggerSource.class);
+		internalServices.add(ProxyFactory.class);
+		internalServices.add(ScopeManager.class);
 
 		final StringBuilder statisticsBuilder = new StringBuilder("Services:\n");
 		for (Map.Entry<String, Service<?>> entry : services.entrySet()) {
@@ -49,8 +52,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 				decorators.addAll(module.getDecorators(service));
 				interceptors.addAll(module.getInterceptors(service));
 			}
-			final ServiceHolder<?> holder = createServiceHolder(service, configurators, decorators, interceptors, internalScope);
-			servicesById.put(serviceId, holder);
+			final ServiceStatus<?> status = createServiceHolder(service, configurators, decorators, interceptors);
+			servicesById.put(serviceId, status);
 
 			statisticsBuilder.append(String.format("\t%s[ %s ]( %s )\n", serviceId, service.getScope(), service.getServiceClass()));
 		}
@@ -66,16 +69,16 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 	public Class<?> getServiceClass(final String id) {
 		if (servicesById.containsKey(id)) {
-			final ServiceHolder holder = servicesById.get(id);
-			return holder.getServiceClass();
+			final ServiceStatus<?> status = servicesById.get(id);
+			return status.getServiceClass();
 		}
 		throw new IllegalStateException(String.format("Can't find service with id %s", id));
 	}
 
 	public <T> T getService(final String id, final Class<T> serviceClass) {
 		if (servicesById.containsKey(id)) {
-			final ServiceHolder holder = servicesById.get(id);
-			final Object service = holder.getService();
+			final ServiceStatus<?> status = servicesById.get(id);
+			final Object service = status.getService();
 			return serviceClass.cast(service);
 		}
 		throw new IllegalStateException(String.format("Can't find service with id %s", id));
@@ -91,30 +94,30 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 	public <T> Set<T> findServices(final Class<T> serviceClass) {
 		final Set<T> result = CollectionUtils.newSet();
-		for (ServiceHolder serviceHolder : servicesById.values()) {
-			if (serviceClass.isAssignableFrom(serviceHolder.getServiceClass())) {
-				final Object service = serviceHolder.getService();
+		for (ServiceStatus<?> serviceStatus : servicesById.values()) {
+			if (serviceClass.isAssignableFrom(serviceStatus.getServiceClass())) {
+				final Object service = serviceStatus.getService();
 				result.add(serviceClass.cast(service));
 			}
 		}
 		return result;
 	}
 
-	public Logger getLogger() {
-		return logger;
+	@SuppressWarnings({"unchecked"})
+	private ServiceStatus<?> createServiceHolder(final Service<?> service,
+												 final List<Configurator<?>> configurators,
+												 final List<Decorator<?>> decorators,
+												 final List<Interceptor<?>> interceptors) {
+		final ServiceResources resources = new ServiceInitialResources(this, service);
+		final ServiceBuilder builder = new ServiceBuilder(service, resources, configurators, decorators);
+
+
+		return isInternal(service) ?
+				new InternalHolder(resources, builder) :
+				new ServiceHolder(resources, builder, interceptors);
 	}
 
-	@SuppressWarnings({"unchecked"})
-	private ServiceHolder createServiceHolder(final Service<?> service,
-											  final List<Configurator<?>> configurators,
-											  final List<Decorator<?>> decorators,
-											  final List<Interceptor<?>> interceptors,
-											  final Scope internalScope) {
-		final ServiceResources resources = new ServiceInitialResources(this, service);
-		final ObjectBuilder builder = new ServiceBuilder(service, resources, configurators, decorators);
-
-		return new ServiceHolder(resources,
-				service.isLazy() ? new LazyBuilder(resources, builder, interceptors) : builder,
-				ScopeConstants.INTERNAL.equals(service.getScope()) ? internalScope : null);
+	private boolean isInternal(final Service<?> service) {
+		return internalServices.contains(service.getServiceClass());
 	}
 }

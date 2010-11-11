@@ -64,10 +64,8 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 	}
 
 	public MethodAdvice intercept(final ServiceResources<T> resources) {
-		final Logger logger = resources.getLogger();
-		if (logger != null) {
-			logger.info("Intercepting service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, interceptMethod);
-		}
+		final Logger logger = resources.getResource(Logger.class);
+		logger.info("Intercepting service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, interceptMethod);
 
 		try {
 			final Object moduleInstance = Modifier.isStatic(interceptMethod.getModifiers()) ? null : resources.getResource(moduleClass);

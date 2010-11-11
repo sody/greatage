@@ -23,7 +23,6 @@ public class ServiceFactory<T> implements Service<T> {
 	private final String serviceId;
 	private final String scope;
 	private final boolean override;
-	private final boolean proxy;
 
 	ServiceFactory(final Class<?> factoryClass, final Method factoryMethod) {
 		this.factoryClass = factoryClass;
@@ -36,7 +35,6 @@ public class ServiceFactory<T> implements Service<T> {
 		serviceId = !StringUtils.isEmpty(build.value()) ? build.value() : serviceClass.getSimpleName();
 		scope = build.scope();
 		override = build.override();
-		proxy = build.lazy();
 	}
 
 	public String getServiceId() {
@@ -51,19 +49,13 @@ public class ServiceFactory<T> implements Service<T> {
 		return override;
 	}
 
-	public boolean isLazy() {
-		return proxy;
-	}
-
 	public String getScope() {
 		return scope;
 	}
 
 	public T build(final ServiceResources<T> resources) {
-		final Logger logger = resources.getLogger();
-		if (logger != null) {
-			logger.info("Building service (%s, %s) from module (%s, %s)", serviceId, serviceClass, factoryClass, factoryMethod);
-		}
+		final Logger logger = resources.getResource(Logger.class);
+		logger.info("Building service (%s, %s) from module (%s, %s)", serviceId, serviceClass, factoryClass, factoryMethod);
 
 		try {
 			final Object moduleInstance = Modifier.isStatic(factoryMethod.getModifiers()) ? null : resources.getResource(factoryClass);

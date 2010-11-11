@@ -16,6 +16,4 @@ public interface ServiceBindingOptions {
 
 	ServiceBindingOptions override();
 
-	ServiceBindingOptions lazy(boolean lazy);
-
 }

@@ -26,13 +26,13 @@ public class IOCModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(ProxyFactory.class, JavaAssistProxyFactory.class).withScope(ScopeConstants.INTERNAL).lazy(false);
-		binder.bind(LoggerSource.class, Log4jLoggerSource.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(ScopeManager.class, ScopeManagerImpl.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withScope(ScopeConstants.INTERNAL).withId("GASymbolSource");
-		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class).withScope(ScopeConstants.GLOBAL);
-		binder.bind(MessagesSource.class, MessagesSourceImpl.class).withScope(ScopeConstants.GLOBAL);
+		binder.bind(ProxyFactory.class, JavaAssistProxyFactory.class);
+		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
+		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
+		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withId("GASymbolSource");
+		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class);
+		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
+		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
 	}
 
 	@Configure(ScopeManager.class)
@@ -40,11 +40,6 @@ public class IOCModule {
 		configuration.addInstance(ScopeConstants.GLOBAL, GlobalScope.class);
 		configuration.addInstance(ScopeConstants.PROTOTYPE, PrototypeScope.class);
 		configuration.addInstance(ScopeConstants.THREAD, ThreadScope.class);
-	}
-
-	@Configure(SymbolProvider.class)
-	public static void configureSymbolProvider(final MappedConfiguration<String, String> configuration) {
-		configuration.add(IOCSymbols.DEFAULT_SCOPE, ScopeConstants.GLOBAL);
 	}
 
 	@Configure(SymbolSource.class)

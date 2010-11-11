@@ -9,7 +9,6 @@ package org.greatage.ioc;
  * @since 1.0
  */
 public abstract class ScopeConstants {
-	public static final String INTERNAL = "internal";
 	public static final String GLOBAL = "global";
 	public static final String THREAD = "thread";
 	public static final String PROTOTYPE = "prototype";

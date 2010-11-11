@@ -15,15 +15,13 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private String serviceId;
 	private String serviceScope;
 	private boolean override;
-	private boolean lazy;
 
 	ServiceBindingOptionsImpl(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;
 		this.serviceId = serviceClass.getSimpleName();
-		this.serviceScope = "";
+		this.serviceScope = ScopeConstants.GLOBAL;
 		this.override = false;
-		this.lazy = true;
 	}
 
 	public ServiceBindingOptions withId(final String id) {
@@ -41,12 +39,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 		return this;
 	}
 
-	public ServiceBindingOptions lazy(final boolean lazy) {
-		this.lazy = lazy;
-		return this;
-	}
-
 	public Service<T> createService() {
-		return new ServiceImpl<T>(serviceId, serviceClass, implementationClass, serviceScope, override, lazy);
+		return new ServiceImpl<T>(serviceId, serviceClass, implementationClass, serviceScope, override);
 	}
 }

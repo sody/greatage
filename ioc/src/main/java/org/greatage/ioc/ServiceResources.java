@@ -4,8 +4,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.logging.Logger;
-
 import java.lang.annotation.Annotation;
 
 /**
@@ -19,8 +17,6 @@ public interface ServiceResources<T> {
 	Class<T> getServiceClass();
 
 	String getServiceScope();
-
-	Logger getLogger();
 
 	<E> E getResource(Class<E> resourceClass, Annotation... annotations);
 

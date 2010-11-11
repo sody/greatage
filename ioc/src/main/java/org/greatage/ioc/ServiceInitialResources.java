@@ -6,7 +6,9 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Inject;
 import org.greatage.ioc.annotations.Symbol;
+import org.greatage.ioc.logging.DummyLogger;
 import org.greatage.ioc.logging.Logger;
+import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.symbol.SymbolSource;
 import org.greatage.util.StringUtils;
 
@@ -45,11 +47,15 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 		return serviceScope;
 	}
 
-	public Logger getLogger() {
-		return locator.getLogger();
-	}
-
 	public <E> E getResource(final Class<E> resourceClass, final Annotation... annotations) {
+		if (Logger.class.equals(resourceClass)) {
+			if (LoggerSource.class.equals(serviceClass)) {
+				return resourceClass.cast(new DummyLogger(LoggerSource.class.getName()));
+			}
+			final LoggerSource loggerSource = locator.getService(LoggerSource.class);
+			return resourceClass.cast(loggerSource.getLogger(serviceClass));
+		}
+
 		final Symbol symbol = findAnnotation(annotations, Symbol.class);
 		if (symbol != null) {
 			if (!String.class.equals(resourceClass)) {

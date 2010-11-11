@@ -9,22 +9,24 @@ import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.util.DescriptionBuilder;
 
+import java.util.List;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceHolder<T> {
+public class ServiceHolder<T> implements ServiceStatus<T> {
 	private final ServiceResources<T> resources;
 	private final ObjectBuilder<T> builder;
 
 	private Scope scope;
 
 	ServiceHolder(final ServiceResources<T> resources,
-				  final ObjectBuilder<T> builder,
-				  final Scope scope) {
+				  final ServiceBuilder<T> builder,
+				  final List<Interceptor<T>> interceptors) {
+
 		this.resources = resources;
-		this.builder = builder;
-		this.scope = scope;
+		this.builder = new LazyBuilder<T>(resources, builder, interceptors);
 	}
 
 	public T getService() {

@@ -4,10 +4,6 @@
 
 package org.greatage.ioc.scope;
 
-import org.greatage.ioc.IOCSymbols;
-import org.greatage.ioc.annotations.Symbol;
-import org.greatage.util.StringUtils;
-
 import java.util.Map;
 
 /**
@@ -16,18 +12,14 @@ import java.util.Map;
  */
 public class ScopeManagerImpl implements ScopeManager {
 	private final Map<String, Scope> scopes;
-	private final String defaultScope;
 
-	public ScopeManagerImpl(final Map<String, Scope> scopes,
-							@Symbol(IOCSymbols.DEFAULT_SCOPE) final String defaultScope) {
+	public ScopeManagerImpl(final Map<String, Scope> scopes) {
 		assert scopes != null;
-		assert defaultScope != null;
 
 		this.scopes = scopes;
-		this.defaultScope = defaultScope;
 	}
 
 	public Scope getScope(final String scope) {
-		return scopes.get(StringUtils.isEmpty(scope) ? defaultScope : scope);
+		return scopes.get(scope);
 	}
 }
