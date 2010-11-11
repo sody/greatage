@@ -36,12 +36,12 @@ ul.t-menu > li > span {
 
 ul.t-menu > li.collapsed > a,
 ul.t-menu > li.collapsed > span {
-	background: transparent url("white/collapsed.gif") no-repeat right center;
+	background: transparent url("chrome/collapsed.gif") no-repeat right center;
 }
 
 ul.t-menu > li.expanded > a,
 ul.t-menu > li.expanded > span {
-	background: transparent url("white/expanded.gif") no-repeat right center;
+	background: transparent url("chrome/expanded.gif") no-repeat right center;
 }
 
 ul.t-menu > li.separator {
@@ -61,7 +61,7 @@ ul.t-menu.sidebar {
 }
 
 ul.t-menu.sidebar > li {
-	background: #BED6F8;
+	background: #BED6F8 url(chrome/header.gif) repeat-x 0 -1px;
 }
 
 ul.t-menu.sidebar > li:hover {
@@ -70,7 +70,7 @@ ul.t-menu.sidebar > li:hover {
 
 /* PopUp Menu styles */
 ul.t-menu.popup {
-	background: #FFFFFF;
+	background: #FFFFFF url("chrome/menu.png") repeat-y scroll 0 0;
 	border: 1px solid #BED6F8;
 	padding: 2px;
 	z-index: 1000;
@@ -156,7 +156,7 @@ ul.t-menu.toolbar > li.selected > span {
 /* Menu button styles */
 div.t-menu-button {
 	border: 1px solid #C0C0C0;
-	background: #BED6F8;
+	background: #BED6F8 url(chrome/header.gif) repeat-x 0 -1px;
 	margin: 1px;
 	padding: 3px 20px 3px 30px;
 	display: block;
@@ -182,7 +182,7 @@ div.t-panel-body {
 }
 
 div.t-panel-header {
-	background: #BED6F8;
+	background: #BED6F8 url(chrome/header.gif) repeat-x 0 -1px;
 	border: 1px solid #C0C0C0;
 	margin: 1px;
 	font-weight: bold;
@@ -264,7 +264,7 @@ table.t-data-grid {
 }
 
 table.t-data-grid > thead > tr {
-	background: #BED6F8;
+	background: #BED6F8 repeat-x left top url("chrome/grid_header.gif");
 }
 
 table.t-data-grid > thead > tr > th {
@@ -283,17 +283,17 @@ table.t-data-grid > thead > tr > th > a {
 }
 
 th.t-sort-column-unsorted > a {
-	background: transparent url("white/unsorted.gif") no-repeat right top;
+	background: transparent url("chrome/unsorted.gif") no-repeat right top;
 	padding-right: 15px;
 }
 
 th.t-sort-column-ascending > a {
-	background: transparent url("white/ascending.gif") no-repeat right top;
+	background: transparent url("chrome/ascending.gif") no-repeat right top;
 	padding-right: 15px;
 }
 
 th.t-sort-column-descending > a {
-	background: transparent url("white/descending.gif") no-repeat right top;
+	background: transparent url("chrome/descending.gif") no-repeat right top;
 	padding-right: 15px;
 }
 
