@@ -27,8 +27,10 @@ public class SecurityExceptionHandler implements RequestExceptionHandler {
 	public void handleRequestException(final Throwable exception) throws IOException {
 		if (needsRedirect(exception)) {
 			renderer.renderPageMarkupResponse("security/login");
+			//todo: add logging
+		} else {
+			delegate.handleRequestException(exception);
 		}
-		delegate.handleRequestException(exception);
 	}
 
 	private boolean needsRedirect(final Throwable exception) {
