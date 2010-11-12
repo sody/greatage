@@ -1,3 +1,7 @@
+/*
+ * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ */
+
 package org.greatage.util;
 
 import org.greatage.mock.MockClass;
@@ -5,6 +9,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
@@ -14,8 +19,8 @@ import java.util.List;
  */
 public class TestReflectionUtils extends Assert {
 
-	@DataProvider(name = "newInstanceData")
-	public Object[][] getNewInstanceData() {
+	@DataProvider
+	public Object[][] newInstanceData() {
 		return new Object[][]{
 				{MockClass.class, new Object[]{}, new MockClass()},
 				{MockClass.class, new Object[]{"test"}, new MockClass("test")},
@@ -27,46 +32,64 @@ public class TestReflectionUtils extends Assert {
 		};
 	}
 
-	@DataProvider(name = "newInstanceExceptionData")
-	public Object[][] getNewInstanceExceptionData() {
+	@DataProvider
+	public Object[][] newInstanceExceptionData() {
 		return new Object[][]{
 				{MockClass.class, new Object[]{true}},
 				{MockClass.class, new Object[]{"test", "test"}},
 		};
 	}
 
-	@DataProvider(name = "findConstructorsData")
-	public Object[][] getFindConstructorsData() {
+	@DataProvider
+	public Object[][] findConstructorsData() {
 		return new Object[][]{
-				{MockClass.class, new Class<?>[] {}, 1},
-				{MockClass.class, new Class<?>[] {String.class}, 1},
-				{MockClass.class, new Class<?>[] {null}, 1},
-				{MockClass.class, new Class<?>[] {Object.class}, 0},
+				{MockClass.class, new Class<?>[]{}, 1},
+				{MockClass.class, new Class<?>[]{String.class}, 1},
+				{MockClass.class, new Class<?>[]{null}, 1},
+				{MockClass.class, new Class<?>[]{Object.class}, 0},
 
-				{MockClass.class, new Class<?>[] {String.class, Boolean.TYPE}, 1},
-				{MockClass.class, new Class<?>[] {String.class, Boolean.class}, 1},
-				{MockClass.class, new Class<?>[] {String.class, String.class}, 0},
-				{MockClass.class, new Class<?>[] {String.class, null}, 1},
-				{MockClass.class, new Class<?>[] {null, Boolean.TYPE}, 1},
-				{MockClass.class, new Class<?>[] {null, null}, 1},
+				{MockClass.class, new Class<?>[]{String.class, Boolean.TYPE}, 1},
+				{MockClass.class, new Class<?>[]{String.class, Boolean.class}, 1},
+				{MockClass.class, new Class<?>[]{String.class, String.class}, 0},
+				{MockClass.class, new Class<?>[]{String.class, null}, 1},
+				{MockClass.class, new Class<?>[]{null, Boolean.TYPE}, 1},
+				{MockClass.class, new Class<?>[]{null, null}, 1},
 
-				{MockClass.class, new Class<?>[] {String.class, Boolean.TYPE, String.class}, 2},
-				{MockClass.class, new Class<?>[] {String.class, Boolean.TYPE, CharSequence.class}, 1},
-				{MockClass.class, new Class<?>[] {String.class, Boolean.class, null}, 2},
-				{MockClass.class, new Class<?>[] {String.class, Boolean.TYPE, Object.class}, 0},
+				{MockClass.class, new Class<?>[]{String.class, Boolean.TYPE, String.class}, 2},
+				{MockClass.class, new Class<?>[]{String.class, Boolean.TYPE, CharSequence.class}, 1},
+				{MockClass.class, new Class<?>[]{String.class, Boolean.class, null}, 2},
+				{MockClass.class, new Class<?>[]{String.class, Boolean.TYPE, Object.class}, 0},
 
-				{MockClass.class, new Class<?>[] {null, null, null, null}, 0},
+				{MockClass.class, new Class<?>[]{null, null, null, null}, 0},
 		};
 	}
 
+	@DataProvider
+	public Object[][] findExceptionData() {
+		final IOException ioException = new IOException();
+		final IllegalArgumentException argumentException = new IllegalArgumentException(ioException);
+		final Throwable throwable = new Throwable(argumentException);
+		final RuntimeException runtimeException = new RuntimeException(throwable);
+		return new Object[][]{
+				{null, Throwable.class, null},
+				{runtimeException, Throwable.class, runtimeException},
+				{runtimeException, IOException.class, ioException},
+				{runtimeException, RuntimeException.class, runtimeException},
+				{runtimeException, IllegalArgumentException.class, argumentException},
+				{throwable, RuntimeException.class, argumentException},
+				{ioException, RuntimeException.class, null}
+		};
+	}
+
+
 	@Test(dataProvider = "newInstanceData")
-	public <T> void testNewInstance(Class<T> clazz, Object[] parameters, T expected) {
+	public <T> void testNewInstance(final Class<T> clazz, final Object[] parameters, final T expected) {
 		final T actual = ReflectionUtils.newInstance(clazz, parameters);
 		assertEquals(actual, expected);
 	}
 
 	@Test(dataProvider = "newInstanceExceptionData", expectedExceptions = RuntimeException.class)
-	public <T> void testNewInstanceException(Class<T> clazz, Object[] parameters) {
+	public <T> void testNewInstanceException(final Class<T> clazz, final Object[] parameters) {
 		ReflectionUtils.newInstance(clazz, parameters);
 	}
 
@@ -85,9 +108,15 @@ public class TestReflectionUtils extends Assert {
 	}
 
 	@Test(dataProvider = "findConstructorsData")
-	public <T> void testFindConstructors(Class<T> clazz, Class<?>[] parameterTypes, int expectedConstructorCount) {
+	public <T> void testFindConstructors(final Class<T> clazz, final Class<?>[] parameterTypes, final int expectedConstructorCount) {
 		final List<Constructor<T>> list = ReflectionUtils.findConstructors(clazz, parameterTypes);
 		assertNotNull(list);
 		assertEquals(list.size(), expectedConstructorCount);
+	}
+
+	@Test(dataProvider = "findExceptionData")
+	public <T extends Throwable> void testFindException(final Throwable exception, final Class<T> exceptionClass, final T expected) {
+		final T actual = ReflectionUtils.findException(exception, exceptionClass);
+		assertEquals(actual, expected);
 	}
 }
