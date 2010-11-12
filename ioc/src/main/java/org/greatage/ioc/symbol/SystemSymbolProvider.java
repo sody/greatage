@@ -9,8 +9,6 @@ package org.greatage.ioc.symbol;
  * @since 1.0
  */
 public class SystemSymbolProvider implements SymbolProvider {
-	public static final String PROVIDER_ID = "system";
-
 	public String getSymbol(final String key) {
 		return System.getProperty(key);
 	}

@@ -7,7 +7,7 @@ package org.greatage.domain;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * This class represents implementation of {@link EntityFilterProcessor} that combines logic of child filter
@@ -17,14 +17,14 @@ import java.util.List;
  * @since 1.0
  */
 public class CompositeFilterProcessor implements EntityFilterProcessor {
-	private final List<EntityFilterProcessor> processors;
+	private final Collection<EntityFilterProcessor> processors;
 
 	/**
 	 * Constructor with child filter processors initialization.
 	 *
 	 * @param processors child filter processors
 	 */
-	public CompositeFilterProcessor(final List<EntityFilterProcessor> processors) {
+	public CompositeFilterProcessor(final Collection<EntityFilterProcessor> processors) {
 		this.processors = processors;
 	}
 
