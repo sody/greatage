@@ -1,6 +1,7 @@
 /*
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
+
 package org.greatage.util;
 
 import java.lang.reflect.Constructor;
@@ -75,6 +76,25 @@ public abstract class ReflectionUtils {
 			}
 		}
 		return constructors;
+	}
+
+	/**
+	 * Finds exception with specified class in exception cause.
+	 *
+	 * @param exception	  exception with cause
+	 * @param exceptionClass exception class
+	 * @param <T>            exception type
+	 * @return exception with specified class retrieved from cause or null if not found
+	 */
+	public static <T extends Throwable> T findException(final Throwable exception, final Class<T> exceptionClass) {
+		Throwable cause = exception;
+		while (cause != null) {
+			if (exceptionClass.isInstance(cause)) {
+				return exceptionClass.cast(cause);
+			}
+			cause = cause.getCause();
+		}
+		return null;
 	}
 
 	private static boolean isConstructorSuitable(final Constructor<?> constructor, final Class<?>... parameterTypes) {
