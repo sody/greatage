@@ -37,12 +37,13 @@ public class SecurityExceptionHandler implements RequestExceptionHandler {
 		this.logger = logger;
 	}
 
+	@SuppressWarnings({"ThrowableResultOfMethodCallIgnored"})
 	public void handleRequestException(final Throwable exception) throws IOException {
 		final SecurityException securityException = ReflectionUtils.findException(exception, SecurityException.class);
 		if (securityException != null) {
 			final String pageName = resolver.resolvePageClassNameToPageName(loginPage.getName());
 			renderer.renderPageMarkupResponse(pageName);
-			logger.info("Need authentication", securityException);
+			logger.info(securityException.getMessage());
 		} else {
 			delegate.handleRequestException(exception);
 		}
