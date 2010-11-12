@@ -11,8 +11,6 @@ import java.util.Map;
  * @since 1.0
  */
 public class DefaultSymbolProvider implements SymbolProvider {
-	public static final String PROVIDER_ID = "default";
-
 	private final Map<String, String> symbols;
 
 	public DefaultSymbolProvider(final Map<String, String> symbols) {
