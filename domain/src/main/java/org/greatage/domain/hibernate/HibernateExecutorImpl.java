@@ -39,6 +39,7 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 
 	public void commit() {
 		transaction.commit();
+		session.flush();
 	}
 
 	public void rollback() {
