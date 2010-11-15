@@ -24,6 +24,8 @@ public abstract class DefaultAuthenticationProvider implements AuthenticationPro
 		return doAuthenticate(authenticationToken.getName(), authenticationToken.getPassword());
 	}
 
+	protected abstract DefaultAuthentication getAuthentication(final String name);
+
 	private Authentication doAuthenticate(final String name, final String password) {
 		final DefaultAuthentication authentication = getAuthentication(name);
 		if (authentication == null) {
@@ -34,9 +36,7 @@ public abstract class DefaultAuthenticationProvider implements AuthenticationPro
 		return authentication;
 	}
 
-	protected abstract DefaultAuthentication getAuthentication(final String name);
-
-	protected void checkPassword(final String password, final String expected) {
+	private void checkPassword(final String password, final String expected) {
 		final String actual = passwordEncoder.encode(password);
 		if ((actual != null && !actual.equals(expected)) ||
 				(actual == null && expected != null)) {

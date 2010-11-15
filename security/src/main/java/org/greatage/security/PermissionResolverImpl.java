@@ -21,16 +21,16 @@ public class PermissionResolverImpl implements PermissionResolver {
 		this.accessControlManager = accessControlManager;
 	}
 
-	public boolean isGranted(final Object securedObject, final String permission) {
+	public void check(final Object securedObject, final String permission) {
 		final Authentication user = userContext.getUser();
 		final List<String> authorities = user != null ? user.getAuthorities() : CollectionUtils.<String>newList();
 		final AccessControlList acl = accessControlManager.getAccessControlList(securedObject);
 		for (String authority : authorities) {
 			final AccessControlEntry ace = acl.getAccessControlEntry(authority, permission);
 			if (ace.isGranted()) {
-				return true;
+				return;
 			}
 		}
-		return false;
+		throw new AccessDeniedException("Access denied for object " + securedObject);
 	}
 }

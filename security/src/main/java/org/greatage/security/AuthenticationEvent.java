@@ -4,12 +4,11 @@
 
 package org.greatage.security;
 
+import org.greatage.ioc.event.Event;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface PermissionResolver {
-
-	void check(Object securedObject, String permission);
-
+public class AuthenticationEvent implements Event {
 }
