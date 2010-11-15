@@ -10,9 +10,9 @@ import org.apache.tapestry5.services.ClassTransformation;
 import org.apache.tapestry5.services.ComponentClassTransformWorker;
 import org.apache.tapestry5.services.ComponentInstanceOperation;
 import org.apache.tapestry5.services.TransformConstants;
-import org.greatage.security.acl.AccessDeniedException;
+import org.greatage.security.AccessDeniedException;
+import org.greatage.security.PermissionResolver;
 import org.greatage.security.annotations.Secured;
-import org.greatage.security.context.PermissionResolver;
 
 /**
  * @author Ivan Khalopik

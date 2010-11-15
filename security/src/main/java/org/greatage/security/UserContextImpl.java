@@ -2,9 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.security.context;
-
-import org.greatage.security.auth.Authentication;
+package org.greatage.security;
 
 /**
  * @author Ivan Khalopik

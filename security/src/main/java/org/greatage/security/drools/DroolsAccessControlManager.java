@@ -2,11 +2,11 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.security.acl.drools;
+package org.greatage.security.drools;
 
 import org.drools.KnowledgeBase;
-import org.greatage.security.acl.AccessControlList;
-import org.greatage.security.acl.AccessControlManager;
+import org.greatage.security.AccessControlList;
+import org.greatage.security.AccessControlManager;
 
 /**
  * @author Ivan Khalopik

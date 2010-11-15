@@ -2,12 +2,8 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.security.context;
+package org.greatage.security;
 
-import org.greatage.security.acl.AccessControlEntry;
-import org.greatage.security.acl.AccessControlList;
-import org.greatage.security.acl.AccessControlManager;
-import org.greatage.security.auth.Authentication;
 import org.greatage.util.CollectionUtils;
 
 import java.util.List;

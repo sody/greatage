@@ -2,12 +2,12 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.security.acl.drools;
+package org.greatage.security.drools;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatelessKnowledgeSession;
-import org.greatage.security.acl.AccessControlEntry;
-import org.greatage.security.acl.AccessControlList;
+import org.greatage.security.AccessControlEntry;
+import org.greatage.security.AccessControlList;
 
 /**
  * @author Ivan Khalopik

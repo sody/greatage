@@ -5,8 +5,8 @@
 package org.greatage.tapestry.internal;
 
 import org.apache.tapestry5.services.*;
-import org.greatage.security.auth.Authentication;
-import org.greatage.security.context.UserContext;
+import org.greatage.security.Authentication;
+import org.greatage.security.UserContext;
 
 import java.io.IOException;
 
