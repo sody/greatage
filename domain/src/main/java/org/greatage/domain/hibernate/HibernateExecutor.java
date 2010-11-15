@@ -4,14 +4,14 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.EntityTransactionManager;
+import org.greatage.domain.TransactionExecutor;
 
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface HibernateExecutor extends EntityTransactionManager {
+public interface HibernateExecutor extends TransactionExecutor {
 
 	<T> T execute(HibernateCallback<T> callback);
 

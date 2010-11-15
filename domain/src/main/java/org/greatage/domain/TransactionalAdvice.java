@@ -13,22 +13,22 @@ import org.greatage.ioc.proxy.MethodAdvice;
  * @since 1.0
  */
 public class TransactionalAdvice implements MethodAdvice {
-	private final EntityTransactionManager transactionManager;
+	private final TransactionExecutor executor;
 
-	public TransactionalAdvice(final EntityTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
+	public TransactionalAdvice(final TransactionExecutor executor) {
+		this.executor = executor;
 	}
 
 	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
 		final Transactional transactional = invocation.getAnnotation(Transactional.class);
 		if (transactional != null) {
+			final Transaction transaction = executor.begin();
 			try {
-				transactionManager.begin();
 				final Object result = invocation.proceed(parameters);
-				transactionManager.commit();
+				transaction.commit();
 				return result;
 			} catch (Throwable throwable) {
-				transactionManager.rollback();
+				transaction.rollback();
 				throw throwable;
 			}
 		}

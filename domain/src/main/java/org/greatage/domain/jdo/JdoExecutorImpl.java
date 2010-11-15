@@ -4,9 +4,10 @@
 
 package org.greatage.domain.jdo;
 
+import org.greatage.domain.Transaction;
+
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Transaction;
 
 /**
  * @author Ivan Khalopik
@@ -16,7 +17,6 @@ public class JdoExecutorImpl implements JdoExecutor {
 	private final PersistenceManagerFactory persistenceManagerFactory;
 
 	private PersistenceManager persistenceManager;
-	private Transaction transaction;
 
 	public JdoExecutorImpl(final PersistenceManagerFactory persistenceManagerFactory) {
 		this.persistenceManagerFactory = persistenceManagerFactory;
@@ -40,16 +40,9 @@ public class JdoExecutorImpl implements JdoExecutor {
 		return persistenceManager;
 	}
 
-	public void begin() {
-		transaction = getPersistenceManager().currentTransaction();
+	public Transaction begin() {
+		final javax.jdo.Transaction transaction = getPersistenceManager().currentTransaction();
 		transaction.begin();
-	}
-
-	public void commit() {
-		transaction.commit();
-	}
-
-	public void rollback() {
-		transaction.rollback();
+		return new JdoTransaction(transaction);
 	}
 }

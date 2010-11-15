@@ -4,6 +4,8 @@
 
 package org.greatage.domain.jpa;
 
+import org.greatage.domain.Transaction;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
@@ -16,7 +18,6 @@ public class JpaExecutorImpl implements JpaExecutor {
 	private final EntityManagerFactory entityManagerFactory;
 
 	private EntityManager entityManager;
-	private EntityTransaction transaction;
 
 	public JpaExecutorImpl(final EntityManagerFactory entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
@@ -40,16 +41,9 @@ public class JpaExecutorImpl implements JpaExecutor {
 		return entityManager;
 	}
 
-	public void begin() {
-		transaction = getEntityManager().getTransaction();
+	public Transaction begin() {
+		final EntityTransaction transaction = getEntityManager().getTransaction();
 		transaction.begin();
-	}
-
-	public void commit() {
-		transaction.commit();
-	}
-
-	public void rollback() {
-		transaction.rollback();
+		return new JpaTransaction(transaction);
 	}
 }

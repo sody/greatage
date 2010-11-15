@@ -4,9 +4,9 @@
 
 package org.greatage.domain.hibernate;
 
+import org.greatage.domain.Transaction;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 /**
  * @author Ivan Khalopik
@@ -16,7 +16,6 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 	private final SessionFactory sessionFactory;
 
 	private Session session;
-	private Transaction transaction;
 
 	public HibernateExecutorImpl(final SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -25,7 +24,9 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 	public <T> T execute(final HibernateCallback<T> callback) {
 		try {
 			final Session session = getSession();
-			return callback.doInSession(session);
+			final T result = callback.doInSession(session);
+			session.flush();
+			return result;
 		} catch (RuntimeException ex) {
 			throw ex;
 		} catch (Throwable throwable) {
@@ -33,17 +34,8 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 		}
 	}
 
-	public void begin() {
-		transaction = getSession().beginTransaction();
-	}
-
-	public void commit() {
-		transaction.commit();
-		session.flush();
-	}
-
-	public void rollback() {
-		transaction.rollback();
+	public Transaction begin() {
+		return new HibernateTransaction(getSession().beginTransaction());
 	}
 
 	private Session getSession() {
