@@ -28,7 +28,7 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 		this(locator, service.getServiceId(), service.getServiceClass(), service.getScope());
 	}
 
-	private ServiceInitialResources(final ServiceLocator locator, final String serviceId, final Class<T> serviceClass, final String serviceScope) {
+	ServiceInitialResources(final ServiceLocator locator, final String serviceId, final Class<T> serviceClass, final String serviceScope) {
 		this.locator = locator;
 		this.serviceId = serviceId;
 		this.serviceClass = serviceClass;

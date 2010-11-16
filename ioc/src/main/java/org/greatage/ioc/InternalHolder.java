@@ -21,14 +21,22 @@ public class InternalHolder<T> implements ServiceStatus<T> {
 		this.builder = builder;
 	}
 
+	public String getServiceId() {
+		return resources.getServiceId();
+	}
+
+	public Class<T> getServiceClass() {
+		return resources.getServiceClass();
+	}
+
+	public String getServiceScope() {
+		return resources.getServiceScope();
+	}
+
 	public T getService() {
 		if (serviceInstance == null) {
 			serviceInstance = builder.build();
 		}
 		return serviceInstance;
-	}
-
-	public Class<T> getServiceClass() {
-		return resources.getServiceClass();
 	}
 }

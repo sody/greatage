@@ -10,8 +10,12 @@ package org.greatage.ioc;
  */
 public interface ServiceStatus<T> {
 
-	T getService();
+	String getServiceId();
 
 	Class<T> getServiceClass();
+
+	String getServiceScope();
+
+	T getService();
 
 }

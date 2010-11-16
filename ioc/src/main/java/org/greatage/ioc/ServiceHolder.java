@@ -29,18 +29,26 @@ public class ServiceHolder<T> implements ServiceStatus<T> {
 		this.builder = new LazyBuilder<T>(resources, builder, interceptors);
 	}
 
-	public T getService() {
-		return getServiceScope().get(resources, builder);
+	public String getServiceId() {
+		return resources.getServiceId();
 	}
 
 	public Class<T> getServiceClass() {
 		return resources.getServiceClass();
 	}
 
-	public Scope getServiceScope() {
+	public String getServiceScope() {
+		return resources.getServiceScope();
+	}
+
+	public T getService() {
+		return getScope().get(resources, builder);
+	}
+
+	private Scope getScope() {
 		if (scope == null) {
 			final ScopeManager scopeManager = resources.getResource(ScopeManager.class);
-			scope = scopeManager.getScope(resources.getServiceScope());
+			scope = scopeManager.getScope(getServiceScope());
 			if (scope == null) {
 				throw new IllegalStateException(String.format("Wrong scope specified for service (%s, %s). scope=%s", resources.getServiceId(), resources.getServiceClass(), resources.getServiceScope()));
 			}

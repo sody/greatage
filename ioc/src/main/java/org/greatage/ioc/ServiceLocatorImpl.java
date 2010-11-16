@@ -40,7 +40,10 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		internalServices.add(ProxyFactory.class);
 		internalServices.add(ScopeManager.class);
 
-		final StringBuilder statisticsBuilder = new StringBuilder("Services:\n");
+
+		final ServiceStatus<ServiceLocator> serviceLocatorStatus = new SimpleHolder<ServiceLocator>(ServiceLocator.class.getSimpleName(), ServiceLocator.class, this);
+		servicesById.put(serviceLocatorStatus.getServiceId(), serviceLocatorStatus);
+		int maxLength = serviceLocatorStatus.getServiceId().length();
 		for (Map.Entry<String, Service<?>> entry : services.entrySet()) {
 			final String serviceId = entry.getKey();
 			final Service<?> service = entry.getValue();
@@ -54,8 +57,15 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			}
 			final ServiceStatus<?> status = createServiceHolder(service, configurators, decorators, interceptors);
 			servicesById.put(serviceId, status);
+			if (serviceId.length() > maxLength) {
+				maxLength = serviceId.length();
+			}
+		}
 
-			statisticsBuilder.append(String.format("\t%s[ %s ]( %s )\n", serviceId, service.getScope(), service.getServiceClass()));
+		final StringBuilder statisticsBuilder = new StringBuilder("Services:\n");
+		final String format = "%" + maxLength + "s[%s] : %s\n";
+		for (ServiceStatus<?> status : servicesById.values()) {
+			statisticsBuilder.append(String.format(format, status.getServiceId(), status.getServiceScope(), status.getServiceClass()));
 		}
 
 		final LoggerSource loggerSource = getService(LoggerSource.class);
@@ -67,10 +77,9 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		return CollectionUtils.newSet(servicesById.keySet());
 	}
 
-	public Class<?> getServiceClass(final String id) {
+	public ServiceStatus<?> getServiceStatus(final String id) {
 		if (servicesById.containsKey(id)) {
-			final ServiceStatus<?> status = servicesById.get(id);
-			return status.getServiceClass();
+			return servicesById.get(id);
 		}
 		throw new IllegalStateException(String.format("Can't find service with id %s", id));
 	}

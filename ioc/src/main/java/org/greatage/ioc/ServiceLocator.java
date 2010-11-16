@@ -14,7 +14,7 @@ public interface ServiceLocator {
 
 	Set<String> getServiceIds();
 
-	Class<?> getServiceClass(String id);
+	ServiceStatus<?> getServiceStatus(String id);
 
 	<T> T getService(String id, Class<T> serviceClass);
 
