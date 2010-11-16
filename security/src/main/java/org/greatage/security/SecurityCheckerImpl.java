@@ -35,7 +35,7 @@ public class SecurityCheckerImpl implements SecurityChecker {
 
 	public void checkAuthority(final String authority) {
 		final List<String> authorities = getAuthorities();
-		if (authorities.contains(authority)) {
+		if (!authorities.contains(authority)) {
 			throw new AccessDeniedException(String.format("Access denied. Needed authority missed: '%s'", authority));
 		}
 	}
