@@ -7,6 +7,7 @@ package org.greatage.tapestry.internal;
 import org.apache.tapestry5.services.ComponentClassResolver;
 import org.apache.tapestry5.services.RequestExceptionHandler;
 import org.apache.tapestry5.services.ResponseRenderer;
+import org.greatage.security.SecurityException;
 import org.greatage.util.ReflectionUtils;
 import org.slf4j.Logger;
 

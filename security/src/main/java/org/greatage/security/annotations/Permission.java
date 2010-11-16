@@ -8,8 +8,8 @@ package org.greatage.security.annotations;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public @interface Secured {
+public @interface Permission {
 
-	String value() default "";
+	String value();
 
 }

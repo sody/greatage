@@ -8,8 +8,10 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface PermissionResolver {
+public interface SecurityChecker {
 
-	void check(Object securedObject, String permission);
+	void checkPermission(Object securedObject, String permission);
+
+	void checkAuthority(String authority);
 
 }
