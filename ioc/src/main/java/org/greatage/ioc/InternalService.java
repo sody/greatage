@@ -6,19 +6,23 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.proxy.ObjectBuilder;
 
+import java.util.List;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class InternalHolder<T> implements ServiceStatus<T> {
+public class InternalService<T> implements ServiceStatus<T> {
 	private final ServiceResources<T> resources;
 	private final ObjectBuilder<T> builder;
 	private T serviceInstance;
 
-	InternalHolder(final ServiceResources<T> resources,
-				   final ServiceBuilder<T> builder) {
-		this.resources = resources;
-		this.builder = builder;
+	InternalService(final ServiceLocator locator,
+					final Service<T> service,
+					final List<Configurator<T>> configurators,
+					final List<Decorator<T>> decorators) {
+		this.resources = new ServiceInitialResources<T>(locator, service);
+		this.builder = new ServiceBuilder<T>(resources, service, configurators, decorators);
 	}
 
 	public String getServiceId() {

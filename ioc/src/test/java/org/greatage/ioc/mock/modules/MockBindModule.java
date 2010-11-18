@@ -8,10 +8,7 @@ import org.greatage.ioc.ScopeConstants;
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.mock.MockMessageService;
-import org.greatage.ioc.mock.MockMessageServiceImpl;
-import org.greatage.ioc.mock.MockTalkService;
-import org.greatage.ioc.mock.MockTalkServiceImpl;
+import org.greatage.ioc.mock.*;
 
 /**
  * @author Ivan Khalopik
@@ -21,7 +18,7 @@ public class MockBindModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(MockTalkServiceImpl.class).withId("talkService1");
+		binder.bind(MockTalkServiceImpl1.class).withId("talkService1");
 		binder.bind(MockTalkService.class, MockTalkServiceImpl.class).withId("talkService2");
 	}
 

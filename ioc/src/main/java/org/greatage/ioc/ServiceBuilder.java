@@ -19,8 +19,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	private final List<Configurator<T>> configurators;
 	private final List<Decorator<T>> decorators;
 
-	ServiceBuilder(final Service<T> service,
-				   final ServiceResources<T> resources,
+	ServiceBuilder(final ServiceResources<T> resources, final Service<T> service,
 				   final List<Configurator<T>> configurators,
 				   final List<Decorator<T>> decorators) {
 		this.service = service;

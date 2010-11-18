@@ -4,9 +4,7 @@
 
 package org.greatage.ioc.proxy;
 
-import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
-import org.greatage.util.Locker;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -20,8 +18,6 @@ import java.util.List;
 public abstract class AbstractInvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
 	private final List<MethodAdvice> advices;
-	private final Locker locker = new Locker();
-	private T delegate;
 
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
@@ -30,8 +26,10 @@ public abstract class AbstractInvocationHandler<T> {
 	 * @param advices method advices
 	 */
 	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+		assert builder != null;
+
 		this.builder = builder;
-		this.advices = CollectionUtils.isEmpty(advices) ? null : advices;
+		this.advices = advices;
 	}
 
 	/**
@@ -40,26 +38,20 @@ public abstract class AbstractInvocationHandler<T> {
 	 * @return lazy initialized object instance
 	 */
 	protected T getDelegate() {
-		if (delegate == null) {
-			// locks lazy creation to prevent multy building
-			locker.lock();
-			delegate = builder.build();
-		}
-		return delegate;
+		return builder.build();
 	}
 
 	protected Object invoke(final Method method, final Object... parameters) throws Throwable {
-		if (advices != null) {
-			final Method realMethod = getDelegate().getClass().getMethod(method.getName(), method.getParameterTypes());
-			return getInvocation(realMethod).proceed(parameters);
-		}
-		return method.invoke(getDelegate(), parameters);
+		final Method realMethod = getDelegate().getClass().getMethod(method.getName(), method.getParameterTypes());
+		return createInvocation(realMethod).proceed(parameters);
 	}
 
-	private Invocation getInvocation(final Method method) {
+	private Invocation createInvocation(final Method method) {
 		Invocation invocation = new MethodInvocation(getDelegate(), method);
-		for (MethodAdvice advice : advices) {
-			invocation = new AdvisedInvocation(invocation, advice);
+		if (advices != null) {
+			for (MethodAdvice advice : advices) {
+				invocation = new AdvisedInvocation(invocation, advice);
+			}
 		}
 		return invocation;
 	}
@@ -68,7 +60,7 @@ public abstract class AbstractInvocationHandler<T> {
 	public String toString() {
 		final DescriptionBuilder db = new DescriptionBuilder(getClass());
 		db.append("builder", builder);
-		db.append("delegate", delegate);
+		db.append("advices", advices);
 		return db.toString();
 	}
 }

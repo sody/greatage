@@ -117,13 +117,9 @@ public class ServiceLocatorImpl implements ServiceLocator {
 												 final List<Configurator<?>> configurators,
 												 final List<Decorator<?>> decorators,
 												 final List<Interceptor<?>> interceptors) {
-		final ServiceResources resources = new ServiceInitialResources(this, service);
-		final ServiceBuilder builder = new ServiceBuilder(service, resources, configurators, decorators);
-
-
 		return isInternal(service) ?
-				new InternalHolder(resources, builder) :
-				new ServiceHolder(resources, builder, interceptors);
+				new InternalService(this, service, configurators, decorators) :
+				new ScopedService(this, service, configurators, decorators, interceptors);
 	}
 
 	private boolean isInternal(final Service<?> service) {
