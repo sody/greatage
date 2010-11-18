@@ -288,12 +288,12 @@ th.t-sort-column-unsorted > a {
 }
 
 th.t-sort-column-ascending > a {
-	background: transparent url("chrome/ascending.gif") no-repeat right top;
+	background: transparent url("chrome/up.gif") no-repeat right top;
 	padding-right: 15px;
 }
 
 th.t-sort-column-descending > a {
-	background: transparent url("chrome/descending.gif") no-repeat right top;
+	background: transparent url("chrome/down.gif") no-repeat right top;
 	padding-right: 15px;
 }
 
@@ -317,4 +317,32 @@ img.t-sort-icon {
 	width: 0;
 	height: 0;
 	display: none;
+}
+
+.invisible {
+	display: none;
+}
+
+.disabled {
+	opacity: 0.5;
+}
+
+.t-selector .previous,
+.t-selector .next {
+	width: 15px;
+	height: 15px;
+	float: left;
+}
+
+.t-selector .previous {
+	background: transparent url("white/left.gif");
+}
+
+.t-selector .next {
+	background: transparent url("white/right.gif");
+}
+
+.t-selector .item {
+	text-align: center;
+	float: left;
 }

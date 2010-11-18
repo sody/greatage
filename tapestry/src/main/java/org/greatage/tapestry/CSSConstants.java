@@ -39,4 +39,8 @@ public abstract class CSSConstants {
 	public static final String GRID_FIRST_CLASS = GridConstants.FIRST_CLASS;
 	public static final String GRID_LAST_CLASS = GridConstants.LAST_CLASS;
 
+	public static final String SELECTOR_CLASS = "t-selector";
+	public static final String SELECTOR_PREVIOUS_CLASS = "previous";
+	public static final String SELECTOR_NEXT_CLASS = "next";
+	public static final String SELECTOR_ITEM_CLASS = "item";
 }
