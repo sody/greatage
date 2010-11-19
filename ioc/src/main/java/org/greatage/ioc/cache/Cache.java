@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.cache;
+package org.greatage.ioc.cache;
 
 /**
  * @author Ivan Khalopik
@@ -10,12 +10,14 @@ package org.greatage.cache;
  */
 public interface Cache<K, V> {
 
+	boolean contains(K key);
+
 	V get(K key);
 
 	void put(K key, V value);
 
-	boolean contains(K key);
+	V remove(K key);
 
-	void invalidate();
+	void clear();
 
 }

@@ -7,6 +7,8 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Configure;
 import org.greatage.ioc.annotations.Inject;
+import org.greatage.ioc.cache.CacheSource;
+import org.greatage.ioc.cache.SimpleCacheSource;
 import org.greatage.ioc.logging.Log4jLoggerSource;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.proxy.JavaAssistProxyFactory;
@@ -33,6 +35,7 @@ public class IOCModule {
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withId("ApplicationSymbolProvider");
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
+		binder.bind(CacheSource.class, SimpleCacheSource.class).withId("SimpleCacheSource");
 	}
 
 	@Configure(ScopeManager.class)

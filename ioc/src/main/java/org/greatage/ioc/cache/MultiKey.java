@@ -2,7 +2,9 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.cache;
+package org.greatage.ioc.cache;
+
+import org.greatage.util.DescriptionBuilder;
 
 import java.util.Arrays;
 
@@ -16,7 +18,7 @@ public class MultiKey {
 	private final Object[] values;
 	private final int hashCode;
 
-	public MultiKey(Object... values) {
+	public MultiKey(final Object... values) {
 		this.values = values;
 		hashCode = PRIME * Arrays.hashCode(this.values);
 	}
@@ -27,7 +29,7 @@ public class MultiKey {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (this == obj) return true;
 		if (obj == null || getClass() != obj.getClass()) return false;
 		final MultiKey other = (MultiKey) obj;
@@ -36,7 +38,9 @@ public class MultiKey {
 
 	@Override
 	public String toString() {
-		return "MultiKey[" + Arrays.toString(values) + "]";
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("values", Arrays.toString(values));
+		return builder.toString();
 	}
 
 }
