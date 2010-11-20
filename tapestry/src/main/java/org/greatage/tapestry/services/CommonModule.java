@@ -4,6 +4,7 @@
 
 package org.greatage.tapestry.services;
 
+import org.apache.tapestry5.internal.services.GenericValueEncoderFactory;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
@@ -11,10 +12,14 @@ import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.BeanBlockContribution;
 import org.apache.tapestry5.services.LibraryMapping;
 import org.apache.tapestry5.services.PersistentFieldStrategy;
+import org.apache.tapestry5.services.ValueEncoderFactory;
 import org.greatage.tapestry.CommonSymbols;
 import org.greatage.tapestry.PersistenceConstants;
 import org.greatage.tapestry.ThemeConstants;
 import org.greatage.tapestry.internal.*;
+
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * @author Ivan Khalopik
@@ -23,8 +28,8 @@ public class CommonModule {
 
 	public static void bind(ServiceBinder binder) {
 		binder.bind(MenuModelSource.class, MenuModelSourceImpl.class);
-		binder.bind(SelectModelBuilder.class);
-		binder.bind(RealClassResolver.class);
+		binder.bind(SelectModelBuilder.class, SelectModelBuilder.class);
+		binder.bind(RealClassResolver.class, RealClassResolver.class);
 	}
 
 	public static void contributeFactoryDefaults(MappedConfiguration<String, String> configuration) {
@@ -34,6 +39,11 @@ public class CommonModule {
 
 	public static void contributeComponentClassResolver(Configuration<LibraryMapping> configuration) {
 		configuration.add(new LibraryMapping("common", "org.greatage.tapestry.commonlib"));
+	}
+
+	public void contributeValueEncoderSource(final MappedConfiguration<Class, ValueEncoderFactory> configuration) {
+		configuration.add(Locale.class, GenericValueEncoderFactory.create(new LocaleValueEncoder()));
+		configuration.add(TimeZone.class, GenericValueEncoderFactory.create(new TimeZoneValueEncoder()));
 	}
 
 	public static void contributeClasspathAssetAliasManager(MappedConfiguration<String, String> configuration,
