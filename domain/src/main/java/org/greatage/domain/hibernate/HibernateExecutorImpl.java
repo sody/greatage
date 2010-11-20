@@ -34,6 +34,13 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 		}
 	}
 
+	public void clear() {
+		if (session != null) {
+			session.close();
+			session = null;
+		}
+	}
+
 	public Transaction begin() {
 		return new HibernateTransaction(getSession().beginTransaction());
 	}

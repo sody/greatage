@@ -15,4 +15,6 @@ public interface HibernateExecutor extends TransactionExecutor {
 
 	<T> T execute(HibernateCallback<T> callback);
 
+	void clear();
+
 }
