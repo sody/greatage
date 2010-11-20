@@ -100,7 +100,7 @@ public class Selector extends AbstractComponent {
 			itemIds.put(o, itemId);
 			itemValues.put(o, encoder.toClient(o));
 		}
-		if (value == null) {
+		if (value == null && source.iterator().hasNext()) {
 			value = source.iterator().next();
 		}
 
