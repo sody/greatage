@@ -18,16 +18,22 @@ public class SimpleCache<K, V> implements Cache<K, V> {
 	private static final int DEFAULT_READS_TO_LIVE = 50;
 
 	private final Map<K, SimpleCacheElement<V>> cache = CollectionUtils.newMap();
+	private final String name;
 	private final int timeToLive;
 	private final int readsToLive;
 
-	public SimpleCache() {
-		this(DEFAULT_TIME_TO_LIVE, DEFAULT_READS_TO_LIVE);
+	public SimpleCache(final String name) {
+		this(name, DEFAULT_TIME_TO_LIVE, DEFAULT_READS_TO_LIVE);
 	}
 
-	public SimpleCache(final int timeToLive, final int readsToLive) {
+	public SimpleCache(final String name, final int timeToLive, final int readsToLive) {
+		this.name = name;
 		this.timeToLive = timeToLive;
 		this.readsToLive = readsToLive;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public boolean contains(final K key) {

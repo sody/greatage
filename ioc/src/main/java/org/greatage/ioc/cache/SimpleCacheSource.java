@@ -8,9 +8,9 @@ package org.greatage.ioc.cache;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SimpleCacheSource implements CacheSource {
+public class SimpleCacheSource extends AbstractCacheSource {
 
-	public <K, V> Cache<K, V> getCache(final Class<K> keyClass, final Class<V> valueClass) {
-		return new SimpleCache<K, V>();
+	public <K, V> Cache<K, V> getCache(final String name) {
+		return new SimpleCache<K, V>(name);
 	}
 }

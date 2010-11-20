@@ -10,6 +10,8 @@ package org.greatage.ioc.cache;
  */
 public interface CacheSource {
 
-	<K, V> Cache<K, V> getCache(Class<K> keyClass, Class<V> valueClass);
+	<K, V> Cache<K, V> getCache(Class clazz);
+
+	<K, V> Cache<K, V> getCache(String name);
 
 }

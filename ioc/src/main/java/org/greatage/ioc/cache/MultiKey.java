@@ -42,5 +42,4 @@ public class MultiKey {
 		builder.append("values", Arrays.toString(values));
 		return builder.toString();
 	}
-
 }

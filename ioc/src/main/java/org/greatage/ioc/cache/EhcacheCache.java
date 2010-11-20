@@ -21,6 +21,10 @@ public class EhcacheCache<K, V> implements Cache<K, V> {
 		this.serialized = serialized;
 	}
 
+	public String getName() {
+		return ehcache.getName();
+	}
+
 	public boolean contains(final K key) {
 		return ehcache.get(key) != null;
 	}

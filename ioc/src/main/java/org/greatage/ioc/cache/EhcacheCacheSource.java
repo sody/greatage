@@ -8,27 +8,21 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import org.greatage.util.DescriptionBuilder;
 
-import java.io.Serializable;
-
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class EhcacheCacheSource implements CacheSource {
+public class EhcacheCacheSource extends AbstractCacheSource {
 	private final CacheManager cacheManager;
 
 	public EhcacheCacheSource(final CacheManager cacheManager) {
 		this.cacheManager = cacheManager;
 	}
 
-	public <K, V> Cache<K, V> getCache(final Class<K> keyClass, final Class<V> valueClass) {
-		final boolean serialized = Serializable.class.isAssignableFrom(keyClass) &&
-				Serializable.class.isAssignableFrom(valueClass);
+	public <K, V> Cache<K, V> getCache(final String name) {
+		final Ehcache ehcache = cacheManager.addCacheIfAbsent(name);
 
-		final String cacheName = keyClass.getSimpleName() + valueClass.getSimpleName();
-		final Ehcache ehcache = cacheManager.addCacheIfAbsent(cacheName);
-
-		return new EhcacheCache<K, V>(ehcache, serialized);
+		return new EhcacheCache<K, V>(ehcache, true);
 	}
 
 	@Override

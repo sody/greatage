@@ -10,6 +10,8 @@ package org.greatage.ioc.cache;
  */
 public interface Cache<K, V> {
 
+	String getName();
+
 	boolean contains(K key);
 
 	V get(K key);
