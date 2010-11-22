@@ -11,13 +11,16 @@ import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
-import org.greatage.ioc.ScopeConstants;
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
+import org.greatage.ioc.annotations.Dependency;
 import org.greatage.ioc.resource.Resource;
 import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.security.*;
+import org.greatage.security.AccessControlManager;
+import org.greatage.security.PermissionSecurityChecker;
+import org.greatage.security.SecurityChecker;
+import org.greatage.security.SecurityModule;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -27,13 +30,12 @@ import java.util.Collection;
  * @author Ivan Khalopik
  * @since 1.0
  */
+@Dependency(SecurityModule.class)
 public class DroolsSecurityModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(AuthenticationManager.class, AuthenticationManagerImpl.class);
-		binder.bind(SecurityChecker.class, SecurityCheckerImpl.class);
-		binder.bind(UserContext.class, UserContextImpl.class).withScope(ScopeConstants.THREAD);
+		binder.bind(SecurityChecker.class, PermissionSecurityChecker.class).withId("PermissionSecurityChecker");
 		binder.bind(AccessControlManager.class, DroolsAccessControlManager.class);
 	}
 

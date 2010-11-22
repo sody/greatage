@@ -8,10 +8,10 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface UserContext<U extends Authentication> {
+public interface SecurityContext {
 
-	U getUser();
+	Authentication getAuthentication();
 
-	void setUser(U user);
+	void setAuthentication(Authentication authentication);
 
 }

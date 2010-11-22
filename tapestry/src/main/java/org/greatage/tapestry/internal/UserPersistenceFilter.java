@@ -6,7 +6,7 @@ package org.greatage.tapestry.internal;
 
 import org.apache.tapestry5.services.*;
 import org.greatage.security.Authentication;
-import org.greatage.security.UserContext;
+import org.greatage.security.SecurityContext;
 
 import java.io.IOException;
 
@@ -17,20 +17,20 @@ import java.io.IOException;
 public class UserPersistenceFilter implements RequestFilter {
 	private static final String SECURITY_CONTEXT_KEY = "SECURITY_CONTEXT";
 
-	private final UserContext<Authentication> userContext;
+	private final SecurityContext securityContext;
 
-	public UserPersistenceFilter(final UserContext<Authentication> userContext) {
-		this.userContext = userContext;
+	public UserPersistenceFilter(final SecurityContext securityContext) {
+		this.securityContext = securityContext;
 	}
 
 	public boolean service(final Request request, final Response response, final RequestHandler handler) throws IOException {
 		try {
 			final Authentication authentication = getAuthentication(request);
-			userContext.setUser(authentication);
+			securityContext.setAuthentication(authentication);
 			return handler.service(request, response);
 		} finally {
-			final Authentication authentication = userContext.getUser();
-			userContext.setUser(null);
+			final Authentication authentication = securityContext.getAuthentication();
+			securityContext.setAuthentication(null);
 			setAuthentication(request, authentication);
 		}
 	}

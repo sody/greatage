@@ -12,16 +12,16 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SecurityCheckerImpl implements SecurityChecker {
-	private final UserContext userContext;
+public class PermissionSecurityChecker implements SecurityChecker {
+	private final SecurityContext securityContext;
 	private final AccessControlManager accessControlManager;
 
-	public SecurityCheckerImpl(final UserContext userContext, final AccessControlManager accessControlManager) {
-		this.userContext = userContext;
+	public PermissionSecurityChecker(final SecurityContext securityContext, final AccessControlManager accessControlManager) {
+		this.securityContext = securityContext;
 		this.accessControlManager = accessControlManager;
 	}
 
-	public void checkPermission(final Object securedObject, final String permission) {
+	public void check(final Object securedObject, final String permission) {
 		final List<String> authorities = getAuthorities();
 		final AccessControlList acl = accessControlManager.getAccessControlList(securedObject);
 		for (String authority : authorities) {
@@ -33,15 +33,8 @@ public class SecurityCheckerImpl implements SecurityChecker {
 		throw new AccessDeniedException(String.format("Access denied for object %s. Need permission missed: '%s'", securedObject, permission));
 	}
 
-	public void checkAuthority(final String authority) {
-		final List<String> authorities = getAuthorities();
-		if (!authorities.contains(authority)) {
-			throw new AccessDeniedException(String.format("Access denied. Needed authority missed: '%s'", authority));
-		}
-	}
-
 	private List<String> getAuthorities() {
-		final Authentication user = userContext.getUser();
+		final Authentication user = securityContext.getAuthentication();
 		return user != null ? user.getAuthorities() : CollectionUtils.<String>newList();
 	}
 }

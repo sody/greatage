@@ -10,8 +10,6 @@ package org.greatage.security;
  */
 public interface SecurityChecker {
 
-	void checkPermission(Object securedObject, String permission);
-
-	void checkAuthority(String authority);
+	void check(Object securedObject, String permission);
 
 }

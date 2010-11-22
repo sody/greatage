@@ -29,7 +29,7 @@ public class SecuredAnnotationWorker implements ComponentClassTransformWorker {
 		if (authority != null) {
 			transformation.getOrCreateMethod(TransformConstants.DISPATCH_COMPONENT_EVENT).addOperationBefore(new ComponentInstanceOperation() {
 				public void invoke(final Component instance) {
-					securityChecker.checkAuthority(authority.value());
+					securityChecker.check(null, authority.value());
 				}
 			});
 		}

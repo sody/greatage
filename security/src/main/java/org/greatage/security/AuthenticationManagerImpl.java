@@ -12,17 +12,17 @@ import java.util.List;
  */
 public class AuthenticationManagerImpl implements AuthenticationManager {
 	private final List<AuthenticationProvider> providers;
-	private final UserContext userContext;
+	private final SecurityContext securityContext;
 
-	public AuthenticationManagerImpl(final List<AuthenticationProvider> providers, final UserContext<?> userContext) {
+	public AuthenticationManagerImpl(final List<AuthenticationProvider> providers, final SecurityContext securityContext) {
 		this.providers = providers;
-		this.userContext = userContext;
+		this.securityContext = securityContext;
 	}
 
 	@SuppressWarnings({"unchecked"})
 	public Authentication authenticate(final AuthenticationToken token) throws AuthenticationException {
 		final Authentication authentication = doAuthenticate(token);
-		userContext.setUser(authentication);
+		securityContext.setAuthentication(authentication);
 		return authentication;
 	}
 
