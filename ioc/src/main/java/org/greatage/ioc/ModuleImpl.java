@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Service> services = CollectionUtils.newList();
-	private final List<Configurator> configurators = CollectionUtils.newList();
+	private final List<Contributor> contributors = CollectionUtils.newList();
 	private final List<Decorator> decorators = CollectionUtils.newList();
 	private final List<Interceptor> interceptors = CollectionUtils.newList();
 
@@ -26,8 +26,8 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {
 				services.add(new ServiceFactory(moduleClass, method));
-			} else if (method.isAnnotationPresent(Configure.class)) {
-				configurators.add(new ConfiguratorImpl(moduleClass, method));
+			} else if (method.isAnnotationPresent(Contribute.class)) {
+				contributors.add(new ContributorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
 				decorators.add(new DecoratorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Intercept.class)) {
@@ -48,12 +48,12 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		return services;
 	}
 
-	public <T> List<Configurator<T>> getConfigurators(final Service<T> service) {
-		final List<Configurator<T>> result = CollectionUtils.newList();
-		for (Configurator configurator : configurators) {
-			if (configurator.supports(service)) {
+	public <T> List<Contributor<T>> getConfigurators(final Service<T> service) {
+		final List<Contributor<T>> result = CollectionUtils.newList();
+		for (Contributor contributor : contributors) {
+			if (contributor.supports(service)) {
 				//noinspection unchecked
-				result.add(configurator);
+				result.add(contributor);
 			}
 		}
 		return result;

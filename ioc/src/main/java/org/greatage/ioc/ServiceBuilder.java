@@ -16,15 +16,15 @@ import java.util.List;
 public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	private final Service<T> service;
 	private final ServiceResources<T> resources;
-	private final List<Configurator<T>> configurators;
+	private final List<Contributor<T>> contributors;
 	private final List<Decorator<T>> decorators;
 
 	ServiceBuilder(final ServiceResources<T> resources, final Service<T> service,
-				   final List<Configurator<T>> configurators,
+				   final List<Contributor<T>> contributors,
 				   final List<Decorator<T>> decorators) {
 		this.service = service;
 		this.resources = resources;
-		this.configurators = configurators;
+		this.contributors = contributors;
 		this.decorators = decorators;
 	}
 
@@ -33,7 +33,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	}
 
 	public T build() {
-		final ServiceResources<T> buildResources = new ServiceBuildResources<T>(resources, configurators);
+		final ServiceResources<T> buildResources = new ServiceBuildResources<T>(resources, contributors);
 		final T serviceInstance = service.build(buildResources);
 		return decorateService(serviceInstance);
 	}

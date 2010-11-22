@@ -43,8 +43,8 @@ public interface Service<T> {
 	String getScope();
 
 	/**
-	 * Builds service instance using configured service resource. They are configured by {@link
-	 * org.greatage.ioc.Configurator} instances correspondent to this service instance.
+	 * Builds service instance using configured service resource. They are configured by {@link Contributor} instances
+	 * correspondent to this service instance.
 	 *
 	 * @param resources configured service resources
 	 * @return service instance, not null

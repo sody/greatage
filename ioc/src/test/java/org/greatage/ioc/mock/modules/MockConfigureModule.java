@@ -6,7 +6,7 @@ package org.greatage.ioc.mock.modules;
 
 import org.greatage.ioc.OrderedConfiguration;
 import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Configure;
+import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.mock.MockMessageService;
 import org.greatage.ioc.mock.MockMessageServiceImpl;
 import org.greatage.ioc.mock.MockTalkService;
@@ -30,8 +30,8 @@ public class MockConfigureModule {
 		return new MockTalkServiceImpl(messageService);
 	}
 
-	@Configure(MockMessageService.class)
-	public void configureMessageService(final OrderedConfiguration<String> configuration) {
+	@Contribute(MockMessageService.class)
+	public void contributeMessageService(final OrderedConfiguration<String> configuration) {
 		configuration.add("!!!", "end");
 		configuration.add("hello", "hello");
 		configuration.add("world", "world", "after:hello", "before:end");

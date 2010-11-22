@@ -33,8 +33,8 @@ public class HibernateModule {
 		binder.bind(EntityFilterProcessor.class, CompositeFilterProcessor.class).withId("HibernateFilterProcessor");
 	}
 
-	@Configure(value = SymbolProvider.class, serviceId = "ApplicationSymbolProvider")
-	public void configureApplicationSymbolProvider(final MappedConfiguration<String, String> configuration) {
+	@Contribute(value = SymbolProvider.class, serviceId = "ApplicationSymbolProvider")
+	public void contributeApplicationSymbolProvider(final MappedConfiguration<String, String> configuration) {
 		configuration.add(DomainConstants.HIBERNATE_PROPERTIES, "hibernate.properties");
 	}
 
@@ -47,12 +47,12 @@ public class HibernateModule {
 		return configuration.buildSessionFactory();
 	}
 
-	@Configure(SessionFactory.class)
-	public void configureSessionFactory(final OrderedConfiguration<HibernateConfiguration> configuration,
-										@Inject("HibernatePropertyConfiguration") final HibernateConfiguration propertyConfiguration,
-										@Inject("HibernateAnnotationConfiguration") final HibernateConfiguration annotationConfiguration,
-										@Symbol(DomainConstants.HIBERNATE_PROPERTIES) final String hibernatePropertiesResource,
-										final ResourceLocator resourceLocator) throws IOException {
+	@Contribute(SessionFactory.class)
+	public void contributeSessionFactory(final OrderedConfiguration<HibernateConfiguration> configuration,
+										 @Inject("HibernatePropertyConfiguration") final HibernateConfiguration propertyConfiguration,
+										 @Inject("HibernateAnnotationConfiguration") final HibernateConfiguration annotationConfiguration,
+										 @Symbol(DomainConstants.HIBERNATE_PROPERTIES) final String hibernatePropertiesResource,
+										 final ResourceLocator resourceLocator) throws IOException {
 		configuration.add(new HibernateBaseConfiguration(resourceLocator, hibernatePropertiesResource), "Base");
 		configuration.add(propertyConfiguration, "Property", "after:Base");
 		configuration.add(annotationConfiguration, "Annotation", "after:Property");
@@ -65,8 +65,8 @@ public class HibernateModule {
 		return new HibernateRepository(aliases, executor, processor);
 	}
 
-	@Configure(value = EntityFilterProcessor.class, serviceId = "HibernateFilterProcessor")
-	public void configureHibernateFilterProcessor(final org.greatage.ioc.Configuration<EntityFilterProcessor> configuration) {
+	@Contribute(value = EntityFilterProcessor.class, serviceId = "HibernateFilterProcessor")
+	public void contributeHibernateFilterProcessor(final org.greatage.ioc.Configuration<EntityFilterProcessor> configuration) {
 		configuration.addInstance(BaseFilterProcessor.class);
 	}
 

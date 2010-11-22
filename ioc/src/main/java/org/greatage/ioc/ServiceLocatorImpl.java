@@ -47,15 +47,15 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		for (Map.Entry<String, Service<?>> entry : services.entrySet()) {
 			final String serviceId = entry.getKey();
 			final Service<?> service = entry.getValue();
-			final List<Configurator<?>> configurators = CollectionUtils.newList();
+			final List<Contributor<?>> contributors = CollectionUtils.newList();
 			final List<Decorator<?>> decorators = CollectionUtils.newList();
 			final List<Interceptor<?>> interceptors = CollectionUtils.newList();
 			for (Module module : modules) {
-				configurators.addAll(module.getConfigurators(service));
+				contributors.addAll(module.getConfigurators(service));
 				decorators.addAll(module.getDecorators(service));
 				interceptors.addAll(module.getInterceptors(service));
 			}
-			final ServiceStatus<?> status = createServiceHolder(service, configurators, decorators, interceptors);
+			final ServiceStatus<?> status = createServiceHolder(service, contributors, decorators, interceptors);
 			servicesById.put(serviceId, status);
 			if (serviceId.length() > maxLength) {
 				maxLength = serviceId.length();
@@ -111,12 +111,12 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 	@SuppressWarnings({"unchecked"})
 	private ServiceStatus<?> createServiceHolder(final Service<?> service,
-												 final List<Configurator<?>> configurators,
+												 final List<Contributor<?>> contributors,
 												 final List<Decorator<?>> decorators,
 												 final List<Interceptor<?>> interceptors) {
 		return isInternal(service) ?
-				new InternalService(this, service, configurators, decorators) :
-				new ScopedService(this, service, configurators, decorators, interceptors);
+				new InternalService(this, service, contributors, decorators) :
+				new ScopedService(this, service, contributors, decorators, interceptors);
 	}
 
 	private boolean isInternal(final Service<?> service) {

@@ -19,10 +19,10 @@ public class InternalService<T> implements ServiceStatus<T> {
 
 	InternalService(final ServiceLocator locator,
 					final Service<T> service,
-					final List<Configurator<T>> configurators,
+					final List<Contributor<T>> contributors,
 					final List<Decorator<T>> decorators) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		this.builder = new ServiceBuilder<T>(resources, service, configurators, decorators);
+		this.builder = new ServiceBuilder<T>(resources, service, contributors, decorators);
 	}
 
 	public String getServiceId() {

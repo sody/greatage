@@ -5,7 +5,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Bind;
-import org.greatage.ioc.annotations.Configure;
+import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Inject;
 import org.greatage.ioc.cache.CacheSource;
 import org.greatage.ioc.cache.SimpleCacheSource;
@@ -38,16 +38,16 @@ public class IOCModule {
 		binder.bind(CacheSource.class, SimpleCacheSource.class).withId("SimpleCacheSource");
 	}
 
-	@Configure(ScopeManager.class)
-	public static void configureScopeManager(final MappedConfiguration<String, Scope> configuration) {
+	@Contribute(ScopeManager.class)
+	public static void contributeScopeManager(final MappedConfiguration<String, Scope> configuration) {
 		configuration.addInstance(ScopeConstants.GLOBAL, GlobalScope.class);
 		configuration.addInstance(ScopeConstants.PROTOTYPE, PrototypeScope.class);
 		configuration.addInstance(ScopeConstants.THREAD, ThreadScope.class);
 	}
 
-	@Configure(SymbolSource.class)
-	public static void configureSymbolSource(final OrderedConfiguration<SymbolProvider> configuration,
-											 @Inject("ApplicationSymbolProvider") final SymbolProvider applicationSymbolProvider) {
+	@Contribute(SymbolSource.class)
+	public static void contributeSymbolSource(final OrderedConfiguration<SymbolProvider> configuration,
+											  @Inject("ApplicationSymbolProvider") final SymbolProvider applicationSymbolProvider) {
 		configuration.add(applicationSymbolProvider, "Application");
 		configuration.addInstance(SystemSymbolProvider.class, "System", "after:Application");
 	}

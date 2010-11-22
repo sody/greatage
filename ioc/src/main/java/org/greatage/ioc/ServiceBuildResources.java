@@ -15,12 +15,12 @@ import java.util.Map;
  * @since 1.0
  */
 public class ServiceBuildResources<T> extends ServiceAdditionalResources<T> {
-	private final List<Configurator<T>> configurators;
+	private final List<Contributor<T>> contributors;
 	private final Locker locker = new Locker();
 
-	ServiceBuildResources(final ServiceResources<T> delegate, final List<Configurator<T>> configurators) {
+	ServiceBuildResources(final ServiceResources<T> delegate, final List<Contributor<T>> contributors) {
 		super(delegate);
-		this.configurators = configurators;
+		this.contributors = contributors;
 	}
 
 	@Override
@@ -60,8 +60,8 @@ public class ServiceBuildResources<T> extends ServiceAdditionalResources<T> {
 
 	private void configure(Object configuration) {
 		final ServiceConfigureResources<T> resources = new ServiceConfigureResources<T>(getDelegate(), configuration);
-		for (Configurator<T> configurator : configurators) {
-			configurator.configure(resources);
+		for (Contributor<T> contributor : contributors) {
+			contributor.contribute(resources);
 		}
 	}
 }

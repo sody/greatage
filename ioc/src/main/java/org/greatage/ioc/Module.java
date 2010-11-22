@@ -14,7 +14,7 @@ public interface Module {
 
 	List<Service> getServices();
 
-	<T> List<Configurator<T>> getConfigurators(Service<T> service);
+	<T> List<Contributor<T>> getConfigurators(Service<T> service);
 
 	<T> List<Decorator<T>> getDecorators(Service<T> service);
 

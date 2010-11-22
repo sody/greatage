@@ -4,7 +4,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Configure;
+import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.util.StringUtils;
 
@@ -15,14 +15,14 @@ import java.lang.reflect.Modifier;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ConfiguratorImpl<T> implements Configurator<T> {
+public class ContributorImpl<T> implements Contributor<T> {
 	private final Class<?> moduleClass;
 	private final Method configureMethod;
 
 	private final Class<T> serviceClass;
 	private final String serviceId;
 
-	ConfiguratorImpl(final Class<?> moduleClass, final Method configureMethod) {
+	ContributorImpl(final Class<?> moduleClass, final Method configureMethod) {
 		this.moduleClass = moduleClass;
 		this.configureMethod = configureMethod;
 
@@ -30,10 +30,10 @@ public class ConfiguratorImpl<T> implements Configurator<T> {
 			throw new IllegalArgumentException("Configuration method can not return anu value");
 		}
 
-		final Configure configure = configureMethod.getAnnotation(Configure.class);
-		serviceId = !StringUtils.isEmpty(configure.serviceId()) ? configure.serviceId() : null;
+		final Contribute contribute = configureMethod.getAnnotation(Contribute.class);
+		serviceId = !StringUtils.isEmpty(contribute.serviceId()) ? contribute.serviceId() : null;
 		//noinspection unchecked
-		serviceClass = configure.value();
+		serviceClass = contribute.value();
 	}
 
 	public boolean supports(final Service service) {
@@ -42,7 +42,7 @@ public class ConfiguratorImpl<T> implements Configurator<T> {
 				serviceClass.isAssignableFrom(service.getServiceClass());
 	}
 
-	public void configure(final ServiceResources<T> resources) {
+	public void contribute(final ServiceResources<T> resources) {
 		final Logger logger = resources.getResource(Logger.class);
 		logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, configureMethod);
 

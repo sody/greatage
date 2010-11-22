@@ -29,11 +29,11 @@ public class ScopedService<T> implements ServiceStatus<T> {
 
 	ScopedService(final ServiceLocator locator,
 				  final Service<T> service,
-				  final List<Configurator<T>> configurators,
+				  final List<Contributor<T>> contributors,
 				  final List<Decorator<T>> decorators,
 				  final List<Interceptor<T>> interceptors) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, configurators, decorators);
+		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, contributors, decorators);
 		this.builder = new ScopedBuilder<T>(resources, serviceBuilder);
 		this.interceptors = interceptors;
 	}
