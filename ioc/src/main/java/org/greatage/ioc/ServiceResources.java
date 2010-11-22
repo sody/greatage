@@ -41,8 +41,8 @@ public interface ServiceResources<T> {
 	/**
 	 * Gets resource to service by its type and annotations used.
 	 *
-	 * @param resourceClass reource class
-	 * @param annotations   resouce annotation
+	 * @param resourceClass resource class
+	 * @param annotations   resource annotation
 	 * @param <E>           resource type
 	 * @return requested resource that implements specified class
 	 * @throws RuntimeException if an error occurs instantiating resource

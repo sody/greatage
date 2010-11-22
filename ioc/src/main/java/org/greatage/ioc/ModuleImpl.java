@@ -8,6 +8,7 @@ import org.greatage.ioc.annotations.*;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,11 +45,11 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		}
 	}
 
-	public List<Service> getServices() {
+	public Collection<Service> getServices() {
 		return services;
 	}
 
-	public <T> List<Contributor<T>> getConfigurators(final Service<T> service) {
+	public <T> List<Contributor<T>> getContributors(final Service<T> service) {
 		final List<Contributor<T>> result = CollectionUtils.newList();
 		for (Contributor contributor : contributors) {
 			if (contributor.supports(service)) {

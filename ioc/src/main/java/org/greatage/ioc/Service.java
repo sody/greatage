@@ -5,7 +5,7 @@
 package org.greatage.ioc;
 
 /**
- * This class represents service definition that instantiates service. By default it is configurated by module build
+ * This class represents service definition that instantiates service. By default it is configured by module build
  * methods annotated with {@link org.greatage.ioc.annotations.Build} class.
  *
  * @author Ivan Khalopik
@@ -43,8 +43,8 @@ public interface Service<T> {
 	String getScope();
 
 	/**
-	 * Builds service instance using configured service resource. They are configured by {@link Contributor} instances
-	 * correspondent to this service instance.
+	 * Builds service instance using configured service resource. They are configured by {@link
+	 * org.greatage.ioc.Contributor} instances correspondent to this service instance.
 	 *
 	 * @param resources configured service resources
 	 * @return service instance, not null

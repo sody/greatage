@@ -51,7 +51,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			final List<Decorator<?>> decorators = CollectionUtils.newList();
 			final List<Interceptor<?>> interceptors = CollectionUtils.newList();
 			for (Module module : modules) {
-				contributors.addAll(module.getConfigurators(service));
+				contributors.addAll(module.getContributors(service));
 				decorators.addAll(module.getDecorators(service));
 				interceptors.addAll(module.getInterceptors(service));
 			}
