@@ -13,6 +13,9 @@ import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * This annotation marks class fields and method parameters inside the IoC container as injected symbols with specified
+ * expression provided by {@link org.greatage.ioc.symbol.SymbolSource}.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -21,6 +24,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface Symbol {
 
+	/**
+	 * This property defines symbol expression to inject.
+	 *
+	 * @return symbol expression
+	 */
 	String value();
 
 }

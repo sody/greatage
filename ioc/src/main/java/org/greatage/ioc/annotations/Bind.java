@@ -12,6 +12,10 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * This annotation marks methods inside the IoC module as bind methods that binds service interfaces to their
+ * automatically built implementations with specified binding options. Such bind method must be static and have one
+ * argument of type {@link org.greatage.ioc.ServiceBinder}.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -19,5 +23,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Documented
 public @interface Bind {
-
 }

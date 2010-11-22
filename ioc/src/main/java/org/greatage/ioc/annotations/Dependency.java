@@ -12,6 +12,8 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * This annotation marks module class inside the IoC container as definition for child modules.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -20,6 +22,11 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface Dependency {
 
-	Class[] value() default {};
+	/**
+	 * This property defines child modules.
+	 *
+	 * @return classes of child modules
+	 */
+	Class[] value();
 
 }
