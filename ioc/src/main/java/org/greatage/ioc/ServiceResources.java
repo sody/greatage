@@ -39,7 +39,10 @@ public interface ServiceResources<T> {
 	String getServiceScope();
 
 	/**
-	 * Gets resource to service by its type and annotations used.
+	 * Gets resource to service by its type and annotations used. It can provide logger for service, injected symbols
+	 * configured by {@link org.greatage.ioc.symbol.SymbolSource} (needs {@link org.greatage.ioc.annotations.Symbol}
+	 * annotation), injected services by id (needs {@link org.greatage.ioc.annotations.Inject} annotation) or services by
+	 * their interfaces by default.
 	 *
 	 * @param resourceClass resource class
 	 * @param annotations   resource annotation
