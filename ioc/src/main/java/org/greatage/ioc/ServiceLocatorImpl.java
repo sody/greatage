@@ -78,10 +78,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	}
 
 	public ServiceStatus<?> getServiceStatus(final String id) {
-		if (servicesById.containsKey(id)) {
-			return servicesById.get(id);
-		}
-		throw new IllegalStateException(String.format("Can't find service with id %s", id));
+		return servicesById.get(id);
 	}
 
 	public <T> T getService(final String id, final Class<T> serviceClass) {
