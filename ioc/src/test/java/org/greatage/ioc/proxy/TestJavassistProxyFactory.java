@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc.services;
+package org.greatage.ioc.proxy;
 
 import org.greatage.ioc.mock.*;
 import org.greatage.ioc.proxy.*;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestCGLibProxyFactory extends Assert {
+public class TestJavassistProxyFactory extends Assert {
 	private ProxyFactory proxyFactory;
 
 	@DataProvider
@@ -115,14 +115,14 @@ public class TestCGLibProxyFactory extends Assert {
 				},
 				{
 						new MockObjectBuilder<MockIOCInterfaceImpl4>(MockIOCInterfaceImpl4.class, MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
-						null
+						new Class[]{}
 				},
 		};
 	}
 
 	@BeforeClass
 	public void setupProxyFactory() {
-		proxyFactory = new CGLibProxyFactory();
+		proxyFactory = new JavassistProxyFactory();
 	}
 
 	@Test(dataProvider = "createProxyData")

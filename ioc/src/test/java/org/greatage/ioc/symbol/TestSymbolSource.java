@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc.services;
+package org.greatage.ioc.symbol;
 
 import org.greatage.ioc.symbol.DefaultSymbolProvider;
 import org.greatage.ioc.symbol.SymbolProvider;

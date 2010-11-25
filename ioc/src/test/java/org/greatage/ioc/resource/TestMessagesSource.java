@@ -2,12 +2,8 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc.services;
+package org.greatage.ioc.resource;
 
-import org.greatage.ioc.resource.ClasspathResourceLocator;
-import org.greatage.ioc.resource.Messages;
-import org.greatage.ioc.resource.MessagesSource;
-import org.greatage.ioc.resource.MessagesSourceImpl;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.I18nUtils;
 import org.testng.Assert;

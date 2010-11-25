@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc.services;
+package org.greatage.ioc.proxy;
 
 import org.greatage.ioc.mock.*;
 import org.greatage.ioc.proxy.*;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestJavassistProxyFactory extends Assert {
+public class TestJdkProxyFactory extends Assert {
 	private ProxyFactory proxyFactory;
 
 	@DataProvider
@@ -40,16 +40,6 @@ public class TestJavassistProxyFactory extends Assert {
 						"test", null
 				},
 				{
-						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class),
-						null,
-						"test", null
-				},
-				{
-						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class, "test5"),
-						null,
-						"test", "test5"
-				},
-				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl3.class),
 						CollectionUtils.newList(
 								new MethodAdvice() {
@@ -59,33 +49,6 @@ public class TestJavassistProxyFactory extends Assert {
 								}
 						),
 						"advice:test", "advice:" + MockIOCInterfaceImpl3.MESSAGE
-				},
-				{
-						new MockObjectBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class, MockIOCInterfaceImpl3.class),
-						CollectionUtils.newList(
-								new MethodAdvice() {
-									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-										return "advice:" + invocation.proceed(parameters);
-									}
-								}
-						),
-						"advice:test", "advice:" + MockIOCInterfaceImpl3.MESSAGE
-				},
-				{
-						new MockObjectBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class, MockIOCInterfaceImpl3.class),
-						CollectionUtils.newList(
-								new MethodAdvice() {
-									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-										return "advice1:" + invocation.proceed(parameters);
-									}
-								},
-								new MethodAdvice() {
-									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-										return "advice2:" + invocation.proceed(parameters);
-									}
-								}
-						),
-						"advice2:advice1:test", "advice2:advice1:" + MockIOCInterfaceImpl3.MESSAGE
 				},
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
@@ -114,15 +77,27 @@ public class TestJavassistProxyFactory extends Assert {
 						null
 				},
 				{
+						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class),
+						null
+				},
+				{
+						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class, "test3"),
+						null
+				},
+				{
+						new MockObjectBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class, MockIOCInterfaceImpl3.class),
+						null
+				},
+				{
 						new MockObjectBuilder<MockIOCInterfaceImpl4>(MockIOCInterfaceImpl4.class, MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
-						new Class[]{}
+						null
 				},
 		};
 	}
 
 	@BeforeClass
 	public void setupProxyFactory() {
-		proxyFactory = new JavassistProxyFactory();
+		proxyFactory = new JdkProxyFactory();
 	}
 
 	@Test(dataProvider = "createProxyData")
