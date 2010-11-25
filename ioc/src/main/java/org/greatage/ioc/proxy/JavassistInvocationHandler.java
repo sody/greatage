@@ -11,14 +11,14 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JavaAssistInvocationHandler<T> extends AbstractInvocationHandler<T> {
+public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> {
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
 	 * @param builder object builder
 	 * @param advices method advices
 	 */
-	public JavaAssistInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+	public JavassistInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		super(builder, advices);
 	}
 

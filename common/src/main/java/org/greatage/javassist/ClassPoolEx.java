@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.javaassist;
+package org.greatage.javassist;
 
 import javassist.ClassPool;
 import javassist.LoaderClassPath;

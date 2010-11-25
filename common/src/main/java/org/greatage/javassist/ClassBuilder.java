@@ -2,13 +2,13 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.javaassist;
+package org.greatage.javassist;
 
 import javassist.*;
 import org.greatage.util.DescriptionBuilder;
 
 /**
- * This class represents utility that helps to create classes in runtime uses javaassist.
+ * This class represents utility that helps to create classes in runtime uses javassist.
  *
  * @author Ivan Khalopik
  * @param <T> type of class that will be created by {@link #build()} method

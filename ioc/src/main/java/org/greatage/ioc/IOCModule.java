@@ -11,7 +11,7 @@ import org.greatage.ioc.cache.CacheSource;
 import org.greatage.ioc.cache.SimpleCacheSource;
 import org.greatage.ioc.logging.Log4jLoggerSource;
 import org.greatage.ioc.logging.LoggerSource;
-import org.greatage.ioc.proxy.JavaAssistProxyFactory;
+import org.greatage.ioc.proxy.JavassistProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.resource.ClasspathResourceLocator;
 import org.greatage.ioc.resource.MessagesSource;
@@ -28,7 +28,7 @@ public class IOCModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(ProxyFactory.class, JavaAssistProxyFactory.class);
+		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withId("GASymbolSource");

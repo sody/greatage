@@ -18,7 +18,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestJavaAssistProxyFactory extends Assert {
+public class TestJavassistProxyFactory extends Assert {
 	private ProxyFactory proxyFactory;
 
 	@DataProvider
@@ -122,7 +122,7 @@ public class TestJavaAssistProxyFactory extends Assert {
 
 	@BeforeClass
 	public void setupProxyFactory() {
-		proxyFactory = new JavaAssistProxyFactory();
+		proxyFactory = new JavassistProxyFactory();
 	}
 
 	@Test(dataProvider = "createProxyData")

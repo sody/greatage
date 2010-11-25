@@ -62,6 +62,12 @@
 
 		<dependency>
 			<groupId>org.greatage</groupId>
+			<artifactId>greatage-ioc</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.greatage</groupId>
 			<artifactId>greatage-security</artifactId>
 			<scope>provided</scope>
 		</dependency>
@@ -73,13 +79,18 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.tapestry</groupId>
-			<artifactId>tapestry-core</artifactId>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.tapestry</groupId>
 			<artifactId>tapestry-ioc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tapestry</groupId>
+			<artifactId>tapestry-core</artifactId>
 		</dependency>
 
 		<dependency>

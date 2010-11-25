@@ -4,8 +4,8 @@
 
 package org.greatage.ioc.proxy;
 
-import org.greatage.javaassist.ClassBuilder;
-import org.greatage.javaassist.ClassPoolEx;
+import org.greatage.javassist.ClassBuilder;
+import org.greatage.javassist.ClassPoolEx;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
@@ -16,12 +16,12 @@ import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
- * This class represents proxy factory implementation using javaassist library.
+ * This class represents proxy factory implementation using javassist library.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JavaAssistProxyFactory extends AbstractProxyFactory {
+public class JavassistProxyFactory extends AbstractProxyFactory {
 	private static final AtomicLong UID_GENERATOR = new AtomicLong(System.currentTimeMillis());
 
 	private static final String HANDLER_FIELD = "_handler";
@@ -31,7 +31,7 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 	/**
 	 * Creates new instance of java assist proxy factory with default class pool.
 	 */
-	public JavaAssistProxyFactory() {
+	public JavassistProxyFactory() {
 		this(new ClassPoolEx());
 	}
 
@@ -40,7 +40,7 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 	 *
 	 * @param pool class pool
 	 */
-	public JavaAssistProxyFactory(final ClassPoolEx pool) {
+	public JavassistProxyFactory(final ClassPoolEx pool) {
 		this.pool = pool;
 	}
 
@@ -63,8 +63,8 @@ public class JavaAssistProxyFactory extends AbstractProxyFactory {
 
 		final ClassBuilder<T> classBuilder = new ClassBuilder<T>(pool, className, false, proxyClass);
 
-		classBuilder.addField(HANDLER_FIELD, Modifier.PRIVATE | Modifier.FINAL, JavaAssistInvocationHandler.class);
-		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, List.class}, null, String.format("%s = new %s($$);", HANDLER_FIELD, JavaAssistInvocationHandler.class.getName()));
+		classBuilder.addField(HANDLER_FIELD, Modifier.PRIVATE | Modifier.FINAL, JavassistInvocationHandler.class);
+		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, List.class}, null, String.format("%s = new %s($$);", HANDLER_FIELD, JavassistInvocationHandler.class.getName()));
 
 		for (Method method : proxyClass.getMethods()) {
 			final int modifiers = method.getModifiers();
