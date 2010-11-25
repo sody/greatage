@@ -33,7 +33,7 @@ public class TestReflectionUtils extends Assert {
 	}
 
 	@DataProvider
-	public Object[][] newInstanceExceptionData() {
+	public Object[][] newInstanceWrongData() {
 		return new Object[][]{
 				{MockClass.class, new Object[]{true}},
 				{MockClass.class, new Object[]{"test", "test"}},
@@ -88,7 +88,7 @@ public class TestReflectionUtils extends Assert {
 		assertEquals(actual, expected);
 	}
 
-	@Test(dataProvider = "newInstanceExceptionData", expectedExceptions = RuntimeException.class)
+	@Test(dataProvider = "newInstanceWrongData", expectedExceptions = RuntimeException.class)
 	public <T> void testNewInstanceException(final Class<T> clazz, final Object[] parameters) {
 		ReflectionUtils.newInstance(clazz, parameters);
 	}
