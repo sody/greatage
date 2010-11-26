@@ -12,18 +12,18 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class DefaultAuthentication implements Authentication {
+public class PasswordAuthentication implements Authentication {
 	private final String name;
 	private final List<String> authorities;
 	private final String encodedPassword;
 
-	public DefaultAuthentication(final String name, final String encodedPassword, List<String> authorities) {
+	public PasswordAuthentication(final String name, final String encodedPassword, List<String> authorities) {
 		this.name = name;
 		this.authorities = authorities;
 		this.encodedPassword = encodedPassword;
 	}
 
-	public DefaultAuthentication(final String name, final String encodedPassword, String... authorities) {
+	public PasswordAuthentication(final String name, final String encodedPassword, String... authorities) {
 		this(name, encodedPassword, CollectionUtils.newList(authorities));
 	}
 

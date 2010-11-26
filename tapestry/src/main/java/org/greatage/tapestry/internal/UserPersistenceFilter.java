@@ -25,23 +25,23 @@ public class UserPersistenceFilter implements RequestFilter {
 
 	public boolean service(final Request request, final Response response, final RequestHandler handler) throws IOException {
 		try {
-			final Authentication authentication = getAuthentication(request);
-			securityContext.setAuthentication(authentication);
+			final Authentication authentication = loadAuthentication(request);
+			securityContext.initCurrentUser(authentication);
 			return handler.service(request, response);
 		} finally {
-			final Authentication authentication = securityContext.getAuthentication();
-			securityContext.setAuthentication(null);
-			setAuthentication(request, authentication);
+			final Authentication authentication = securityContext.getCurrentUser();
+			securityContext.clearCurrentUser();
+			saveAuthentication(request, authentication);
 		}
 	}
 
-	private Authentication getAuthentication(final Request request) {
+	private Authentication loadAuthentication(final Request request) {
 		final Session session = getSession(request, true);
 		final Object user = session != null ? session.getAttribute(SECURITY_CONTEXT_KEY) : null;
 		return user != null && user instanceof Authentication ? (Authentication) user : null;
 	}
 
-	private void setAuthentication(final Request request, final Authentication user) {
+	private void saveAuthentication(final Request request, final Authentication user) {
 		final Session session = getSession(request, true);
 		session.setAttribute(SECURITY_CONTEXT_KEY, user);
 	}

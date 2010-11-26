@@ -4,14 +4,24 @@
 
 package org.greatage.security;
 
+import java.util.List;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface SecurityContext {
+public interface SecurityContext<T extends Authentication> {
 
-	Authentication getAuthentication();
+	T getCurrentUser();
 
-	void setAuthentication(Authentication authentication);
+	T getUser(String name);
+
+	List<T> getLoggedUsers();
+
+	void initCurrentUser(T user);
+
+	void clearCurrentUser();
+
+	void removeCurrentUser();
 
 }

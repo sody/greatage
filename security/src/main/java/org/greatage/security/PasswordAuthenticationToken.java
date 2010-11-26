@@ -8,11 +8,11 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class DefaultAuthenticationToken implements AuthenticationToken {
+public class PasswordAuthenticationToken implements AuthenticationToken {
 	private final String name;
 	private final String password;
 
-	public DefaultAuthenticationToken(final String name, final String password) {
+	public PasswordAuthenticationToken(final String name, final String password) {
 		this.name = name;
 		this.password = password;
 	}

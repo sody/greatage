@@ -18,8 +18,6 @@ import org.greatage.ioc.annotations.Dependency;
 import org.greatage.ioc.resource.Resource;
 import org.greatage.ioc.resource.ResourceLocator;
 import org.greatage.security.AccessControlManager;
-import org.greatage.security.PermissionSecurityChecker;
-import org.greatage.security.SecurityChecker;
 import org.greatage.security.SecurityModule;
 
 import java.io.IOException;
@@ -35,7 +33,6 @@ public class DroolsSecurityModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(SecurityChecker.class, PermissionSecurityChecker.class).withId("PermissionSecurityChecker");
 		binder.bind(AccessControlManager.class, DroolsAccessControlManager.class);
 	}
 

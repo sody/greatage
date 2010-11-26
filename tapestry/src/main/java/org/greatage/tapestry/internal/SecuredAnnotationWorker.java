@@ -10,28 +10,78 @@ import org.apache.tapestry5.services.ClassTransformation;
 import org.apache.tapestry5.services.ComponentClassTransformWorker;
 import org.apache.tapestry5.services.ComponentInstanceOperation;
 import org.apache.tapestry5.services.TransformConstants;
-import org.greatage.security.SecurityChecker;
-import org.greatage.security.annotations.Authority;
+import org.greatage.security.AccessDeniedException;
+import org.greatage.security.Authentication;
+import org.greatage.security.AuthorityConstants;
+import org.greatage.security.SecurityContext;
+import org.greatage.security.annotations.Allow;
+import org.greatage.security.annotations.Deny;
+import org.greatage.security.annotations.Operation;
+import org.greatage.util.CollectionUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
 public class SecuredAnnotationWorker implements ComponentClassTransformWorker {
-	private final SecurityChecker securityChecker;
+	private final SecurityContext securityContext;
 
-	public SecuredAnnotationWorker(final SecurityChecker securityChecker) {
-		this.securityChecker = securityChecker;
+	public SecuredAnnotationWorker(final SecurityContext securityContext) {
+		this.securityContext = securityContext;
 	}
 
 	public void transform(final ClassTransformation transformation, final MutableComponentModel model) {
-		final Authority authority = transformation.getAnnotation(Authority.class);
-		if (authority != null) {
+		final Allow allow = transformation.getAnnotation(Allow.class);
+		final Deny deny = transformation.getAnnotation(Deny.class);
+		if (allow != null || deny != null) {
 			transformation.getOrCreateMethod(TransformConstants.DISPATCH_COMPONENT_EVENT).addOperationBefore(new ComponentInstanceOperation() {
 				public void invoke(final Component instance) {
-					securityChecker.check(null, authority.value());
+					final List<String> authorities = getAuthorities();
+					if (allow != null) {
+						checkAllow(allow, authorities);
+					}
+					if (deny != null) {
+						checkDeny(deny, authorities);
+					}
 				}
 			});
 		}
+	}
+
+	private void checkDeny(final Deny deny, final List<String> authorities) {
+		if (deny.operation() == Operation.AND) {
+			if (authorities.containsAll(Arrays.asList(deny.value()))) {
+				throw new AccessDeniedException(String.format("Access denied for authorities: '%s'", authorities));
+			}
+		} else if (deny.operation() == Operation.OR) {
+			for (String authority : deny.value()) {
+				if (authorities.contains(authority)) {
+					throw new AccessDeniedException(String.format("Access denied for authorities: '%s'", authorities));
+				}
+			}
+		}
+	}
+
+	private void checkAllow(final Allow allow, final List<String> authorities) {
+		if (allow.operation() == Operation.AND) {
+			if (!authorities.containsAll(Arrays.asList(allow.value()))) {
+				throw new AccessDeniedException(String.format("Access denied for authorities: '%s'", authorities));
+			}
+		} else if (allow.operation() == Operation.OR) {
+			for (String authority : allow.value()) {
+				if (authorities.contains(authority)) {
+					return;
+				}
+			}
+			throw new AccessDeniedException(String.format("Access denied for authorities: '%s'", authorities));
+		}
+	}
+
+	private List<String> getAuthorities() {
+		final Authentication user = securityContext.getCurrentUser();
+		return user != null ? user.getAuthorities() : CollectionUtils.newList(AuthorityConstants.STATUS_ANONYMOUS);
 	}
 }

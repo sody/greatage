@@ -10,6 +10,8 @@ package org.greatage.security;
  */
 public interface AuthenticationManager {
 
-	Authentication authenticate(AuthenticationToken token);
+	void signIn(AuthenticationToken token) throws AuthenticationException;
+
+	void signOut() throws AuthenticationException;
 
 }

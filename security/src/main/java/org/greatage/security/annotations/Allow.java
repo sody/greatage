@@ -8,8 +8,10 @@ package org.greatage.security.annotations;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public @interface Authority {
+public @interface Allow {
 
-	String value();
+	String[] value();
+
+	Operation operation() default Operation.AND;
 
 }
