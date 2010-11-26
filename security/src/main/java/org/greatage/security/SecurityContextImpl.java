@@ -30,7 +30,9 @@ public class SecurityContextImpl<T extends Authentication> implements SecurityCo
 	}
 
 	public void initCurrentUser(final T user) {
-		loggedUsers.put(user.getName(), user);
+		if (user != null) {
+			loggedUsers.put(user.getName(), user);
+		}
 		currentUser.set(user);
 	}
 

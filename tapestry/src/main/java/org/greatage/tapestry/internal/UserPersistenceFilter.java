@@ -5,7 +5,9 @@
 package org.greatage.tapestry.internal;
 
 import org.apache.tapestry5.services.*;
+import org.greatage.security.AnonymousAuthenticationToken;
 import org.greatage.security.Authentication;
+import org.greatage.security.AuthenticationManager;
 import org.greatage.security.SecurityContext;
 
 import java.io.IOException;
@@ -17,16 +19,23 @@ import java.io.IOException;
 public class UserPersistenceFilter implements RequestFilter {
 	private static final String SECURITY_CONTEXT_KEY = "SECURITY_CONTEXT";
 
+	private final AuthenticationManager authenticationManager;
 	private final SecurityContext securityContext;
 
-	public UserPersistenceFilter(final SecurityContext securityContext) {
+	public UserPersistenceFilter(final AuthenticationManager authenticationManager, final SecurityContext securityContext) {
+		this.authenticationManager = authenticationManager;
 		this.securityContext = securityContext;
 	}
 
+	@SuppressWarnings({"unchecked"})
 	public boolean service(final Request request, final Response response, final RequestHandler handler) throws IOException {
 		try {
 			final Authentication authentication = loadAuthentication(request);
-			securityContext.initCurrentUser(authentication);
+			if (authentication != null) {
+				securityContext.initCurrentUser(authentication);
+			} else {
+				authenticationManager.signIn(new AnonymousAuthenticationToken());
+			}
 			return handler.service(request, response);
 		} finally {
 			final Authentication authentication = securityContext.getCurrentUser();
