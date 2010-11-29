@@ -72,9 +72,45 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>${clean.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${compiler.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${resources.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${jar.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${source.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>${install.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${deploy.plugin.version}</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.4.2</version>
+					<version>${surefire.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${site.plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>${versions.plugin.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -107,6 +143,15 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<dependencyManagement>
 		<dependencies>
@@ -264,7 +309,7 @@
 		<cglib.version>2.2</cglib.version>
 
 		<jcache.version>1.1</jcache.version>
-		<ehcache.version>2.2.0</ehcache.version>
+		<ehcache.version>2.3.0</ehcache.version>
 		<oscache.version>2.4</oscache.version>
 
 		<!--security dependencies-->
@@ -277,7 +322,19 @@
 
 		<!--front dependencies-->
 		<servlet.api.version>2.5</servlet.api.version>
-		<tapestry.version>5.2.2</tapestry.version>
+		<tapestry.version>5.2.4</tapestry.version>
+
+		<!--plugin dependencies-->
+		<clean.plugin.version>2.3</clean.plugin.version>
+		<jar.plugin.version>2.3</jar.plugin.version>
+		<install.plugin.version>2.3</install.plugin.version>
+		<deploy.plugin.version>2.4</deploy.plugin.version>
+		<site.plugin.version>2.1</site.plugin.version>
+		<surefire.plugin.version>2.4.3</surefire.plugin.version>
+		<compiler.plugin.version>2.3</compiler.plugin.version>
+		<resources.plugin.version>2.4</resources.plugin.version>
+		<source.plugin.version>2.1.2</source.plugin.version>
+		<versions.plugin.version>1.2</versions.plugin.version>
 
 		<!--library properties-->
 		<release.url>${project.build.directory}/repository</release.url>

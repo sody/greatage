@@ -9,7 +9,7 @@
 				<maven.test.skip>true</maven.test.skip>
 				<maven.javadoc.skip>true</maven.javadoc.skip>
 				<release.url>file:/home/sody/development/temp-repo</release.url>
-                <snapshot.url>file:/home/sody/development/temp-repo</snapshot.url>
+				<snapshot.url>file:/home/sody/development/temp-repo</snapshot.url>
 			</properties>
 		</profile>
 
@@ -18,8 +18,8 @@
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
 				<maven.javadoc.skip>false</maven.javadoc.skip>
-				<release.url>file://d:/projects/great-age/repositories/release</release.url>
-				<snapshot.url>file://d:/projects/great-age/repositories/snapshot</snapshot.url>
+				<release.url>file://z:/projects/greatage-repository/release</release.url>
+				<snapshot.url>file://z:/projects/greatage-repository/snapshot</snapshot.url>
 			</properties>
 		</profile>
 	</profiles>
