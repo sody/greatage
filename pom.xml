@@ -153,7 +153,7 @@
 			<plugin>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<configuration>
-					<configLocation>config/sun_checks.xml</configLocation>
+					<configLocation>src/config/greatage_checks.xml</configLocation>
 				</configuration>
 			</plugin>
 			<plugin>
