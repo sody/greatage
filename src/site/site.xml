@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Great Age Framework">
+	<publishDate format="dd MMM yyyy"/>
+	<version/>
+
+	<body>
+		<menu name="Great Age Project">
+			<item name="JavaDocs" href="apidocs/"/>
+			<item name="Ivan's Blog" href="http://ikhalopik.blogspot.com/"/>
+		</menu>
+
+		<menu name="Great Age Modules">
+			<item name="greatage-common" href="common/"/>
+			<item name="greatage-ioc" href="ioc/"/>
+			<item name="greatage-security" href="security/"/>
+			<item name="greatage-domain" href="domain/"/>
+			<item name="greatage-tapestry" href="tapestry/"/>
+		</menu>
+
+		<menu ref="reports"/>
+	</body>
+</project>
