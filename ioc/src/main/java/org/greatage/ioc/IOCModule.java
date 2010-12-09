@@ -4,6 +4,8 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.access.ClassAccessSource;
+import org.greatage.ioc.access.ClassAccessSourceImpl;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Inject;
@@ -17,8 +19,17 @@ import org.greatage.ioc.resource.ClasspathResourceLocator;
 import org.greatage.ioc.resource.MessagesSource;
 import org.greatage.ioc.resource.MessagesSourceImpl;
 import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.ioc.scope.*;
-import org.greatage.ioc.symbol.*;
+import org.greatage.ioc.scope.GlobalScope;
+import org.greatage.ioc.scope.PrototypeScope;
+import org.greatage.ioc.scope.Scope;
+import org.greatage.ioc.scope.ScopeManager;
+import org.greatage.ioc.scope.ScopeManagerImpl;
+import org.greatage.ioc.scope.ThreadScope;
+import org.greatage.ioc.symbol.DefaultSymbolProvider;
+import org.greatage.ioc.symbol.SymbolProvider;
+import org.greatage.ioc.symbol.SymbolSource;
+import org.greatage.ioc.symbol.SymbolSourceImpl;
+import org.greatage.ioc.symbol.SystemSymbolProvider;
 
 /**
  * @author Ivan Khalopik
@@ -36,6 +47,8 @@ public class IOCModule {
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
 		binder.bind(CacheSource.class, SimpleCacheSource.class).withId("SimpleCacheSource");
+
+		binder.bind(ClassAccessSource.class, ClassAccessSourceImpl.class);
 	}
 
 	@Contribute(ScopeManager.class)
@@ -51,5 +64,4 @@ public class IOCModule {
 		configuration.add(applicationSymbolProvider, "Application");
 		configuration.addInstance(SystemSymbolProvider.class, "System", "after:Application");
 	}
-
 }
