@@ -9,13 +9,7 @@
 			<item name="Ivan's Blog" href="http://ikhalopik.blogspot.com/"/>
 		</menu>
 
-		<menu name="Great Age Modules">
-			<item name="greatage-common" href="common/"/>
-			<item name="greatage-ioc" href="ioc/"/>
-			<item name="greatage-security" href="security/"/>
-			<item name="greatage-domain" href="domain/"/>
-			<item name="greatage-tapestry" href="tapestry/"/>
-		</menu>
+		<menu ref="modules"/>
 
 		<menu ref="reports"/>
 	</body>
