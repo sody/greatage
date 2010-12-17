@@ -14,7 +14,7 @@
 
 	<scm>
 		<url>https://github.com/sody/greatage</url>
-		<developerConnection>scm:git:ssh:git@github.com:sody/greatage.git</developerConnection>
+		<developerConnection>scm:git:ssh://git@github.com/sody/greatage.git</developerConnection>
 		<connection>scm:git:git://github.com/sody/greatage.git</connection>
 	</scm>
 
