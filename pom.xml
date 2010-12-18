@@ -75,6 +75,13 @@
 	</distributionManagement>
 
 	<build>
+		<extensions>
+			<extension>
+				<groupId>org.jvnet.wagon-svn</groupId>
+				<artifactId>wagon-svn</artifactId>
+				<version>1.8</version>
+			</extension>
+		</extensions>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -357,4 +364,24 @@
 		<snapshot.url>file://${user.dir}/target/greatage/snapshot</snapshot.url>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>debug</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>release</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<maven.javadoc.skip>false</maven.javadoc.skip>
+				<site.url>file://${user.dir}/target/greatage/site</site.url>
+				<release.url>svn:https://great-age-repository.googlecode.com/svn/trunk/release</release.url>
+				<snapshot.url>svn:https://great-age-repository.googlecode.com/svn/trunk/snapshot</snapshot.url>
+			</properties>
+		</profile>
+	</profiles>
 </project>
