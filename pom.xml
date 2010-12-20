@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                      http://maven.apache.org/maven-v4_0_0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<name>Great Age Framework Project</name>
@@ -42,11 +41,11 @@
 	<repositories>
 		<repository>
 			<id>jboss</id>
-			<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
 		</repository>
 		<repository>
 			<id>apache-snapshot</id>
-			<url>http://repository.apache.org/snapshots/</url>
+			<url>http://repository.apache.org/snapshots</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -72,14 +71,6 @@
 	</distributionManagement>
 
 	<build>
-		<extensions>
-			<extension>
-				<groupId>org.jvnet.wagon-svn</groupId>
-				<artifactId>wagon-svn</artifactId>
-				<version>1.8</version>
-			</extension>
-		</extensions>
-
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -125,25 +116,12 @@
 				</executions>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>1.3</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<artifactId>maven-scm-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>1.3</version>
-					</dependency>
-				</dependencies>
+				<version>2.1</version>
+				<configuration>
+					<autoVersionSubmodules>true</autoVersionSubmodules>
+					<commitByProject>true</commitByProject>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
@@ -375,4 +353,24 @@
 		<snapshot.url>file://${user.dir}/target/greatage/snapshot</snapshot.url>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>debug</id>
+			<properties>
+				<maven.test.skip>true</maven.test.skip>
+				<maven.javadoc.skip>true</maven.javadoc.skip>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>release</id>
+			<properties>
+				<maven.test.skip>false</maven.test.skip>
+				<maven.javadoc.skip>false</maven.javadoc.skip>
+				<site.url>file://${user.dir}/target/greatage/site</site.url>
+				<release.url>svn:https://great-age-repository.googlecode.com/svn/trunk/release</release.url>
+				<snapshot.url>svn:https://great-age-repository.googlecode.com/svn/trunk/snapshot</snapshot.url>
+			</properties>
+		</profile>
+	</profiles>
 </project>
