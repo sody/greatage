@@ -77,6 +77,10 @@
 					<artifactId>maven-site-plugin</artifactId>
 					<version>${site.plugin.version}</version>
 				</plugin>
+				<plugin>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${source.plugin.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -109,7 +113,7 @@
 					<execution>
 						<id>attach-sources</id>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -165,6 +169,12 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>cobertura-maven-plugin</artifactId>
 				<version>${cobertura.plugin.version}</version>
+				<configuration>
+					<formats>
+						<format>xml</format>
+						<format>html</format>
+					</formats>
+				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>
@@ -344,6 +354,7 @@
 
 		<!--plugin dependencies-->
 		<site.plugin.version>2.1</site.plugin.version>
+		<source.plugin.version>2.1</source.plugin.version>
 		<versions.plugin.version>1.2</versions.plugin.version>
 		<cobertura.plugin.version>2.4</cobertura.plugin.version>
 		<taglist.plugin.version>2.4</taglist.plugin.version>
