@@ -85,14 +85,7 @@
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
-					<encoding>UTF-8</encoding>
 					<optimize>true</optimize>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-resources-plugin</artifactId>
-				<configuration>
-					<encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -106,6 +99,12 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
+				<configuration>
+					<archive>
+						<compress>true</compress>
+						<index>true</index>
+					</archive>
+				</configuration>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -315,6 +314,8 @@
 	</dependencyManagement>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
 		<!--common dependencies-->
 		<testng.version>5.14.2</testng.version>
 
@@ -367,9 +368,6 @@
 			<properties>
 				<maven.test.skip>false</maven.test.skip>
 				<maven.javadoc.skip>false</maven.javadoc.skip>
-				<site.url>file://${user.dir}/target/greatage/site</site.url>
-				<release.url>svn:https://great-age-repository.googlecode.com/svn/trunk/release</release.url>
-				<snapshot.url>svn:https://great-age-repository.googlecode.com/svn/trunk/snapshot</snapshot.url>
 			</properties>
 		</profile>
 	</profiles>
