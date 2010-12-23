@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>Great Age Security Library - Checkstyle report</title>
+    <link>http://localhost/greatage/greatage-security</link>
+    <description>Great Age Security Library - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2009 - 2010</copyright>
+    <item>
+      <title>File: 33,
+             Errors: 21,
+             Warnings: 85,
+             Infos: 8
+      </title>
+            <link>http://localhost/greatage/greatage-security/checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://localhost/greatage/greatage-security/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AnonymousAuthenticationProvider.java">org/greatage/security/AnonymousAuthenticationProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AccessControlManager.java">org/greatage/security/AccessControlManager.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.SecurityModule.java">org/greatage/security/SecurityModule.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthenticationToken.java">org/greatage/security/AuthenticationToken.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthoritySecurityAdvice.java">org/greatage/security/AuthoritySecurityAdvice.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.SecurityContext.java">org/greatage/security/SecurityContext.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.annotations.Permission.java">org/greatage/security/annotations/Permission.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.PasswordEncoder.java">org/greatage/security/PasswordEncoder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.drools.DroolsSecurityModule.java">org/greatage/security/drools/DroolsSecurityModule.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.SecurityContextImpl.java">org/greatage/security/SecurityContextImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.Authentication.java">org/greatage/security/Authentication.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.PasswordAuthentication.java">org/greatage/security/PasswordAuthentication.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AnonymousAuthenticationToken.java">org/greatage/security/AnonymousAuthenticationToken.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AbstractAuthenticationProvider.java">org/greatage/security/AbstractAuthenticationProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  5
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.PasswordAuthenticationProvider.java">org/greatage/security/PasswordAuthenticationProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AccessDeniedException.java">org/greatage/security/AccessDeniedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthenticationProvider.java">org/greatage/security/AuthenticationProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  3
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.annotations.Deny.java">org/greatage/security/annotations/Deny.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthenticationManager.java">org/greatage/security/AuthenticationManager.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  2
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthenticationManagerImpl.java">org/greatage/security/AuthenticationManagerImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  6
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthorityConstants.java">org/greatage/security/AuthorityConstants.java</a>
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.PlainTextPasswordEncoder.java">org/greatage/security/PlainTextPasswordEncoder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.drools.DroolsAccessControlManager.java">org/greatage/security/drools/DroolsAccessControlManager.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.SecurityException.java">org/greatage/security/SecurityException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.PasswordAuthenticationToken.java">org/greatage/security/PasswordAuthenticationToken.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.drools.DroolsAccessControlList.java">org/greatage/security/drools/DroolsAccessControlList.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.MessageDigestPasswordEncoder.java">org/greatage/security/MessageDigestPasswordEncoder.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.drools.DroolsAccessControlEntry.java">org/greatage/security/drools/DroolsAccessControlEntry.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  7
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AuthenticationException.java">org/greatage/security/AuthenticationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.annotations.Operation.java">org/greatage/security/annotations/Operation.java</a>
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AccessControlEntry.java">org/greatage/security/AccessControlEntry.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.annotations.Allow.java">org/greatage/security/annotations/Allow.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-security/checkstyle.html#org.greatage.security.AccessControlList.java">org/greatage/security/AccessControlList.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
