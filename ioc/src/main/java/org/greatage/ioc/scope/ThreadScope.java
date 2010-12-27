@@ -22,6 +22,12 @@ public class ThreadScope extends AbstractScope {
 	};
 
 	@Override
+	public void cleanup() {
+		super.cleanup(); //cleanup services before closing scope
+		services.remove();
+	}
+
+	@Override
 	protected <E> boolean contains(final ServiceResources<E> resources) {
 		return getServices().containsKey(resources.getServiceId());
 	}

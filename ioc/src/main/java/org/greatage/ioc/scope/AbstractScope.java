@@ -21,6 +21,10 @@ public abstract class AbstractScope implements Scope {
 		return get(resources);
 	}
 
+	public void cleanup() {
+		//todo: add functionality of closing services
+	}
+
 	protected abstract <E> boolean contains(final ServiceResources<E> resources);
 
 	protected abstract <E> E get(final ServiceResources<E> resources);

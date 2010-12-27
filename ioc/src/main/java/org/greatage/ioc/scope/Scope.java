@@ -25,4 +25,8 @@ public interface Scope {
 	 */
 	<E> E get(ServiceResources<E> resources, ObjectBuilder<E> builder);
 
+	/**
+	 * Close scope before end of lifetime.
+	 */
+	void cleanup();
 }

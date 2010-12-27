@@ -15,4 +15,8 @@ public class PrototypeScope implements Scope {
 	public <E> E get(final ServiceResources<E> resources, final ObjectBuilder<E> builder) {
 		return builder.build();
 	}
+
+	public void cleanup() {
+		//do nothing
+	}
 }
