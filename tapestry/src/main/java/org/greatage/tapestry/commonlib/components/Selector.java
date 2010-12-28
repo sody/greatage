@@ -4,12 +4,15 @@
 
 package org.greatage.tapestry.commonlib.components;
 
+import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Environmental;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.internal.TapestryInternalUtils;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.apache.tapestry5.json.JSONObject;
 import org.apache.tapestry5.services.ComponentDefaultProvider;
 import org.apache.tapestry5.services.FormSupport;
@@ -17,6 +20,7 @@ import org.greatage.tapestry.CSSConstants;
 import org.greatage.tapestry.commonlib.base.components.AbstractComponent;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +35,9 @@ public class Selector extends AbstractComponent {
 
 	@Parameter
 	private Object value;
+
+	@Parameter(name = "class", defaultPrefix = BindingConstants.LITERAL)
+	private String className;
 
 	@Property
 	@Parameter
@@ -57,7 +64,13 @@ public class Selector extends AbstractComponent {
 	}
 
 	public String getSelectorClass() {
-		return CSSConstants.CONTAINER_CLASS + " " + CSSConstants.SELECTOR_CLASS;
+		final List<String> classes = CollectionFactory.newList();
+		classes.add(CSSConstants.CONTAINER_CLASS);
+		classes.add(CSSConstants.SELECTOR_CLASS);
+		if (className != null) {
+			classes.add(className);
+		}
+		return TapestryInternalUtils.toClassAttributeValue(classes);
 	}
 
 	public boolean isVolatile() {

@@ -17,13 +17,13 @@ public class PasswordAuthentication implements Authentication {
 	private final List<String> authorities;
 	private final String encodedPassword;
 
-	public PasswordAuthentication(final String name, final String encodedPassword, List<String> authorities) {
+	public PasswordAuthentication(final String name, final String encodedPassword, final List<String> authorities) {
 		this.name = name;
 		this.authorities = authorities;
 		this.encodedPassword = encodedPassword;
 	}
 
-	public PasswordAuthentication(final String name, final String encodedPassword, String... authorities) {
+	public PasswordAuthentication(final String name, final String encodedPassword, final String... authorities) {
 		this(name, encodedPassword, CollectionUtils.newList(authorities));
 	}
 
