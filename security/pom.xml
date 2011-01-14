@@ -9,11 +9,12 @@
 		<version>1.1-SNAPSHOT</version>
 	</parent>
 
-	<name>Great Age Security Library</name>
 	<groupId>org.greatage</groupId>
 	<artifactId>greatage-security</artifactId>
-	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
+
+	<name>Great Age Security Library</name>
+	<description>Great Age Security Library</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -29,17 +30,6 @@
 				<directory>src/test/resources</directory>
 			</testResource>
 		</testResources>
-
-		<plugins>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
 
 	<dependencies>

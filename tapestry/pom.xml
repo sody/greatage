@@ -9,11 +9,12 @@
 		<version>1.1-SNAPSHOT</version>
 	</parent>
 
-	<name>Great Age Tapestry Library</name>
 	<groupId>org.greatage</groupId>
 	<artifactId>greatage-tapestry</artifactId>
-	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
+
+	<name>Great Age Tapestry Library</name>
+	<description>Great Age Tapestry Library</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -32,20 +33,12 @@
 
 		<plugins>
 			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<suiteXmlFiles>
-						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
-					</suiteXmlFiles>
-				</configuration>
-			</plugin>
-			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
 					<archive>
 						<manifestEntries>
-							<Tapestry-Module-Classes>org.greatage.tapestry.services.CommonModule
-							</Tapestry-Module-Classes>
+							<Tapestry-Module-Classes>org.greatage.tapestry.services.CommonModule</Tapestry-Module-Classes>
 						</manifestEntries>
 					</archive>
 				</configuration>
