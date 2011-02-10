@@ -158,6 +158,13 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-report-plugin</artifactId>
 				<version>2.6</version>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>report-only</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -188,7 +195,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-
 			<!--internal dependencies-->
 			<dependency>
 				<groupId>org.greatage</groupId>
@@ -326,7 +332,6 @@
 				<artifactId>tapestry-test</artifactId>
 				<version>${tapestry.version}</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -339,7 +344,7 @@
 		<snapshot.url>file://${user.dir}/target/greatage/snapshot</snapshot.url>
 
 		<!--common dependencies-->
-		<testng.version>5.14.2</testng.version>
+		<testng.version>5.14.9</testng.version>
 
 		<!--ioc dependencies-->
 		<log4j.version>1.2.16</log4j.version>
@@ -349,8 +354,8 @@
 		<cglib.version>2.2</cglib.version>
 
 		<jcache.version>1.1</jcache.version>
-		<ehcache.version>2.3.0</ehcache.version>
-		<oscache.version>2.4</oscache.version>
+		<ehcache.version>2.3.2</ehcache.version>
+		<oscache.version>2.4.1</oscache.version>
 
 		<!--security dependencies-->
 		<drools.version>5.1.1</drools.version>
@@ -358,7 +363,7 @@
 		<!--domain dependencies-->
 		<persistence.api.version>1.0</persistence.api.version>
 		<jdo.api.version>2.3-eb</jdo.api.version>
-		<hibernate.version>3.6.0.Final</hibernate.version>
+		<hibernate.version>3.6.1.Final</hibernate.version>
 
 		<!--front dependencies-->
 		<servlet.api.version>2.5</servlet.api.version>

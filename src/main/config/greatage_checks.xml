@@ -10,33 +10,48 @@
 	<!--<property name="headerFile" value="${checkstyle.header.file}"/>-->
 	<!--</module>-->
 
+	<!--Checks that each Java package has a Javadoc file used for commenting. -->
+	<module name="JavadocPackage"/>
+
 	<module name="TreeWalker">
 		<property name="cacheFile" value="${checkstyle.cache.file}"/>
 		<property name="tabWidth" value="4"/>
 
-		<module name="LeftCurly"/>
-		<module name="RightCurly"/>
-
+		<!--Checks for long lines.-->
 		<module name="LineLength">
-			<property name="max" value="120"/>
+			<property name="max" value="125"/>
 			<property name="ignorePattern" value="@version|@see|@todo|TODO"/>
 		</module>
+
+		<!--Checks the placement of left curly braces on types, methods and other blocks-->
+		<module name="LeftCurly"/>
+
+		<!--Checks the placement of right curly braces.-->
+		<module name="RightCurly"/>
 
 		<module name="MemberName"/>
 
 		<!-- Checks for Javadoc comments.                     -->
 		<!-- See http://checkstyle.sf.net/config_javadoc.html -->
-		<module name="JavadocMethod">
-			<property name="severity" value="warning"/>
-			<property name="scope" value="protected"/>
-		</module>
+
+		<!--Checks Javadoc comments for class and interface definitions. todo: add authorFormat pattern -->
 		<module name="JavadocType">
 			<property name="scope" value="protected"/>
 		</module>
+
+		<!--Checks the Javadoc of a method or constructor.-->
+		<module name="JavadocMethod">
+			<property name="severity" value="warning"/>
+			<property name="scope" value="protected"/>
+			<property name="allowUndeclaredRTE" value="true"/>
+		</module>
+
+		<!--Checks that variables have Javadoc comments.-->
 		<module name="JavadocVariable">
 			<property name="severity" value="info"/>
 			<property name="scope" value="protected"/>
 		</module>
+
 
 		<!-- Checks for Naming Conventions.                  -->
 		<!-- See http://checkstyle.sf.net/config_naming.html -->

@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * @author Ivan Khalopik
  * @since 1.0
+ * @param <K>
  */
 public class MultiLocker<K> {
 	private final Map<K, Locker> lockers = CollectionUtils.newConcurrentMap();

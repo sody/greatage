@@ -43,11 +43,15 @@ public class OrderingUtils {
 					final OrderedNode<T> target = nodes.get(targetId);
 					// throw exception if target item is not exists
 					if (target == null) {
-						throw new IllegalArgumentException(String.format("Ordered item with id '%s' not found. It is dependency of item with id '%s'", targetId, item.getOrderId()));
+						throw new IllegalArgumentException(String.format(
+								"Ordered item with id '%s' not found. It is dependency of item with id '%s'",
+								targetId, item.getOrderId()));
 					}
 					// throw exception for cycle dependencies
 					if (source.isReachable(target)) {
-						throw new IllegalArgumentException(String.format("Cycle dependency of items with id '%s' and '%s'", targetId, item.getOrderId()));
+						throw new IllegalArgumentException(String.format(
+								"Cycle dependency of items with id '%s' and '%s'",
+								targetId, item.getOrderId()));
 					}
 					target.addDependency(source);
 				} else if (constraint.startsWith(Ordered.AFTER)) {
@@ -56,11 +60,15 @@ public class OrderingUtils {
 					final OrderedNode<T> target = nodes.get(targetId);
 					// throw exception if target item is not exists
 					if (target == null) {
-						throw new IllegalArgumentException(String.format("Ordered item with id '%s' not found. It is dependency of item with id '%s'", targetId, item.getOrderId()));
+						throw new IllegalArgumentException(String.format(
+								"Ordered item with id '%s' not found. It is dependency of item with id '%s'",
+								targetId, item.getOrderId()));
 					}
 					// throw exception for cycle dependencies
 					if (target.isReachable(source)) {
-						throw new IllegalArgumentException(String.format("Cycle dependency of items with id '%s' and '%s'", targetId, item.getOrderId()));
+						throw new IllegalArgumentException(String.format(
+								"Cycle dependency of items with id '%s' and '%s'",
+								targetId, item.getOrderId()));
 					}
 					source.addDependency(target);
 				} else {
@@ -77,7 +85,6 @@ public class OrderingUtils {
 		}
 		return result;
 	}
-
 }
 
 class OrderedNode<T extends Ordered> {

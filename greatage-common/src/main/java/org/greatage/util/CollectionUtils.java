@@ -4,7 +4,14 @@
 
 package org.greatage.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -52,6 +59,7 @@ public abstract class CollectionUtils {
 	 * Creates new generic set initialized with specified values.
 	 *
 	 * @param <V>    type of values
+	 * @param <T>    type of values
 	 * @param values values to initialize set with
 	 * @return new generic set initialized with specified values
 	 */
@@ -84,6 +92,7 @@ public abstract class CollectionUtils {
 	 * Creates new thread safe set initialized with specified values.
 	 *
 	 * @param <V>    type of values
+	 * @param <T>    type of values
 	 * @param values values to initialize set with
 	 * @return new thread safe set initialized with specified values
 	 */
@@ -116,6 +125,7 @@ public abstract class CollectionUtils {
 	 * Creates new generic list initialized with specified values.
 	 *
 	 * @param <V>    type of values
+	 * @param <T>    type of values
 	 * @param values values to initialize list with
 	 * @return new generic list initialized with specified values
 	 */
@@ -148,6 +158,7 @@ public abstract class CollectionUtils {
 	 * Creates new thread safe list initialized with specified values.
 	 *
 	 * @param <V>    type of values
+	 * @param <T>    type of values
 	 * @param values values to initialize list with
 	 * @return new thread safe list initialized with specified values
 	 */

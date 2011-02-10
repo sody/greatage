@@ -21,6 +21,7 @@ public abstract class EncodeUtils {
 			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
 			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
 	};
+	private static final int BASE64_MASK = 0x3f;
 
 	/**
 	 * Encodes binary data using specified message digest algorithm.
@@ -56,16 +57,16 @@ public abstract class EncodeUtils {
 			final byte byte1 = data[dataCursor++];
 			final byte byte2 = data[dataCursor++];
 			result[resultCursor++] = BASE64_DICTIONARY[byte0 >> 2];
-			result[resultCursor++] = BASE64_DICTIONARY[(byte0 << 4) & 0x3f | (byte1 >> 4)];
-			result[resultCursor++] = BASE64_DICTIONARY[(byte1 << 2) & 0x3f | (byte2 >> 6)];
-			result[resultCursor++] = BASE64_DICTIONARY[byte2 & 0x3f];
+			result[resultCursor++] = BASE64_DICTIONARY[(byte0 << 4) & BASE64_MASK | (byte1 >> 4)];
+			result[resultCursor++] = BASE64_DICTIONARY[(byte1 << 2) & BASE64_MASK | (byte2 >> 6)];
+			result[resultCursor++] = BASE64_DICTIONARY[byte2 & BASE64_MASK];
 		}
 
 		switch (data.length - dataCursor) {
 			case 1:
 				final byte b = data[dataCursor];
 				result[resultCursor++] = BASE64_DICTIONARY[b >> 2];
-				result[resultCursor++] = BASE64_DICTIONARY[(b << 4) & 0x3f];
+				result[resultCursor++] = BASE64_DICTIONARY[(b << 4) & BASE64_MASK];
 				result[resultCursor++] = BASE64_NULL;
 				result[resultCursor] = BASE64_NULL;
 				break;
@@ -73,8 +74,8 @@ public abstract class EncodeUtils {
 				final byte b0 = data[dataCursor++];
 				final byte b1 = data[dataCursor];
 				result[resultCursor++] = BASE64_DICTIONARY[b0 >> 2];
-				result[resultCursor++] = BASE64_DICTIONARY[(b0 << 4) & 0x3f | (b1 >> 4)];
-				result[resultCursor++] = BASE64_DICTIONARY[(b1 << 2) & 0x3f];
+				result[resultCursor++] = BASE64_DICTIONARY[(b0 << 4) & BASE64_MASK | (b1 >> 4)];
+				result[resultCursor++] = BASE64_DICTIONARY[(b1 << 2) & BASE64_MASK];
 				result[resultCursor] = BASE64_NULL;
 				break;
 		}

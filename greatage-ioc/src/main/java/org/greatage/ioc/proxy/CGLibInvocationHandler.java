@@ -4,6 +4,8 @@
 
 package org.greatage.ioc.proxy;
 
+import net.sf.cglib.proxy.InvocationHandler;
+
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -13,7 +15,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> implements com.google.inject.internal.cglib.proxy.InvocationHandler {
+public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> implements InvocationHandler {
 
 	/**
 	 * Creates new instance of invocation handler for CGLib proxy objects.

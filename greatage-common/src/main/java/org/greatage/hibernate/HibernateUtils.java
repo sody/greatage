@@ -25,5 +25,4 @@ public abstract class HibernateUtils {
 		}
 		return entityClass;
 	}
-
 }

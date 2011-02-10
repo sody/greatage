@@ -19,8 +19,10 @@ import java.util.Properties;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
-public abstract class AbstractEnumUserType<E extends Enum, V extends Serializable> implements UserType, ParameterizedType {
+public abstract class AbstractEnumUserType<E extends Enum, V extends Serializable>
+		implements UserType, ParameterizedType {
 	private final Map<V, E> constantsByValue = new HashMap<V, E>();
 	private final Map<E, V> constantsByEnum = new HashMap<E, V>();
 
@@ -31,7 +33,7 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		this.sqlType = sqlType;
 	}
 
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings( {"unchecked"})
 	public void setParameterValues(final Properties parameters) {
 		final String enumClassName = parameters.getProperty("enumClass");
 		if (enumClassName == null) {
@@ -66,13 +68,15 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		return sqlType;
 	}
 
-	public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws HibernateException, SQLException {
+	public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner)
+			throws HibernateException, SQLException {
 		final V value = get(rs, names[0]);
 		return value == null || rs.wasNull() ? null : getEnum(value);
 	}
 
-	@SuppressWarnings({"unchecked"})
-	public void nullSafeSet(final PreparedStatement st, final Object value, final int index) throws HibernateException, SQLException {
+	@SuppressWarnings( {"unchecked"})
+	public void nullSafeSet(final PreparedStatement st, final Object value, final int index)
+			throws HibernateException, SQLException {
 		if (value == null) {
 			st.setNull(index, getSqlType());
 		} else {
@@ -86,7 +90,7 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 	}
 
 	public int[] sqlTypes() {
-		return new int[]{sqlType};
+		return new int[] {sqlType};
 	}
 
 	public Object deepCopy(final Object value) throws HibernateException {
@@ -127,7 +131,8 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 
 	public abstract V get(final ResultSet rs, final String name) throws HibernateException, SQLException;
 
-	public abstract void set(final PreparedStatement st, final V value, final int index) throws HibernateException, SQLException;
+	public abstract void set(final PreparedStatement st, final V value, final int index)
+			throws HibernateException, SQLException;
 
 	protected abstract V enumToValue(final E e);
 }

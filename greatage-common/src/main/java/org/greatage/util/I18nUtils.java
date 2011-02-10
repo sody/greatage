@@ -56,16 +56,13 @@ public abstract class I18nUtils {
 				locales.add(locale);
 			}
 			if (country.length() > 0) {
-				locales.add((locales.size() == 0) ?
-						locale : new Locale(language, country));
+				locales.add((locales.size() == 0) ? locale : new Locale(language, country));
 			}
 			if (language.length() > 0) {
-				locales.add((locales.size() == 0) ?
-						locale : new Locale(language));
+				locales.add((locales.size() == 0) ? locale : new Locale(language));
 			}
 		}
 		locales.add(ROOT_LOCALE);
 		return locales;
 	}
-
 }

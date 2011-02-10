@@ -99,14 +99,16 @@ public abstract class ReflectionUtils {
 
 	private static boolean isConstructorSuitable(final Constructor<?> constructor, final Class<?>... parameterTypes) {
 		final Class<?>[] constructorParameterTypes = constructor.getParameterTypes();
-		if (parameterTypes.length != constructorParameterTypes.length) return false;
+		if (parameterTypes.length != constructorParameterTypes.length) {
+			return false;
+		}
 
 		for (int i = 0; i < parameterTypes.length; i++) {
 			final Class<?> expectedType = parameterTypes[i];
 			final Class<?> actualType = constructorParameterTypes[i];
 			if (expectedType != null && !actualType.isAssignableFrom(expectedType)) {
-				if (!actualType.isPrimitive() ||
-						!PRIMITIVES_TO_WRAPPERS.get(actualType).isAssignableFrom(expectedType)) {
+				if (!actualType.isPrimitive()
+						|| !PRIMITIVES_TO_WRAPPERS.get(actualType).isAssignableFrom(expectedType)) {
 					return false;
 				}
 			}
@@ -114,12 +116,18 @@ public abstract class ReflectionUtils {
 		return true;
 	}
 
+	/**
+	 * Gets classes from generic type.
+	 *
+	 * @param genericType generic type
+	 * @return array of classes from generic type, not null
+	 */
 	public static Class<?>[] getClassesFromGenericType(final Type genericType) {
 		if (genericType instanceof Class) {
-			return new Class[]{Object.class};
+			return new Class[] {Object.class};
 		}
 		if (!(genericType instanceof ParameterizedType)) {
-			return new Class[]{};
+			return new Class[] {};
 		}
 		final ParameterizedType parameterizedType = (ParameterizedType) genericType;
 		final Type[] types = parameterizedType.getActualTypeArguments();
@@ -128,6 +136,5 @@ public abstract class ReflectionUtils {
 			result[i] = types[i] instanceof Class ? (Class) types[i] : null;
 		}
 		return result;
-
 	}
 }
