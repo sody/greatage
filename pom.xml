@@ -33,11 +33,11 @@
 	</developers>
 
 	<modules>
-		<module>common</module>
-		<module>ioc</module>
-		<module>security</module>
-		<module>domain</module>
-		<module>tapestry</module>
+		<module>greatage-common</module>
+		<module>greatage-ioc</module>
+		<module>greatage-security</module>
+		<module>greatage-domain</module>
+		<module>greatage-tapestry</module>
 	</modules>
 
 	<repositories>
