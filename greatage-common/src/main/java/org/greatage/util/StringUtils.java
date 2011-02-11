@@ -15,7 +15,7 @@ public abstract class StringUtils {
 	private static final int LOW_BYTE_MASK = 0x0f;
 
 	private static final char[] HEX_SYMBOLS = {
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f',
 	};
 
 	/**

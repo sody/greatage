@@ -4,14 +4,19 @@
 
 package org.greatage.javassist;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtField;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 import org.greatage.util.DescriptionBuilder;
 
 /**
  * This class represents utility that helps to create classes in runtime uses javassist.
  *
- * @author Ivan Khalopik
  * @param <T> type of class that will be created by {@link #build()} method
+ * @author Ivan Khalopik
  * @since 1.0
  */
 public class ClassBuilder<T> {
@@ -54,7 +59,8 @@ public class ClassBuilder<T> {
 	 * @param isInterface isInterface parameter
 	 * @param superClass  superClass parameter, may be null
 	 */
-	public ClassBuilder(final ClassPoolEx pool, final String name, final boolean isInterface, final Class<T> superClass) {
+	public ClassBuilder(final ClassPoolEx pool, final String name, final boolean isInterface,
+						final Class<T> superClass) {
 		this.pool = pool;
 
 		if (isInterface) {
@@ -76,7 +82,7 @@ public class ClassBuilder<T> {
 	 *
 	 * @return new class instance
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings("unchecked")
 	public Class<T> build() {
 		return toClass(ctClass);
 	}
@@ -121,7 +127,8 @@ public class ClassBuilder<T> {
 	 * @param body		   constructor body
 	 * @return this class builder instance
 	 */
-	public ClassBuilder<T> addConstructor(final Class[] parameterTypes, final Class[] exceptionTypes, final String body) {
+	public ClassBuilder<T> addConstructor(final Class[] parameterTypes, final Class[] exceptionTypes,
+										  final String body) {
 		final CtClass[] ctParameterTypes = toCtClasses(parameterTypes);
 		final CtClass[] ctExceptionTypes = toCtClasses(exceptionTypes);
 
@@ -172,7 +179,9 @@ public class ClassBuilder<T> {
 	 * @return java assist class representations
 	 */
 	private CtClass[] toCtClasses(final Class[] inputClasses) {
-		if (inputClasses == null || inputClasses.length == 0) return null;
+		if (inputClasses == null || inputClasses.length == 0) {
+			return null;
+		}
 
 		final CtClass[] result = new CtClass[inputClasses.length];
 		for (int i = 0; i < inputClasses.length; i++) {
@@ -199,14 +208,14 @@ public class ClassBuilder<T> {
 	/**
 	 * Converts java assist class to original java class.
 	 *
-	 * @param ctClass java assist class
+	 * @param inputClass java assist class
 	 * @return original java class
 	 */
-	private Class toClass(final CtClass ctClass) {
+	private Class toClass(final CtClass inputClass) {
 		try {
-			return pool.toClass(ctClass);
+			return pool.toClass(inputClass);
 		} catch (CannotCompileException ex) {
-			throw new RuntimeException(String.format("Can't convert class '%s'", ctClass), ex);
+			throw new RuntimeException(String.format("Can't convert javassist class '%s'", inputClass), ex);
 		}
 	}
 
@@ -217,8 +226,9 @@ public class ClassBuilder<T> {
 	 * @return string representation of class name
 	 */
 	private String toClassName(final Class inputClass) {
-		if (inputClass.isArray())
+		if (inputClass.isArray()) {
 			return toClassName(inputClass.getComponentType()) + "[]";
+		}
 
 		return inputClass.getName();
 	}

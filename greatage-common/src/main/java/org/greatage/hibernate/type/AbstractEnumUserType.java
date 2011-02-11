@@ -4,7 +4,6 @@
 
 package org.greatage.hibernate.type;
 
-import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
 import org.hibernate.usertype.ParameterizedType;
 import org.hibernate.usertype.UserType;
@@ -18,6 +17,10 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
+ * This class represents base class for all hibernate custom user types that represent enum as some simple sql type.
+ *
+ * @param <E> type of enum
+ * @param <V> type of corresponding value
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -29,27 +32,42 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 	private Class<E> enumClass;
 	private final int sqlType;
 
-	protected AbstractEnumUserType(int sqlType) {
+	/**
+	 * Constructor that creates hibernate custom user type that represent enum as some simple sql type.
+	 *
+	 * @param sqlType correspondent sql type
+	 */
+	protected AbstractEnumUserType(final int sqlType) {
 		this.sqlType = sqlType;
 	}
 
-	@SuppressWarnings( {"unchecked"})
+	/**
+	 * Configure hibernate custom type with enum class name stored in <tt>enumClass</tt> parameter.
+	 *
+	 * @param parameters hibernate custom type configuration parameters
+	 */
+	@SuppressWarnings("unchecked")
 	public void setParameterValues(final Properties parameters) {
 		final String enumClassName = parameters.getProperty("enumClass");
 		if (enumClassName == null) {
-			throw new MappingException("enumClassName parameter not specified");
+			throw new MappingException("enumClass parameter not specified");
 		}
 
 		try {
-			Class<E> enumClass = (Class<E>) Class.forName(enumClassName);
-			setEnumClass(enumClass);
+			final Class<E> configuredEnumClass = (Class<E>) Class.forName(enumClassName);
+			setEnumClass(configuredEnumClass);
 		} catch (ClassNotFoundException e) {
-			throw new MappingException("enumClass " + enumClassName + " not found", e);
+			throw new MappingException("Enum class " + enumClassName + " not found", e);
 		} catch (ClassCastException e) {
-			throw new MappingException("enumClass " + enumClassName + " not enum class", e);
+			throw new MappingException("Class " + enumClassName + " is not enum class", e);
 		}
 	}
 
+	/**
+	 * Sets enum class and configures all enum-to-value and value-to-enum mappings.
+	 *
+	 * @param enumClass enum class
+	 */
 	public void setEnumClass(final Class<E> enumClass) {
 		this.enumClass = enumClass;
 		constantsByValue.clear();
@@ -60,23 +78,37 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		}
 	}
 
+	/**
+	 * Gets enum class correspondent to this type.
+	 *
+	 * @return enum class
+	 */
 	public Class<E> getEnumClass() {
 		return enumClass;
 	}
 
+	/**
+	 * Gets sql type correspondent to this type.
+	 *
+	 * @return sql type
+	 */
 	public int getSqlType() {
 		return sqlType;
 	}
 
-	public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner)
-			throws HibernateException, SQLException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws SQLException {
 		final V value = get(rs, names[0]);
 		return value == null || rs.wasNull() ? null : getEnum(value);
 	}
 
-	@SuppressWarnings( {"unchecked"})
-	public void nullSafeSet(final PreparedStatement st, final Object value, final int index)
-			throws HibernateException, SQLException {
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	public void nullSafeSet(final PreparedStatement st, final Object value, final int index) throws SQLException {
 		if (value == null) {
 			st.setNull(index, getSqlType());
 		} else {
@@ -85,54 +117,115 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<E> returnedClass() {
 		return getEnumClass();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public int[] sqlTypes() {
-		return new int[] {sqlType};
+		return new int[]{sqlType};
 	}
 
-	public Object deepCopy(final Object value) throws HibernateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object deepCopy(final Object value) {
 		return value;
 	}
 
-	public Object replace(final Object original, final Object target, final Object owner) throws HibernateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object replace(final Object original, final Object target, final Object owner) {
 		return original;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isMutable() {
 		return false;
 	}
 
-	public Serializable disassemble(final Object value) throws HibernateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Serializable disassemble(final Object value) {
 		return (Enum) value;
 	}
 
-	public Object assemble(final Serializable cached, final Object owner) throws HibernateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object assemble(final Serializable cached, final Object owner) {
 		return cached;
 	}
 
-	public boolean equals(final Object x, final Object y) throws HibernateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean equals(final Object x, final Object y) {
 		return x == y;
 	}
 
-	public int hashCode(final Object x) throws HibernateException {
+	/**
+	 * {@inheritDoc}
+	 */
+	public int hashCode(final Object x) {
 		return x.hashCode();
 	}
 
-	protected E getEnum(final V order) {
-		return constantsByValue.get(order);
+	/**
+	 * Gets enum constant mapped to specified value.
+	 *
+	 * @param value enum value
+	 * @return enum constant mapped to specified value
+	 */
+	protected E getEnum(final V value) {
+		return constantsByValue.get(value);
 	}
 
-	protected V getValue(final E e) {
-		return constantsByEnum.get(e);
+	/**
+	 * Gets value correspondent to specified enum constant.
+	 *
+	 * @param enumConstant enum constant
+	 * @return value correspondent to specified enum constant
+	 */
+	protected V getValue(final E enumConstant) {
+		return constantsByEnum.get(enumConstant);
 	}
 
-	public abstract V get(final ResultSet rs, final String name) throws HibernateException, SQLException;
+	/**
+	 * Gets value from result set for specified column name.
+	 *
+	 * @param rs   SQL result set
+	 * @param name SQL column name
+	 * @return value from result set for specified column name
+	 * @throws SQLException if error occurs when retrieving value
+	 */
+	protected abstract V get(final ResultSet rs, final String name) throws SQLException;
 
-	public abstract void set(final PreparedStatement st, final V value, final int index)
-			throws HibernateException, SQLException;
+	/**
+	 * Sets value to prepared statement for specified column index.
+	 *
+	 * @param st	SQL prepered statement
+	 * @param index SQL column index
+	 * @param value value that will be set to prepared statement
+	 * @throws SQLException if error occurs when setting value
+	 */
+	protected abstract void set(final PreparedStatement st, final V value, final int index) throws SQLException;
 
-	protected abstract V enumToValue(final E e);
+	/**
+	 * Converts enum constant to value. It is used when initializing hibernate type purpose to generate mappings between
+	 * enum constants and values of some simple type.
+	 *
+	 * @param enumConstant enum constant
+	 * @return value correspondent to specified enum constant
+	 */
+	protected abstract V enumToValue(final E enumConstant);
 }

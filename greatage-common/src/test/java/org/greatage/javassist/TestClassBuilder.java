@@ -4,8 +4,6 @@
 
 package org.greatage.javassist;
 
-import org.greatage.mock.MockInterface;
-import org.greatage.mock.MockInterfaceImpl2;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -55,7 +53,8 @@ public class TestClassBuilder extends Assert {
 			assertTrue(superClass.isAssignableFrom(newClass));
 		}
 		if (!isInterface) {
-			assertEquals(newClass.getSuperclass(), superClass == null || superClass.isInterface() ? Object.class : superClass);
+			assertEquals(newClass.getSuperclass(),
+					superClass == null || superClass.isInterface() ? Object.class : superClass);
 		}
 	}
 

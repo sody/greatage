@@ -1,4 +1,4 @@
-package org.greatage.mock;
+package org.greatage.util;
 
 /**
  * @author Ivan Khalopik
@@ -44,7 +44,5 @@ public class MockClass {
 		return parameter2 == mockClass.parameter2 &&
 				!(parameter1 != null ? !parameter1.equals(mockClass.parameter1) : mockClass.parameter1 != null) &&
 				!(parameter3 != null ? !parameter3.equals(mockClass.parameter3) : mockClass.parameter3 != null);
-
 	}
-
 }

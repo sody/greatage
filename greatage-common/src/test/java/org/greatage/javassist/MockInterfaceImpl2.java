@@ -1,4 +1,4 @@
-package org.greatage.mock;
+package org.greatage.javassist;
 
 /**
  * @author Ivan Khalopik

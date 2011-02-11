@@ -18,7 +18,7 @@ public abstract class HibernateUtils {
 	 * @param <T>         type of entity
 	 * @return true, underlying class of a proxied persistent class
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings("unchecked")
 	public static <T> Class<T> getRealClass(final Class<T> entityClass) {
 		if (HibernateProxy.class.isAssignableFrom(entityClass)) {
 			return (Class<T>) entityClass.getSuperclass();

@@ -4,7 +4,6 @@
 
 package org.greatage.util;
 
-import org.greatage.mock.MockClass;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -27,7 +26,10 @@ public class TestReflectionUtils extends Assert {
 				{MockClass.class, new Object[]{null}, new MockClass(null)},
 				{MockClass.class, new Object[]{"test", true}, new MockClass("test", true)},
 				{MockClass.class, new Object[]{null, true}, new MockClass(null, true)},
-				{MockClass.class, new Object[]{"test1", true, "test2"}, new MockClass("test1", true, (CharSequence) "test2")},
+				{
+						MockClass.class, new Object[]{"test1", true, "test2"},
+						new MockClass("test1", true, (CharSequence) "test2")
+				},
 				{MockClass.class, new Object[]{"test1", true, null}, new MockClass("test1", true, (CharSequence) null)},
 		};
 	}
@@ -81,7 +83,6 @@ public class TestReflectionUtils extends Assert {
 		};
 	}
 
-
 	@Test(dataProvider = "newInstanceData")
 	public <T> void testNewInstance(final Class<T> clazz, final Object[] parameters, final T expected) {
 		final T actual = ReflectionUtils.newInstance(clazz, parameters);
@@ -108,14 +109,16 @@ public class TestReflectionUtils extends Assert {
 	}
 
 	@Test(dataProvider = "findConstructorsData")
-	public <T> void testFindConstructors(final Class<T> clazz, final Class<?>[] parameterTypes, final int expectedConstructorCount) {
+	public <T> void testFindConstructors(final Class<T> clazz, final Class<?>[] parameterTypes,
+										 final int expectedConstructorCount) {
 		final List<Constructor<T>> list = ReflectionUtils.findConstructors(clazz, parameterTypes);
 		assertNotNull(list);
 		assertEquals(list.size(), expectedConstructorCount);
 	}
 
 	@Test(dataProvider = "findExceptionData")
-	public <T extends Throwable> void testFindException(final Throwable exception, final Class<T> exceptionClass, final T expected) {
+	public <T extends Throwable> void testFindException(final Throwable exception, final Class<T> exceptionClass,
+														final T expected) {
 		final T actual = ReflectionUtils.findException(exception, exceptionClass);
 		assertEquals(actual, expected);
 	}

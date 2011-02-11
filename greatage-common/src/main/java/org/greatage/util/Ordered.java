@@ -37,5 +37,4 @@ public interface Ordered {
 	 * @return list of order constraints or empty list
 	 */
 	List<String> getOrderConstraints();
-
 }

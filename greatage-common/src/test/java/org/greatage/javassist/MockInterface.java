@@ -1,4 +1,4 @@
-package org.greatage.mock;
+package org.greatage.javassist;
 
 /**
  * @author Ivan Khalopik
@@ -7,5 +7,4 @@ package org.greatage.mock;
 public interface MockInterface {
 
 	String say();
-
 }

@@ -1,6 +1,4 @@
-package org.greatage.mock;
-
-import org.greatage.util.Ordered;
+package org.greatage.util;
 
 import java.util.Arrays;
 import java.util.List;

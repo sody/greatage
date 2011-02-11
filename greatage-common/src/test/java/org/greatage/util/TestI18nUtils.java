@@ -39,7 +39,10 @@ public class TestI18nUtils extends Assert {
 				{I18nUtils.ROOT_LOCALE, CollectionUtils.newList(I18nUtils.ROOT_LOCALE)},
 				{Locale.ENGLISH, CollectionUtils.newList(Locale.ENGLISH, I18nUtils.ROOT_LOCALE)},
 				{Locale.US, CollectionUtils.newList(Locale.US, Locale.ENGLISH, I18nUtils.ROOT_LOCALE)},
-				{new Locale("en", "US", "xxx"), CollectionUtils.newList(new Locale("en", "US", "xxx"), Locale.US, Locale.ENGLISH, I18nUtils.ROOT_LOCALE)},
+				{
+						new Locale("en", "US", "xxx"), CollectionUtils
+						.newList(new Locale("en", "US", "xxx"), Locale.US, Locale.ENGLISH, I18nUtils.ROOT_LOCALE)
+				},
 		};
 	}
 
@@ -48,5 +51,4 @@ public class TestI18nUtils extends Assert {
 		final List<Locale> actual = I18nUtils.getCandidateLocales(locale);
 		assertEquals(actual, expected);
 	}
-
 }

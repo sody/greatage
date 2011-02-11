@@ -8,7 +8,8 @@ import java.util.List;
 
 /**
  * This class represents utility that helps to implement toString() method. It builds entity description according to
- * configured entity name and entity parameters. The result string will look like <tt>EntityName(key1=value1,key2=value2,value3,key4=value4...)</tt>
+ * configured entity name and entity parameters. The result string will look like
+ * <tt>EntityName(key1=value1,key2=value2,value3,key4=value4...)</tt>.
  *
  * @author Ivan Khalopik
  * @since 1.0

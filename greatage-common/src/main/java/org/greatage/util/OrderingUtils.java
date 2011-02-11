@@ -13,7 +13,7 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class OrderingUtils {
+public abstract class OrderingUtils {
 
 	/**
 	 * Orders list of ordered items according to their order id and constraints.
@@ -41,34 +41,25 @@ public class OrderingUtils {
 					// if constraint like before:targetId add current item to dependencies of target item
 					final String targetId = constraint.substring(Ordered.BEFORE.length());
 					final OrderedNode<T> target = nodes.get(targetId);
-					// throw exception if target item is not exists
 					if (target == null) {
-						throw new IllegalArgumentException(String.format(
-								"Ordered item with id '%s' not found. It is dependency of item with id '%s'",
-								targetId, item.getOrderId()));
+						// throw exception if target item is not exists
+						return reportMissedItem(item, targetId);
+					} else if (source.isReachable(target)) {
+						// throw exception for cycle dependencies
+						return reportCycleDependency(item, targetId);
+					} else {
+						target.addDependency(source);
 					}
-					// throw exception for cycle dependencies
-					if (source.isReachable(target)) {
-						throw new IllegalArgumentException(String.format(
-								"Cycle dependency of items with id '%s' and '%s'",
-								targetId, item.getOrderId()));
-					}
-					target.addDependency(source);
 				} else if (constraint.startsWith(Ordered.AFTER)) {
 					// if constraint like after:targetId add target item to dependencies of current item
 					final String targetId = constraint.substring(Ordered.AFTER.length());
 					final OrderedNode<T> target = nodes.get(targetId);
-					// throw exception if target item is not exists
 					if (target == null) {
-						throw new IllegalArgumentException(String.format(
-								"Ordered item with id '%s' not found. It is dependency of item with id '%s'",
-								targetId, item.getOrderId()));
-					}
-					// throw exception for cycle dependencies
-					if (target.isReachable(source)) {
-						throw new IllegalArgumentException(String.format(
-								"Cycle dependency of items with id '%s' and '%s'",
-								targetId, item.getOrderId()));
+						// throw exception if target item is not exists
+						reportMissedItem(item, targetId);
+					} else if (target.isReachable(source)) {
+						// throw exception for cycle dependencies
+						reportCycleDependency(item, targetId);
 					}
 					source.addDependency(target);
 				} else {
@@ -84,6 +75,17 @@ public class OrderingUtils {
 			node.fill(result);
 		}
 		return result;
+	}
+
+	private static <T extends Ordered> List<T> reportCycleDependency(final T item, final String targetId) {
+		throw new IllegalArgumentException(String.format("Cycle dependency of items with id '%s' and '%s'",
+				targetId, item.getOrderId()));
+	}
+
+	private static <T extends Ordered> List<T> reportMissedItem(final T item, final String targetId) {
+		throw new IllegalArgumentException(String.format(
+				"Ordered item with id '%s' not found. It is dependency of item with id '%s'",
+				targetId, item.getOrderId()));
 	}
 }
 

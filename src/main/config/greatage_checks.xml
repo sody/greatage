@@ -180,7 +180,9 @@
 		<module name="MissingDeprecated"/>
 
 		<!-- Verifies that the Override annotation is present when the {@inheritDoc} javadoc tag is present. -->
-		<module name="MissingOverride"/>
+		<module name="MissingOverride">
+			<property name="javaFiveCompatibility" value="true"/>
+		</module>
 
 		<!-- Miscellaneous other checks.                   -->
 		<!-- See http://checkstyle.sf.net/config_misc.html -->
@@ -194,7 +196,7 @@
 		<!-- Check that method/constructor/catch block parameters are final. -->
 		<module name="FinalParameters"/>
 
-		<!-- Checks correct indentation of Java Code. -->
+		<!-- Checks correct indentation of Java Code. todo: continuation indent can not be configured -->
 		<module name="Indentation"/>
 
 		<!-- Checks that long constants are defined with an upper ell. -->

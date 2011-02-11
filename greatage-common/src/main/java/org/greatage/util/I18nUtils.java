@@ -15,7 +15,12 @@ import java.util.StringTokenizer;
  * @since 1.0
  */
 public abstract class I18nUtils {
+	/**
+	 * Root locale fix fo java 1.5
+	 */
 	public static final Locale ROOT_LOCALE = new Locale("");
+
+	private static final String LOCALE_SEPARATOR = "_";
 
 	/**
 	 * Gets locale for specified string value.
@@ -25,14 +30,14 @@ public abstract class I18nUtils {
 	 */
 	public static Locale getLocale(final String value) {
 		if (value != null) {
-			final StringTokenizer tokens = new StringTokenizer(value, "_");
+			final StringTokenizer tokens = new StringTokenizer(value, LOCALE_SEPARATOR);
 			final String language = tokens.hasMoreTokens() ? tokens.nextToken() : "";
 			final String country = tokens.hasMoreTokens() ? tokens.nextToken() : "";
 			String variant = "";
 			String sep = "";
 			while (tokens.hasMoreTokens()) {
 				variant += sep + tokens.nextToken();
-				sep = "_";
+				sep = LOCALE_SEPARATOR;
 			}
 			return new Locale(language, country, variant);
 		}

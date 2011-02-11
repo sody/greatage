@@ -197,7 +197,6 @@ public abstract class CollectionUtils {
 	 * @param values values to initialize map with
 	 * @return new generic map initialized with keys like array even elements and values like odd elements
 	 */
-	@SuppressWarnings({"unchecked"})
 	public static <K, V> Map<K, V> newMap(final Object... values) {
 		final Map<K, V> map = newMap();
 		return fillMap(map, values);
@@ -248,7 +247,7 @@ public abstract class CollectionUtils {
 	 * @param values values to fill map with
 	 * @return filled with specified values map
 	 */
-	@SuppressWarnings({"unchecked"})
+	@SuppressWarnings("unchecked")
 	private static <K, V> Map<K, V> fillMap(final Map<K, V> map, final Object... values) {
 		if (values == null || values.length % 2 == 1) {
 			throw new IllegalArgumentException("Values length must be ord");
