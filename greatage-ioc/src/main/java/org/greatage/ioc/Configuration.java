@@ -8,6 +8,7 @@ package org.greatage.ioc;
  * This class represent unordered service configuration that is used by service contributors to configure service
  * instance. It is injected to service resources as a collection of items at build time.
  *
+ * @param <V> type of configuration items
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -29,5 +30,4 @@ public interface Configuration<V> {
 	 * @return this configuration instance
 	 */
 	Configuration<V> addInstance(Class<? extends V> itemClass);
-
 }

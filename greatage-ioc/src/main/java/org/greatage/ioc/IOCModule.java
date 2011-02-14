@@ -32,11 +32,22 @@ import org.greatage.ioc.symbol.SymbolSourceImpl;
 import org.greatage.ioc.symbol.SystemSymbolProvider;
 
 /**
+ * This class represents base module for Great Age IoC container that configures all needed core services. This are
+ * {@link ProxyFactory}, {@link LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider},
+ * {@link ResourceLocator}, {@link MessagesSource}, {@link CacheSource}, {@link ClassAccessSource}.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
 public class IOCModule {
 
+	/**
+	 * Binds all needed core services with their default implementations. This are {@link ProxyFactory}, {@link
+	 * LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link ResourceLocator}, {@link
+	 * MessagesSource}, {@link CacheSource}, {@link ClassAccessSource}.
+	 *
+	 * @param binder service binder
+	 */
 	@Bind
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
@@ -51,6 +62,12 @@ public class IOCModule {
 		binder.bind(ClassAccessSource.class, ClassAccessSourceImpl.class);
 	}
 
+	/**
+	 * Configures scope manager service to understand all common scopes. This are <tt>global</tt>, <tt>prototype</tt>,
+	 * <tt>thread</tt>,
+	 *
+	 * @param configuration scope manager mapped configuration
+	 */
 	@Contribute(ScopeManager.class)
 	public static void contributeScopeManager(final MappedConfiguration<String, Scope> configuration) {
 		configuration.addInstance(ScopeConstants.GLOBAL, GlobalScope.class);
@@ -58,9 +75,16 @@ public class IOCModule {
 		configuration.addInstance(ScopeConstants.THREAD, ThreadScope.class);
 	}
 
+	/**
+	 * Configures symbol source service with configured application and system symbol providers.
+	 *
+	 * @param configuration			 symbol source ordered configuration
+	 * @param applicationSymbolProvider configured application symbol provider
+	 */
 	@Contribute(SymbolSource.class)
 	public static void contributeSymbolSource(final OrderedConfiguration<SymbolProvider> configuration,
-											  @Inject("ApplicationSymbolProvider") final SymbolProvider applicationSymbolProvider) {
+											  @Inject("ApplicationSymbolProvider")
+											  final SymbolProvider applicationSymbolProvider) {
 		configuration.add(applicationSymbolProvider, "Application");
 		configuration.addInstance(SystemSymbolProvider.class, "System", "after:Application");
 	}

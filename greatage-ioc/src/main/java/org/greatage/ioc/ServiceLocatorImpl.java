@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * This class represents default {@link ServiceLocator} implementation that is used as main entry point of Great Age IoC
+ * container. TODO: make constructor that defines internal logger
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -24,6 +27,11 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 	private final Logger logger;
 
+	/**
+	 * Creates new instance of service locator with defined modules.
+	 *
+	 * @param modules modules
+	 */
 	ServiceLocatorImpl(final List<Module> modules) {
 		final Map<String, Service<?>> services = CollectionUtils.newMap();
 		for (Module module : modules) {
@@ -36,12 +44,12 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			}
 		}
 
+		// initializing internal services collection
 		internalServices.add(LoggerSource.class);
 		internalServices.add(ProxyFactory.class);
 		internalServices.add(ScopeManager.class);
 
-
-		final ServiceStatus<ServiceLocator> serviceLocatorStatus = new SimpleHolder<ServiceLocator>(ServiceLocator.class.getSimpleName(), ServiceLocator.class, this);
+		final ServiceStatus<ServiceLocator> serviceLocatorStatus = new ServiceLocatorStatus(this);
 		servicesById.put(serviceLocatorStatus.getServiceId(), serviceLocatorStatus);
 		int maxLength = serviceLocatorStatus.getServiceId().length();
 		for (Map.Entry<String, Service<?>> entry : services.entrySet()) {
@@ -55,17 +63,19 @@ public class ServiceLocatorImpl implements ServiceLocator {
 				decorators.addAll(module.getDecorators(service));
 				interceptors.addAll(module.getInterceptors(service));
 			}
-			final ServiceStatus<?> status = createServiceHolder(service, contributors, decorators, interceptors);
+			final ServiceStatus<?> status = createServiceStatus(service, contributors, decorators, interceptors);
 			servicesById.put(serviceId, status);
 			if (serviceId.length() > maxLength) {
 				maxLength = serviceId.length();
 			}
 		}
 
+		// building statistics for log
 		final StringBuilder statisticsBuilder = new StringBuilder("Services:\n");
 		final String format = "%" + maxLength + "s[%s] : %s\n";
 		for (ServiceStatus<?> status : servicesById.values()) {
-			statisticsBuilder.append(String.format(format, status.getServiceId(), status.getServiceScope(), status.getServiceClass()));
+			statisticsBuilder.append(String.format(format,
+					status.getServiceId(), status.getServiceScope(), status.getServiceClass()));
 		}
 
 		final LoggerSource loggerSource = getService(LoggerSource.class);
@@ -73,14 +83,25 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		logger.info(statisticsBuilder.toString());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Set<String> getServiceIds() {
 		return CollectionUtils.newSet(servicesById.keySet());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public ServiceStatus<?> getServiceStatus(final String id) {
 		return servicesById.get(id);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException if service not found
+	 */
 	public <T> T getService(final String id, final Class<T> serviceClass) {
 		if (servicesById.containsKey(id)) {
 			final ServiceStatus<?> status = servicesById.get(id);
@@ -90,6 +111,11 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		throw new IllegalStateException(String.format("Can't find service with id %s", id));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IllegalStateException if service not found
+	 */
 	public <T> T getService(final Class<T> serviceClass) {
 		final Set<T> services = findServices(serviceClass);
 		if (services.size() == 1) {
@@ -98,6 +124,9 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		throw new IllegalStateException(String.format("Can't find service of class %s", serviceClass));
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> Set<T> findServices(final Class<T> serviceClass) {
 		final Set<T> result = CollectionUtils.newSet();
 		for (ServiceStatus<?> serviceStatus : servicesById.values()) {
@@ -109,16 +138,33 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		return result;
 	}
 
-	@SuppressWarnings({"unchecked"})
-	private ServiceStatus<?> createServiceHolder(final Service<?> service,
+	/**
+	 * Creates {@link ServiceStatus} instance for specified service with defined service contributors, decorators and
+	 * interceptors.
+	 *
+	 * @param service	  service definition
+	 * @param contributors service contributors
+	 * @param decorators   service decorators
+	 * @param interceptors service interceptors
+	 * @return service status instance, not null
+	 */
+	@SuppressWarnings("unchecked")
+	private ServiceStatus<?> createServiceStatus(final Service<?> service,
 												 final List<Contributor<?>> contributors,
 												 final List<Decorator<?>> decorators,
 												 final List<Interceptor<?>> interceptors) {
 		return isInternal(service) ?
-				new InternalService(this, service, contributors, decorators) :
-				new ScopedService(this, service, contributors, decorators, interceptors);
+				new InternalServiceStatus(this, service, contributors, decorators) :
+				new ServiceStatusImpl(this, service, contributors, decorators, interceptors);
 	}
 
+	/**
+	 * Checks if service definition is internal. Internal services are {@link ProxyFactory}, {@link LoggerSource} and
+	 * {@link ScopeManager}.
+	 *
+	 * @param service service definition
+	 * @return true if service is internal, false otherwise
+	 */
 	private boolean isInternal(final Service<?> service) {
 		return internalServices.contains(service.getServiceClass());
 	}

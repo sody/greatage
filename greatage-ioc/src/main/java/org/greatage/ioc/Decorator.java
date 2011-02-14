@@ -7,9 +7,10 @@ package org.greatage.ioc;
 import org.greatage.util.Ordered;
 
 /**
- * This class represents service decorator definition that distributly decorates services. By default it is configured
- * by module decorate methods annotated with {@link org.greatage.ioc.annotations.Decorate} class.
+ * This class represents service decorator definition that distributively decorates services. By default it is
+ * configured by module decorate methods annotated with {@link org.greatage.ioc.annotations.Decorate} class.
  *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -31,5 +32,4 @@ public interface Decorator<T> extends Ordered {
 	 * @return decorated service instance
 	 */
 	T decorate(ServiceResources<T> resources);
-
 }

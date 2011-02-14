@@ -7,11 +7,10 @@ package org.greatage.ioc.annotations;
 import org.greatage.ioc.ScopeConstants;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This annotation marks methods inside the IoC module as service build points that will build service instances with
@@ -21,8 +20,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Target(METHOD)
-@Retention(RUNTIME)
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Build {
 
@@ -48,5 +47,4 @@ public @interface Build {
 	 * @return service scope
 	 */
 	String scope() default ScopeConstants.GLOBAL;
-
 }

@@ -4,7 +4,11 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.*;
+import org.greatage.ioc.annotations.Bind;
+import org.greatage.ioc.annotations.Build;
+import org.greatage.ioc.annotations.Contribute;
+import org.greatage.ioc.annotations.Decorate;
+import org.greatage.ioc.annotations.Intercept;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;
@@ -12,6 +16,10 @@ import java.util.Collection;
 import java.util.List;
 
 /**
+ * This class represents default implementation of module definition. It is based on automatically module creation by
+ * its class. It can also be represented as service definition with service identifier and class like module class.
+ *
+ * @param <T> module service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -21,6 +29,13 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Decorator> decorators = CollectionUtils.newList();
 	private final List<Interceptor> interceptors = CollectionUtils.newList();
 
+	/**
+	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
+	 * Build}, {@link Contribute}, {@link Decorate}, {@link Intercept} and {@link Bind} annotations and creates for them
+	 * service, contribute, decorate, intercept and bind definitions respectively.
+	 *
+	 * @param moduleClass module class
+	 */
 	ModuleImpl(final Class<T> moduleClass) {
 		super(moduleClass.getSimpleName(), moduleClass, ScopeConstants.GLOBAL, false);
 		services.add(this);
@@ -45,10 +60,16 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Collection<Service> getServices() {
 		return services;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> List<Contributor<T>> getContributors(final Service<T> service) {
 		final List<Contributor<T>> result = CollectionUtils.newList();
 		for (Contributor contributor : contributors) {
@@ -60,6 +81,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> List<Decorator<T>> getDecorators(final Service<T> service) {
 		final List<Decorator<T>> result = CollectionUtils.newList();
 		for (Decorator decorator : decorators) {
@@ -71,6 +95,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> List<Interceptor<T>> getInterceptors(final Service<T> service) {
 		final List<Interceptor<T>> result = CollectionUtils.newList();
 		for (Interceptor interceptor : interceptors) {

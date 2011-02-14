@@ -35,5 +35,4 @@ public interface ServiceBindingOptions {
 	 * @return this service binding options
 	 */
 	ServiceBindingOptions override();
-
 }

@@ -12,6 +12,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
+ * This class represent implementation of service definition that instantiates service. It is based on building service
+ * by invoking configured module method.
+ *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -24,6 +28,13 @@ public class ServiceFactory<T> implements Service<T> {
 	private final String scope;
 	private final boolean override;
 
+	/**
+	 * Creates new instance of service definition with defined module class and build method, service class. Build method
+	 * must have return equal to service type and be annotated with {@link Build} annotation.
+	 *
+	 * @param factoryClass  module class
+	 * @param factoryMethod build method
+	 */
 	ServiceFactory(final Class<?> factoryClass, final Method factoryMethod) {
 		this.factoryClass = factoryClass;
 		this.factoryMethod = factoryMethod;
@@ -37,32 +48,50 @@ public class ServiceFactory<T> implements Service<T> {
 		override = build.override();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getServiceId() {
 		return serviceId;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class<T> getServiceClass() {
 		return serviceClass;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isOverride() {
 		return override;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getScope() {
 		return scope;
 	}
 
+	/**
+	 * {@inheritDoc} It builds service instance by invoking configured module method.
+	 */
 	public T build(final ServiceResources<T> resources) {
 		final Logger logger = resources.getResource(Logger.class);
-		logger.info("Building service (%s, %s) from module (%s, %s)", serviceId, serviceClass, factoryClass, factoryMethod);
+		logger.info("Building service (%s, %s) from module (%s, %s)", serviceId, serviceClass, factoryClass,
+				factoryMethod);
 
 		try {
-			final Object moduleInstance = Modifier.isStatic(factoryMethod.getModifiers()) ? null : resources.getResource(factoryClass);
+			final Object moduleInstance =
+					Modifier.isStatic(factoryMethod.getModifiers()) ? null : resources.getResource(factoryClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, factoryMethod);
 			return serviceClass.cast(factoryMethod.invoke(moduleInstance, parameters));
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't create service of class '%s' with id '%s'", serviceClass, serviceId), e);
+			throw new RuntimeException(
+					String.format("Can't create service of class '%s' with id '%s'", serviceClass, serviceId), e);
 		}
 	}
 }

@@ -12,6 +12,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 /**
+ * This class represents default implementation of service contribution definition that distributively configures
+ * services. It is based on configuring service by invoking module method.
+ *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -22,6 +26,13 @@ public class ContributorImpl<T> implements Contributor<T> {
 	private final Class<T> serviceClass;
 	private final String serviceId;
 
+	/**
+	 * Creates new instance of service contribution definition with defined module class and method used for service
+	 * configuration. Configuration method must have void return type and be annotated with {@link Contribute} annotation.
+	 *
+	 * @param moduleClass	 module class
+	 * @param configureMethod module method used for service configuration
+	 */
 	ContributorImpl(final Class<?> moduleClass, final Method configureMethod) {
 		this.moduleClass = moduleClass;
 		this.configureMethod = configureMethod;
@@ -36,22 +47,32 @@ public class ContributorImpl<T> implements Contributor<T> {
 		serviceClass = contribute.value();
 	}
 
+	/**
+	 * {@inheritDoc} This contributor supports service if its service identifier or service class correspond to configured
+	 * ones.
+	 */
 	public boolean supports(final Service service) {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
 				serviceClass.isAssignableFrom(service.getServiceClass());
 	}
 
+	/**
+	 * {@inheritDoc} It configures service by invoking configured module method.
+	 */
 	public void contribute(final ServiceResources<T> resources) {
 		final Logger logger = resources.getResource(Logger.class);
-		logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(), resources.getServiceClass(), moduleClass, configureMethod);
+		logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(),
+				resources.getServiceClass(), moduleClass, configureMethod);
 
 		try {
-			final Object moduleInstance = Modifier.isStatic(configureMethod.getModifiers()) ? null : resources.getResource(moduleClass);
+			final Object moduleInstance =
+					Modifier.isStatic(configureMethod.getModifiers()) ? null : resources.getResource(moduleClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, configureMethod);
 			configureMethod.invoke(moduleInstance, parameters);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't create service configuration with id '%s'", resources.getServiceId()), e);
+			throw new RuntimeException(
+					String.format("Can't create service configuration with id '%s'", resources.getServiceId()), e);
 		}
 	}
 }

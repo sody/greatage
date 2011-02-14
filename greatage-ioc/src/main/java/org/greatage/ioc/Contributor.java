@@ -5,9 +5,10 @@
 package org.greatage.ioc;
 
 /**
- * This class represents service contribution definition that distributly configures services. By default it is
+ * This class represents service contribution definition that distributively configures services. By default it is
  * configured by module contribute methods annotated with {@link org.greatage.ioc.annotations.Contribute} class.
  *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -30,5 +31,4 @@ public interface Contributor<T> {
 	 * @param resources service resources
 	 */
 	void contribute(ServiceResources<T> resources);
-
 }

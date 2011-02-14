@@ -9,6 +9,7 @@ package org.greatage.ioc;
  * instance. All items will be ordered by their order constraints in {@link org.greatage.util.Ordered} style. It is
  * injected to service resources as an ordered list of items at build time.
  *
+ * @param <V> type of configuration items
  * @author Ivan Khalopik
  * @see org.greatage.util.OrderingUtils
  * @since 1.0
@@ -35,5 +36,4 @@ public interface OrderedConfiguration<V> {
 	 * @return this configuration instance
 	 */
 	OrderedConfiguration<V> addInstance(Class<? extends V> itemClass, String orderId, String... constraints);
-
 }

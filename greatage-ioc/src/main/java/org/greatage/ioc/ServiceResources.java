@@ -10,8 +10,8 @@ import java.lang.annotation.Annotation;
  * This class represents service resources that may be provided to a service when it initializes, are configurated or
  * are decorated. It also provides access to other services.
  *
+ * @param <T> service type
  * @author Ivan Khalopik
- * @param <T>        service type
  * @since 1.0
  */
 public interface ServiceResources<T> {
@@ -51,5 +51,4 @@ public interface ServiceResources<T> {
 	 * @throws RuntimeException if an error occurs instantiating resource
 	 */
 	<E> E getResource(Class<E> resourceClass, Annotation... annotations);
-
 }

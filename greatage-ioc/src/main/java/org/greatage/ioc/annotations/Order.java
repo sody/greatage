@@ -5,11 +5,10 @@
 package org.greatage.ioc.annotations;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This annotation marks ordered objects and adds order id and order constraints. It is used in addition to {@link
@@ -18,8 +17,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Target(METHOD)
-@Retention(RUNTIME)
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Order {
 
@@ -36,5 +35,4 @@ public @interface Order {
 	 * @return array of order constraints
 	 */
 	String[] constraints() default {};
-
 }

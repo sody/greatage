@@ -8,6 +8,8 @@ package org.greatage.ioc;
  * This class represent mapped service configuration that is used by service contributors to configure service instance.
  * It is injected to service resources as a map of keyed items at build time.
  *
+ * @param <K> type of configuration keys
+ * @param <V> type of configuration values
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -31,5 +33,4 @@ public interface MappedConfiguration<K, V> {
 	 * @return this configuration instance
 	 */
 	MappedConfiguration<K, V> addInstance(K key, Class<? extends V> valueClass);
-
 }

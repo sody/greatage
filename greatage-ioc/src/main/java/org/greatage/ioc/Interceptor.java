@@ -8,9 +8,10 @@ import org.greatage.ioc.proxy.MethodAdvice;
 import org.greatage.util.Ordered;
 
 /**
- * This class represents service interceptor definition that distributly configures service method advices. By default
+ * This class represents service interceptor definition that distributively configures service method advices. By default
  * it is configured by module intercept methods annotated with {@link org.greatage.ioc.annotations.Intercept} class.
  *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @see org.greatage.ioc.proxy.ProxyFactory
  * @see org.greatage.ioc.proxy.MethodAdvice
@@ -33,5 +34,4 @@ public interface Interceptor<T> extends Ordered {
 	 * @return service method advice
 	 */
 	MethodAdvice intercept(ServiceResources<T> resources);
-
 }

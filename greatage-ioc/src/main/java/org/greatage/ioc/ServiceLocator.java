@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * This class represents object which can provide access to services by their id, or (when appropriate) by just service
- * interface. It is an entry point to greateage IoC container.
+ * interface. It is an entry point to Great Age IoC container.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -63,5 +63,4 @@ public interface ServiceLocator {
 	 * @throws RuntimeException if an error occurs instantiating it
 	 */
 	<T> Set<T> findServices(Class<T> serviceClass);
-
 }

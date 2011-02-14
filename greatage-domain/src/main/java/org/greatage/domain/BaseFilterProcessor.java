@@ -9,7 +9,7 @@ import org.greatage.util.DescriptionBuilder;
 import java.io.Serializable;
 
 /**
- * This class represents implementation if {@link EntityFilterProcessor} that processes existing, includeKeys and
+ * This class represents implementation of {@link EntityFilterProcessor} that processes existing, includeKeys and
  * excludeKeys filter parameters.
  *
  * @author Ivan Khalopik

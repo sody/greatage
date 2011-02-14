@@ -8,6 +8,7 @@ package org.greatage.ioc;
  * This class represents service definition that instantiates service. By default it is configured by module build
  * methods annotated with {@link org.greatage.ioc.annotations.Build} class.
  *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -50,5 +51,4 @@ public interface Service<T> {
 	 * @return service instance, not null
 	 */
 	T build(ServiceResources<T> resources);
-
 }

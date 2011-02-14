@@ -7,6 +7,7 @@ package org.greatage.ioc;
 /**
  * This class represents specific information about service inside the IoC container.
  *
+ * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -41,5 +42,4 @@ public interface ServiceStatus<T> {
 	 * @return service instance
 	 */
 	T getService();
-
 }

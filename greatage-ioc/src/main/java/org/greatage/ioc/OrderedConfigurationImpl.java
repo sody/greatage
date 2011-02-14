@@ -12,26 +12,49 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * This class represents default implementation of ordered service configuration. The resulting type of such
+ * configuration is {@link List}.
+ *
+ * @param <T> service type
+ * @param <V> type of configuration items
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class OrderedConfigurationImpl<T, V> extends AbstractConfiguration<T, V, List<V>> implements OrderedConfiguration<V> {
+public class OrderedConfigurationImpl<T, V> extends AbstractConfiguration<T, V, List<V>>
+		implements OrderedConfiguration<V> {
 	private final List<OrderedItem> configuration = CollectionUtils.newList();
 
+	/**
+	 * Creates new instance of ordered service configuration with defined service resources.
+	 *
+	 * @param resources service resource
+	 */
 	OrderedConfigurationImpl(final ServiceResources<T> resources) {
 		super(resources);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public OrderedConfiguration<V> add(final V item, final String id, final String... constraints) {
 		configuration.add(new OrderedItem(item, id, constraints));
 		return this;
 	}
 
-	public OrderedConfiguration<V> addInstance(final Class<? extends V> clazz, final String id, final String... constraints) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public OrderedConfiguration<V> addInstance(final Class<? extends V> clazz, final String id,
+											   final String... constraints) {
 		add(newInstance(clazz), id, constraints);
 		return this;
 	}
 
+	/**
+	 * Creates resulting instance of ordered service configuration as ordered list of configuration items.
+	 *
+	 * @return resulting ordered list of configuration items
+	 */
 	public List<V> build() {
 		final List<V> result = CollectionUtils.newList();
 

@@ -5,12 +5,10 @@
 package org.greatage.ioc.annotations;
 
 import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * This annotation marks class fields and method parameters inside the IoC container as injected services with specified
@@ -19,8 +17,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Target({FIELD, PARAMETER})
-@Retention(RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Inject {
 
@@ -30,5 +28,4 @@ public @interface Inject {
 	 * @return service unique id
 	 */
 	String value() default "";
-
 }

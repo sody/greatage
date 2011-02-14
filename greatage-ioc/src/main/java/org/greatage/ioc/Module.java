@@ -55,5 +55,4 @@ public interface Module {
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
 	<T> List<Interceptor<T>> getInterceptors(Service<T> service);
-
 }
