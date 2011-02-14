@@ -15,28 +15,51 @@ import org.greatage.util.DescriptionBuilder;
  */
 public abstract class AbstractLogger implements Logger {
 
-	public void trace(String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void trace(final String format, final Object... parameters) {
 		trace(null, format, parameters);
 	}
 
-	public void debug(String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void debug(final String format, final Object... parameters) {
 		debug(null, format, parameters);
 	}
 
-	public void info(String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void info(final String format, final Object... parameters) {
 		info(null, format, parameters);
 	}
 
-	public void warn(String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void warn(final String format, final Object... parameters) {
 		warn(null, format, parameters);
 	}
 
-	public void error(String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void error(final String format, final Object... parameters) {
 		error(null, format, parameters);
 	}
 
+	/**
+	 * Gets logger name.
+	 *
+	 * @return logger name
+	 */
 	protected abstract String getName();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());

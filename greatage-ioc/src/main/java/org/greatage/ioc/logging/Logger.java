@@ -18,7 +18,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void trace(String format, Object... parameters);
+	void trace(String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message and attached exception at the TRACE level.
@@ -27,7 +27,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void trace(Throwable exception, String format, Object... parameters);
+	void trace(Throwable exception, String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message at the DEBUG level.
@@ -35,7 +35,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void debug(String format, Object... parameters);
+	void debug(String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message and attached exception at the DEBUG level.
@@ -44,7 +44,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void debug(Throwable exception, String format, Object... parameters);
+	void debug(Throwable exception, String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message at the INFO level.
@@ -52,7 +52,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void info(String format, Object... parameters);
+	void info(String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message and attached exception at the INFO level.
@@ -61,7 +61,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void info(Throwable exception, String format, Object... parameters);
+	void info(Throwable exception, String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message at the WARN level.
@@ -69,7 +69,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void warn(String format, Object... parameters);
+	void warn(String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message and attached exception at the WARN level.
@@ -78,7 +78,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void warn(Throwable exception, String format, Object... parameters);
+	void warn(Throwable exception, String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message at the ERROR level.
@@ -86,7 +86,7 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void error(String format, Object... parameters);
+	void error(String format, Object... parameters);
 
 	/**
 	 * Log a formatted with specified parameters message and attached exception at the ERROR level.
@@ -95,6 +95,5 @@ public interface Logger {
 	 * @param format	 format string
 	 * @param parameters parameters to format message with
 	 */
-	public void error(Throwable exception, String format, Object... parameters);
-
+	void error(Throwable exception, String format, Object... parameters);
 }

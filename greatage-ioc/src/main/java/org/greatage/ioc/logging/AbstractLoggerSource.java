@@ -15,10 +15,16 @@ import org.greatage.util.DescriptionBuilder;
  */
 public abstract class AbstractLoggerSource implements LoggerSource {
 
-	public Logger getLogger(Class clazz) {
+	/**
+	 * {@inheritDoc} Delegates invocation to {@link #getLogger(String)} method.
+	 */
+	public Logger getLogger(final Class clazz) {
 		return getLogger(clazz.getName());
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return new DescriptionBuilder(getClass()).toString();

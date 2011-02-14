@@ -18,11 +18,14 @@ public class Slf4jLogger extends AbstractLogger {
 	 *
 	 * @param logger Slf4j logger
 	 */
-	public Slf4jLogger(org.slf4j.Logger logger) {
+	public Slf4jLogger(final org.slf4j.Logger logger) {
 		delegate = logger;
 	}
 
-	public void trace(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void trace(final Throwable exception, final String format, final Object... parameters) {
 		final String message = String.format(format, parameters);
 		if (exception != null) {
 			delegate.trace(message, exception);
@@ -31,7 +34,10 @@ public class Slf4jLogger extends AbstractLogger {
 		}
 	}
 
-	public void debug(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void debug(final Throwable exception, final String format, final Object... parameters) {
 		final String message = String.format(format, parameters);
 		if (exception != null) {
 			delegate.debug(message, exception);
@@ -40,7 +46,10 @@ public class Slf4jLogger extends AbstractLogger {
 		}
 	}
 
-	public void info(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void info(final Throwable exception, final String format, final Object... parameters) {
 		final String message = String.format(format, parameters);
 		if (exception != null) {
 			delegate.info(message, exception);
@@ -49,7 +58,10 @@ public class Slf4jLogger extends AbstractLogger {
 		}
 	}
 
-	public void warn(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void warn(final Throwable exception, final String format, final Object... parameters) {
 		final String message = String.format(format, parameters);
 		if (exception != null) {
 			delegate.warn(message, exception);
@@ -58,7 +70,10 @@ public class Slf4jLogger extends AbstractLogger {
 		}
 	}
 
-	public void error(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void error(final Throwable exception, final String format, final Object... parameters) {
 		final String message = String.format(format, parameters);
 		if (exception != null) {
 			delegate.error(message, exception);
@@ -67,6 +82,9 @@ public class Slf4jLogger extends AbstractLogger {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getName() {
 		return delegate.getName();

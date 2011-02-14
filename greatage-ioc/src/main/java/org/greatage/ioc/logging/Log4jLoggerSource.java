@@ -14,8 +14,10 @@ import org.apache.log4j.LogManager;
  */
 public class Log4jLoggerSource extends AbstractLoggerSource {
 
-	public Logger getLogger(String name) {
+	/**
+	 * {@inheritDoc} Creates {@link Log4jLogger} instance.
+	 */
+	public Logger getLogger(final String name) {
 		return new Log4jLogger(LogManager.getLogger(name));
 	}
-
 }

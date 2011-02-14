@@ -14,8 +14,10 @@ import java.util.logging.LogManager;
  */
 public class Jdk14LoggerSource extends AbstractLoggerSource {
 
-	public Logger getLogger(String name) {
+	/**
+	 * {@inheritDoc} Creates {@link Jdk14Logger} instance.
+	 */
+	public Logger getLogger(final String name) {
 		return new Jdk14Logger(LogManager.getLogManager().getLogger(name));
 	}
-
 }

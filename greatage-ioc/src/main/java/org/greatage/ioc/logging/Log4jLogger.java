@@ -21,30 +21,48 @@ public class Log4jLogger extends AbstractLogger {
 	 *
 	 * @param logger Log4j logger
 	 */
-	public Log4jLogger(org.apache.log4j.Logger logger) {
+	public Log4jLogger(final org.apache.log4j.Logger logger) {
 		delegate = logger;
 	}
 
-	public void trace(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void trace(final Throwable exception, final String format, final Object... parameters) {
 		log(Level.TRACE, exception, format, parameters);
 	}
 
-	public void debug(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void debug(final Throwable exception, final String format, final Object... parameters) {
 		log(Level.DEBUG, exception, format, parameters);
 	}
 
-	public void info(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void info(final Throwable exception, final String format, final Object... parameters) {
 		log(Level.INFO, exception, format, parameters);
 	}
 
-	public void warn(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void warn(final Throwable exception, final String format, final Object... parameters) {
 		log(Level.WARN, exception, format, parameters);
 	}
 
-	public void error(Throwable exception, String format, Object... parameters) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void error(final Throwable exception, final String format, final Object... parameters) {
 		log(Level.ERROR, exception, format, parameters);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getName() {
 		return delegate.getName();
@@ -58,7 +76,7 @@ public class Log4jLogger extends AbstractLogger {
 	 * @param format	 message format
 	 * @param parameters message parameters
 	 */
-	private void log(Level level, Throwable exception, String format, Object... parameters) {
+	private void log(final Level level, final Throwable exception, final String format, final Object... parameters) {
 		delegate.log(FQCN, level, String.format(format, parameters), exception);
 	}
 }

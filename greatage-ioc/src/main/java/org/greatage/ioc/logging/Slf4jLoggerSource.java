@@ -6,7 +6,6 @@ package org.greatage.ioc.logging;
 
 import org.slf4j.LoggerFactory;
 
-
 /**
  * This class represents logger source implementation through Slf4j logging API.
  *
@@ -15,8 +14,10 @@ import org.slf4j.LoggerFactory;
  */
 public class Slf4jLoggerSource extends AbstractLoggerSource {
 
-	public Logger getLogger(String name) {
+	/**
+	 * {@inheritDoc} Creates {@link Slf4jLogger} instance.
+	 */
+	public Logger getLogger(final String name) {
 		return new Slf4jLogger(LoggerFactory.getLogger(name));
 	}
-
 }

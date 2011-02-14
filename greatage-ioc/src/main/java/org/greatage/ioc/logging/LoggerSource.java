@@ -27,5 +27,4 @@ public interface LoggerSource {
 	 * @return logger instance
 	 */
 	Logger getLogger(String name);
-
 }
