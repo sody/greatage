@@ -4,7 +4,7 @@ import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
-import org.greatage.ioc.ScopeConstants;
+import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeManager;
 

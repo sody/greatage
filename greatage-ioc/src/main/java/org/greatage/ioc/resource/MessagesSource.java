@@ -31,6 +31,5 @@ public interface MessagesSource {
 	 * @return localized messages
 	 */
 	Messages getMessages(String name, Locale locale);
-
 }
 

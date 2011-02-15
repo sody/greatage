@@ -14,7 +14,6 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-
 /**
  * This class represents proxy factory implementation using javassist library.
  *
@@ -44,6 +43,9 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 		this.pool = pool;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		validate(builder);
 
@@ -64,13 +66,15 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 		final ClassBuilder<T> classBuilder = new ClassBuilder<T>(pool, className, false, proxyClass);
 
 		classBuilder.addField(HANDLER_FIELD, Modifier.PRIVATE | Modifier.FINAL, JavassistInvocationHandler.class);
-		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, List.class}, null, String.format("%s = new %s($$);", HANDLER_FIELD, JavassistInvocationHandler.class.getName()));
+		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, List.class}, null,
+				String.format("%s = new %s($$);", HANDLER_FIELD, JavassistInvocationHandler.class.getName()));
 
 		for (Method method : proxyClass.getMethods()) {
 			final int modifiers = method.getModifiers();
 			if (Modifier.isPublic(modifiers) && !Modifier.isFinal(modifiers)) {
 				final String methodName = method.getName();
-				final String methodBody = String.format("{ %s realMethod = %s.getDelegate().getClass().getMethod(\"%s\", $sig); return ($r) %s.invoke(realMethod, $args); }",
+				final String methodBody = String.format(
+						"{ %s realMethod = %s.getDelegate().getClass().getMethod(\"%s\", $sig); return ($r) %s.invoke(realMethod, $args); }",
 						Method.class.getName(), HANDLER_FIELD, methodName, HANDLER_FIELD);
 				classBuilder.addMethod(methodName, Modifier.PUBLIC, method.getReturnType(),
 						method.getParameterTypes(), method.getExceptionTypes(), methodBody);
@@ -87,11 +91,14 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 	 * @param inputClass original class
 	 * @return generated name for proxy class
 	 */
-	private String generateName(Class inputClass) {
+	private String generateName(final Class inputClass) {
 		final String uid = Long.toHexString(UID_GENERATOR.getAndIncrement());
 		return "$" + inputClass.getSimpleName() + "_" + uid;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());

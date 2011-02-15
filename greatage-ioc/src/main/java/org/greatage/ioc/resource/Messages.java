@@ -36,5 +36,4 @@ public interface Messages {
 	 * @return formatted localized string
 	 */
 	String format(String key, Object... parameters);
-
 }

@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * This class represents utility for lazy creation of object from object builder.
  *
+ * @param <T> delegate type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -41,11 +42,25 @@ public abstract class AbstractInvocationHandler<T> {
 		return builder.build();
 	}
 
+	/**
+	 * Invokes specified method with specified parameters on delegate instance
+	 *
+	 * @param method	 interface method
+	 * @param parameters invocation parameters
+	 * @return delegated from invocation return object
+	 * @throws Throwable if some problems occurs while invoking method
+	 */
 	protected Object invoke(final Method method, final Object... parameters) throws Throwable {
 		final Method realMethod = getDelegate().getClass().getMethod(method.getName(), method.getParameterTypes());
 		return createInvocation(realMethod).proceed(parameters);
 	}
 
+	/**
+	 * Creates new invocation instance for specified method with defined method advices.
+	 *
+	 * @param method method
+	 * @return new invocation instance for specified method with defined method advices
+	 */
 	private Invocation createInvocation(final Method method) {
 		Invocation invocation = new MethodInvocation(getDelegate(), method);
 		if (advices != null) {
@@ -56,6 +71,9 @@ public abstract class AbstractInvocationHandler<T> {
 		return invocation;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		final DescriptionBuilder db = new DescriptionBuilder(getClass());

@@ -7,6 +7,8 @@ package org.greatage.ioc.cache;
 /**
  * This interface represents cache that provides simplified access to all cache operations.
  *
+ * @param <K>   type of cache keys
+ * @param <V>   type of cache items
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -55,5 +57,4 @@ public interface Cache<K, V> {
 	 * Clears cache. All cached items will be removed from it.
 	 */
 	void clear();
-
 }

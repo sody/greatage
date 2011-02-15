@@ -9,6 +9,7 @@ import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Intercept;
+import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;

@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * This class represents implementation of invocation handler for CGLib proxy objects.
  *
+ * @param <T> object type
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -28,7 +29,7 @@ public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> impl
 	}
 
 	/**
-	 * Delegates all method invocations to delegate instance.
+	 * {@inheritDoc} Delegates all method invocations to delegate instance.
 	 */
 	public Object invoke(final Object obj, final Method method, final Object[] args) throws Throwable {
 		return invoke(method, args);

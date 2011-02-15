@@ -31,5 +31,4 @@ public interface CacheSource {
 	 * @return cache instance
 	 */
 	<K, V> Cache<K, V> getCache(String name);
-
 }

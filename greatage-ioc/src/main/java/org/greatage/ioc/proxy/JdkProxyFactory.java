@@ -17,6 +17,9 @@ import java.util.List;
  */
 public class JdkProxyFactory extends AbstractProxyFactory {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
 		validate(builder);
 
@@ -29,11 +32,7 @@ public class JdkProxyFactory extends AbstractProxyFactory {
 	}
 
 	/**
-	 * Checks if proxy instance can be created for specified class. It can not be created when original class is not
-	 * interface.
-	 *
-	 * @param builder object builder
-	 * @throws IllegalArgumentException if proxy instance can not be created
+	 * {@inheritDoc} It also can not be created when original class is not interface.
 	 */
 	@Override
 	protected <T> void validate(final ObjectBuilder<T> builder) {
@@ -43,6 +42,9 @@ public class JdkProxyFactory extends AbstractProxyFactory {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return new DescriptionBuilder(getClass()).toString();

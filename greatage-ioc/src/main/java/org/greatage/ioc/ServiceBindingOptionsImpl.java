@@ -4,6 +4,8 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.scope.ScopeConstants;
+
 /**
  * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id,
  * service scope and is it overrides the existing service.

@@ -7,7 +7,7 @@ package org.greatage.domain.hibernate;
 import org.greatage.domain.*;
 import org.greatage.ioc.MappedConfiguration;
 import org.greatage.ioc.OrderedConfiguration;
-import org.greatage.ioc.ScopeConstants;
+import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.*;
 import org.greatage.ioc.resource.ResourceLocator;

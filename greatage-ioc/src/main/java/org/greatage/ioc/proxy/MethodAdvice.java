@@ -21,5 +21,4 @@ public interface MethodAdvice {
 	 * @throws Throwable when error occurs during invocation or may be added by this method advice
 	 */
 	Object advice(Invocation invocation, Object... parameters) throws Throwable;
-
 }

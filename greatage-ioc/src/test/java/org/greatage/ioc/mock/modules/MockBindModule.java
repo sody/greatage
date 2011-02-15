@@ -4,7 +4,7 @@
 
 package org.greatage.ioc.mock.modules;
 
-import org.greatage.ioc.ScopeConstants;
+import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;

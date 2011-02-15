@@ -2,7 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc;
+package org.greatage.ioc.scope;
 
 /**
  * This class represents all base pre-defined scope identifiers.
@@ -19,7 +19,7 @@ public abstract class ScopeConstants {
 
 	/**
 	 * Identifier for prototype scope. It is used for services that have different state for all points where it is
-	 * accessed..
+	 * accessed.
 	 */
 	public static final String PROTOTYPE = "prototype";
 

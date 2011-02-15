@@ -10,10 +10,12 @@ import java.util.List;
 /**
  * This class represents implementation of invocation handler for JDK proxy objects.
  *
+ * @param <T> object type
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T> implements java.lang.reflect.InvocationHandler {
+public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T>
+		implements java.lang.reflect.InvocationHandler {
 
 	/**
 	 * Creates new instance of invocation handler for JDK proxy objects.
@@ -26,7 +28,7 @@ public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T> implem
 	}
 
 	/**
-	 * Delegates all method invocations to delegate instance.
+	 * {@inheritDoc} Delegates all method invocations to delegate instance.
 	 */
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 		return invoke(method, args);

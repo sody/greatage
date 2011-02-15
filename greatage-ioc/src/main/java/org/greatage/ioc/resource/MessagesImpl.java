@@ -27,11 +27,17 @@ public class MessagesImpl extends AbstractMessages {
 		this.messages = messages;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean contains(final String key) {
 		return messages.containsKey(key);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	protected String getMessage(final String key) {
 		return messages.get(key);

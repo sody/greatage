@@ -20,5 +20,4 @@ public interface SymbolSource {
 	 * @return string value
 	 */
 	String getValue(String expression);
-
 }

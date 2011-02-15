@@ -4,6 +4,8 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.scope.ScopeConstants;
+
 /**
  * This class represents {@link ServiceStatus} implementation for {@link ServiceLocator} service. It always has hardly
  * specified service identifier, class, scope and instance.

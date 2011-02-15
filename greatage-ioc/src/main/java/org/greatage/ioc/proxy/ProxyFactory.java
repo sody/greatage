@@ -26,5 +26,4 @@ public interface ProxyFactory {
 	 * @throws RuntimeException if proxy creation is impossible or if an error occurs instantiating it
 	 */
 	<T> T createProxy(ObjectBuilder<T> objectBuilder, List<MethodAdvice> advices);
-
 }

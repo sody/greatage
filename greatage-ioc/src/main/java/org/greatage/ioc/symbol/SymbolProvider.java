@@ -20,5 +20,4 @@ public interface SymbolProvider {
 	 * @return string value
 	 */
 	String getSymbol(String key);
-
 }

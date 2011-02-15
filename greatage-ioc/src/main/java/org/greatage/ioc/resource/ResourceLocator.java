@@ -19,5 +19,4 @@ public interface ResourceLocator {
 	 * @return resource instance
 	 */
 	Resource getResource(String path);
-
 }

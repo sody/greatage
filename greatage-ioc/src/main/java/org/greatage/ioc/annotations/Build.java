@@ -4,7 +4,7 @@
 
 package org.greatage.ioc.annotations;
 
-import org.greatage.ioc.ScopeConstants;
+import org.greatage.ioc.scope.ScopeConstants;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

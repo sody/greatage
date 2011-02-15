@@ -53,5 +53,4 @@ public interface Invocation {
 	 * @throws Throwable when error occurs during invocation
 	 */
 	Object proceed(Object... parameters) throws Throwable;
-
 }

@@ -7,8 +7,8 @@ package org.greatage.ioc.proxy;
 /**
  * This interface represents proxy generation data.
  *
- * @author Ivan Khalopik
  * @param <T> type of class that will be created by {@link #build()} method
+ * @author Ivan Khalopik
  * @since 1.0
  */
 public interface ObjectBuilder<T> {
@@ -26,5 +26,4 @@ public interface ObjectBuilder<T> {
 	 * @return new instance of real object
 	 */
 	T build();
-
 }

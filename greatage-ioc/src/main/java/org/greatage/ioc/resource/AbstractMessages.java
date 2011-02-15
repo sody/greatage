@@ -28,14 +28,23 @@ public abstract class AbstractMessages implements Messages {
 		this.locale = locale;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean contains(final String key) {
 		return getMessage(key) != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String get(final String key) {
 		return contains(key) ? getMessage(key) : String.format(MISSING_KEY_PLACEHOLDER, key);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String format(final String key, final Object... parameters) {
 		final String format = get(key);
 		return String.format(locale, format, parameters);
@@ -49,6 +58,9 @@ public abstract class AbstractMessages implements Messages {
 	 */
 	protected abstract String getMessage(final String key);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(Messages.class);

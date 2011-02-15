@@ -16,13 +16,18 @@ import java.util.List;
  */
 public class CGLibProxyFactory extends AbstractProxyFactory {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <T> T createProxy(final ObjectBuilder<T> objectBuilder, final List<MethodAdvice> advices) {
 		validate(objectBuilder);
 
-		final Class superClass = objectBuilder.getObjectClass().isInterface() ? Object.class : objectBuilder.getObjectClass();
+		final Class superClass = objectBuilder.getObjectClass().isInterface() ?
+				Object.class :
+				objectBuilder.getObjectClass();
 		final CGLibInvocationHandler<T> handler = new CGLibInvocationHandler<T>(objectBuilder, advices);
 		final Object proxy = objectBuilder.getObjectClass().isInterface() ?
-				Enhancer.create(superClass, new Class[] { objectBuilder.getObjectClass() }, handler) :
+				Enhancer.create(superClass, new Class[]{objectBuilder.getObjectClass()}, handler) :
 				Enhancer.create(superClass, handler);
 		return objectBuilder.getObjectClass().cast(proxy);
 	}

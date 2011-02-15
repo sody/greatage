@@ -22,6 +22,7 @@ import org.greatage.ioc.resource.ResourceLocator;
 import org.greatage.ioc.scope.GlobalScope;
 import org.greatage.ioc.scope.PrototypeScope;
 import org.greatage.ioc.scope.Scope;
+import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.ioc.scope.ScopeManagerImpl;
 import org.greatage.ioc.scope.ThreadScope;

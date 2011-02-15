@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Properties;
 
 /**
+ * This class represents default {@link MessagesSource} implementation that uses {@link ResourceLocator} service to
+ * locate message bundles, reads them in UTF-8 encoding and creates {@link MessagesImpl} instance as result.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -24,17 +27,30 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 
 	private final ResourceLocator resourceLocator;
 
+	/**
+	 * Creates new instance of message source that uses {@link ResourceLocator} service to locate message bundles, reads
+	 * them in UTF-8 encoding and creates {@link MessagesImpl} instance as result.
+	 *
+	 * @param resourceLocator resource locator
+	 */
 	public MessagesSourceImpl(final ResourceLocator resourceLocator) {
 		this.resourceLocator = resourceLocator;
 	}
 
+	/**
+	 * {@inheritDoc} It uses {@link ResourceLocator} service to locate message bundles, reads them in UTF-8 encoding and
+	 * creates {@link MessagesImpl} instance as result.
+	 *
+	 * @throws IllegalStateException if message bundle is not found
+	 * @throws RuntimeException	  when error occurs while reading properties file
+	 */
 	public Messages getMessages(final String name, final Locale locale) {
 		final Resource resource = resourceLocator.getResource(name + ".properties").inLocale(locale);
 		if (resource != null) {
 			final Map<String, String> properties = readProperties(resource);
 			return new MessagesImpl(locale, properties);
 		}
-		throw new RuntimeException(String.format("Can't find messages for %s", name));
+		throw new IllegalStateException(String.format("Can't find messages for %s", name));
 	}
 
 	/**
@@ -42,6 +58,7 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 	 *
 	 * @param resource resource
 	 * @return string properties from resource
+	 * @throws RuntimeException when error occurs while reading properties file
 	 */
 	private Map<String, String> readProperties(final Resource resource) {
 		Reader reader = null;

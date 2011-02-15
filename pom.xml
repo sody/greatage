@@ -354,7 +354,7 @@
 		<cglib.version>2.2</cglib.version>
 
 		<jcache.version>1.1</jcache.version>
-		<ehcache.version>2.3.2</ehcache.version>
+		<ehcache.version>2.4.0</ehcache.version>
 		<oscache.version>2.4.1</oscache.version>
 
 		<!--security dependencies-->

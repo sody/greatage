@@ -19,6 +19,7 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
 	 * Checks if proxy instance can be created for specified class. It can not be created when original class is not
 	 * interface and has no default constructor.
 	 *
+	 * @param <T>     object type
 	 * @param builder object builder
 	 * @throws IllegalArgumentException if proxy instance can not be created
 	 */
@@ -34,11 +35,15 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
 			try {
 				proxyClass.getConstructor();
 			} catch (NoSuchMethodException e) {
-				throw new IllegalArgumentException(String.format("Proxy class '%s' must have default constructor", proxyClass), e);
+				throw new IllegalArgumentException(
+						String.format("Proxy class '%s' must have default constructor", proxyClass), e);
 			}
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return new DescriptionBuilder(getClass()).toString();

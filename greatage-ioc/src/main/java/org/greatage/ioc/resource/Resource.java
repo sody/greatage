@@ -67,5 +67,4 @@ public interface Resource {
 	 * @throws IOException if error occurs during resource opening
 	 */
 	InputStream open() throws IOException;
-
 }

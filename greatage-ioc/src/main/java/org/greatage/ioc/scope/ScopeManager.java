@@ -19,5 +19,4 @@ public interface ScopeManager {
 	 * @return scope instance correspondent to specified scope name or null if doesn't exist
 	 */
 	Scope getScope(String scope);
-
 }
