@@ -14,16 +14,12 @@ public class TestDescriptionBuilder extends Assert {
 	public Object[][] descriptionBuilderData() {
 		return new Object[][]{
 				{new DescriptionBuilder(getClass()), "TestDescriptionBuilder"},
-				{new DescriptionBuilder((String) null), "null"},
 				{new DescriptionBuilder(getClass()).append("test"), "TestDescriptionBuilder(test)"},
 				{new DescriptionBuilder(getClass()).append(null), "TestDescriptionBuilder(null)"},
 				{new DescriptionBuilder(getClass()).append(null, null), "TestDescriptionBuilder(null=null)"},
-				{new DescriptionBuilder("Test").append("test").append("data"), "Test(test,data)"},
-				{new DescriptionBuilder("Test").append("test").append("test", "data"), "Test(test,test=data)"},
-				{
-						new DescriptionBuilder("Test").append("test").append("test", "data").append("test", "data1"),
-						"Test(test,test=data,test=data1)"
-				},
+				{new DescriptionBuilder("Test").append("test").append("data"), "Test(test, data)"},
+				{new DescriptionBuilder("Test").append("test").append("test", "data"), "Test(test, test=data)"},
+				{new DescriptionBuilder("Test").append("test").append("test", "data").append("test", "data1"),"Test(test, test=data, test=data1)"},
 		};
 	}
 
@@ -34,6 +30,11 @@ public class TestDescriptionBuilder extends Assert {
 
 	@Test(expectedExceptions = NullPointerException.class)
 	public void testDescriptionBuilderWrong() {
-		new DescriptionBuilder((Class) null);
+		new DescriptionBuilder((Class) null).toString();
+	}
+
+	@Test(expectedExceptions = NullPointerException.class)
+	public void testDescriptionBuilderWrong2() {
+		new DescriptionBuilder((String) null).toString();
 	}
 }

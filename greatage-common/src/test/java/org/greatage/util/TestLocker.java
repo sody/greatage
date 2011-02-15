@@ -41,9 +41,9 @@ public class TestLocker extends Assert {
 	public void testLockerToString() {
 		final Locker locker = new Locker();
 		locker.check();
-		assertEquals(locker, "Locker(locked=false)");
+		assertEquals(locker.toString(), "Locker(locked=false)");
 		locker.lock();
-		assertEquals(locker, "Locker(locked=true)");
+		assertEquals(locker.toString(), "Locker(locked=true)");
 	}
 
 	@Test
@@ -87,8 +87,8 @@ public class TestLocker extends Assert {
 	public void testMultiLockerToString() {
 		final MultiLocker<Class> locker = new MultiLocker<Class>();
 		locker.check(getClass());
-		assertEquals(locker, "MultiLocker(lockers=...)");
+		assertEquals(locker.toString(), "MultiLocker(lockers={})");
 		locker.lock(getClass());
-		assertEquals(locker, "MultiLocker(lockers=...)");
+		assertEquals(locker.toString(), "MultiLocker(lockers={class org.greatage.util.TestLocker=Locker(locked=true)})");
 	}
 }

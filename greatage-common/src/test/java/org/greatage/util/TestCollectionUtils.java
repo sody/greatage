@@ -39,23 +39,65 @@ public class TestCollectionUtils extends Assert {
 	@DataProvider
 	public Object[][] collectionFactoryData() {
 		return new Object[][]{
-				{CollectionUtils.newList(), ArrayList.class},
-				{CollectionUtils.newList(1, 2, 3), ArrayList.class, 1, 2, 3},
-				{CollectionUtils.newList(Arrays.asList("1", "2", "3")), ArrayList.class, "1", "2", "3"},
-				{CollectionUtils.newConcurrentList(), CopyOnWriteArrayList.class},
-				{CollectionUtils.newConcurrentList(1, 2, 3), CopyOnWriteArrayList.class, 1, 2, 3},
 				{
-						CollectionUtils.newConcurrentList(Arrays.asList("1", "2", "3")), CopyOnWriteArrayList.class,
-						"1", "2", "3"
+						CollectionUtils.newList(),
+						ArrayList.class,
+						new Object[]{}
 				},
-				{CollectionUtils.newSet(), HashSet.class},
-				{CollectionUtils.newSet(1, 2, 3), HashSet.class, 1, 2, 3},
-				{CollectionUtils.newSet(Arrays.asList("1", "2", "3")), HashSet.class, "1", "2", "3"},
-				{CollectionUtils.newConcurrentSet(), CopyOnWriteArraySet.class},
-				{CollectionUtils.newConcurrentSet(1, 2, 3), CopyOnWriteArraySet.class, 1, 2, 3},
 				{
-						CollectionUtils.newConcurrentSet(Arrays.asList("1", "2", "3")), CopyOnWriteArraySet.class, "1",
-						"2", "3"
+						CollectionUtils.newList(1, 2, 3),
+						ArrayList.class,
+						new Object[]{1, 2, 3}
+				},
+				{
+						CollectionUtils.newList(Arrays.asList("1", "2", "3")),
+						ArrayList.class,
+						new Object[]{"1", "2", "3"}
+				},
+				{
+						CollectionUtils.newConcurrentList(),
+						CopyOnWriteArrayList.class,
+						new Object[]{}
+				},
+				{
+						CollectionUtils.newConcurrentList(1, 2, 3),
+						CopyOnWriteArrayList.class,
+						new Object[]{1, 2, 3}
+				},
+				{
+						CollectionUtils.newConcurrentList(Arrays.asList("1", "2", "3")),
+						CopyOnWriteArrayList.class,
+						new Object[]{"1", "2", "3"}
+				},
+				{
+						CollectionUtils.newSet(),
+						HashSet.class,
+						new Object[]{}
+				},
+				{
+						CollectionUtils.newSet(1, 2, 3),
+						HashSet.class,
+						new Object[]{1, 2, 3}
+				},
+				{
+						CollectionUtils.newSet(Arrays.asList("1", "2", "3")),
+						HashSet.class,
+						new Object[]{"1", "2", "3"}
+				},
+				{
+						CollectionUtils.newConcurrentSet(),
+						CopyOnWriteArraySet.class,
+						new Object[]{}
+				},
+				{
+						CollectionUtils.newConcurrentSet(1, 2, 3),
+						CopyOnWriteArraySet.class,
+						new Object[]{1, 2, 3}
+				},
+				{
+						CollectionUtils.newConcurrentSet(Arrays.asList("1", "2", "3")),
+						CopyOnWriteArraySet.class,
+						new Object[]{"1", "2", "3"}
 				},
 		};
 	}
@@ -94,7 +136,7 @@ public class TestCollectionUtils extends Assert {
 	@Test(dataProvider = "collectionFactoryData")
 	public void testCollectionFactory(final Collection collection,
 									  final Class<? extends Collection> collectionClass,
-									  final Object... expected) {
+									  final Object[] expected) {
 		assertNotNull(collection);
 		assertTrue(collectionClass.isInstance(collection));
 		assertEquals(collection.size(), expected.length);
@@ -104,7 +146,7 @@ public class TestCollectionUtils extends Assert {
 	@Test(dataProvider = "mapFactoryData")
 	public void testMapFactory(final Map map,
 							   final Class<? extends Map> mapClass,
-							   final Map... expected) {
+							   final Map expected) {
 		assertNotNull(map);
 		assertTrue(mapClass.isInstance(map));
 		assertEquals(map, expected);
