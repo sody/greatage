@@ -43,7 +43,7 @@ public class ServiceFactory<T> implements Service<T> {
 		serviceClass = (Class<T>) factoryMethod.getReturnType();
 
 		final Build build = factoryMethod.getAnnotation(Build.class);
-		serviceId = !StringUtils.isEmpty(build.value()) ? build.value() : serviceClass.getSimpleName();
+		serviceId = !StringUtils.isEmpty(build.value()) ? build.value() : serviceClass.getName();
 		scope = build.scope();
 		override = build.override();
 	}

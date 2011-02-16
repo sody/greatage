@@ -57,6 +57,6 @@ public class GreatAgeModuleDef implements ModuleDef {
 	}
 
 	public String getLoggerName() {
-		return GreatAgeModuleDef.class.getSimpleName();
+		return GreatAgeModuleDef.class.getName();
 	}
 }

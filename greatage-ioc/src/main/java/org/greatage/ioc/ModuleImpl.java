@@ -38,7 +38,7 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Class<T> moduleClass) {
-		super(moduleClass.getSimpleName(), moduleClass, ScopeConstants.GLOBAL, false);
+		super(moduleClass.getName(), moduleClass, ScopeConstants.GLOBAL, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {

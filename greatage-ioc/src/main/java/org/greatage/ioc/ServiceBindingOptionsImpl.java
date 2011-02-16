@@ -31,7 +31,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	ServiceBindingOptionsImpl(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;
-		this.serviceId = serviceClass.getSimpleName();
+		this.serviceId = serviceClass.getName();
 		this.serviceScope = ScopeConstants.GLOBAL;
 		this.override = false;
 	}

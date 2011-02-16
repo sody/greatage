@@ -6,8 +6,8 @@ import org.apache.tapestry5.ioc.Resource;
 import org.apache.tapestry5.services.InvalidationListener;
 
 /**
- * @author ivan.khalopik@tieto.com
- * @since 1.0
+ * @author Ivan Khalopik
+ * @since 1.1
  */
 public class SvgResourceCache implements ResourceCache {
 	private final ResourceCache delegate;

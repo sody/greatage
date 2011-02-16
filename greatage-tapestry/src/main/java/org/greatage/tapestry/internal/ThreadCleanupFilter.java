@@ -11,8 +11,8 @@ import org.greatage.ioc.scope.ScopeManager;
 import java.io.IOException;
 
 /**
- * @author ivan.khalopik@tieto.com
- * @since 1.0
+ * @author Ivan Khalopik
+ * @since 1.1
  */
 public class ThreadCleanupFilter implements RequestFilter {
 	private Scope threadScope;

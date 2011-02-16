@@ -2,9 +2,7 @@
  * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
  */
 
-package org.greatage.ioc.cache;
-
-import org.greatage.util.DescriptionBuilder;
+package org.greatage.util;
 
 import java.util.Arrays;
 
@@ -16,8 +14,6 @@ import java.util.Arrays;
  * @since 1.0
  */
 public class MultiKey {
-	private static final int PRIME = 31;
-
 	private final Object[] values;
 	private final int hashCode;
 
@@ -29,7 +25,7 @@ public class MultiKey {
 	 */
 	public MultiKey(final Object... values) {
 		this.values = values;
-		hashCode = PRIME * Arrays.hashCode(this.values);
+		hashCode = Arrays.hashCode(this.values);
 	}
 
 	/**

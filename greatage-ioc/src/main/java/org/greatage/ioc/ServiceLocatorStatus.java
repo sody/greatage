@@ -29,7 +29,7 @@ public class ServiceLocatorStatus implements ServiceStatus<ServiceLocator> {
 	 * {@inheritDoc} Always returns <tt>ServiceLocator</tt> service identifier.
 	 */
 	public String getServiceId() {
-		return ServiceLocator.class.getSimpleName();
+		return ServiceLocator.class.getName();
 	}
 
 	/**

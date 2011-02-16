@@ -54,11 +54,10 @@ public class IOCModule {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
-		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withId("GASymbolSource");
+		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withId("ApplicationSymbolProvider");
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
-		binder.bind(CacheSource.class, SimpleCacheSource.class).withId("SimpleCacheSource");
 
 		binder.bind(ClassAccessSource.class, ClassAccessSourceImpl.class);
 	}

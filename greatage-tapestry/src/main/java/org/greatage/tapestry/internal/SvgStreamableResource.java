@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * @author ivan.khalopik@tieto.com
- * @since 1.0
+ * @author Ivan Khalopik
+ * @since 1.1
  */
 public class SvgStreamableResource implements StreamableResource {
 	private final StreamableResource delegate;
