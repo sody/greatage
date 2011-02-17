@@ -8,12 +8,11 @@ import org.greatage.ioc.access.ClassAccessSource;
 import org.greatage.ioc.access.ClassAccessSourceImpl;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.cache.CacheSource;
-import org.greatage.ioc.coerce.AbstractCoercionProvider;
 import org.greatage.ioc.coerce.BooleanToStringCoercion;
 import org.greatage.ioc.coerce.Coercion;
 import org.greatage.ioc.coerce.CoercionProvider;
-import org.greatage.ioc.coerce.EnumToStringCoercionProvider;
+import org.greatage.ioc.coerce.DefaultCoercionProvider;
+import org.greatage.ioc.coerce.EnumToStringCoercion;
 import org.greatage.ioc.coerce.NumberToStringCoercion;
 import org.greatage.ioc.coerce.StringToBooleanCoercion;
 import org.greatage.ioc.coerce.StringToDoubleCoercion;
@@ -45,7 +44,7 @@ import org.greatage.ioc.symbol.SystemSymbolProvider;
 /**
  * This class represents base module for Great Age IoC container that configures all needed core services. This are
  * {@link ProxyFactory}, {@link LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider},
- * {@link ResourceLocator}, {@link MessagesSource}, {@link CacheSource}, {@link ClassAccessSource}.
+ * {@link ResourceLocator}, {@link MessagesSource}, {@link ClassAccessSource}.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -55,7 +54,7 @@ public class IOCModule {
 	/**
 	 * Binds all needed core services with their default implementations. This are {@link ProxyFactory}, {@link
 	 * LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link ResourceLocator}, {@link
-	 * MessagesSource}, {@link CacheSource}, {@link ClassAccessSource}.
+	 * MessagesSource}, {@link ClassAccessSource}.
 	 *
 	 * @param binder service binder
 	 */
@@ -65,7 +64,7 @@ public class IOCModule {
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
 		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
-		binder.bind(CoercionProvider.class, AbstractCoercionProvider.class);
+		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
 		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class);
 
@@ -105,15 +104,15 @@ public class IOCModule {
 	public static void contributeTypeCoercer(final Configuration<CoercionProvider> configuration,
 											 final CoercionProvider coercionProvider) {
 		configuration.add(coercionProvider);
-		configuration.addInstance(EnumToStringCoercionProvider.class);
 		configuration.addInstance(StringToEnumCoercionProvider.class);
 	}
 
 	@Contribute(CoercionProvider.class)
 	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
 		configuration.addInstance(BooleanToStringCoercion.class);
-		configuration.addInstance(StringToBooleanCoercion.class);
 		configuration.addInstance(NumberToStringCoercion.class);
+		configuration.addInstance(EnumToStringCoercion.class);
+		configuration.addInstance(StringToBooleanCoercion.class);
 		configuration.addInstance(StringToIntegerCoercion.class);
 		configuration.addInstance(StringToDoubleCoercion.class);
 	}

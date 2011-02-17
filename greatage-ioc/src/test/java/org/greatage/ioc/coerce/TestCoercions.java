@@ -25,7 +25,7 @@ public class TestCoercions extends Assert {
 				{new NumberToStringCoercion(), Integer.MIN_VALUE, "-2147483648"},
 				{new NumberToStringCoercion(), Integer.MAX_VALUE, "2147483647"},
 
-				{new EnumToStringCoercion<TimeUnit>(TimeUnit.class), TimeUnit.SECONDS, "seconds"},
+				{new EnumToStringCoercion(), TimeUnit.SECONDS, "seconds"},
 
 				{new StringToBooleanCoercion(), "true", true},
 				{new StringToBooleanCoercion(), "TRUE", true},

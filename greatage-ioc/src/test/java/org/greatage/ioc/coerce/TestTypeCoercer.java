@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.lang.annotation.ElementType;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -35,6 +36,15 @@ public class TestTypeCoercer extends Assert {
 				{100045, String.class, "100045"},
 				{-145, String.class, "-145"},
 
+				{TimeUnit.SECONDS, String.class, "seconds"},
+				{TimeUnit.MILLISECONDS, CharSequence.class, "milliseconds"},
+				{ElementType.TYPE, String.class, "type"},
+
+				{"type", ElementType.class, ElementType.TYPE},
+				{"seconds", TimeUnit.class, TimeUnit.SECONDS},
+				{"SECONDS", TimeUnit.class, TimeUnit.SECONDS},
+				{"sEcoNds", TimeUnit.class, TimeUnit.SECONDS},
+
 				{-145, CharSequence.class, "-145"},
 		};
 	}
@@ -52,6 +62,7 @@ public class TestTypeCoercer extends Assert {
 		final Set<Coercion> coercions = CollectionUtils.newSet();
 		coercions.add(new BooleanToStringCoercion());
 		coercions.add(new NumberToStringCoercion());
+		coercions.add(new EnumToStringCoercion());
 		coercions.add(new StringToBooleanCoercion());
 		coercions.add(new StringToIntegerCoercion());
 		coercions.add(new StringToDoubleCoercion());
@@ -59,7 +70,6 @@ public class TestTypeCoercer extends Assert {
 
 		final Set<CoercionProvider> coercionProviders = CollectionUtils.newSet();
 		coercionProviders.add(coercionProvider);
-		coercionProviders.add(new EnumToStringCoercionProvider());
 		coercionProviders.add(new StringToEnumCoercionProvider());
 
 		typeCoercer = new TypeCoercerImpl(coercionProviders);
