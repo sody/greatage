@@ -8,9 +8,19 @@ import org.greatage.ioc.access.ClassAccessSource;
 import org.greatage.ioc.access.ClassAccessSourceImpl;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Inject;
 import org.greatage.ioc.cache.CacheSource;
-import org.greatage.ioc.cache.SimpleCacheSource;
+import org.greatage.ioc.coerce.AbstractCoercionProvider;
+import org.greatage.ioc.coerce.BooleanToStringCoercion;
+import org.greatage.ioc.coerce.Coercion;
+import org.greatage.ioc.coerce.CoercionProvider;
+import org.greatage.ioc.coerce.EnumToStringCoercionProvider;
+import org.greatage.ioc.coerce.NumberToStringCoercion;
+import org.greatage.ioc.coerce.StringToBooleanCoercion;
+import org.greatage.ioc.coerce.StringToDoubleCoercion;
+import org.greatage.ioc.coerce.StringToEnumCoercionProvider;
+import org.greatage.ioc.coerce.StringToIntegerCoercion;
+import org.greatage.ioc.coerce.TypeCoercer;
+import org.greatage.ioc.coerce.TypeCoercerImpl;
 import org.greatage.ioc.logging.Log4jLoggerSource;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.proxy.JavassistProxyFactory;
@@ -54,8 +64,11 @@ public class IOCModule {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
+		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
+		binder.bind(CoercionProvider.class, AbstractCoercionProvider.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
-		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withId("ApplicationSymbolProvider");
+		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class);
+
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
 
@@ -78,14 +91,30 @@ public class IOCModule {
 	/**
 	 * Configures symbol source service with configured application and system symbol providers.
 	 *
-	 * @param configuration			 symbol source ordered configuration
-	 * @param applicationSymbolProvider configured application symbol provider
+	 * @param configuration  symbol source ordered configuration
+	 * @param symbolProvider configured application symbol provider
 	 */
 	@Contribute(SymbolSource.class)
 	public static void contributeSymbolSource(final OrderedConfiguration<SymbolProvider> configuration,
-											  @Inject("ApplicationSymbolProvider")
-											  final SymbolProvider applicationSymbolProvider) {
-		configuration.add(applicationSymbolProvider, "Application");
+											  final SymbolProvider symbolProvider) {
+		configuration.add(symbolProvider, "Application");
 		configuration.addInstance(SystemSymbolProvider.class, "System", "after:Application");
+	}
+
+	@Contribute(TypeCoercer.class)
+	public static void contributeTypeCoercer(final Configuration<CoercionProvider> configuration,
+											 final CoercionProvider coercionProvider) {
+		configuration.add(coercionProvider);
+		configuration.addInstance(EnumToStringCoercionProvider.class);
+		configuration.addInstance(StringToEnumCoercionProvider.class);
+	}
+
+	@Contribute(CoercionProvider.class)
+	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
+		configuration.addInstance(BooleanToStringCoercion.class);
+		configuration.addInstance(StringToBooleanCoercion.class);
+		configuration.addInstance(NumberToStringCoercion.class);
+		configuration.addInstance(StringToIntegerCoercion.class);
+		configuration.addInstance(StringToDoubleCoercion.class);
 	}
 }

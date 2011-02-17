@@ -7,20 +7,30 @@ import java.util.Collection;
 import java.util.Map;
 
 /**
+ * This class represents default {@link TypeCoercer} implementation that are configurable with {@link CoercionProvider}
+ * instances.
+ *
  * @author Ivan Khalopik
  * @since 1.1
  */
 public class TypeCoercerImpl implements TypeCoercer {
-	private final Collection<Coercion> coercions;
-
+	private final Collection<CoercionProvider> coercionProviders;
 	private final Map<CompositeKey, Coercion> cache = CollectionUtils.newConcurrentMap();
 
-	public TypeCoercerImpl(final Collection<Coercion> coercions) {
-		assert coercions != null;
+	/**
+	 * Creates new instance of type coercer configured with specified coercion providers
+	 *
+	 * @param coercionProviders coercion providers
+	 */
+	public TypeCoercerImpl(final Collection<CoercionProvider> coercionProviders) {
+		assert coercionProviders != null;
 
-		this.coercions = coercions;
+		this.coercionProviders = coercionProviders;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public <S, T> T coerce(final S input, final Class<T> targetClass) {
 		assert targetClass != null;
 
@@ -28,42 +38,39 @@ public class TypeCoercerImpl implements TypeCoercer {
 			return targetClass.cast(input);
 		}
 
+		@SuppressWarnings("unchecked")
 		final Class<S> sourceClass = (Class<S>) input.getClass();
 
 		final Coercion<S, T> coercion = getCoercion(sourceClass, targetClass);
 		if (coercion == null) {
-			throw new IllegalStateException(
-					String.format("Can not find coercion from '%s' to '%s'", sourceClass, targetClass));
+			throw new CoerceException(input, targetClass);
 		}
 		return coercion.coerce(input);
 	}
 
+	/**
+	 * Implements algorithm of finding coercions by specified source and target classes. It also caches results.
+	 *
+	 * @param sourceClass source class
+	 * @param targetClass target class
+	 * @param <S>         source type
+	 * @param <T>         target type
+	 * @return coercion instance or null if no correspondent coercion found
+	 */
+	@SuppressWarnings("unchecked")
 	private <S, T> Coercion<S, T> getCoercion(final Class<S> sourceClass, final Class<T> targetClass) {
 		final CompositeKey key = new CompositeKey(sourceClass, targetClass);
 		if (cache.containsKey(key)) {
 			return cache.get(key);
 		}
 
-		final Coercion<S, T> coercion = findCoercion(sourceClass, targetClass);
-		cache.put(key, coercion);
-		return coercion;
-	}
-
-	private <S, T> Coercion<S, T> findCoercion(final Class<S> sourceClass, final Class<T> targetClass) {
-		for (Coercion coercion : coercions) {
-			if (supports(coercion, sourceClass, targetClass)) {
+		for (CoercionProvider provider : coercionProviders) {
+			final Coercion<S, T> coercion = provider.getCoercion(sourceClass, targetClass);
+			if (coercion != null) {
+				cache.put(key, coercion);
 				return coercion;
 			}
 		}
 		return null;
-	}
-
-	private boolean supports(final Coercion coercion, final Class sourceClass, final Class targetClass) {
-		if (sourceClass.isAssignableFrom(coercion.getSourceClass())) {
-			if (targetClass.isAssignableFrom(coercion.getTargetClass())) {
-				return true;
-			}
-		}
-		return false;
 	}
 }
