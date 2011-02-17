@@ -13,17 +13,17 @@ import java.util.Arrays;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class MultiKey {
+public class CompositeKey {
 	private final Object[] values;
 	private final int hashCode;
 
 	/**
-	 * Creates new instance of multi key from the provided values. Values have to be a good map keys, immutable, with
+	 * Creates new instance of composite key from the provided values. Values have to be a good map keys, immutable, with
 	 * proper implementations of equals() and hashCode().
 	 *
 	 * @param values composite key parts
 	 */
-	public MultiKey(final Object... values) {
+	public CompositeKey(final Object... values) {
 		this.values = values;
 		hashCode = Arrays.hashCode(this.values);
 	}
@@ -47,7 +47,7 @@ public class MultiKey {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		final MultiKey other = (MultiKey) obj;
+		final CompositeKey other = (CompositeKey) obj;
 		return Arrays.equals(values, other.values);
 	}
 

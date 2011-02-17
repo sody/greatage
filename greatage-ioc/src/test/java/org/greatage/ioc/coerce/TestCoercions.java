@@ -15,6 +15,18 @@ public class TestCoercions extends Assert {
 	@DataProvider
 	public Object[][] coercionData() {
 		return new Object[][]{
+				{new BooleanToStringCoercion(), Boolean.TRUE, "true"},
+				{new BooleanToStringCoercion(), Boolean.FALSE, "false"},
+
+				{new NumberToStringCoercion(), 0, "0"},
+				{new NumberToStringCoercion(), -0, "0"},
+				{new NumberToStringCoercion(), 12, "12"},
+				{new NumberToStringCoercion(), -482, "-482"},
+				{new NumberToStringCoercion(), Integer.MIN_VALUE, "-2147483648"},
+				{new NumberToStringCoercion(), Integer.MAX_VALUE, "2147483647"},
+
+				{new EnumToStringCoercion<TimeUnit>(TimeUnit.class), TimeUnit.SECONDS, "seconds"},
+
 				{new StringToBooleanCoercion(), "true", true},
 				{new StringToBooleanCoercion(), "TRUE", true},
 				{new StringToBooleanCoercion(), "True", true},
@@ -24,10 +36,6 @@ public class TestCoercions extends Assert {
 				{new StringToBooleanCoercion(), "FALSE", false},
 				{new StringToBooleanCoercion(), "False", false},
 				{new StringToBooleanCoercion(), "FalSe", false},
-
-				{new StringToBooleanCoercion(), null, false},
-				{new StringToBooleanCoercion(), "", false},
-				{new StringToBooleanCoercion(), "some string", false},
 
 				{new StringToIntegerCoercion(), "0", 0},
 				{new StringToIntegerCoercion(), "-0", 0},
@@ -50,17 +58,17 @@ public class TestCoercions extends Assert {
 	@DataProvider
 	public Object[][] coercionWrongData() {
 		return new Object[][]{
-				{new StringToIntegerCoercion(), null},
+				{new StringToBooleanCoercion(), ""},
+				{new StringToBooleanCoercion(), "some string"},
+
 				{new StringToIntegerCoercion(), ""},
 				{new StringToIntegerCoercion(), "2as"},
 				{new StringToIntegerCoercion(), "2147483648"},
 				{new StringToIntegerCoercion(), "-2147483649"},
 
-				{new StringToDoubleCoercion(), null},
 				{new StringToDoubleCoercion(), ""},
 				{new StringToDoubleCoercion(), "0s3"},
 
-				{new StringToEnumCoercion<TimeUnit>(TimeUnit.class), null},
 				{new StringToEnumCoercion<TimeUnit>(TimeUnit.class), ""},
 				{new StringToEnumCoercion<TimeUnit>(TimeUnit.class), "0Uh"},
 		};
@@ -72,7 +80,7 @@ public class TestCoercions extends Assert {
 		assertEquals(actual, expected);
 	}
 
-	@Test(dataProvider = "coercionWrongData", expectedExceptions = RuntimeException.class)
+	@Test(dataProvider = "coercionWrongData", expectedExceptions = CoerceException.class)
 	public <S, T> void testCoercionWrong(final Coercion<S, T> coercion, final S source) {
 		coercion.coerce(source);
 	}

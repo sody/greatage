@@ -1,7 +1,7 @@
 package org.greatage.ioc.coerce;
 
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.MultiKey;
+import org.greatage.util.CompositeKey;
 
 import java.util.Collection;
 import java.util.Map;
@@ -13,7 +13,7 @@ import java.util.Map;
 public class TypeCoercerImpl implements TypeCoercer {
 	private final Collection<Coercion> coercions;
 
-	private final Map<MultiKey, Coercion> cache = CollectionUtils.newConcurrentMap();
+	private final Map<CompositeKey, Coercion> cache = CollectionUtils.newConcurrentMap();
 
 	public TypeCoercerImpl(final Collection<Coercion> coercions) {
 		assert coercions != null;
@@ -39,7 +39,7 @@ public class TypeCoercerImpl implements TypeCoercer {
 	}
 
 	private <S, T> Coercion<S, T> getCoercion(final Class<S> sourceClass, final Class<T> targetClass) {
-		final MultiKey key = new MultiKey(sourceClass, targetClass);
+		final CompositeKey key = new CompositeKey(sourceClass, targetClass);
 		if (cache.containsKey(key)) {
 			return cache.get(key);
 		}
