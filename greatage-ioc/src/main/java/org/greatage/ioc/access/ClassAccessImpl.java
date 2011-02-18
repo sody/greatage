@@ -8,22 +8,33 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 /**
+ * This class represents default {@link ClassAccess} implementation that uses {@code java.beans} utilities to retrieve
+ * all bean properties.
+ *
+ * @param <T> bean type
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ClassAccessImpl implements ClassAccess {
-	private final Map<String, PropertyAccess> properties = CollectionUtils.newMap();
-	private final Class type;
+public class ClassAccessImpl<T> implements ClassAccess<T> {
+	private final Map<String, PropertyAccess<T>> properties = CollectionUtils.newMap();
+	private final Class<T> type;
 
-	public ClassAccessImpl(final Class type) {
+	/**
+	 * Creates new class access instance for specified class which is configured with its properties using {@code
+	 * java.beans} utilities
+	 *
+	 * @param type bean class
+	 * @throws PropertyAccessException when error occurs while resolving bean properties
+	 */
+	ClassAccessImpl(final Class<T> type) {
 		this.type = type;
 
 		try {
@@ -46,47 +57,72 @@ public class ClassAccessImpl implements ClassAccess {
 
 			for (PropertyDescriptor descriptor : descriptors) {
 				if (descriptor.getPropertyType() != null && !properties.containsKey(descriptor.getName())) {
-					final PropertyAccess propertyAccess = new PropertyAccessImpl(this, descriptor);
+					final PropertyAccess<T> propertyAccess = new PropertyAccessImpl<T>(this, descriptor);
 					properties.put(propertyAccess.getName(), propertyAccess);
 				}
 			}
 
 			for (Field field : type.getFields()) {
 				if (!Modifier.isStatic(field.getModifiers()) && !properties.containsKey(field.getName())) {
-					final PropertyAccess propertyAccess = new PropertyAccessImpl(this, field);
+					final PropertyAccess<T> propertyAccess = new PropertyAccessImpl<T>(this, field);
 					properties.put(propertyAccess.getName(), propertyAccess);
 				}
 			}
 		} catch (Throwable ex) {
-			throw new RuntimeException(ex);
+			throw new PropertyAccessException(
+					String.format("Can not create class access instance for '%s' class", type), ex);
 		}
 	}
 
-	public Collection<String> getPropertyNames() {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<String> getPropertyNames() {
 		return properties.keySet();
 	}
 
-	public Class getType() {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Class<T> getType() {
 		return type;
 	}
 
-	public PropertyAccess getPropertyAccess(final String propertyName) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public PropertyAccess<T> getPropertyAccess(final String propertyName) {
+		assert propertyName != null;
+
 		return properties.get(propertyName);
 	}
 
-	public Object get(final Object instance, final String propertyName) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object get(final T instance, final String propertyName) {
 		return propertyAccess(propertyName).get(instance);
 	}
 
-	public void set(final Object instance, final String propertyName, final Object value) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void set(final T instance, final String propertyName, final Object value) {
 		propertyAccess(propertyName).set(instance, value);
 	}
 
-	private PropertyAccess propertyAccess(final String propertyName) {
-		final PropertyAccess access = getPropertyAccess(propertyName);
-		if (access == null) {
-			throw new IllegalArgumentException(String.format("Class '%s' has no property with name '%s'",
-					type, propertyName));
+	/**
+	 * Gets property access instance for specified property, if it is not exists {@link PropertyAccessException} will be
+	 * thrown.
+	 *
+	 * @param propertyName property name
+	 * @return property access instance, not null
+	 * @throws PropertyAccessException if bean has no such property
+	 */
+	private PropertyAccess<T> propertyAccess(final String propertyName) {
+		if (!properties.containsKey(propertyName)) {
+			throw new PropertyAccessException(
+					String.format("Class '%s' has no property with name '%s'", type, propertyName));
 		}
 		return properties.get(propertyName);
 	}

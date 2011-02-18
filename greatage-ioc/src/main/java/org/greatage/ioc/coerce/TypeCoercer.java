@@ -19,4 +19,15 @@ public interface TypeCoercer {
 	 * @throws CoerceException if can not convert
 	 */
 	<S, T> T coerce(S input, Class<T> targetType);
+
+	/**
+	 * Gets coercion instance that supports coercion from source to target class.
+	 *
+	 * @param sourceClass source class
+	 * @param targetClass target class
+	 * @param <S>         source type
+	 * @param <T>         target type
+	 * @return coercion instance or null if no correspondent coercion found
+	 */
+	<S, T> Coercion<S, T> getCoercion(Class<S> sourceClass, Class<T> targetClass);
 }

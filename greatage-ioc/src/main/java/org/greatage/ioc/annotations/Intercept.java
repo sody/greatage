@@ -25,15 +25,11 @@ public @interface Intercept {
 
 	/**
 	 * This property defines service interface for intercepting.
-	 *
-	 * @return service interface
 	 */
 	Class value();
 
 	/**
 	 * This property defines service unique id for intercepting.
-	 *
-	 * @return service unique id
 	 */
 	String serviceId() default "";
 }

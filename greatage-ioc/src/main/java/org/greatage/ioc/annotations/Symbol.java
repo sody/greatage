@@ -24,8 +24,6 @@ public @interface Symbol {
 
 	/**
 	 * This property defines symbol expression to inject.
-	 *
-	 * @return symbol expression
 	 */
 	String value();
 }

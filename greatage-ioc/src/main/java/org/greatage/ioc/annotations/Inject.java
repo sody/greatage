@@ -24,8 +24,6 @@ public @interface Inject {
 
 	/**
 	 * This property defines service id for injection. If is empty service will be injected by its interface.
-	 *
-	 * @return service unique id
 	 */
 	String value() default "";
 }

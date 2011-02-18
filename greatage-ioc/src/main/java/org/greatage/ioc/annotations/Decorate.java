@@ -25,15 +25,11 @@ public @interface Decorate {
 
 	/**
 	 * This property defines service interface for decoration.
-	 *
-	 * @return service interface
 	 */
 	Class value();
 
 	/**
 	 * This property defines service unique id for decoration.
-	 *
-	 * @return service unique id
 	 */
 	String serviceId() default "";
 }

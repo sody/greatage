@@ -100,6 +100,12 @@ public class IOCModule {
 		configuration.addInstance(SystemSymbolProvider.class, "System", "after:Application");
 	}
 
+	/**
+	 * Configures type coercer service with configured default coercion provider and string-to-enum provider.
+	 *
+	 * @param configuration	type coercer configuration
+	 * @param coercionProvider default coercion provider service
+	 */
 	@Contribute(TypeCoercer.class)
 	public static void contributeTypeCoercer(final Configuration<CoercionProvider> configuration,
 											 final CoercionProvider coercionProvider) {
@@ -107,6 +113,11 @@ public class IOCModule {
 		configuration.addInstance(StringToEnumCoercionProvider.class);
 	}
 
+	/**
+	 * Configures default coercion provider with all basic coercions.
+	 *
+	 * @param configuration default coercion provider configuration
+	 */
 	@Contribute(CoercionProvider.class)
 	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
 		configuration.addInstance(BooleanToStringCoercion.class);

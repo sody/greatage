@@ -26,15 +26,11 @@ public @interface Contribute {
 
 	/**
 	 * This property defines service interface for contribution.
-	 *
-	 * @return service interface
 	 */
 	Class value();
 
 	/**
 	 * This property defines service unique id for contribution.
-	 *
-	 * @return service unique id
 	 */
 	String serviceId() default "";
 }

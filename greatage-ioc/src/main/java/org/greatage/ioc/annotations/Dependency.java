@@ -23,8 +23,6 @@ public @interface Dependency {
 
 	/**
 	 * This property defines child modules.
-	 *
-	 * @return classes of child modules
 	 */
 	Class[] value();
 }

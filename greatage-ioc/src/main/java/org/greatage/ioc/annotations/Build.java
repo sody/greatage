@@ -28,23 +28,17 @@ public @interface Build {
 	/**
 	 * This property defines service unique id. If it is empty id will be generated from simplified service interface
 	 * name.
-	 *
-	 * @return service unique id
 	 */
 	String value() default "";
 
 	/**
 	 * This property defines if service definition will be overridden or not.
-	 *
-	 * @return true if this is service override definition, false otherwise
 	 */
 	boolean override() default false;
 
 	/**
 	 * This property defines service scope. This scope must present inside {@link org.greatage.ioc.scope.ScopeManager}
 	 * configuration. The default scope is global.
-	 *
-	 * @return service scope
 	 */
 	String scope() default ScopeConstants.GLOBAL;
 }

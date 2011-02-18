@@ -49,16 +49,10 @@ public class TypeCoercerImpl implements TypeCoercer {
 	}
 
 	/**
-	 * Implements algorithm of finding coercions by specified source and target classes. It also caches results.
-	 *
-	 * @param sourceClass source class
-	 * @param targetClass target class
-	 * @param <S>         source type
-	 * @param <T>         target type
-	 * @return coercion instance or null if no correspondent coercion found
+	 * {@inheritDoc} It also caches results.
 	 */
 	@SuppressWarnings("unchecked")
-	private <S, T> Coercion<S, T> getCoercion(final Class<S> sourceClass, final Class<T> targetClass) {
+	public <S, T> Coercion<S, T> getCoercion(final Class<S> sourceClass, final Class<T> targetClass) {
 		final CompositeKey key = new CompositeKey(sourceClass, targetClass);
 		if (cache.containsKey(key)) {
 			return cache.get(key);

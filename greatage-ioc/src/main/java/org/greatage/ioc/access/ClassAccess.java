@@ -1,20 +1,58 @@
 package org.greatage.ioc.access;
 
-import java.util.Collection;
+import java.util.Set;
 
 /**
+ * This interface represents helper that simplifies bean's property resolving mechanism. It provides set of methods for
+ * resolving all property names, getting and setting property values for specified bean instance.
+ *
+ * @param <T> bean type
  * @author Ivan Khalopik
+ * @see ClassAccessSource
+ * @see PropertyAccess
  * @since 1.1
  */
-public interface ClassAccess {
+public interface ClassAccess<T> {
 
-	Collection<String> getPropertyNames();
+	/**
+	 * Obtains all property names for configured bean class.
+	 *
+	 * @return set with all bean property names or empty set
+	 */
+	Set<String> getPropertyNames();
 
-	Class getType();
+	/**
+	 * Gets bean class.
+	 *
+	 * @return bean class
+	 */
+	Class<T> getType();
 
-	PropertyAccess getPropertyAccess(String propertyName);
+	/**
+	 * Gets property access instance for specified property.
+	 *
+	 * @param propertyName property name, not null
+	 * @return property access instance for specified property or null if not found
+	 */
+	PropertyAccess<T> getPropertyAccess(String propertyName);
 
-	Object get(Object instance, String propertyName);
+	/**
+	 * Gets bean property value for specified property.
+	 *
+	 * @param instance	 bean instance
+	 * @param propertyName property name
+	 * @return bean property value
+	 * @throws PropertyAccessException if bean has no such read property or error occurs while getting value
+	 */
+	Object get(T instance, String propertyName);
 
-	void set(Object instance, String propertyName, Object value);
+	/**
+	 * Sets bean property value for specified property.
+	 *
+	 * @param instance	 bean instance
+	 * @param propertyName property name
+	 * @param value		property value
+	 * @throws PropertyAccessException if bean has no such write property or error occurs while setting value
+	 */
+	void set(T instance, String propertyName, Object value);
 }

@@ -6,11 +6,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * This class represents default {@link PropertyAccess} implementation that uses field or read-write method to access
+ * bean property value.
+ *
+ * @param <T> bean type
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class PropertyAccessImpl implements PropertyAccess {
-	private final ClassAccess classAccess;
+public class PropertyAccessImpl<T> implements PropertyAccess<T> {
+	private final ClassAccess<T> classAccess;
 	private final String name;
 	private final Class type;
 
@@ -18,7 +22,13 @@ public class PropertyAccessImpl implements PropertyAccess {
 	private final Method readMethod;
 	private final Method writeMethod;
 
-	public PropertyAccessImpl(final ClassAccess classAccess, final Field field) {
+	/**
+	 * Creates new instance of property access with defined property field.
+	 *
+	 * @param classAccess class access instance
+	 * @param field	   property field
+	 */
+	PropertyAccessImpl(final ClassAccess<T> classAccess, final Field field) {
 		this.classAccess = classAccess;
 		this.name = field.getName();
 		this.type = field.getType();
@@ -28,7 +38,13 @@ public class PropertyAccessImpl implements PropertyAccess {
 		this.writeMethod = null;
 	}
 
-	public PropertyAccessImpl(final ClassAccess classAccess, final PropertyDescriptor descriptor) {
+	/**
+	 * Creates new instance of property access with defined property descriptor.
+	 *
+	 * @param classAccess class access instance
+	 * @param descriptor  property descriptor
+	 */
+	PropertyAccessImpl(final ClassAccess<T> classAccess, final PropertyDescriptor descriptor) {
 		this.classAccess = classAccess;
 		this.name = descriptor.getName();
 		this.type = descriptor.getPropertyType();
@@ -38,30 +54,48 @@ public class PropertyAccessImpl implements PropertyAccess {
 		this.writeMethod = descriptor.getWriteMethod();
 	}
 
-	public ClassAccess getClassAccess() {
+	/**
+	 * {@inheritDoc}
+	 */
+	public ClassAccess<T> getClassAccess() {
 		return classAccess;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Class getType() {
 		return type;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isReadable() {
 		return field != null || readMethod != null;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isWritable() {
 		return field != null || writeMethod != null;
 	}
 
-	public Object get(final Object instance) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public Object get(final T instance) {
 		if (!isReadable()) {
-			throw new UnsupportedOperationException(String.format("Property '%s' for class '%s' is not readable",
-					name, classAccess.getType()));
+			throw new PropertyAccessException(
+					String.format("Property '%s' for class '%s' is not readable", name, classAccess.getType()));
 		}
 
 		try {
@@ -71,18 +105,21 @@ public class PropertyAccessImpl implements PropertyAccess {
 				return field.get(instance);
 			}
 		} catch (InvocationTargetException ex) {
-			throw new RuntimeException(String.format("Can not read property '%s' of class '%s'",
+			throw new PropertyAccessException(String.format("Can not read property '%s' of class '%s'",
 					name, classAccess.getType()), ex.getTargetException());
 		} catch (Exception ex) {
-			throw new RuntimeException(String.format("Can not read property '%s' of class '%s'",
+			throw new PropertyAccessException(String.format("Can not read property '%s' of class '%s'",
 					name, classAccess.getType()), ex);
 		}
 	}
 
-	public void set(final Object instance, final Object value) {
+	/**
+	 * {@inheritDoc}
+	 */
+	public void set(final T instance, final Object value) {
 		if (!isWritable()) {
-			throw new UnsupportedOperationException(String.format("Property '%s' for class '%s' is not writable",
-					name, classAccess.getType()));
+			throw new PropertyAccessException(
+					String.format("Property '%s' for class '%s' is not writable", name, classAccess.getType()));
 		}
 
 		try {
@@ -92,10 +129,10 @@ public class PropertyAccessImpl implements PropertyAccess {
 				field.set(instance, value);
 			}
 		} catch (InvocationTargetException ex) {
-			throw new RuntimeException(String.format("Can not write property '%s' of class '%s'",
+			throw new PropertyAccessException(String.format("Can not write property '%s' of class '%s'",
 					name, classAccess.getType()), ex.getTargetException());
 		} catch (Exception ex) {
-			throw new RuntimeException(String.format("Can not write property '%s' of class '%s'",
+			throw new PropertyAccessException(String.format("Can not write property '%s' of class '%s'",
 					name, classAccess.getType()), ex);
 		}
 	}

@@ -24,15 +24,11 @@ public @interface Order {
 
 	/**
 	 * This property defines unique order id for ordered object.
-	 *
-	 * @return unique order id
 	 */
 	String value();
 
 	/**
 	 * This property defines an array of order constraints for ordered object.
-	 *
-	 * @return array of order constraints
 	 */
 	String[] constraints() default {};
 }
