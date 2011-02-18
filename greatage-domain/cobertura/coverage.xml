@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.0" branch-rate="0.0" lines-covered="0" lines-valid="693" branches-covered="0" branches-valid="152" complexity="1.289544235924933" version="1.9.4.1" timestamp="1293112022973">
+<coverage line-rate="0.0" branch-rate="0.0" lines-covered="0" lines-valid="693" branches-covered="0" branches-valid="152" complexity="1.289544235924933" version="1.9.4.1" timestamp="1298025240879">
 	<sources>
 		<source>--source</source>
-		<source>Z:/projects/greatage/domain/src/main/java</source>
+		<source>Z:/projects/greatage/greatage-domain/src/main/java</source>
 	</sources>
 	<packages>
 		<package name="org.greatage.domain" line-rate="0.0" branch-rate="0.0" complexity="1.2352941176470589">

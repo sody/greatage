@@ -6,12 +6,12 @@
     <link>http://localhost/greatage/greatage-tapestry</link>
     <description>Great Age Tapestry Library - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2009 - 2010</copyright>
+    <copyright>&#169;2009 - 2011</copyright>
     <item>
-      <title>File: 76,
-             Errors: 85,
-             Warnings: 358,
-             Infos: 38
+      <title>File: 79,
+             Errors: 241,
+             Warnings: 494,
+             Infos: 0
       </title>
             <link>http://localhost/greatage/greatage-tapestry/checkstyle.html</link>
       <description>
@@ -38,7 +38,7 @@
                   1
                 </td>
                 <td>
-                  0
+                  1
                 </td>
               </tr>
                           <tr>
@@ -49,10 +49,10 @@
                   0
                 </td>
                 <td>
-                  7
+                  10
                 </td>
                 <td>
-                  2
+                  12
                 </td>
               </tr>
                           <tr>
@@ -60,10 +60,10 @@
                   <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.ThemeConstants.java">org/greatage/tapestry/ThemeConstants.java</a>
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
-                  0
+                  2
                 </td>
                 <td>
                   0
@@ -91,7 +91,7 @@
                   0
                 </td>
                 <td>
-                  13
+                  14
                 </td>
                 <td>
                   10
@@ -105,10 +105,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  3
                 </td>
                 <td>
-                  1
+                  7
                 </td>
               </tr>
                           <tr>
@@ -122,7 +122,7 @@
                   5
                 </td>
                 <td>
-                  0
+                  5
                 </td>
               </tr>
                           <tr>
@@ -133,10 +133,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
-                  2
+                  13
                 </td>
               </tr>
                           <tr>
@@ -147,7 +147,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
                   0
@@ -164,7 +164,7 @@
                   2
                 </td>
                 <td>
-                  0
+                  1
                 </td>
               </tr>
                           <tr>
@@ -172,10 +172,10 @@
                   <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.PersistenceConstants.java">org/greatage/tapestry/PersistenceConstants.java</a>
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
-                  0
+                  2
                 </td>
                 <td>
                   0
@@ -192,7 +192,7 @@
                   1
                 </td>
                 <td>
-                  1
+                  5
                 </td>
               </tr>
                           <tr>
@@ -217,10 +217,10 @@
                   0
                 </td>
                 <td>
-                  22
+                  27
                 </td>
                 <td>
-                  6
+                  9
                 </td>
               </tr>
                           <tr>
@@ -231,10 +231,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
-                  0
+                  5
                 </td>
               </tr>
                           <tr>
@@ -248,7 +248,7 @@
                   9
                 </td>
                 <td>
-                  3
+                  4
                 </td>
               </tr>
                           <tr>
@@ -259,10 +259,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
-                  0
+                  5
                 </td>
               </tr>
                           <tr>
@@ -270,10 +270,10 @@
                   <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.CSSConstants.java">org/greatage/tapestry/CSSConstants.java</a>
                 </td>
                 <td>
-                  26
+                  0
                 </td>
                 <td>
-                  0
+                  26
                 </td>
                 <td>
                   0
@@ -290,7 +290,7 @@
                   9
                 </td>
                 <td>
-                  0
+                  5
                 </td>
               </tr>
                           <tr>
@@ -304,7 +304,7 @@
                   3
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -315,10 +315,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  7
                 </td>
                 <td>
-                  2
+                  1
                 </td>
               </tr>
                           <tr>
@@ -329,10 +329,10 @@
                   0
                 </td>
                 <td>
-                  9
+                  13
                 </td>
                 <td>
-                  3
+                  6
                 </td>
               </tr>
                           <tr>
@@ -343,7 +343,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  4
                 </td>
                 <td>
                   2
@@ -365,16 +365,30 @@
               </tr>
                           <tr>
                 <td>
+                  <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.internal.SvgResourceCache.java">org/greatage/tapestry/internal/SvgResourceCache.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  6
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.commonlib.components.Image.java">org/greatage/tapestry/commonlib/components/Image.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -399,10 +413,10 @@
                   0
                 </td>
                 <td>
-                  13
+                  27
                 </td>
                 <td>
-                  4
+                  17
                 </td>
               </tr>
                           <tr>
@@ -413,7 +427,7 @@
                   0
                 </td>
                 <td>
-                  0
+                  2
                 </td>
                 <td>
                   1
@@ -430,7 +444,7 @@
                   12
                 </td>
                 <td>
-                  0
+                  5
                 </td>
               </tr>
                           <tr>
@@ -441,7 +455,7 @@
                   0
                 </td>
                 <td>
-                  3
+                  4
                 </td>
                 <td>
                   4
@@ -455,10 +469,10 @@
                   0
                 </td>
                 <td>
-                  12
+                  15
                 </td>
                 <td>
-                  3
+                  5
                 </td>
               </tr>
                           <tr>
@@ -472,7 +486,7 @@
                   1
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -497,10 +511,10 @@
                   0
                 </td>
                 <td>
-                  0
+                  1
                 </td>
                 <td>
-                  0
+                  1
                 </td>
               </tr>
                           <tr>
@@ -511,10 +525,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  5
                 </td>
                 <td>
-                  1
+                  2
                 </td>
               </tr>
                           <tr>
@@ -539,10 +553,10 @@
                   0
                 </td>
                 <td>
-                  7
+                  9
                 </td>
                 <td>
-                  2
+                  3
                 </td>
               </tr>
                           <tr>
@@ -581,10 +595,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  3
                 </td>
                 <td>
-                  1
+                  7
                 </td>
               </tr>
                           <tr>
@@ -595,10 +609,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  5
                 </td>
                 <td>
-                  4
+                  2
                 </td>
               </tr>
                           <tr>
@@ -612,7 +626,7 @@
                   8
                 </td>
                 <td>
-                  2
+                  4
                 </td>
               </tr>
                           <tr>
@@ -626,7 +640,7 @@
                   4
                 </td>
                 <td>
-                  0
+                  4
                 </td>
               </tr>
                           <tr>
@@ -654,7 +668,7 @@
                   0
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -665,7 +679,7 @@
                   0
                 </td>
                 <td>
-                  9
+                  13
                 </td>
                 <td>
                   2
@@ -693,10 +707,10 @@
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
-                  0
+                  1
                 </td>
               </tr>
                           <tr>
@@ -707,10 +721,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
-                  0
+                  5
                 </td>
               </tr>
                           <tr>
@@ -721,7 +735,7 @@
                   0
                 </td>
                 <td>
-                  5
+                  6
                 </td>
                 <td>
                   1
@@ -749,10 +763,10 @@
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -777,7 +791,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  3
                 </td>
                 <td>
                   0
@@ -791,7 +805,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  2
                 </td>
                 <td>
                   1
@@ -819,10 +833,10 @@
                   0
                 </td>
                 <td>
-                  10
+                  14
                 </td>
                 <td>
-                  3
+                  6
                 </td>
               </tr>
                           <tr>
@@ -844,13 +858,13 @@
                   <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.grid.Page.java">org/greatage/tapestry/grid/Page.java</a>
                 </td>
                 <td>
+                  0
+                </td>
+                <td>
+                  18
+                </td>
+                <td>
                   6
-                </td>
-                <td>
-                  9
-                </td>
-                <td>
-                  1
                 </td>
               </tr>
                           <tr>
@@ -861,10 +875,10 @@
                   0
                 </td>
                 <td>
-                  13
+                  14
                 </td>
                 <td>
-                  3
+                  7
                 </td>
               </tr>
                           <tr>
@@ -875,7 +889,7 @@
                   0
                 </td>
                 <td>
-                  6
+                  7
                 </td>
                 <td>
                   0
@@ -889,10 +903,10 @@
                   0
                 </td>
                 <td>
-                  6
+                  7
                 </td>
                 <td>
-                  1
+                  2
                 </td>
               </tr>
                           <tr>
@@ -906,7 +920,7 @@
                   1
                 </td>
                 <td>
-                  1
+                  6
                 </td>
               </tr>
                           <tr>
@@ -917,10 +931,24 @@
                   0
                 </td>
                 <td>
-                  28
+                  32
+                </td>
+                <td>
+                  16
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.internal.ThreadCleanupFilter.java">org/greatage/tapestry/internal/ThreadCleanupFilter.java</a>
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   2
+                </td>
+                <td>
+                  1
                 </td>
               </tr>
                           <tr>
@@ -959,7 +987,7 @@
                   0
                 </td>
                 <td>
-                  9
+                  13
                 </td>
                 <td>
                   0
@@ -976,7 +1004,7 @@
                   4
                 </td>
                 <td>
-                  4
+                  15
                 </td>
               </tr>
                           <tr>
@@ -990,7 +1018,7 @@
                   5
                 </td>
                 <td>
-                  1
+                  2
                 </td>
               </tr>
                           <tr>
@@ -1001,10 +1029,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  7
                 </td>
                 <td>
-                  1
+                  2
                 </td>
               </tr>
                           <tr>
@@ -1018,7 +1046,7 @@
                   3
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -1046,7 +1074,7 @@
                   4
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -1060,7 +1088,7 @@
                   1
                 </td>
                 <td>
-                  0
+                  1
                 </td>
               </tr>
                           <tr>
@@ -1079,13 +1107,27 @@
               </tr>
                           <tr>
                 <td>
-                  <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.CommonSymbols.java">org/greatage/tapestry/CommonSymbols.java</a>
-                </td>
-                <td>
-                  2
+                  <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.internal.SvgStreamableResource.java">org/greatage/tapestry/internal/SvgStreamableResource.java</a>
                 </td>
                 <td>
                   0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-tapestry/checkstyle.html#org.greatage.tapestry.CommonSymbols.java">org/greatage/tapestry/CommonSymbols.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
                 </td>
                 <td>
                   0

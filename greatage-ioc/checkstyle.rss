@@ -6,12 +6,12 @@
     <link>http://localhost/greatage/greatage-ioc</link>
     <description>Great Age IoC Library - Checkstyle report</description>
     <language>en-us</language>
-    <copyright>&#169;2009 - 2010</copyright>
+    <copyright>&#169;2009 - 2011</copyright>
     <item>
-      <title>File: 123,
-             Errors: 135,
-             Warnings: 288,
-             Infos: 3
+      <title>File: 143,
+             Errors: 9,
+             Warnings: 6,
+             Infos: 0
       </title>
             <link>http://localhost/greatage/greatage-ioc/checkstyle.html</link>
       <description>
@@ -38,7 +38,21 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.TypeCoercer.java">org/greatage/ioc/coerce/TypeCoercer.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -66,7 +80,7 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
               </tr>
                           <tr>
@@ -77,10 +91,24 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.ApplicationException.java">org/greatage/ioc/ApplicationException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -91,7 +119,7 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
                   0
@@ -105,7 +133,7 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
                   0
@@ -122,7 +150,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -141,13 +169,13 @@
               </tr>
                           <tr>
                 <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.event.EventDispatcher.java">org/greatage/ioc/event/EventDispatcher.java</a>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.Coercion.java">org/greatage/ioc/coerce/Coercion.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -161,7 +189,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -189,10 +217,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -217,7 +245,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   1
@@ -231,10 +259,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -245,7 +273,7 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
                   0
@@ -262,7 +290,49 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.package-info.java">org/greatage/ioc/resource/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.scope.package-info.java">org/greatage/ioc/scope/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.package-info.java">org/greatage/ioc/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -273,7 +343,21 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.DefaultCoercionProvider.java">org/greatage/ioc/coerce/DefaultCoercionProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -287,7 +371,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   1
@@ -304,7 +388,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -315,7 +399,7 @@
                   0
                 </td>
                 <td>
-                  16
+                  0
                 </td>
                 <td>
                   0
@@ -329,7 +413,7 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
                   0
@@ -343,7 +427,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -357,7 +441,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -371,21 +455,7 @@
                   0
                 </td>
                 <td>
-                  5
-                </td>
-                <td>
-                  6
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.logging.DummyLoggerSource.java">org/greatage/ioc/logging/DummyLoggerSource.java</a>
-                </td>
-                <td>
                   0
-                </td>
-                <td>
-                  1
                 </td>
                 <td>
                   0
@@ -399,10 +469,38 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
-                  3
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.symbol.package-info.java">org/greatage/ioc/symbol/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.ClasspathResourceLocator.java">org/greatage/ioc/resource/ClasspathResourceLocator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -416,20 +514,6 @@
                   0
                 </td>
                 <td>
-                  10
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.ClasspathResourceLocator.java">org/greatage/ioc/resource/ClasspathResourceLocator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
                   0
                 </td>
               </tr>
@@ -441,7 +525,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -455,10 +539,10 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -469,10 +553,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
               </tr>
                           <tr>
@@ -483,7 +567,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -497,10 +581,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -511,7 +595,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -553,10 +637,66 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
-                  4
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.CoercionProvider.java">org/greatage/ioc/coerce/CoercionProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.logging.package-info.java">org/greatage/ioc/logging/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.InternalServiceStatus.java">org/greatage/ioc/InternalServiceStatus.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.logging.ConsoleLogger.java">org/greatage/ioc/logging/ConsoleLogger.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -567,21 +707,7 @@
                   0
                 </td>
                 <td>
-                  6
-                </td>
-                <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.AbstractMessages.java">org/greatage/ioc/resource/AbstractMessages.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  3
                 </td>
                 <td>
                   0
@@ -598,7 +724,21 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.AbstractMessages.java">org/greatage/ioc/resource/AbstractMessages.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -609,10 +749,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -623,24 +763,10 @@
                   0
                 </td>
                 <td>
-                  1
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.event.EventListener.java">org/greatage/ioc/event/EventListener.java</a>
-                </td>
-                <td>
                   0
                 </td>
                 <td>
-                  1
-                </td>
-                <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -651,7 +777,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -665,10 +791,10 @@
                   0
                 </td>
                 <td>
-                  9
+                  0
                 </td>
                 <td>
-                  0
+                  2
                 </td>
               </tr>
                           <tr>
@@ -679,15 +805,29 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
                 <td>
                   <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.scope.ThreadScope.java">org/greatage/ioc/scope/ThreadScope.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.AbstractCoercion.java">org/greatage/ioc/coerce/AbstractCoercion.java</a>
                 </td>
                 <td>
                   0
@@ -710,7 +850,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -721,24 +861,10 @@
                   0
                 </td>
                 <td>
-                  3
-                </td>
-                <td>
-                  3
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.SimpleHolder.java">org/greatage/ioc/SimpleHolder.java</a>
-                </td>
-                <td>
                   0
                 </td>
                 <td>
-                  5
-                </td>
-                <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -749,24 +875,38 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
                 <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.event.EventSource.java">org/greatage/ioc/event/EventSource.java</a>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.logging.ConsoleLoggerSource.java">org/greatage/ioc/logging/ConsoleLoggerSource.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.BooleanToStringCoercion.java">org/greatage/ioc/coerce/BooleanToStringCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -780,12 +920,12 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
                 <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.event.Event.java">org/greatage/ioc/event/Event.java</a>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.TypeCoercerImpl.java">org/greatage/ioc/coerce/TypeCoercerImpl.java</a>
                 </td>
                 <td>
                   0
@@ -805,24 +945,10 @@
                   0
                 </td>
                 <td>
-                  7
-                </td>
-                <td>
-                  4
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.InternalService.java">org/greatage/ioc/InternalService.java</a>
-                </td>
-                <td>
                   0
                 </td>
                 <td>
-                  4
-                </td>
-                <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -833,38 +959,10 @@
                   0
                 </td>
                 <td>
-                  6
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.event.EventSourceImpl.java">org/greatage/ioc/event/EventSourceImpl.java</a>
-                </td>
-                <td>
                   0
                 </td>
                 <td>
-                  3
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.cache.MultiKey.java">org/greatage/ioc/cache/MultiKey.java</a>
-                </td>
-                <td>
                   0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  2
                 </td>
               </tr>
                           <tr>
@@ -873,20 +971,6 @@
                 </td>
                 <td>
                   0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.ScopeConstants.java">org/greatage/ioc/ScopeConstants.java</a>
-                </td>
-                <td>
-                  3
                 </td>
                 <td>
                   0
@@ -903,7 +987,21 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.CoerceException.java">org/greatage/ioc/coerce/CoerceException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -917,10 +1015,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
               </tr>
                           <tr>
@@ -945,7 +1043,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   1
@@ -959,10 +1057,24 @@
                   0
                 </td>
                 <td>
-                  4
+                  0
                 </td>
                 <td>
-                  4
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.StringToIntegerCoercion.java">org/greatage/ioc/coerce/StringToIntegerCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -987,7 +1099,7 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
                   0
@@ -1001,7 +1113,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -1015,7 +1127,21 @@
                   0
                 </td>
                 <td>
-                  6
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.access.package-info.java">org/greatage/ioc/access/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -1029,24 +1155,10 @@
                   0
                 </td>
                 <td>
-                  4
-                </td>
-                <td>
-                  6
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.ScopedService.java">org/greatage/ioc/ScopedService.java</a>
-                </td>
-                <td>
                   0
                 </td>
                 <td>
-                  4
-                </td>
-                <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1057,7 +1169,7 @@
                   0
                 </td>
                 <td>
-                  8
+                  0
                 </td>
                 <td>
                   0
@@ -1071,7 +1183,21 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.annotations.package-info.java">org/greatage/ioc/annotations/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -1088,7 +1214,7 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1099,7 +1225,35 @@
                   0
                 </td>
                 <td>
-                  4
+                  0
+                </td>
+                <td>
+                  1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.StringToDoubleCoercion.java">org/greatage/ioc/coerce/StringToDoubleCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.NumberToStringCoercion.java">org/greatage/ioc/coerce/NumberToStringCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -1116,7 +1270,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1127,10 +1281,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1144,7 +1298,7 @@
                   1
                 </td>
                 <td>
-                  3
+                  1
                 </td>
               </tr>
                           <tr>
@@ -1155,10 +1309,10 @@
                   0
                 </td>
                 <td>
-                  7
+                  0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1177,27 +1331,13 @@
               </tr>
                           <tr>
                 <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.event.EventDispatcherImpl.java">org/greatage/ioc/event/EventDispatcherImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.annotations.Dependency.java">org/greatage/ioc/annotations/Dependency.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -1211,7 +1351,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -1225,7 +1365,7 @@
                   0
                 </td>
                 <td>
-                  6
+                  0
                 </td>
                 <td>
                   0
@@ -1239,10 +1379,10 @@
                   0
                 </td>
                 <td>
-                  4
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1253,10 +1393,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1267,10 +1407,38 @@
                   0
                 </td>
                 <td>
-                  8
+                  0
                 </td>
                 <td>
-                  4
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.StringToBooleanCoercion.java">org/greatage/ioc/coerce/StringToBooleanCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.EnumToStringCoercion.java">org/greatage/ioc/coerce/EnumToStringCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1295,7 +1463,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -1309,15 +1477,29 @@
                   0
                 </td>
                 <td>
-                  4
+                  0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
                 <td>
                   <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.ServiceBindingOptions.java">org/greatage/ioc/ServiceBindingOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.scope.ScopeManager.java">org/greatage/ioc/scope/ScopeManager.java</a>
                 </td>
                 <td>
                   0
@@ -1337,7 +1519,7 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   0
@@ -1346,20 +1528,6 @@
                           <tr>
                 <td>
                   <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.proxy.AbstractInvocationHandler.java">org/greatage/ioc/proxy/AbstractInvocationHandler.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  1
-                </td>
-                <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.scope.ScopeManager.java">org/greatage/ioc/scope/ScopeManager.java</a>
                 </td>
                 <td>
                   0
@@ -1379,10 +1547,10 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
-                  6
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1393,21 +1561,7 @@
                   0
                 </td>
                 <td>
-                  2
-                </td>
-                <td>
                   0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.logging.DummyLogger.java">org/greatage/ioc/logging/DummyLogger.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  6
                 </td>
                 <td>
                   0
@@ -1421,10 +1575,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  5
                 </td>
                 <td>
-                  4
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1435,7 +1589,21 @@
                   0
                 </td>
                 <td>
-                  6
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.package-info.java">org/greatage/ioc/coerce/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -1449,10 +1617,24 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.ServiceLocatorStatus.java">org/greatage/ioc/ServiceLocatorStatus.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1463,7 +1645,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -1477,10 +1659,10 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
-                  5
+                  1
                 </td>
               </tr>
                           <tr>
@@ -1519,7 +1701,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -1533,10 +1715,24 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
                   1
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.cache.OSCacheSource.java">org/greatage/ioc/cache/OSCacheSource.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1550,21 +1746,7 @@
                   0
                 </td>
                 <td>
-                  2
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.cache.OSCacheSource.java">org/greatage/ioc/cache/OSCacheSource.java</a>
-                </td>
-                <td>
                   0
-                </td>
-                <td>
-                  2
-                </td>
-                <td>
-                  1
                 </td>
               </tr>
                           <tr>
@@ -1575,10 +1757,10 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1589,10 +1771,10 @@
                   0
                 </td>
                 <td>
-                  8
+                  0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1603,7 +1785,7 @@
                   0
                 </td>
                 <td>
-                  2
+                  0
                 </td>
                 <td>
                   0
@@ -1620,7 +1802,21 @@
                   0
                 </td>
                 <td>
-                  1
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.cache.package-info.java">org/greatage/ioc/cache/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1631,7 +1827,49 @@
                   0
                 </td>
                 <td>
-                  7
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.access.PropertyAccessException.java">org/greatage/ioc/access/PropertyAccessException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.StringToEnumCoercion.java">org/greatage/ioc/coerce/StringToEnumCoercion.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.proxy.package-info.java">org/greatage/ioc/proxy/package-info.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
                 </td>
                 <td>
                   0
@@ -1653,21 +1891,77 @@
               </tr>
                           <tr>
                 <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.scope.ScopeConstants.java">org/greatage/ioc/scope/ScopeConstants.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.IOCModule.java">org/greatage/ioc/IOCModule.java</a>
                 </td>
                 <td>
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
                 <td>
                   <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.ResourceLocator.java">org/greatage/ioc/resource/ResourceLocator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.coerce.StringToEnumCoercionProvider.java">org/greatage/ioc/coerce/StringToEnumCoercionProvider.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.MessagesImpl.java">org/greatage/ioc/resource/MessagesImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.annotations.Contribute.java">org/greatage/ioc/annotations/Contribute.java</a>
                 </td>
                 <td>
                   0
@@ -1690,26 +1984,12 @@
                   0
                 </td>
                 <td>
-                  1
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.annotations.Contribute.java">org/greatage/ioc/annotations/Contribute.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  2
-                </td>
-                <td>
                   0
                 </td>
               </tr>
                           <tr>
                 <td>
-                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.resource.MessagesImpl.java">org/greatage/ioc/resource/MessagesImpl.java</a>
+                  <a href="http://localhost/greatage/greatage-ioc/checkstyle.html#org.greatage.ioc.ServiceStatusImpl.java">org/greatage/ioc/ServiceStatusImpl.java</a>
                 </td>
                 <td>
                   0
@@ -1729,10 +2009,10 @@
                   0
                 </td>
                 <td>
-                  3
+                  0
                 </td>
                 <td>
-                  1
+                  0
                 </td>
               </tr>
                           <tr>
@@ -1743,7 +2023,7 @@
                   0
                 </td>
                 <td>
-                  5
+                  0
                 </td>
                 <td>
                   0
