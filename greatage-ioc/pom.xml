@@ -13,8 +13,8 @@
 	<artifactId>greatage-ioc</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Great Age IoC Library</name>
-	<description>Great Age IoC Library</description>
+	<name>GreatAge IoC Container</name>
+	<description>GreatAge IoC Container</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -31,6 +31,43 @@
 			</testResource>
 		</testResources>
 	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>dependencies</report>
+							<report>plugins</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>empty</id>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>empty</id>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
 
 	<dependencies>
 		<dependency>
@@ -84,5 +121,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 </project>

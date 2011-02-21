@@ -13,8 +13,12 @@
 	<artifactId>greatage-common</artifactId>
 	<packaging>jar</packaging>
 
-	<name>Great Age Common Library</name>
-	<description>Great Age Common Library</description>
+	<name>GreatAge Common Utilities</name>
+	<description>
+		GreatAge Common module provides a set of utilities that helps to simplify work with java core classes and
+		classes from other java-based frameworks like hibernate, javassist, etc. They doesn't provide any architecture,
+		only base, most-needed methods.
+	</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -32,6 +36,43 @@
 		</testResources>
 	</build>
 
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>index</report>
+							<report>summary</report>
+							<report>dependencies</report>
+							<report>plugins</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>empty</id>
+					</reportSet>
+				</reportSets>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>empty</id>
+					</reportSet>
+				</reportSets>
+			</plugin>
+		</plugins>
+	</reporting>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.javassist</groupId>
@@ -42,6 +83,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>

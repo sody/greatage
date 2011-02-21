@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Great Age Framework">
+<project xmlns="http://maven.apache.org/DECORATION/1.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
+
 	<skin>
 		<groupId>org.apache.maven.skins</groupId>
 		<artifactId>maven-default-skin</artifactId>
@@ -10,13 +13,7 @@
 	<version/>
 
 	<body>
-		<menu name="Great Age Project">
-			<item name="JavaDocs" href="apidocs/"/>
-			<item name="Ivan's Blog" href="http://ikhalopik.blogspot.com/"/>
-		</menu>
-
 		<menu ref="modules"/>
-
 		<menu ref="reports"/>
 	</body>
 </project>

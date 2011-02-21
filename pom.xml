@@ -8,10 +8,14 @@
 	<version>1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>Great Age Framework Project</name>
-	<description>Great Age Framework Project</description>
+	<name>GreatAge Framework</name>
+	<description>
+		GreatAge Framework is an open source project for building java-based back-end applications with their own IoC
+		container, security system and DAO services base architecture.
+	</description>
+
 	<inceptionYear>2009</inceptionYear>
-	<url>http://localhost/greatage/</url>
+	<url>http://sody.github.com/greatage</url>
 
 	<scm>
 		<url>https://github.com/sody/greatage</url>
@@ -44,16 +48,6 @@
 		<repository>
 			<id>jboss</id>
 			<url>https://repository.jboss.org/nexus/content/groups/public</url>
-		</repository>
-		<repository>
-			<id>apache-snapshot</id>
-			<url>http://repository.apache.org/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
 		</repository>
 	</repositories>
 
@@ -110,13 +104,17 @@
 							<index>true</index>
 						</archive>
 					</configuration>
-					<executions>
-						<execution>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.7</version>
+					<configuration>
+						<linksource>true</linksource>
+						<links>
+							<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+						</links>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -140,6 +138,31 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 	<reporting>
@@ -188,6 +211,17 @@
 						<format>xml</format>
 						<format>html</format>
 					</formats>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+				<configuration>
+					<linksource>true</linksource>
+					<links>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
+					</links>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -344,7 +378,7 @@
 		<snapshot.url>file://${user.dir}/target/greatage/snapshot</snapshot.url>
 
 		<!--common dependencies-->
-		<testng.version>5.14.9</testng.version>
+		<testng.version>5.14.10</testng.version>
 
 		<!--ioc dependencies-->
 		<log4j.version>1.2.16</log4j.version>

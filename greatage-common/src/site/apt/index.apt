@@ -1,5 +1,190 @@
  ----
- Great Age Common Library
+ GreatAge Common Utilities
  ----
- 
-What is Great Age?
+
+Introduction
+
+  GreatAge Common module provides a set of utilities that helps to simplify work with java core classes and classes
+  from other java-based frameworks like hibernate, javassist, etc. They doesn't provide any architecture, only base,
+  most-needed methods. All utilities are divided to:
+
+  * {{Common utilities}}
+
+    * {{Collection utilities}}
+
+    * {{String utilities}}
+
+    * {{Encode utilities}}
+
+    * {{Internationalization utilities}}
+
+    * {{Reflection utilities}}
+
+    * {{Ordering utilities}}
+
+    * {{Lock utilities}}
+
+    * {{Other helpers}}
+
+  * {{Javassist utilities}}
+
+  * {{Hibernate utilities}}
+
+  []
+
+{Common utilities}
+
+  This utilities provides classes that simplifies work with core java APIs.
+
+* {Collection utilities}
+
+  They are represented by abstract class CollectionUtils. This utility can be used for collection creation with already
+  defined elements. It supports creation of set, list, map and their concurrent variants For example, creation of
+  concurrent set can look like:
+
++----+
+final Set<String> names = CollectionUtils.newConcurrentSet("Name1", "Name2", "Name3", "Name4");
++----+
+
+  Creation of map is more complex as it consists of two different collections, keys and values. So it
+  creation may look like:
+
++----+
+final Map<String, Integer> variables = CollectionUtils.newMap("var1", 1, "var2", 2, "var3", 3);
++----+
+
+  Below is a table that describes what collection type is created by certain utility method:
+
+*-------------------------*-------------------------------------------*
+| Method                  | Implementation class                      |
+*-------------------------*-------------------------------------------*
+| newSet(...)             | java.util.HashSet                         |
+*-------------------------*-------------------------------------------*
+| newConcurrentSet(...)   | java.util.concurrent.CopyOnWriteArraySet  |
+*-------------------------*-------------------------------------------*
+| newList(...)            | java.util.ArrayList                       |
+*-------------------------*-------------------------------------------*
+| newConcurrentList(...)  | java.util.concurrent.CopyOnWriteArrayList |
+*-------------------------*-------------------------------------------*
+| newMap(...)             | java.util.HashMap                         |
+*-------------------------*-------------------------------------------*
+| newConcurrentMap(...)   | java.util.concurrent.ConcurrentHashMap    |
+*-------------------------*-------------------------------------------*
+
+  Also this utility can be used for checking if collection is empty:
+
++----+
+final Set<String> names = CollectionUtils.newConcurrentSet("Name1", "Name2", "Name3", "Name4");
+// do some staff
+if (CollectionUtils.isEmpty(names)) {
+  // do some staff
+}
++----+
+
+* {String utilities}
+
+  They are represented by abstract class StringUtils. This utility can be used for working with strings. For example,
+  to check if string is empty we can do:
+
++----+
+if (StringUtils.isEmpty(text)) {
+  // do dome staff
+}
++----+
+
+  To convert binary data represented as byte array to string representation in hex form we can use:
+
++----+
+final byte[] data = calculateData();
+final String hexData = StringUtils.toHexString(data);
+System.out.println("Calculated data: " + hexData);
++----+
+
+* {Encode utilities}
+
+  They are represented by abstract class EncodeUtils. This utilities provides encode functionality to encode/decode
+  binary data with some algorithms (e.g. MD5, SHA1, BASE64).
+
+  For example, calculating hash sum using MD5 algorithm will look like:
+
++----+
+final byte[] data = calculateData();
+final byte[] md5sum = EncodeUtils.encode(data, "MD5");
++----+
+
+  It can be very useful for keeping user passwords in DB like hash sums. In such situation it is a good idea to use it
+  with <StringUtils.toHexString()> or <EncodeUtils.encodeBase64()>:
+
++----+
+public String encodePassword(final String password, final boolean useBase64) {
+  if (password == null) {
+    return null;
+  }
+  final byte[] bytes = EncodeUtils.encode(password.getBytes(), algorithm);
+  return useBase64 ? new String(EncodeUtils.encodeBase64(bytes)) : StringUtils.toHexString(bytes);
+}
++----+
+
+* {Internationalization utilities}
+
+  They are represented by abstract class I18nUtils. This utility provides functionality for working with locales. It can
+  convert strings to locales and also can create list of candidate locales for certain locale.
+
+  To parse locale from string just type:
+
++----+
+final Locale locale = I18nUtils.getLocale("ru_RU");
++----+
+
+  Sometimes it is necessary in project to use resources in some other similar to original locale when resources in original
+  are missing. In that case this code will be useful:
+
++----+
+final List<Locale> locales = I18nUtils.getCandidateLocales(resourceLocale);
+for (Locale candidate : locales) {
+  // do some staff
+}
++----+
+
+* {Reflection utilities}
+
+  They are represented by abstract class ReflectionUtils. This utility makes using java reflection easier. It provides
+  methods for finding constructors by parameter types, extracting exceptions from throwable cause, creating new object
+  instances by class and constructor parameters, getting wrapper type for primitives.
+
+  Creation of new instance of SimpleDateFormat will look like:
+
++----+
+final SimpleDateFormat format =
+  ReflectionUtils.newInstance(SimpleDateFormat.class, "yyyy-MM-dd", Locale.ENGLISH);
++----+
+
+  To find all correspondent constructors for specified class we can use:
+
++----+
+final List<Constructor<SimpleDateFormat>> constructors =
+  ReflectionUtils.findConstructors(SimpleDateFormat.class, String.class);
++----+
+
+  If we need to extract some exception from some other exception cause we can use such code:
+
++----+
+try {
+  // do some staff
+} catch (RuntimeException exception) {
+  final SecurityException se = ReflectionUtils.findException(exception, SecurityException.class);
+  if (se != null) {
+    throw se;
+  }
+}
++----+
+
+* {Ordering utilities}
+
+* {Lock utilities}
+
+* {Other helpers}
+
+{Javassist utilities}
+
+{Hibernate utilities}
