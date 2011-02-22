@@ -8,14 +8,22 @@
 	<version>1.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>GreatAge Framework</name>
+	<name>GreatAge Project</name>
 	<description>
-		GreatAge Framework is an open source project for building java-based back-end applications with their own IoC
+		GreatAge Project is an open source project for building java-based back-end applications with their own IoC
 		container, security system and DAO services base architecture.
 	</description>
 
 	<inceptionYear>2009</inceptionYear>
 	<url>http://sody.github.com/greatage</url>
+
+	<licenses>
+		<license>
+			<name>Apache Software License 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<scm>
 		<url>https://github.com/sody/greatage</url>
@@ -37,6 +45,7 @@
 	</developers>
 
 	<modules>
+		<module>greatage-maven</module>
 		<module>greatage-common</module>
 		<module>greatage-ioc</module>
 		<module>greatage-security</module>
@@ -171,6 +180,22 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>2.2</version>
+				<reportSets>
+					<reportSet>
+						<id>default</id>
+						<reports>
+							<report>summary</report>
+							<report>license</report>
+							<report>project-team</report>
+							<report>scm</report>
+							<!--<report>issue-tracking</report>-->
+							<!--<report>cim</report>-->
+							<report>plugin-management</report>
+							<report>dependency-management</report>
+							<report>dependency-convergence</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

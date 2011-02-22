@@ -5,6 +5,17 @@
 
 	<body>
 		<menu ref="parent"/>
-		<menu ref="reports"/>
+
+		<menu name="Project Information">
+			<item name="Introduction" href="index.html"/>
+			<item ref="project-summary"/>
+			<item ref="dependencies"/>
+		</menu>
+
+		<menu name="Project Reports">
+			<item ref="checkstyle"/>
+			<item ref="surefire-report"/>
+			<item ref="cobertura/index"/>
+		</menu>
 	</body>
 </project>

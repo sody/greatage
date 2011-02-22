@@ -11,11 +11,5 @@
 			<item ref="project-summary"/>
 			<item ref="dependencies"/>
 		</menu>
-
-		<menu name="Project Reports">
-			<item ref="checkstyle"/>
-			<item ref="surefire-report"/>
-			<item ref="cobertura/index"/>
-		</menu>
 	</body>
 </project>

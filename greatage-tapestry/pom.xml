@@ -11,6 +11,7 @@
 
 	<groupId>org.greatage</groupId>
 	<artifactId>greatage-tapestry</artifactId>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>GreatAge Tapestry Library</name>
@@ -53,11 +54,10 @@
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<reportSets>
 					<reportSet>
+						<id>default</id>
 						<reports>
-							<report>index</report>
 							<report>summary</report>
 							<report>dependencies</report>
-							<report>plugins</report>
 						</reports>
 					</reportSet>
 				</reportSets>

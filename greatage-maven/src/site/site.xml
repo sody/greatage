@@ -9,13 +9,18 @@
 		<menu name="Project Information">
 			<item name="Introduction" href="index.html"/>
 			<item ref="project-summary"/>
-			<item ref="dependencies"/>
 		</menu>
 
+		<menu ref="modules"/>
+
 		<menu name="Project Reports">
-			<item ref="checkstyle"/>
-			<item ref="surefire-report"/>
-			<item ref="cobertura/index"/>
+			<item ref="plugin-management"/>
+			<item ref="dependency-management"/>
+			<item ref="dependency-convergence"/>
+
+			<item ref="property-updates-report"/>
+			<item ref="plugin-updates-report"/>
+			<item ref="dependency-updates-report"/>
 		</menu>
 	</body>
 </project>

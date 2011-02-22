@@ -4,16 +4,35 @@
 		 xsi:schemaLocation="http://maven.apache.org/DECORATION/1.0.0 http://maven.apache.org/xsd/decoration-1.0.0.xsd">
 
 	<skin>
-		<groupId>org.apache.maven.skins</groupId>
-		<artifactId>maven-default-skin</artifactId>
-		<version>1.0</version>
+		<groupId>org.greatage.maven</groupId>
+		<artifactId>maven-greatage-skin</artifactId>
+		<version>1.1-SNAPSHOT</version>
 	</skin>
 
 	<publishDate format="dd MMM yyyy"/>
 	<version/>
 
 	<body>
+		<menu name="Project Information">
+			<item name="Introduction" href="index.html"/>
+			<item ref="project-summary"/>
+			<item ref="license"/>
+			<item ref="team-list"/>
+			<item ref="source-repository"/>
+			<!--<item ref="integration"/>-->
+			<!--<item ref="issue-tracking"/>-->
+		</menu>
+
 		<menu ref="modules"/>
-		<menu ref="reports"/>
+
+		<menu name="Project Reports">
+			<item ref="plugin-management"/>
+			<item ref="dependency-management"/>
+			<item ref="dependency-convergence"/>
+
+			<item ref="property-updates-report"/>
+			<item ref="plugin-updates-report"/>
+			<item ref="dependency-updates-report"/>
+		</menu>
 	</body>
 </project>
