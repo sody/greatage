@@ -44,31 +44,32 @@
                                 <h5>Parent Project</h5>
                   <ul>
                   <li class="none">
-                          <a href="../index.html" title="GreatAge Framework">GreatAge Framework</a>
+                          <a href="../index.html" title="GreatAge Project">GreatAge Project</a>
             </li>
           </ul>
-                       <h5>Project Documentation</h5>
+                       <h5>Project Information</h5>
                   <ul>
-                                                                                                                                    <li class="expanded">
-                          <a href="project-info.html" title="Project Information">Project Information</a>
-                    <ul>
-                      <li class="none">
-            <strong>About</strong>
+                  <li class="none">
+            <strong>Introduction</strong>
           </li>
-                      <li class="none">
-                          <a href="dependencies.html" title="Dependencies">Dependencies</a>
-            </li>
-                      <li class="none">
-                          <a href="plugins.html" title="Project Plugins">Project Plugins</a>
-            </li>
-                      <li class="none">
+                  <li class="none">
                           <a href="project-summary.html" title="Project Summary">Project Summary</a>
             </li>
-              </ul>
-        </li>
-                                                                                                                                            <li class="collapsed">
-                          <a href="project-reports.html" title="Project Reports">Project Reports</a>
-                  </li>
+                  <li class="none">
+                          <a href="dependencies.html" title="Dependencies">Dependencies</a>
+            </li>
+          </ul>
+                       <h5>Project Reports</h5>
+                  <ul>
+                  <li class="none">
+                          <a href="checkstyle.html" title="Checkstyle">Checkstyle</a>
+            </li>
+                  <li class="none">
+                          <a href="surefire-report.html" title="Surefire Report">Surefire Report</a>
+            </li>
+                  <li class="none">
+                          <a href="cobertura/index.html" title="Cobertura Test Coverage">Cobertura Test Coverage</a>
+            </li>
           </ul>
                              <a href="http://maven.apache.org/" title="Built by Maven" class="poweredBy">
         <img class="poweredBy" alt="Built by Maven" src="./images/logos/maven-feather.png" />
@@ -81,7 +82,7 @@
       <div id="contentBox">
         <div class="section"><h2>Introduction<a name="Introduction"></a></h2><p>GreatAge Common module provides a set of utilities that helps to simplify work with java core classes and classes from other java-based frameworks like hibernate, javassist, etc. They doesn't provide any architecture, only base, most-needed methods. All utilities are divided to:</p><ul><li><a href="#Common_utilities">Common utilities</a><ul><li><a href="#Collection_utilities">Collection utilities</a></li><li><a href="#String_utilities">String utilities</a></li><li><a href="#Encode_utilities">Encode utilities</a></li><li><a href="#Internationalization_utilities">Internationalization utilities</a></li><li><a href="#Reflection_utilities">Reflection utilities</a></li><li><a href="#Ordering_utilities">Ordering utilities</a></li><li><a href="#Lock_utilities">Lock utilities</a></li><li><a href="#Other_helpers">Other helpers</a></li></ul></li><li><a href="#Javassist_utilities">Javassist utilities</a></li><li><a href="#Hibernate_utilities">Hibernate utilities</a></li></ul></div><div class="section"><h2><a name="Common_utilities">Common utilities</a><a name="Common_utilities"></a></h2><p>This utilities provides classes that simplifies work with core java APIs.</p><div class="section"><h3><a name="Collection_utilities">Collection utilities</a><a name="Collection_utilities"></a></h3><p>They are represented by abstract class CollectionUtils. This utility can be used for collection creation with already defined elements. It supports creation of set, list, map and their concurrent variants For example, creation of concurrent set can look like:</p><div class="source"><pre>final Set&lt;String&gt; names = CollectionUtils.newConcurrentSet(&quot;Name1&quot;, &quot;Name2&quot;, &quot;Name3&quot;, &quot;Name4&quot;);
 </pre></div><p>Creation of map is more complex as it consists of two different collections, keys and values. So it creation may look like:</p><div class="source"><pre>final Map&lt;String, Integer&gt; variables = CollectionUtils.newMap(&quot;var1&quot;, 1, &quot;var2&quot;, 2, &quot;var3&quot;, 3);
-</pre></div><p>Below is a table that describes what collection type is created by certain utility method:</p><table align="center" border="1" class="bodyTable"><tr class="a"><td align="center">Method</td><td align="center">Implementation class</td></tr><tr class="b"><td align="center">newSet(...)</td><td align="center">java.util.HashSet</td></tr><tr class="a"><td align="center">newConcurrentSet(...)</td><td align="center">java.util.concurrent.CopyOnWriteArraySet</td></tr><tr class="b"><td align="center">newList(...)</td><td align="center">java.util.ArrayList</td></tr><tr class="a"><td align="center">newConcurrentList(...)</td><td align="center">java.util.concurrent.CopyOnWriteArrayList</td></tr><tr class="b"><td align="center">newMap(...)</td><td align="center">java.util.HashMap</td></tr><tr class="a"><td align="center">newConcurrentMap(...)</td><td align="center">java.util.concurrent.ConcurrentHashMap</td></tr></table><p>Also this utility can be used for checking if collection is empty:</p><div class="source"><pre>final Set&lt;String&gt; names = CollectionUtils.newConcurrentSet(&quot;Name1&quot;, &quot;Name2&quot;, &quot;Name3&quot;, &quot;Name4&quot;);
+</pre></div><p>Below is a table that describes what collection type is created by certain utility method:</p><table align="center" border="1" class="bodyTable"><tr class="a"><th align="center">Method</th><th align="center">Implementation class</th></tr><tr class="b"><td align="center">newSet(...)</td><td align="center">java.util.HashSet</td></tr><tr class="a"><td align="center">newConcurrentSet(...)</td><td align="center">java.util.concurrent.CopyOnWriteArraySet</td></tr><tr class="b"><td align="center">newList(...)</td><td align="center">java.util.ArrayList</td></tr><tr class="a"><td align="center">newConcurrentList(...)</td><td align="center">java.util.concurrent.CopyOnWriteArrayList</td></tr><tr class="b"><td align="center">newMap(...)</td><td align="center">java.util.HashMap</td></tr><tr class="a"><td align="center">newConcurrentMap(...)</td><td align="center">java.util.concurrent.ConcurrentHashMap</td></tr></table><p>Also this utility can be used for checking if collection is empty:</p><div class="source"><pre>final Set&lt;String&gt; names = CollectionUtils.newConcurrentSet(&quot;Name1&quot;, &quot;Name2&quot;, &quot;Name3&quot;, &quot;Name4&quot;);
 // do some staff
 if (CollectionUtils.isEmpty(names)) {
   // do some staff

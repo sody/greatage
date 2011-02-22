@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.7373233582709892" branch-rate="0.6855670103092784" lines-covered="887" lines-valid="1203" branches-covered="266" branches-valid="388" complexity="1.5452586206896552" version="1.9.4.1" timestamp="1298360825783">
+<coverage line-rate="0.7373233582709892" branch-rate="0.6855670103092784" lines-covered="887" lines-valid="1203" branches-covered="266" branches-valid="388" complexity="1.5452586206896552" version="1.9.4.1" timestamp="1298386232598">
 	<sources>
 		<source>Z:/projects/greatage/greatage-ioc/src/main/java</source>
 		<source>--source</source>
@@ -3538,7 +3538,7 @@
 						</method>
 						<method name="getSourceClass" signature="()Ljava/lang/Class;" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="41" hits="22" branch="false"/>
+								<line number="41" hits="29" branch="false"/>
 							</lines>
 						</method>
 						<method name="getTargetClass" signature="()Ljava/lang/Class;" line-rate="1.0" branch-rate="1.0">
@@ -3566,7 +3566,7 @@
 						<line number="27" hits="48" branch="false"/>
 						<line number="28" hits="48" branch="false"/>
 						<line number="34" hits="27" branch="false"/>
-						<line number="41" hits="22" branch="false"/>
+						<line number="41" hits="29" branch="false"/>
 					</lines>
 				</class>
 				<class name="org.greatage.ioc.coerce.BooleanToStringCoercion" filename="org/greatage/ioc/coerce/BooleanToStringCoercion.java" line-rate="1.0" branch-rate="1.0" complexity="1.0">
@@ -3656,7 +3656,7 @@
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
 								</line>
-								<line number="31" hits="22" branch="true" condition-coverage="100% (2/2)">
+								<line number="31" hits="29" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
@@ -3667,7 +3667,7 @@
 						</method>
 						<method name="supports" signature="(Lorg/greatage/ioc/coerce/Coercion;Ljava/lang/Class;Ljava/lang/Class;)Z" line-rate="1.0" branch-rate="1.0">
 							<lines>
-								<line number="47" hits="22" branch="true" condition-coverage="100% (2/2)">
+								<line number="47" hits="29" branch="true" condition-coverage="100% (2/2)">
 									<conditions>
 										<condition number="0" type="jump" coverage="100%"/>
 									</conditions>
@@ -3678,7 +3678,7 @@
 									</conditions>
 								</line>
 								<line number="49" hits="6" branch="false"/>
-								<line number="52" hits="16" branch="false"/>
+								<line number="52" hits="23" branch="false"/>
 							</lines>
 						</method>
 					</methods>
@@ -3698,14 +3698,14 @@
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
-						<line number="31" hits="22" branch="true" condition-coverage="100% (2/2)">
+						<line number="31" hits="29" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
 						</line>
 						<line number="32" hits="6" branch="false"/>
 						<line number="35" hits="1" branch="false"/>
-						<line number="47" hits="22" branch="true" condition-coverage="100% (2/2)">
+						<line number="47" hits="29" branch="true" condition-coverage="100% (2/2)">
 							<conditions>
 								<condition number="0" type="jump" coverage="100%"/>
 							</conditions>
@@ -3716,7 +3716,7 @@
 							</conditions>
 						</line>
 						<line number="49" hits="6" branch="false"/>
-						<line number="52" hits="16" branch="false"/>
+						<line number="52" hits="23" branch="false"/>
 					</lines>
 				</class>
 				<class name="org.greatage.ioc.coerce.EnumToStringCoercion" filename="org/greatage/ioc/coerce/EnumToStringCoercion.java" line-rate="1.0" branch-rate="1.0" complexity="1.0">
