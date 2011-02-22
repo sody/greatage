@@ -1,0 +1,152 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.util;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import java.security.MessageDigest;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import java.security.NoSuchAlgorithmException;<a name="line.8"></a>
+<FONT color="green">009</FONT>    <a name="line.9"></a>
+<FONT color="green">010</FONT>    /**<a name="line.10"></a>
+<FONT color="green">011</FONT>     * This class represents utility for encoding data.<a name="line.11"></a>
+<FONT color="green">012</FONT>     *<a name="line.12"></a>
+<FONT color="green">013</FONT>     * @author Ivan Khalopik<a name="line.13"></a>
+<FONT color="green">014</FONT>     * @since 1.0<a name="line.14"></a>
+<FONT color="green">015</FONT>     */<a name="line.15"></a>
+<FONT color="green">016</FONT>    public abstract class EncodeUtils {<a name="line.16"></a>
+<FONT color="green">017</FONT>            private static final byte BASE64_NULL = '=';<a name="line.17"></a>
+<FONT color="green">018</FONT>    <a name="line.18"></a>
+<FONT color="green">019</FONT>            private static final byte BASE64_DICTIONARY[] = {<a name="line.19"></a>
+<FONT color="green">020</FONT>                            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',<a name="line.20"></a>
+<FONT color="green">021</FONT>                            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',<a name="line.21"></a>
+<FONT color="green">022</FONT>                            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',<a name="line.22"></a>
+<FONT color="green">023</FONT>                            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',<a name="line.23"></a>
+<FONT color="green">024</FONT>                            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/',<a name="line.24"></a>
+<FONT color="green">025</FONT>            };<a name="line.25"></a>
+<FONT color="green">026</FONT>            private static final int BASE64_MASK = 0x3f;<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>            /**<a name="line.28"></a>
+<FONT color="green">029</FONT>             * Encodes binary data using specified message digest algorithm.<a name="line.29"></a>
+<FONT color="green">030</FONT>             *<a name="line.30"></a>
+<FONT color="green">031</FONT>             * @param data    binary data<a name="line.31"></a>
+<FONT color="green">032</FONT>             * @param algorithm message digest algorithm<a name="line.32"></a>
+<FONT color="green">033</FONT>             * @return encoded binary data<a name="line.33"></a>
+<FONT color="green">034</FONT>             * @throws IllegalArgumentException if specified algorithm not found<a name="line.34"></a>
+<FONT color="green">035</FONT>             */<a name="line.35"></a>
+<FONT color="green">036</FONT>            public static byte[] encode(final byte[] data, final String algorithm) {<a name="line.36"></a>
+<FONT color="green">037</FONT>                    try {<a name="line.37"></a>
+<FONT color="green">038</FONT>                            final MessageDigest digest = MessageDigest.getInstance(algorithm);<a name="line.38"></a>
+<FONT color="green">039</FONT>                            return digest.digest(data);<a name="line.39"></a>
+<FONT color="green">040</FONT>                    } catch (NoSuchAlgorithmException e) {<a name="line.40"></a>
+<FONT color="green">041</FONT>                            throw new IllegalArgumentException(String.format("Unknown digest algorithm: '%s'", algorithm));<a name="line.41"></a>
+<FONT color="green">042</FONT>                    }<a name="line.42"></a>
+<FONT color="green">043</FONT>            }<a name="line.43"></a>
+<FONT color="green">044</FONT>    <a name="line.44"></a>
+<FONT color="green">045</FONT>            /**<a name="line.45"></a>
+<FONT color="green">046</FONT>             * Encodes binary data using Base64 algorithm.<a name="line.46"></a>
+<FONT color="green">047</FONT>             *<a name="line.47"></a>
+<FONT color="green">048</FONT>             * @param data binary data<a name="line.48"></a>
+<FONT color="green">049</FONT>             * @return encoded binary data<a name="line.49"></a>
+<FONT color="green">050</FONT>             */<a name="line.50"></a>
+<FONT color="green">051</FONT>            public static byte[] encodeBase64(final byte[] data) {<a name="line.51"></a>
+<FONT color="green">052</FONT>                    final int tripleCount = data.length / 3;<a name="line.52"></a>
+<FONT color="green">053</FONT>                    final int resultLength = data.length % 3 == 0 ? 4 * tripleCount : 4 * (tripleCount + 1);<a name="line.53"></a>
+<FONT color="green">054</FONT>                    final byte[] result = new byte[resultLength];<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>                    int dataCursor = 0, resultCursor = 0;<a name="line.56"></a>
+<FONT color="green">057</FONT>                    for (int i = 0; i &lt; tripleCount; i++) {<a name="line.57"></a>
+<FONT color="green">058</FONT>                            final byte byte0 = data[dataCursor++];<a name="line.58"></a>
+<FONT color="green">059</FONT>                            final byte byte1 = data[dataCursor++];<a name="line.59"></a>
+<FONT color="green">060</FONT>                            final byte byte2 = data[dataCursor++];<a name="line.60"></a>
+<FONT color="green">061</FONT>                            result[resultCursor++] = BASE64_DICTIONARY[byte0 &gt;&gt; 2];<a name="line.61"></a>
+<FONT color="green">062</FONT>                            result[resultCursor++] = BASE64_DICTIONARY[(byte0 &lt;&lt; 4) &amp; BASE64_MASK | (byte1 &gt;&gt; 4)];<a name="line.62"></a>
+<FONT color="green">063</FONT>                            result[resultCursor++] = BASE64_DICTIONARY[(byte1 &lt;&lt; 2) &amp; BASE64_MASK | (byte2 &gt;&gt; 6)];<a name="line.63"></a>
+<FONT color="green">064</FONT>                            result[resultCursor++] = BASE64_DICTIONARY[byte2 &amp; BASE64_MASK];<a name="line.64"></a>
+<FONT color="green">065</FONT>                    }<a name="line.65"></a>
+<FONT color="green">066</FONT>    <a name="line.66"></a>
+<FONT color="green">067</FONT>                    switch (data.length - dataCursor) {<a name="line.67"></a>
+<FONT color="green">068</FONT>                            case 1:<a name="line.68"></a>
+<FONT color="green">069</FONT>                                    final byte b = data[dataCursor];<a name="line.69"></a>
+<FONT color="green">070</FONT>                                    result[resultCursor++] = BASE64_DICTIONARY[b &gt;&gt; 2];<a name="line.70"></a>
+<FONT color="green">071</FONT>                                    result[resultCursor++] = BASE64_DICTIONARY[(b &lt;&lt; 4) &amp; BASE64_MASK];<a name="line.71"></a>
+<FONT color="green">072</FONT>                                    result[resultCursor++] = BASE64_NULL;<a name="line.72"></a>
+<FONT color="green">073</FONT>                                    result[resultCursor] = BASE64_NULL;<a name="line.73"></a>
+<FONT color="green">074</FONT>                                    break;<a name="line.74"></a>
+<FONT color="green">075</FONT>                            case 2:<a name="line.75"></a>
+<FONT color="green">076</FONT>                                    final byte b0 = data[dataCursor++];<a name="line.76"></a>
+<FONT color="green">077</FONT>                                    final byte b1 = data[dataCursor];<a name="line.77"></a>
+<FONT color="green">078</FONT>                                    result[resultCursor++] = BASE64_DICTIONARY[b0 &gt;&gt; 2];<a name="line.78"></a>
+<FONT color="green">079</FONT>                                    result[resultCursor++] = BASE64_DICTIONARY[(b0 &lt;&lt; 4) &amp; BASE64_MASK | (b1 &gt;&gt; 4)];<a name="line.79"></a>
+<FONT color="green">080</FONT>                                    result[resultCursor++] = BASE64_DICTIONARY[(b1 &lt;&lt; 2) &amp; BASE64_MASK];<a name="line.80"></a>
+<FONT color="green">081</FONT>                                    result[resultCursor] = BASE64_NULL;<a name="line.81"></a>
+<FONT color="green">082</FONT>                                    break;<a name="line.82"></a>
+<FONT color="green">083</FONT>                    }<a name="line.83"></a>
+<FONT color="green">084</FONT>                    return result;<a name="line.84"></a>
+<FONT color="green">085</FONT>            }<a name="line.85"></a>
+<FONT color="green">086</FONT>    }<a name="line.86"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

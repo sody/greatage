@@ -1,0 +1,105 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.domain.hibernate;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.greatage.ioc.resource.Resource;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.greatage.ioc.resource.ResourceLocator;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.hibernate.cfg.Configuration;<a name="line.9"></a>
+<FONT color="green">010</FONT>    <a name="line.10"></a>
+<FONT color="green">011</FONT>    import java.io.IOException;<a name="line.11"></a>
+<FONT color="green">012</FONT>    import java.util.Properties;<a name="line.12"></a>
+<FONT color="green">013</FONT>    <a name="line.13"></a>
+<FONT color="green">014</FONT>    /**<a name="line.14"></a>
+<FONT color="green">015</FONT>     * @author Ivan Khalopik<a name="line.15"></a>
+<FONT color="green">016</FONT>     * @since 1.0<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    public class HibernateBaseConfiguration implements HibernateConfiguration {<a name="line.18"></a>
+<FONT color="green">019</FONT>            private final ResourceLocator resourceLocator;<a name="line.19"></a>
+<FONT color="green">020</FONT>            private final String hibernatePropertiesResource;<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>            public HibernateBaseConfiguration(final ResourceLocator resourceLocator, final String hibernatePropertiesResource) {<a name="line.22"></a>
+<FONT color="green">023</FONT>                    this.resourceLocator = resourceLocator;<a name="line.23"></a>
+<FONT color="green">024</FONT>                    this.hibernatePropertiesResource = hibernatePropertiesResource;<a name="line.24"></a>
+<FONT color="green">025</FONT>            }<a name="line.25"></a>
+<FONT color="green">026</FONT>    <a name="line.26"></a>
+<FONT color="green">027</FONT>            public void configure(final Configuration configuration) {<a name="line.27"></a>
+<FONT color="green">028</FONT>                    final Resource resource = resourceLocator.getResource(hibernatePropertiesResource);<a name="line.28"></a>
+<FONT color="green">029</FONT>                    if (resource.exists()) {<a name="line.29"></a>
+<FONT color="green">030</FONT>                            final Properties properties = new Properties();<a name="line.30"></a>
+<FONT color="green">031</FONT>                            try {<a name="line.31"></a>
+<FONT color="green">032</FONT>                                    properties.load(resource.open());<a name="line.32"></a>
+<FONT color="green">033</FONT>                                    configuration.setProperties(properties);<a name="line.33"></a>
+<FONT color="green">034</FONT>                            } catch (IOException e) {<a name="line.34"></a>
+<FONT color="green">035</FONT>                                    throw new RuntimeException("Can not find hibernate properties", e);<a name="line.35"></a>
+<FONT color="green">036</FONT>                            }<a name="line.36"></a>
+<FONT color="green">037</FONT>                    }<a name="line.37"></a>
+<FONT color="green">038</FONT>            }<a name="line.38"></a>
+<FONT color="green">039</FONT>    }<a name="line.39"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

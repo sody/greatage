@@ -1,0 +1,122 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package org.greatage.ioc.cache;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    import org.greatage.util.CollectionUtils;<a name="line.3"></a>
+<FONT color="green">004</FONT>    import org.testng.Assert;<a name="line.4"></a>
+<FONT color="green">005</FONT>    import org.testng.annotations.BeforeClass;<a name="line.5"></a>
+<FONT color="green">006</FONT>    import org.testng.annotations.DataProvider;<a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.testng.annotations.Test;<a name="line.7"></a>
+<FONT color="green">008</FONT>    <a name="line.8"></a>
+<FONT color="green">009</FONT>    import java.util.Map;<a name="line.9"></a>
+<FONT color="green">010</FONT>    <a name="line.10"></a>
+<FONT color="green">011</FONT>    /**<a name="line.11"></a>
+<FONT color="green">012</FONT>     * @author Ivan Khalopik<a name="line.12"></a>
+<FONT color="green">013</FONT>     * @since 1.0<a name="line.13"></a>
+<FONT color="green">014</FONT>     */<a name="line.14"></a>
+<FONT color="green">015</FONT>    public class TestSimpleCacheSource extends Assert {<a name="line.15"></a>
+<FONT color="green">016</FONT>            private CacheSource cacheSource;<a name="line.16"></a>
+<FONT color="green">017</FONT>    <a name="line.17"></a>
+<FONT color="green">018</FONT>            @DataProvider<a name="line.18"></a>
+<FONT color="green">019</FONT>            public Object[][] getCacheData() {<a name="line.19"></a>
+<FONT color="green">020</FONT>                    return new Object[][]{<a name="line.20"></a>
+<FONT color="green">021</FONT>                                    {String.class, Integer.class, CollectionUtils.newMap("1", 1, "2", 2, "3", 3, "4", 4)},<a name="line.21"></a>
+<FONT color="green">022</FONT>                                    {Object.class, Object.class, CollectionUtils.newMap("1", null, "2", null, "3", null, "4", null)},<a name="line.22"></a>
+<FONT color="green">023</FONT>                                    {String.class, String.class, CollectionUtils.newMap("1", "11", "2", "12", "3", "13", "4", "14")},<a name="line.23"></a>
+<FONT color="green">024</FONT>                    };<a name="line.24"></a>
+<FONT color="green">025</FONT>            }<a name="line.25"></a>
+<FONT color="green">026</FONT>    <a name="line.26"></a>
+<FONT color="green">027</FONT>            @BeforeClass<a name="line.27"></a>
+<FONT color="green">028</FONT>            public void setupCacheManager() {<a name="line.28"></a>
+<FONT color="green">029</FONT>                    cacheSource = new SimpleCacheSource();<a name="line.29"></a>
+<FONT color="green">030</FONT>            }<a name="line.30"></a>
+<FONT color="green">031</FONT>    <a name="line.31"></a>
+<FONT color="green">032</FONT>            @Test(dataProvider = "getCacheData")<a name="line.32"></a>
+<FONT color="green">033</FONT>            public &lt;K, V&gt; void testGetCache(final Class&lt;K&gt; keyClass, final Class&lt;V&gt; valueClass, final Map&lt;K, V&gt; data) {<a name="line.33"></a>
+<FONT color="green">034</FONT>                    final Cache&lt;K, V&gt; cache = cacheSource.getCache("test");<a name="line.34"></a>
+<FONT color="green">035</FONT>                    assertNotNull(cache);<a name="line.35"></a>
+<FONT color="green">036</FONT>                    assertEquals(cache.getName(), "test");<a name="line.36"></a>
+<FONT color="green">037</FONT>                    cache.clear();<a name="line.37"></a>
+<FONT color="green">038</FONT>                    for (Map.Entry&lt;K, V&gt; entry : data.entrySet()) {<a name="line.38"></a>
+<FONT color="green">039</FONT>                            cache.put(entry.getKey(), entry.getValue());<a name="line.39"></a>
+<FONT color="green">040</FONT>                    }<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>                    for (K key : data.keySet()) {<a name="line.42"></a>
+<FONT color="green">043</FONT>                            assertTrue(cache.contains(key));<a name="line.43"></a>
+<FONT color="green">044</FONT>                    }<a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>                    for (Map.Entry&lt;K, V&gt; entry : data.entrySet()) {<a name="line.46"></a>
+<FONT color="green">047</FONT>                            final V actual = cache.get(entry.getKey());<a name="line.47"></a>
+<FONT color="green">048</FONT>                            final V expected = entry.getValue();<a name="line.48"></a>
+<FONT color="green">049</FONT>                            assertEquals(actual, expected);<a name="line.49"></a>
+<FONT color="green">050</FONT>                    }<a name="line.50"></a>
+<FONT color="green">051</FONT>                    cache.clear();<a name="line.51"></a>
+<FONT color="green">052</FONT>                    for (K key : data.keySet()) {<a name="line.52"></a>
+<FONT color="green">053</FONT>                            assertFalse(cache.contains(key));<a name="line.53"></a>
+<FONT color="green">054</FONT>                    }<a name="line.54"></a>
+<FONT color="green">055</FONT>            }<a name="line.55"></a>
+<FONT color="green">056</FONT>    }<a name="line.56"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

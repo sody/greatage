@@ -1,0 +1,132 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package org.greatage.util;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    import org.testng.Assert;<a name="line.3"></a>
+<FONT color="green">004</FONT>    import org.testng.annotations.DataProvider;<a name="line.4"></a>
+<FONT color="green">005</FONT>    import org.testng.annotations.Test;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    /**<a name="line.7"></a>
+<FONT color="green">008</FONT>     * @author Ivan Khalopik<a name="line.8"></a>
+<FONT color="green">009</FONT>     * @since 1.0<a name="line.9"></a>
+<FONT color="green">010</FONT>     */<a name="line.10"></a>
+<FONT color="green">011</FONT>    public class TestEncodeUtils extends Assert {<a name="line.11"></a>
+<FONT color="green">012</FONT>    <a name="line.12"></a>
+<FONT color="green">013</FONT>            @DataProvider<a name="line.13"></a>
+<FONT color="green">014</FONT>            public Object[][] encodeData() {<a name="line.14"></a>
+<FONT color="green">015</FONT>                    return new Object[][]{<a name="line.15"></a>
+<FONT color="green">016</FONT>                                    {"", "MD5", "d41d8cd98f00b204e9800998ecf8427e"},<a name="line.16"></a>
+<FONT color="green">017</FONT>                                    {"test", "MD5", "098f6bcd4621d373cade4e832627b4f6"},<a name="line.17"></a>
+<FONT color="green">018</FONT>                                    {"admin", "MD5", "21232f297a57a5a743894a0e4a801fc3"},<a name="line.18"></a>
+<FONT color="green">019</FONT>                                    {"tester", "MD5", "f5d1278e8109edd94e1e4197e04873b9"},<a name="line.19"></a>
+<FONT color="green">020</FONT>                                    {"Hello World!!!", "MD5", "236bf30c70dc03f69175f030afbe38f3"},<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>                                    {"", "SHA1", "da39a3ee5e6b4b0d3255bfef95601890afd80709"},<a name="line.22"></a>
+<FONT color="green">023</FONT>                                    {"test", "SHA1", "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3"},<a name="line.23"></a>
+<FONT color="green">024</FONT>                                    {"admin", "SHA1", "d033e22ae348aeb5660fc2140aec35850c4da997"},<a name="line.24"></a>
+<FONT color="green">025</FONT>                                    {"tester", "SHA1", "ab4d8d2a5f480a137067da17100271cd176607a1"},<a name="line.25"></a>
+<FONT color="green">026</FONT>                                    {"Hello World!!!", "SHA1", "0aa941b04274ae04dc5a9bd214f7d5214f36e6de"},<a name="line.26"></a>
+<FONT color="green">027</FONT>                    };<a name="line.27"></a>
+<FONT color="green">028</FONT>            }<a name="line.28"></a>
+<FONT color="green">029</FONT>    <a name="line.29"></a>
+<FONT color="green">030</FONT>            @DataProvider<a name="line.30"></a>
+<FONT color="green">031</FONT>            public Object[][] encodeWrongData() {<a name="line.31"></a>
+<FONT color="green">032</FONT>                    return new Object[][]{<a name="line.32"></a>
+<FONT color="green">033</FONT>                                    {null, "MD5"},<a name="line.33"></a>
+<FONT color="green">034</FONT>                                    {new byte[]{}, null},<a name="line.34"></a>
+<FONT color="green">035</FONT>                                    {new byte[]{}, "MD"},<a name="line.35"></a>
+<FONT color="green">036</FONT>                    };<a name="line.36"></a>
+<FONT color="green">037</FONT>            }<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>            @DataProvider<a name="line.39"></a>
+<FONT color="green">040</FONT>            public Object[][] encodeBase64Data() {<a name="line.40"></a>
+<FONT color="green">041</FONT>                    return new Object[][]{<a name="line.41"></a>
+<FONT color="green">042</FONT>                                    {new byte[]{}, ""},<a name="line.42"></a>
+<FONT color="green">043</FONT>                                    {"test".getBytes(), "dGVzdA=="},<a name="line.43"></a>
+<FONT color="green">044</FONT>                                    {"admin".getBytes(), "YWRtaW4="},<a name="line.44"></a>
+<FONT color="green">045</FONT>                                    {"tester".getBytes(), "dGVzdGVy"},<a name="line.45"></a>
+<FONT color="green">046</FONT>                                    {"Hello World!!!".getBytes(), "SGVsbG8gV29ybGQhISE="},<a name="line.46"></a>
+<FONT color="green">047</FONT>                    };<a name="line.47"></a>
+<FONT color="green">048</FONT>            }<a name="line.48"></a>
+<FONT color="green">049</FONT>    <a name="line.49"></a>
+<FONT color="green">050</FONT>            @Test(dataProvider = "encodeBase64Data")<a name="line.50"></a>
+<FONT color="green">051</FONT>            public void testEncodeBase64(final byte[] data, final String expected) {<a name="line.51"></a>
+<FONT color="green">052</FONT>                    final String actual = new String(EncodeUtils.encodeBase64(data));<a name="line.52"></a>
+<FONT color="green">053</FONT>                    assertEquals(actual, expected);<a name="line.53"></a>
+<FONT color="green">054</FONT>            }<a name="line.54"></a>
+<FONT color="green">055</FONT>    <a name="line.55"></a>
+<FONT color="green">056</FONT>            @Test(dataProvider = "encodeData")<a name="line.56"></a>
+<FONT color="green">057</FONT>            public void testEncode(final String data, final String algorithm, final String expected) {<a name="line.57"></a>
+<FONT color="green">058</FONT>                    final String actual = StringUtils.toHexString(EncodeUtils.encode(data.getBytes(), algorithm));<a name="line.58"></a>
+<FONT color="green">059</FONT>                    assertEquals(actual, expected);<a name="line.59"></a>
+<FONT color="green">060</FONT>            }<a name="line.60"></a>
+<FONT color="green">061</FONT>    <a name="line.61"></a>
+<FONT color="green">062</FONT>            @Test(dataProvider = "encodeWrongData", expectedExceptions = RuntimeException.class)<a name="line.62"></a>
+<FONT color="green">063</FONT>            public void testEncodeWrong(final byte[] data, final String algorithm) {<a name="line.63"></a>
+<FONT color="green">064</FONT>                    StringUtils.toHexString(EncodeUtils.encode(data, algorithm));<a name="line.64"></a>
+<FONT color="green">065</FONT>            }<a name="line.65"></a>
+<FONT color="green">066</FONT>    }<a name="line.66"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

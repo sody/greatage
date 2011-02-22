@@ -1,0 +1,157 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.tapestry.commonlib.components;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.apache.tapestry5.dom.Document;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.greatage.tapestry.internal.BaseComponentTest;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.greatage.tapestry.internal.TestConstants;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.testng.annotations.BeforeClass;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import org.testng.annotations.DataProvider;<a name="line.11"></a>
+<FONT color="green">012</FONT>    import org.testng.annotations.Test;<a name="line.12"></a>
+<FONT color="green">013</FONT>    <a name="line.13"></a>
+<FONT color="green">014</FONT>    /**<a name="line.14"></a>
+<FONT color="green">015</FONT>     * todo: make tests more right<a name="line.15"></a>
+<FONT color="green">016</FONT>     *<a name="line.16"></a>
+<FONT color="green">017</FONT>     * @author Ivan Khalopik<a name="line.17"></a>
+<FONT color="green">018</FONT>     * @version $Revision: 202 $ $Date: 2010-07-13 13:26:39 +0300 (Вт, 13 июл 2010) $<a name="line.18"></a>
+<FONT color="green">019</FONT>     */<a name="line.19"></a>
+<FONT color="green">020</FONT>    public class TestMenu extends BaseComponentTest {<a name="line.20"></a>
+<FONT color="green">021</FONT>            private Document document;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>            @BeforeClass(groups = TestConstants.INTEGRATION_GROUP)<a name="line.23"></a>
+<FONT color="green">024</FONT>            public void generateDocument() {<a name="line.24"></a>
+<FONT color="green">025</FONT>                    document = generatePage("TestPageForMenu");<a name="line.25"></a>
+<FONT color="green">026</FONT>            }<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>            @Test(dataProvider = "menuData", groups = TestConstants.INTEGRATION_GROUP)<a name="line.28"></a>
+<FONT color="green">029</FONT>            public void testMenu(String containerId, String expected) {<a name="line.29"></a>
+<FONT color="green">030</FONT>                    final String actual = getChildMarkup(document, containerId);<a name="line.30"></a>
+<FONT color="green">031</FONT>                    assertEquals(actual, expected);<a name="line.31"></a>
+<FONT color="green">032</FONT>            }<a name="line.32"></a>
+<FONT color="green">033</FONT>    <a name="line.33"></a>
+<FONT color="green">034</FONT>            @Test(dataProvider = "menuItemsData", groups = TestConstants.INTEGRATION_GROUP)<a name="line.34"></a>
+<FONT color="green">035</FONT>            public void testMenuItems(String containerId, String[] items) {<a name="line.35"></a>
+<FONT color="green">036</FONT>                    final String actual = getChildMarkup(document, containerId);<a name="line.36"></a>
+<FONT color="green">037</FONT>                    assertNotNull(actual);<a name="line.37"></a>
+<FONT color="green">038</FONT>                    for (String item : items) {<a name="line.38"></a>
+<FONT color="green">039</FONT>                            assertTrue(actual.contains(item), "Expected item: " + item);<a name="line.39"></a>
+<FONT color="green">040</FONT>                    }<a name="line.40"></a>
+<FONT color="green">041</FONT>            }<a name="line.41"></a>
+<FONT color="green">042</FONT>    <a name="line.42"></a>
+<FONT color="green">043</FONT>            @DataProvider(name = "menuData")<a name="line.43"></a>
+<FONT color="green">044</FONT>            public Object[][] getMenuData() {<a name="line.44"></a>
+<FONT color="green">045</FONT>                    return new Object[][]{<a name="line.45"></a>
+<FONT color="green">046</FONT>                                    {"test1", "&lt;ul class=\"container t-menu\"&gt;&lt;/ul&gt;"},<a name="line.46"></a>
+<FONT color="green">047</FONT>                                    {"test2", "&lt;ul class=\"container t-menu foo bar\"&gt;&lt;/ul&gt;"},<a name="line.47"></a>
+<FONT color="green">048</FONT>                    };<a name="line.48"></a>
+<FONT color="green">049</FONT>            }<a name="line.49"></a>
+<FONT color="green">050</FONT>    <a name="line.50"></a>
+<FONT color="green">051</FONT>            @DataProvider(name = "menuItemsData")<a name="line.51"></a>
+<FONT color="green">052</FONT>            public Object[][] getMenuItemsData() {<a name="line.52"></a>
+<FONT color="green">053</FONT>                    return new Object[][]{<a name="line.53"></a>
+<FONT color="green">054</FONT>                                    {"test3", new String[]{<a name="line.54"></a>
+<FONT color="green">055</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_1:action1\"&gt;Save&lt;/a&gt;&lt;/li&gt;",<a name="line.55"></a>
+<FONT color="green">056</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_1:action2\"&gt;Cancel&lt;/a&gt;&lt;/li&gt;",<a name="line.56"></a>
+<FONT color="green">057</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_1:action3\"&gt;Action3&lt;/a&gt;&lt;/li&gt;"<a name="line.57"></a>
+<FONT color="green">058</FONT>                                    }},<a name="line.58"></a>
+<FONT color="green">059</FONT>                                    {"test4", new String[]{<a name="line.59"></a>
+<FONT color="green">060</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_2:action1/false\"&gt;Save&lt;/a&gt;&lt;/li&gt;",<a name="line.60"></a>
+<FONT color="green">061</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_2:action2/false\"&gt;Cancel&lt;/a&gt;&lt;/li&gt;",<a name="line.61"></a>
+<FONT color="green">062</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_2:action3/false\"&gt;Action3&lt;/a&gt;&lt;/li&gt;"<a name="line.62"></a>
+<FONT color="green">063</FONT>                                    }},<a name="line.63"></a>
+<FONT color="green">064</FONT>                                    {"test5", new String[]{<a name="line.64"></a>
+<FONT color="green">065</FONT>                                                    "&lt;li&gt;&lt;span&gt;Save&lt;/span&gt;&lt;/li&gt;",<a name="line.65"></a>
+<FONT color="green">066</FONT>                                                    "&lt;li&gt;&lt;span&gt;Test&lt;/span&gt;&lt;/li&gt;",<a name="line.66"></a>
+<FONT color="green">067</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menuitem_1:save\"&gt;Action3&lt;/a&gt;&lt;/li&gt;",<a name="line.67"></a>
+<FONT color="green">068</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menuitem_2:save\"&gt;Action4&lt;/a&gt;&lt;/li&gt;",<a name="line.68"></a>
+<FONT color="green">069</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu\"&gt;Action5&lt;/a&gt;&lt;/li&gt;",<a name="line.69"></a>
+<FONT color="green">070</FONT>                                                    "&lt;li class=\"selected\"&gt;&lt;span&gt;Action6&lt;/span&gt;&lt;/li&gt;"<a name="line.70"></a>
+<FONT color="green">071</FONT>                                    }},<a name="line.71"></a>
+<FONT color="green">072</FONT>                                    {"test6", new String[]{<a name="line.72"></a>
+<FONT color="green">073</FONT>                                                    "&lt;li&gt;Action1&lt;/li&gt;",<a name="line.73"></a>
+<FONT color="green">074</FONT>                                                    "&lt;li&gt;Action2&lt;/li&gt;",<a name="line.74"></a>
+<FONT color="green">075</FONT>                                                    "&lt;li&gt;Action3&lt;/li&gt;",<a name="line.75"></a>
+<FONT color="green">076</FONT>                                                    "&lt;li&gt;Action4&lt;/li&gt;",<a name="line.76"></a>
+<FONT color="green">077</FONT>                                                    "&lt;li&gt;Action5&lt;/li&gt;",<a name="line.77"></a>
+<FONT color="green">078</FONT>                                                    "&lt;li class=\"selected\"&gt;Action6&lt;/li&gt;"<a name="line.78"></a>
+<FONT color="green">079</FONT>                                    }},<a name="line.79"></a>
+<FONT color="green">080</FONT>                                    {"test7", new String[]{<a name="line.80"></a>
+<FONT color="green">081</FONT>                                                    "&lt;li&gt;Action1Override&lt;/li&gt;",<a name="line.81"></a>
+<FONT color="green">082</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_5:action3\"&gt;Action3&lt;/a&gt;&lt;/li&gt;",//todo: wrong!<a name="line.82"></a>
+<FONT color="green">083</FONT>                                    }},<a name="line.83"></a>
+<FONT color="green">084</FONT>                                    {"test8", new String[]{<a name="line.84"></a>
+<FONT color="green">085</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_6:action2/true\"&gt;Cancel&lt;/a&gt;&lt;/li&gt;",<a name="line.85"></a>
+<FONT color="green">086</FONT>                                                    "&lt;li&gt;Action3Override&lt;/li&gt;",<a name="line.86"></a>
+<FONT color="green">087</FONT>                                                    "&lt;li&gt;&lt;a href=\"/foo/testpageformenu.menu_6:action6/true\"&gt;Action6&lt;/a&gt;&lt;/li&gt;",<a name="line.87"></a>
+<FONT color="green">088</FONT>                                    }},<a name="line.88"></a>
+<FONT color="green">089</FONT>                    };<a name="line.89"></a>
+<FONT color="green">090</FONT>            }<a name="line.90"></a>
+<FONT color="green">091</FONT>    }<a name="line.91"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

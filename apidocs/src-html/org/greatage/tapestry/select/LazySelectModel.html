@@ -1,0 +1,114 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.tapestry.select;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.apache.tapestry5.OptionGroupModel;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.apache.tapestry5.OptionModel;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.apache.tapestry5.internal.OptionModelImpl;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.apache.tapestry5.ioc.internal.util.CollectionFactory;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import org.apache.tapestry5.util.AbstractSelectModel;<a name="line.11"></a>
+<FONT color="green">012</FONT>    <a name="line.12"></a>
+<FONT color="green">013</FONT>    import java.util.Collection;<a name="line.13"></a>
+<FONT color="green">014</FONT>    import java.util.List;<a name="line.14"></a>
+<FONT color="green">015</FONT>    <a name="line.15"></a>
+<FONT color="green">016</FONT>    /**<a name="line.16"></a>
+<FONT color="green">017</FONT>     * @author Ivan Khalopik<a name="line.17"></a>
+<FONT color="green">018</FONT>     */<a name="line.18"></a>
+<FONT color="green">019</FONT>    public abstract class LazySelectModel&lt;V&gt; extends AbstractSelectModel {<a name="line.19"></a>
+<FONT color="green">020</FONT>            private List&lt;OptionModel&gt; optionModels;<a name="line.20"></a>
+<FONT color="green">021</FONT>    <a name="line.21"></a>
+<FONT color="green">022</FONT>            public List&lt;OptionGroupModel&gt; getOptionGroups() {<a name="line.22"></a>
+<FONT color="green">023</FONT>                    return null;<a name="line.23"></a>
+<FONT color="green">024</FONT>            }<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>            public List&lt;OptionModel&gt; getOptions() {<a name="line.26"></a>
+<FONT color="green">027</FONT>                    if (optionModels == null) {<a name="line.27"></a>
+<FONT color="green">028</FONT>                            optionModels = createOptionModels();<a name="line.28"></a>
+<FONT color="green">029</FONT>                    }<a name="line.29"></a>
+<FONT color="green">030</FONT>                    return optionModels;<a name="line.30"></a>
+<FONT color="green">031</FONT>            }<a name="line.31"></a>
+<FONT color="green">032</FONT>    <a name="line.32"></a>
+<FONT color="green">033</FONT>            protected abstract Collection&lt;V&gt; getValues();<a name="line.33"></a>
+<FONT color="green">034</FONT>    <a name="line.34"></a>
+<FONT color="green">035</FONT>            protected String getLabel(V value) {<a name="line.35"></a>
+<FONT color="green">036</FONT>                    return String.valueOf(value);<a name="line.36"></a>
+<FONT color="green">037</FONT>            }<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>            //todo: add optional values sorting<a name="line.39"></a>
+<FONT color="green">040</FONT>    <a name="line.40"></a>
+<FONT color="green">041</FONT>            protected List&lt;OptionModel&gt; createOptionModels() {<a name="line.41"></a>
+<FONT color="green">042</FONT>                    final List&lt;OptionModel&gt; result = CollectionFactory.newList();<a name="line.42"></a>
+<FONT color="green">043</FONT>                    for (V v : getValues()) {<a name="line.43"></a>
+<FONT color="green">044</FONT>                            result.add(new OptionModelImpl(getLabel(v), v));<a name="line.44"></a>
+<FONT color="green">045</FONT>                    }<a name="line.45"></a>
+<FONT color="green">046</FONT>                    return result;<a name="line.46"></a>
+<FONT color="green">047</FONT>            }<a name="line.47"></a>
+<FONT color="green">048</FONT>    }<a name="line.48"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

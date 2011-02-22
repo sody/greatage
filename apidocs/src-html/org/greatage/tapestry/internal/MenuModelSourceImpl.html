@@ -1,0 +1,104 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.tapestry.internal;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.apache.tapestry5.ComponentResources;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.apache.tapestry5.ioc.Messages;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.greatage.tapestry.menu.MenuModel;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.greatage.tapestry.menu.MenuModelImpl;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import org.greatage.tapestry.services.MenuModelSource;<a name="line.11"></a>
+<FONT color="green">012</FONT>    <a name="line.12"></a>
+<FONT color="green">013</FONT>    import java.util.List;<a name="line.13"></a>
+<FONT color="green">014</FONT>    <a name="line.14"></a>
+<FONT color="green">015</FONT>    /**<a name="line.15"></a>
+<FONT color="green">016</FONT>     * @author Ivan Khalopik<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    public class MenuModelSourceImpl implements MenuModelSource {<a name="line.18"></a>
+<FONT color="green">019</FONT>    <a name="line.19"></a>
+<FONT color="green">020</FONT>            public MenuModel createMenuModel(ComponentResources resources, Messages messages, List&lt;String&gt; menuItems, Object... context) {<a name="line.20"></a>
+<FONT color="green">021</FONT>                    //todo: defence<a name="line.21"></a>
+<FONT color="green">022</FONT>    //              Defense.notNull(resources, "resources");<a name="line.22"></a>
+<FONT color="green">023</FONT>    //              Defense.notNull(messages, "messages");<a name="line.23"></a>
+<FONT color="green">024</FONT>    //              Defense.notNull(menuItems, "menuItems");<a name="line.24"></a>
+<FONT color="green">025</FONT>    //              Defense.notNull(context, "context");<a name="line.25"></a>
+<FONT color="green">026</FONT>    <a name="line.26"></a>
+<FONT color="green">027</FONT>                    final MenuModel model = new MenuModelImpl(messages);<a name="line.27"></a>
+<FONT color="green">028</FONT>                    for (String menuItem : menuItems) {<a name="line.28"></a>
+<FONT color="green">029</FONT>                            if (menuItem.startsWith("_")) {<a name="line.29"></a>
+<FONT color="green">030</FONT>                                    final String name = menuItem.substring(1);<a name="line.30"></a>
+<FONT color="green">031</FONT>                                    model.add(name, resources.createFormEventLink(name, context));<a name="line.31"></a>
+<FONT color="green">032</FONT>                            } else {<a name="line.32"></a>
+<FONT color="green">033</FONT>                                    model.add(menuItem, resources.createEventLink(menuItem, context));<a name="line.33"></a>
+<FONT color="green">034</FONT>                            }<a name="line.34"></a>
+<FONT color="green">035</FONT>                    }<a name="line.35"></a>
+<FONT color="green">036</FONT>                    return model;<a name="line.36"></a>
+<FONT color="green">037</FONT>            }<a name="line.37"></a>
+<FONT color="green">038</FONT>    }<a name="line.38"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

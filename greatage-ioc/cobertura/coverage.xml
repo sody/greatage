@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
 
-<coverage line-rate="0.7373233582709892" branch-rate="0.6855670103092784" lines-covered="887" lines-valid="1203" branches-covered="266" branches-valid="388" complexity="1.5452586206896552" version="1.9.4.1" timestamp="1298025045769">
+<coverage line-rate="0.7373233582709892" branch-rate="0.6855670103092784" lines-covered="887" lines-valid="1203" branches-covered="266" branches-valid="388" complexity="1.5452586206896552" version="1.9.4.1" timestamp="1298360825783">
 	<sources>
 		<source>Z:/projects/greatage/greatage-ioc/src/main/java</source>
 		<source>--source</source>

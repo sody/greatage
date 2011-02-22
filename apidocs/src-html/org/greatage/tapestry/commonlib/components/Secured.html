@@ -1,0 +1,112 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    package org.greatage.tapestry.commonlib.components;<a name="line.1"></a>
+<FONT color="green">002</FONT>    <a name="line.2"></a>
+<FONT color="green">003</FONT>    import org.apache.tapestry5.BindingConstants;<a name="line.3"></a>
+<FONT color="green">004</FONT>    import org.apache.tapestry5.annotations.Parameter;<a name="line.4"></a>
+<FONT color="green">005</FONT>    import org.apache.tapestry5.ioc.annotations.Inject;<a name="line.5"></a>
+<FONT color="green">006</FONT>    import org.greatage.security.Authentication;<a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.greatage.security.AuthorityConstants;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.greatage.security.SecurityContext;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.greatage.tapestry.commonlib.base.components.AbstractComponent;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.greatage.util.CollectionUtils;<a name="line.10"></a>
+<FONT color="green">011</FONT>    <a name="line.11"></a>
+<FONT color="green">012</FONT>    import java.util.List;<a name="line.12"></a>
+<FONT color="green">013</FONT>    <a name="line.13"></a>
+<FONT color="green">014</FONT>    /**<a name="line.14"></a>
+<FONT color="green">015</FONT>     * @author Ivan Khalopik<a name="line.15"></a>
+<FONT color="green">016</FONT>     * @since 1.0<a name="line.16"></a>
+<FONT color="green">017</FONT>     */<a name="line.17"></a>
+<FONT color="green">018</FONT>    public class Secured extends AbstractComponent {<a name="line.18"></a>
+<FONT color="green">019</FONT>    <a name="line.19"></a>
+<FONT color="green">020</FONT>            @Parameter(defaultPrefix = BindingConstants.LITERAL)<a name="line.20"></a>
+<FONT color="green">021</FONT>            private String allow;<a name="line.21"></a>
+<FONT color="green">022</FONT>    <a name="line.22"></a>
+<FONT color="green">023</FONT>            @Parameter(defaultPrefix = BindingConstants.LITERAL)<a name="line.23"></a>
+<FONT color="green">024</FONT>            private String deny;<a name="line.24"></a>
+<FONT color="green">025</FONT>    <a name="line.25"></a>
+<FONT color="green">026</FONT>            @Inject<a name="line.26"></a>
+<FONT color="green">027</FONT>            private SecurityContext securityContext;<a name="line.27"></a>
+<FONT color="green">028</FONT>    <a name="line.28"></a>
+<FONT color="green">029</FONT>            @SuppressWarnings({"RedundantIfStatement"})<a name="line.29"></a>
+<FONT color="green">030</FONT>            boolean setupRender() {<a name="line.30"></a>
+<FONT color="green">031</FONT>                    final List&lt;String&gt; authorities = getAuthorities();<a name="line.31"></a>
+<FONT color="green">032</FONT>                    if (allow != null &amp;&amp; !authorities.contains(allow)) {<a name="line.32"></a>
+<FONT color="green">033</FONT>                            return false;<a name="line.33"></a>
+<FONT color="green">034</FONT>                    }<a name="line.34"></a>
+<FONT color="green">035</FONT>                    if (deny != null &amp;&amp; authorities.contains(deny)) {<a name="line.35"></a>
+<FONT color="green">036</FONT>                            return false;<a name="line.36"></a>
+<FONT color="green">037</FONT>                    }<a name="line.37"></a>
+<FONT color="green">038</FONT>                    return true;<a name="line.38"></a>
+<FONT color="green">039</FONT>            }<a name="line.39"></a>
+<FONT color="green">040</FONT>    <a name="line.40"></a>
+<FONT color="green">041</FONT>            private List&lt;String&gt; getAuthorities() {<a name="line.41"></a>
+<FONT color="green">042</FONT>                    final Authentication user = securityContext.getCurrentUser();<a name="line.42"></a>
+<FONT color="green">043</FONT>                    return user != null ? user.getAuthorities() : CollectionUtils.newList(AuthorityConstants.STATUS_ANONYMOUS);<a name="line.43"></a>
+<FONT color="green">044</FONT>            }<a name="line.44"></a>
+<FONT color="green">045</FONT>    <a name="line.45"></a>
+<FONT color="green">046</FONT>    }<a name="line.46"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

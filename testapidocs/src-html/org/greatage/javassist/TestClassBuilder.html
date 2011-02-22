@@ -1,0 +1,132 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.javassist;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.testng.Assert;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.testng.annotations.BeforeClass;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.testng.annotations.DataProvider;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.testng.annotations.Test;<a name="line.10"></a>
+<FONT color="green">011</FONT>    <a name="line.11"></a>
+<FONT color="green">012</FONT>    /**<a name="line.12"></a>
+<FONT color="green">013</FONT>     * @author Ivan Khalopik<a name="line.13"></a>
+<FONT color="green">014</FONT>     * @since 1.0<a name="line.14"></a>
+<FONT color="green">015</FONT>     */<a name="line.15"></a>
+<FONT color="green">016</FONT>    public class TestClassBuilder extends Assert {<a name="line.16"></a>
+<FONT color="green">017</FONT>            private ClassPoolEx pool;<a name="line.17"></a>
+<FONT color="green">018</FONT>    <a name="line.18"></a>
+<FONT color="green">019</FONT>            @BeforeClass<a name="line.19"></a>
+<FONT color="green">020</FONT>            public void setupClassPool() {<a name="line.20"></a>
+<FONT color="green">021</FONT>                    pool = new ClassPoolEx();<a name="line.21"></a>
+<FONT color="green">022</FONT>            }<a name="line.22"></a>
+<FONT color="green">023</FONT>    <a name="line.23"></a>
+<FONT color="green">024</FONT>            @DataProvider<a name="line.24"></a>
+<FONT color="green">025</FONT>            public Object[][] constructorData() {<a name="line.25"></a>
+<FONT color="green">026</FONT>                    return new Object[][]{<a name="line.26"></a>
+<FONT color="green">027</FONT>                                    {"TestClass_0", false, null},<a name="line.27"></a>
+<FONT color="green">028</FONT>                                    {"TestClass_1", false, Object.class},<a name="line.28"></a>
+<FONT color="green">029</FONT>                                    {"TestClass_2", false, MockInterfaceImpl2.class},<a name="line.29"></a>
+<FONT color="green">030</FONT>                                    {"TestClass_3", false, MockInterface.class},<a name="line.30"></a>
+<FONT color="green">031</FONT>    <a name="line.31"></a>
+<FONT color="green">032</FONT>                                    {"TestInterface_0", true, null},<a name="line.32"></a>
+<FONT color="green">033</FONT>                                    {"TestInterface_1", true, MockInterface.class},<a name="line.33"></a>
+<FONT color="green">034</FONT>                    };<a name="line.34"></a>
+<FONT color="green">035</FONT>            }<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>            @DataProvider<a name="line.37"></a>
+<FONT color="green">038</FONT>            public Object[][] constructorWrongData() {<a name="line.38"></a>
+<FONT color="green">039</FONT>                    return new Object[][]{<a name="line.39"></a>
+<FONT color="green">040</FONT>                                    {"TestInterface_0", true, Object.class},<a name="line.40"></a>
+<FONT color="green">041</FONT>                                    {"TestInterface_0", false, Object.class},<a name="line.41"></a>
+<FONT color="green">042</FONT>                    };<a name="line.42"></a>
+<FONT color="green">043</FONT>            }<a name="line.43"></a>
+<FONT color="green">044</FONT>    <a name="line.44"></a>
+<FONT color="green">045</FONT>            @Test(dataProvider = "constructorData")<a name="line.45"></a>
+<FONT color="green">046</FONT>            public &lt;T&gt; void testConstructor(String className, boolean isInterface, Class&lt;T&gt; superClass) {<a name="line.46"></a>
+<FONT color="green">047</FONT>                    final ClassBuilder&lt;T&gt; builder = new ClassBuilder&lt;T&gt;(pool, className, isInterface, superClass);<a name="line.47"></a>
+<FONT color="green">048</FONT>                    final Class&lt;T&gt; newClass = builder.build();<a name="line.48"></a>
+<FONT color="green">049</FONT>                    assertNotNull(newClass);<a name="line.49"></a>
+<FONT color="green">050</FONT>                    assertEquals(newClass.getName(), className);<a name="line.50"></a>
+<FONT color="green">051</FONT>                    assertEquals(newClass.isInterface(), isInterface);<a name="line.51"></a>
+<FONT color="green">052</FONT>                    if (superClass != null) {<a name="line.52"></a>
+<FONT color="green">053</FONT>                            assertTrue(superClass.isAssignableFrom(newClass));<a name="line.53"></a>
+<FONT color="green">054</FONT>                    }<a name="line.54"></a>
+<FONT color="green">055</FONT>                    if (!isInterface) {<a name="line.55"></a>
+<FONT color="green">056</FONT>                            assertEquals(newClass.getSuperclass(),<a name="line.56"></a>
+<FONT color="green">057</FONT>                                            superClass == null || superClass.isInterface() ? Object.class : superClass);<a name="line.57"></a>
+<FONT color="green">058</FONT>                    }<a name="line.58"></a>
+<FONT color="green">059</FONT>            }<a name="line.59"></a>
+<FONT color="green">060</FONT>    <a name="line.60"></a>
+<FONT color="green">061</FONT>            @Test(dataProvider = "constructorWrongData", expectedExceptions = RuntimeException.class)<a name="line.61"></a>
+<FONT color="green">062</FONT>            public &lt;T&gt; void testConstructorWrong(String className, boolean isInterface, Class&lt;T&gt; superClass) {<a name="line.62"></a>
+<FONT color="green">063</FONT>                    final ClassBuilder&lt;T&gt; builder = new ClassBuilder&lt;T&gt;(pool, className, isInterface, superClass);<a name="line.63"></a>
+<FONT color="green">064</FONT>                    builder.build();<a name="line.64"></a>
+<FONT color="green">065</FONT>            }<a name="line.65"></a>
+<FONT color="green">066</FONT>    }<a name="line.66"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

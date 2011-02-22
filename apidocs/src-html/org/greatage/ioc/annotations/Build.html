@@ -1,0 +1,110 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.ioc.annotations;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.greatage.ioc.scope.ScopeConstants;<a name="line.7"></a>
+<FONT color="green">008</FONT>    <a name="line.8"></a>
+<FONT color="green">009</FONT>    import java.lang.annotation.Documented;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import java.lang.annotation.ElementType;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import java.lang.annotation.Retention;<a name="line.11"></a>
+<FONT color="green">012</FONT>    import java.lang.annotation.RetentionPolicy;<a name="line.12"></a>
+<FONT color="green">013</FONT>    import java.lang.annotation.Target;<a name="line.13"></a>
+<FONT color="green">014</FONT>    <a name="line.14"></a>
+<FONT color="green">015</FONT>    /**<a name="line.15"></a>
+<FONT color="green">016</FONT>     * This annotation marks methods inside the IoC module as service build points that will build service instances with<a name="line.16"></a>
+<FONT color="green">017</FONT>     * specified unique id, scope and override option. Such methods can get as arguments other services, collection, list<a name="line.17"></a>
+<FONT color="green">018</FONT>     * and map for unordered, ordered and mapped configurations respectively.<a name="line.18"></a>
+<FONT color="green">019</FONT>     *<a name="line.19"></a>
+<FONT color="green">020</FONT>     * @author Ivan Khalopik<a name="line.20"></a>
+<FONT color="green">021</FONT>     * @since 1.0<a name="line.21"></a>
+<FONT color="green">022</FONT>     */<a name="line.22"></a>
+<FONT color="green">023</FONT>    @Target(ElementType.METHOD)<a name="line.23"></a>
+<FONT color="green">024</FONT>    @Retention(RetentionPolicy.RUNTIME)<a name="line.24"></a>
+<FONT color="green">025</FONT>    @Documented<a name="line.25"></a>
+<FONT color="green">026</FONT>    public @interface Build {<a name="line.26"></a>
+<FONT color="green">027</FONT>    <a name="line.27"></a>
+<FONT color="green">028</FONT>            /**<a name="line.28"></a>
+<FONT color="green">029</FONT>             * This property defines service unique id. If it is empty id will be generated from simplified service interface<a name="line.29"></a>
+<FONT color="green">030</FONT>             * name.<a name="line.30"></a>
+<FONT color="green">031</FONT>             */<a name="line.31"></a>
+<FONT color="green">032</FONT>            String value() default "";<a name="line.32"></a>
+<FONT color="green">033</FONT>    <a name="line.33"></a>
+<FONT color="green">034</FONT>            /**<a name="line.34"></a>
+<FONT color="green">035</FONT>             * This property defines if service definition will be overridden or not.<a name="line.35"></a>
+<FONT color="green">036</FONT>             */<a name="line.36"></a>
+<FONT color="green">037</FONT>            boolean override() default false;<a name="line.37"></a>
+<FONT color="green">038</FONT>    <a name="line.38"></a>
+<FONT color="green">039</FONT>            /**<a name="line.39"></a>
+<FONT color="green">040</FONT>             * This property defines service scope. This scope must present inside {@link org.greatage.ioc.scope.ScopeManager}<a name="line.40"></a>
+<FONT color="green">041</FONT>             * configuration. The default scope is global.<a name="line.41"></a>
+<FONT color="green">042</FONT>             */<a name="line.42"></a>
+<FONT color="green">043</FONT>            String scope() default ScopeConstants.GLOBAL;<a name="line.43"></a>
+<FONT color="green">044</FONT>    }<a name="line.44"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>

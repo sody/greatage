@@ -1,0 +1,17 @@
+org.example
+org.greatage.ioc
+org.greatage.ioc.access
+org.greatage.ioc.cache
+org.greatage.ioc.coerce
+org.greatage.ioc.mock
+org.greatage.ioc.mock.modules
+org.greatage.ioc.proxy
+org.greatage.ioc.resource
+org.greatage.ioc.symbol
+org.greatage.javassist
+org.greatage.tapestry.commonlib.components
+org.greatage.tapestry.grid
+org.greatage.tapestry.internal
+org.greatage.tapestry.testapp.pages
+org.greatage.tapestry.testapp.services
+org.greatage.util

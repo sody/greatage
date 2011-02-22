@@ -1,0 +1,125 @@
+<HTML>
+<BODY BGCOLOR="white">
+<PRE>
+<FONT color="green">001</FONT>    /*<a name="line.1"></a>
+<FONT color="green">002</FONT>     * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.<a name="line.2"></a>
+<FONT color="green">003</FONT>     */<a name="line.3"></a>
+<FONT color="green">004</FONT>    <a name="line.4"></a>
+<FONT color="green">005</FONT>    package org.greatage.tapestry.internal;<a name="line.5"></a>
+<FONT color="green">006</FONT>    <a name="line.6"></a>
+<FONT color="green">007</FONT>    import org.apache.tapestry5.ValueEncoder;<a name="line.7"></a>
+<FONT color="green">008</FONT>    import org.apache.tapestry5.ioc.services.TypeCoercer;<a name="line.8"></a>
+<FONT color="green">009</FONT>    import org.apache.tapestry5.services.ValueEncoderFactory;<a name="line.9"></a>
+<FONT color="green">010</FONT>    import org.greatage.domain.Entity;<a name="line.10"></a>
+<FONT color="green">011</FONT>    import org.greatage.domain.EntityRepository;<a name="line.11"></a>
+<FONT color="green">012</FONT>    <a name="line.12"></a>
+<FONT color="green">013</FONT>    import java.io.Serializable;<a name="line.13"></a>
+<FONT color="green">014</FONT>    <a name="line.14"></a>
+<FONT color="green">015</FONT>    /**<a name="line.15"></a>
+<FONT color="green">016</FONT>     * Needs ga:ga-core dependency.<a name="line.16"></a>
+<FONT color="green">017</FONT>     *<a name="line.17"></a>
+<FONT color="green">018</FONT>     * @author Ivan Khalopik<a name="line.18"></a>
+<FONT color="green">019</FONT>     */<a name="line.19"></a>
+<FONT color="green">020</FONT>    public class EntityEncoderFactory&lt;PK extends Serializable&gt; implements ValueEncoderFactory&lt;Entity&lt;PK&gt;&gt; {<a name="line.20"></a>
+<FONT color="green">021</FONT>            private final TypeCoercer typeCoercer;<a name="line.21"></a>
+<FONT color="green">022</FONT>            private final EntityRepository repository;<a name="line.22"></a>
+<FONT color="green">023</FONT>            private final Class&lt;PK&gt; pkClass;<a name="line.23"></a>
+<FONT color="green">024</FONT>    <a name="line.24"></a>
+<FONT color="green">025</FONT>            public EntityEncoderFactory(TypeCoercer typeCoercer, EntityRepository repository, Class&lt;PK&gt; pkClass) {<a name="line.25"></a>
+<FONT color="green">026</FONT>                    this.repository = repository; //todo: defence<a name="line.26"></a>
+<FONT color="green">027</FONT>                    this.typeCoercer = typeCoercer; //todo: defence<a name="line.27"></a>
+<FONT color="green">028</FONT>                    this.pkClass = pkClass; //todo: defence<a name="line.28"></a>
+<FONT color="green">029</FONT>            }<a name="line.29"></a>
+<FONT color="green">030</FONT>    <a name="line.30"></a>
+<FONT color="green">031</FONT>            public ValueEncoder&lt;Entity&lt;PK&gt;&gt; create(final Class&lt;Entity&lt;PK&gt;&gt; type) {<a name="line.31"></a>
+<FONT color="green">032</FONT>                    return new ValueEncoder&lt;Entity&lt;PK&gt;&gt;() {<a name="line.32"></a>
+<FONT color="green">033</FONT>                            public String toClient(Entity&lt;PK&gt; value) {<a name="line.33"></a>
+<FONT color="green">034</FONT>                                    return value != null ? typeCoercer.coerce(value.getId(), String.class) : null;<a name="line.34"></a>
+<FONT color="green">035</FONT>                            }<a name="line.35"></a>
+<FONT color="green">036</FONT>    <a name="line.36"></a>
+<FONT color="green">037</FONT>                            public Entity&lt;PK&gt; toValue(String clientValue) {<a name="line.37"></a>
+<FONT color="green">038</FONT>                                    final PK pk = typeCoercer.coerce(clientValue, pkClass);<a name="line.38"></a>
+<FONT color="green">039</FONT>                                    return pk != null ? repository.get(type, pk) : null;<a name="line.39"></a>
+<FONT color="green">040</FONT>                            }<a name="line.40"></a>
+<FONT color="green">041</FONT>    <a name="line.41"></a>
+<FONT color="green">042</FONT>                            @Override<a name="line.42"></a>
+<FONT color="green">043</FONT>                            public String toString() {<a name="line.43"></a>
+<FONT color="green">044</FONT>                                    final StringBuilder sb = new StringBuilder("EntityValueEncoder(");<a name="line.44"></a>
+<FONT color="green">045</FONT>                                    sb.append("class=").append(type);<a name="line.45"></a>
+<FONT color="green">046</FONT>                                    sb.append(")");<a name="line.46"></a>
+<FONT color="green">047</FONT>                                    return sb.toString();<a name="line.47"></a>
+<FONT color="green">048</FONT>                            }<a name="line.48"></a>
+<FONT color="green">049</FONT>                    };<a name="line.49"></a>
+<FONT color="green">050</FONT>            }<a name="line.50"></a>
+<FONT color="green">051</FONT>    <a name="line.51"></a>
+<FONT color="green">052</FONT>            @Override<a name="line.52"></a>
+<FONT color="green">053</FONT>            public String toString() {<a name="line.53"></a>
+<FONT color="green">054</FONT>                    final StringBuilder sb = new StringBuilder("EntityEncoderFactory(");<a name="line.54"></a>
+<FONT color="green">055</FONT>                    sb.append("pkClass=").append(pkClass);<a name="line.55"></a>
+<FONT color="green">056</FONT>                    sb.append(")");<a name="line.56"></a>
+<FONT color="green">057</FONT>                    return sb.toString();<a name="line.57"></a>
+<FONT color="green">058</FONT>            }<a name="line.58"></a>
+<FONT color="green">059</FONT>    }<a name="line.59"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</PRE>
+</BODY>
+</HTML>
