@@ -66,12 +66,12 @@
 			<url>${site.url}</url>
 		</site>
 		<repository>
-			<id>release</id>
-			<url>${release.url}</url>
+			<id>sonatype-staging</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 		<snapshotRepository>
-			<id>snapshot</id>
-			<url>${snapshot.url}</url>
+			<id>sonatype-snapshots</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -398,9 +398,7 @@
 		<!--library properties-->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<site.url>file://${user.dir}/target/greatage/site</site.url>
-		<release.url>file://${user.dir}/target/greatage/release</release.url>
-		<snapshot.url>file://${user.dir}/target/greatage/snapshot</snapshot.url>
+		<site.url>file://${user.dir}/target/aggregated-site</site.url>
 
 		<!--common dependencies-->
 		<testng.version>5.14.10</testng.version>
