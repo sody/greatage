@@ -48,6 +48,13 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	/**
 	 * {@inheritDoc}
 	 */
+	public ServiceBindingOptions withAlias(final Class alias) {
+		return withId(alias.getName());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
 	public ServiceBindingOptions withScope(final String scope) {
 		serviceScope = scope;
 		return this;

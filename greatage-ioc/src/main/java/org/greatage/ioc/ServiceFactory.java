@@ -6,7 +6,6 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.logging.Logger;
-import org.greatage.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -47,7 +46,8 @@ public class ServiceFactory<T> implements Service<T> {
 		serviceClass = (Class<T>) factoryMethod.getReturnType();
 
 		final Build build = factoryMethod.getAnnotation(Build.class);
-		serviceId = !StringUtils.isEmpty(build.value()) ? build.value() : serviceClass.getName();
+		final String proposedId = InternalUtils.generateServiceId(build.value(), build.id());
+		serviceId = proposedId != null ? proposedId : serviceClass.getName();
 		scope = build.scope();
 		override = build.override();
 	}

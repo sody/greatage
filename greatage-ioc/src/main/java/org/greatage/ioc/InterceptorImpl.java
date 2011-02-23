@@ -51,9 +51,9 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 		this.interceptMethod = interceptMethod;
 
 		final Intercept intercept = interceptMethod.getAnnotation(Intercept.class);
-		serviceId = !StringUtils.isEmpty(intercept.serviceId()) ? intercept.serviceId() : null;
+		serviceId = InternalUtils.generateServiceId(intercept.value(), intercept.id());
 		//noinspection unchecked
-		serviceClass = intercept.value();
+		serviceClass = intercept.service();
 
 		final Order order = interceptMethod.getAnnotation(Order.class);
 		if (order != null) {

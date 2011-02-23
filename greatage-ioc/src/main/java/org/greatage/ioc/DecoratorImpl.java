@@ -8,7 +8,6 @@ import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -50,14 +49,14 @@ public class DecoratorImpl<T> implements Decorator<T> {
 		this.moduleClass = moduleClass;
 		this.decorateMethod = decorateMethod;
 
-		//noinspection unchecked
-		serviceClass = (Class<T>) decorateMethod.getReturnType();
-		if (!serviceClass.equals(decorateMethod.getParameterTypes()[0])) {
+		if (!decorateMethod.getReturnType().equals(decorateMethod.getParameterTypes()[0])) {
 			throw new ApplicationException("Decorate method must have equals return type and first argument type");
 		}
 
 		final Decorate decorate = decorateMethod.getAnnotation(Decorate.class);
-		serviceId = !StringUtils.isEmpty(decorate.serviceId()) ? decorate.serviceId() : null;
+		serviceId = InternalUtils.generateServiceId(decorate.value(), decorate.id());
+		//noinspection unchecked
+		serviceClass = (Class<T>) decorate.service();
 
 		final Order order = decorateMethod.getAnnotation(Order.class);
 		if (order != null) {

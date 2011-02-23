@@ -4,6 +4,8 @@
 
 package org.greatage.ioc;
 
+import org.greatage.util.StringUtils;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -15,6 +17,18 @@ import java.lang.reflect.Method;
  * @since 1.0
  */
 public class InternalUtils {
+
+	/**
+	 * Generates service identifier by specified class alias and id. If class alias no equal to void, it class name will be
+	 * used as service id or string id otherwise.
+	 *
+	 * @param alias service class alias
+	 * @param id default service id
+	 * @return generated service id or null
+	 */
+	public static String generateServiceId(final Class alias, final String id) {
+		return !Void.class.isAssignableFrom(alias) ? alias.getName() : !StringUtils.isEmpty(id) ? id : null;
+	}
 
 	/**
 	 * Calculates service dependencies according to specified build constructor.

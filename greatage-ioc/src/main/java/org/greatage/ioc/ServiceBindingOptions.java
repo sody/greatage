@@ -22,6 +22,14 @@ public interface ServiceBindingOptions {
 	ServiceBindingOptions withId(String id);
 
 	/**
+	 * Defines service alias that represent service unique id as class.
+	 *
+	 * @param alias service alias
+	 * @return this service binding options
+	 */
+	ServiceBindingOptions withAlias(Class alias);
+
+	/**
 	 * Defines service scope.
 	 *
 	 * @param scope service scope

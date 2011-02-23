@@ -23,7 +23,12 @@ import java.lang.annotation.Target;
 public @interface Inject {
 
 	/**
-	 * This property defines service id for injection. If is empty service will be injected by its interface.
+	 * This property defines service alias (class name) that represents service unique id.
 	 */
-	String value() default "";
+	Class value() default Void.class;
+
+	/**
+	 * This property defines service unique id for injection. If is empty service will be injected by its interface.
+	 */
+	String id() default "";
 }

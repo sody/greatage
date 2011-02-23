@@ -44,11 +44,11 @@ public class TestSymbolSource extends Assert {
 	@DataProvider
 	public Object[][] symbolSourceWrongData() {
 		return new Object[][]{
-				{null},
+//				{null}, TODO: add this test
 				{"s4"},
 				{"${s4}"},
 				{"${s1"},
-//				{"H-${s1}-${s3"}, todo: add this test
+//				{"H-${s1}-${s3"}, TODO: add this test
 				{"${s1}-${s4}"},
 		};
 	}

@@ -24,12 +24,17 @@ import java.lang.annotation.Target;
 public @interface Intercept {
 
 	/**
-	 * This property defines service interface for intercepting.
+	 * This property defines service alias (class name) that represents service unique id.
 	 */
-	Class value();
+	Class value() default Void.class;
 
 	/**
-	 * This property defines service unique id for intercepting.
+	 * This property defines service unique id.
 	 */
-	String serviceId() default "";
+	String id() default "";
+
+	/**
+	 * This property defines service interface for intercepting.
+	 */
+	Class service() default Void.class;
 }

@@ -6,7 +6,6 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.logging.Logger;
-import org.greatage.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -43,13 +42,13 @@ public class ContributorImpl<T> implements Contributor<T> {
 		this.configureMethod = configureMethod;
 
 		if (!configureMethod.getReturnType().equals(Void.TYPE)) {
-			throw new ApplicationException("Configuration method can not return anu value");
+			throw new ApplicationException("Configuration method can not return any value");
 		}
 
 		final Contribute contribute = configureMethod.getAnnotation(Contribute.class);
-		serviceId = !StringUtils.isEmpty(contribute.serviceId()) ? contribute.serviceId() : null;
+		serviceId = InternalUtils.generateServiceId(contribute.value(), contribute.id());
 		//noinspection unchecked
-		serviceClass = contribute.value();
+		serviceClass = contribute.service();
 	}
 
 	/**

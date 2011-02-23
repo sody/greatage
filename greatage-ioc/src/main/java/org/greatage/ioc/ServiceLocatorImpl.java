@@ -16,7 +16,7 @@ import java.util.Set;
 
 /**
  * This class represents default {@link ServiceLocator} implementation that is used as main entry point of Great Age IoC
- * container. TODO: make constructor that defines internal logger
+ * container.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -25,8 +25,6 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<String, ServiceStatus<?>> servicesById = CollectionUtils.newConcurrentMap();
 	private final Set<Class<?>> internalServices = CollectionUtils.newSet();
 
-	private final Logger logger;
-
 	/**
 	 * Creates new instance of service locator with defined modules.
 	 *
@@ -34,7 +32,6 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @param modules modules
 	 */
 	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
-		this.logger = logger;
 		final Map<String, Service<?>> services = CollectionUtils.newMap();
 		for (Module module : modules) {
 			for (Service service : module.getServices()) {

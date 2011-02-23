@@ -26,10 +26,14 @@ import java.lang.annotation.Target;
 public @interface Build {
 
 	/**
-	 * This property defines service unique id. If it is empty id will be generated from simplified service interface
-	 * name.
+	 * This property defines service alias (class name) that represents service unique id.
 	 */
-	String value() default "";
+	Class value() default Void.class;
+
+	/**
+	 * This property defines service unique id.
+	 */
+	String id() default "";
 
 	/**
 	 * This property defines if service definition will be overridden or not.
