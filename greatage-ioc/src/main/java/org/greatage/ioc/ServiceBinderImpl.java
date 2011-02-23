@@ -4,6 +4,7 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
 
 import java.util.List;
@@ -45,12 +46,13 @@ public class ServiceBinderImpl implements ServiceBinder {
 	/**
 	 * Creates list of configured automatically built service definitions.
 	 *
+	 * @param logger system logger
 	 * @return list of configured automatically built service definitions or empty list
 	 */
-	public List<Service> getServices() {
+	public List<Service> createServices(final Logger logger) {
 		final List<Service> result = CollectionUtils.newList();
 		for (ServiceBindingOptionsImpl options : services) {
-			result.add(options.createService());
+			result.add(options.createService(logger));
 		}
 		return result;
 	}

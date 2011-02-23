@@ -34,6 +34,7 @@ public interface OrderedConfiguration<V> {
 	 * @param orderId	 unique order id
 	 * @param constraints order constraints
 	 * @return this configuration instance
+	 * @throws ApplicationException if error occurs while creating new instance
 	 */
 	OrderedConfiguration<V> addInstance(Class<? extends V> itemClass, String orderId, String... constraints);
 }

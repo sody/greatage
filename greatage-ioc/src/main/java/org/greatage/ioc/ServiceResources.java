@@ -48,7 +48,7 @@ public interface ServiceResources<T> {
 	 * @param annotations   resource annotation
 	 * @param <E>           resource type
 	 * @return requested resource that implements specified class
-	 * @throws RuntimeException if an error occurs instantiating resource
+	 * @throws ApplicationException if an error occurs instantiating resource
 	 */
 	<E> E getResource(Class<E> resourceClass, Annotation... annotations);
 }

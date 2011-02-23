@@ -64,9 +64,9 @@ public class IOCModule {
 		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
 		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
-		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class);
+		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class).withAlias(DefaultCoercionProvider.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
-		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class);
+		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withAlias(DefaultSymbolProvider.class);
 
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
@@ -118,7 +118,7 @@ public class IOCModule {
 	 *
 	 * @param configuration default coercion provider configuration
 	 */
-	@Contribute(CoercionProvider.class)
+	@Contribute(DefaultCoercionProvider.class)
 	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
 		configuration.addInstance(BooleanToStringCoercion.class);
 		configuration.addInstance(NumberToStringCoercion.class);

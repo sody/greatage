@@ -29,6 +29,7 @@ public interface Contributor<T> {
 	 * org.greatage.ioc.ServiceResources} respectively.
 	 *
 	 * @param resources service resources
+	 * @throws ApplicationException if error occurs while configuring service
 	 */
 	void contribute(ServiceResources<T> resources);
 }

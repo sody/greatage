@@ -10,7 +10,6 @@ import org.greatage.ioc.logging.ConsoleLogger;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.symbol.SymbolSource;
-import org.greatage.util.StringUtils;
 
 import java.lang.annotation.Annotation;
 
@@ -94,7 +93,7 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 		if (symbol != null) {
 			// if return type is not String throw an exception
 			if (!String.class.equals(resourceClass)) {
-				throw new IllegalArgumentException("Symbol annotation can be used only with String parameters");
+				throw new ApplicationException("Symbol annotation can be used only with String parameters");
 			}
 			final SymbolSource symbolSource = getResource(SymbolSource.class);
 			final String value = symbolSource.getValue(symbol.value());
@@ -103,8 +102,11 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 
 		// if annotated with Inject annotation trying to find service with specified service identifier
 		final Inject inject = findAnnotation(annotations, Inject.class);
-		if (inject != null && !StringUtils.isEmpty(inject.value())) {
-			return locator.getService(inject.value(), resourceClass);
+		if (inject != null) {
+			final String serviceId = InternalUtils.generateServiceId(inject.value(), inject.id());
+			if (serviceId != null) {
+				return locator.getService(serviceId, resourceClass);
+			}
 		}
 
 		// trying to find service by resource type by default

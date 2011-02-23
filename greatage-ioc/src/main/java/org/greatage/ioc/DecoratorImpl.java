@@ -8,7 +8,6 @@ import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -33,26 +32,31 @@ public class DecoratorImpl<T> implements Decorator<T> {
 	private final String orderId;
 	private final List<String> orderConstraints;
 
+	private final Logger logger;
+
 	/**
 	 * Creates new instance of service decorator definition with defined module class and method used for service
 	 * decoration. Decoration method must have return and first argument types equal to service type and be annotated with
 	 * {@link Decorate} annotation. For decorators ordering it may also be annotated with {@link Order} annotation.
 	 *
+	 * @param logger		 system logger
 	 * @param moduleClass	module class
 	 * @param decorateMethod module method used for service decoration
+	 * @throws ApplicationException if decorate method doesn't correspond to requirements
 	 */
-	DecoratorImpl(final Class<?> moduleClass, final Method decorateMethod) {
+	DecoratorImpl(final Logger logger, final Class<?> moduleClass, final Method decorateMethod) {
+		this.logger = logger;
 		this.moduleClass = moduleClass;
 		this.decorateMethod = decorateMethod;
 
-		//noinspection unchecked
-		serviceClass = (Class<T>) decorateMethod.getReturnType();
-		if (!serviceClass.equals(decorateMethod.getParameterTypes()[0])) {
-			throw new IllegalArgumentException("Decorate method must have equals return type and first argument type");
+		if (!decorateMethod.getReturnType().equals(decorateMethod.getParameterTypes()[0])) {
+			throw new ApplicationException("Decorate method must have equals return type and first argument type");
 		}
 
 		final Decorate decorate = decorateMethod.getAnnotation(Decorate.class);
-		serviceId = !StringUtils.isEmpty(decorate.serviceId()) ? decorate.serviceId() : null;
+		serviceId = InternalUtils.generateServiceId(decorate.value(), decorate.id());
+		//noinspection unchecked
+		serviceClass = (Class<T>) decorate.service();
 
 		final Order order = decorateMethod.getAnnotation(Order.class);
 		if (order != null) {
@@ -92,7 +96,6 @@ public class DecoratorImpl<T> implements Decorator<T> {
 	 * {@inheritDoc} It decorates service by invoking configured module method.
 	 */
 	public T decorate(final ServiceResources<T> resources) {
-		final Logger logger = resources.getResource(Logger.class);
 		logger.info("Decorating service (%s, %s) from module (%s, %s)", resources.getServiceId(),
 				resources.getServiceClass(), moduleClass, decorateMethod);
 
@@ -103,7 +106,7 @@ public class DecoratorImpl<T> implements Decorator<T> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, decorateMethod);
 			return resultClass.cast(decorateMethod.invoke(moduleInstance, parameters));
 		} catch (Exception e) {
-			throw new RuntimeException(
+			throw new ApplicationException(
 					String.format("Can't create service configuration with id '%s'", resources.getServiceId()), e);
 		}
 	}

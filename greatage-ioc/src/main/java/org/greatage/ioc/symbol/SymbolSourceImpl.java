@@ -4,6 +4,8 @@
 
 package org.greatage.ioc.symbol;
 
+import org.greatage.ioc.ApplicationException;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +59,7 @@ public class SymbolSourceImpl implements SymbolSource {
 	 *
 	 * @param key symbol name
 	 * @return symbol value, not null
-	 * @throws IllegalStateException when symbol with specified name is not found
+	 * @throws ApplicationException when symbol with specified name is not found
 	 */
 	private String getSymbol(final String key) {
 		for (SymbolProvider provider : providers) {
@@ -66,6 +68,6 @@ public class SymbolSourceImpl implements SymbolSource {
 				return symbol;
 			}
 		}
-		throw new IllegalStateException("Missing variable: " + key);
+		throw new ApplicationException("Missing variable: " + key);
 	}
 }

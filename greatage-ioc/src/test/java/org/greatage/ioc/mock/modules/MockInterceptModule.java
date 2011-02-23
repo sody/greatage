@@ -22,18 +22,18 @@ public class MockInterceptModule {
 		return new MockMessageServiceImpl("hello");
 	}
 
-	@Build("talkService1")
+	@Build(id = "talkService1")
 	public MockTalkService buildTalkService(final MockMessageService messageService) {
 		return new MockTalkServiceImpl(messageService);
 	}
 
-	@Build("talkService2")
+	@Build(id = "talkService2")
 	public MockTalkService buildTalkService2(final MockMessageService messageService) {
 		final MockTalkServiceImpl service = new MockTalkServiceImpl(messageService);
 		return new MockTalkServiceDelegate(service, "[", "]");
 	}
 
-	@Intercept(MockTalkService.class)
+	@Intercept(service = MockTalkService.class)
 	@Order("first")
 	public MethodAdvice interceptTalkService() {
 		return new MethodAdvice() {
@@ -47,7 +47,7 @@ public class MockInterceptModule {
 		};
 	}
 
-	@Intercept(MockTalkService.class)
+	@Intercept(service = MockTalkService.class)
 	@Order(value = "second", constraints = "after:first")
 	public MethodAdvice interceptTalkService2() {
 		return new MethodAdvice() {

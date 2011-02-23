@@ -38,7 +38,7 @@ public interface ServiceLocator {
 	 * @param serviceClass service interface
 	 * @param <T>          service type
 	 * @return service instance that implement specified service interface
-	 * @throws RuntimeException if the service is not found, or if an error occurs instantiating it
+	 * @throws ApplicationException if the service is not found, or if an error occurs instantiating it
 	 */
 	<T> T getService(String id, Class<T> serviceClass);
 
@@ -49,7 +49,8 @@ public interface ServiceLocator {
 	 * @param serviceClass service interface
 	 * @param <T>          service type
 	 * @return service instance that implement specified service interface
-	 * @throws RuntimeException if there are no ore more than one services found, or if an error occurs instantiating it
+	 * @throws ApplicationException if there are no ore more than one services found, or if an error occurs instantiating
+	 *                              it
 	 */
 	<T> T getService(Class<T> serviceClass);
 
@@ -60,7 +61,7 @@ public interface ServiceLocator {
 	 * @param serviceClass service interface
 	 * @param <T>          service type
 	 * @return services that implement specified service interface or empty set
-	 * @throws RuntimeException if an error occurs instantiating it
+	 * @throws ApplicationException if an error occurs instantiating it
 	 */
 	<T> Set<T> findServices(Class<T> serviceClass);
 }

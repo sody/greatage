@@ -16,7 +16,7 @@ import java.util.Set;
 
 /**
  * This class represents default {@link ServiceLocator} implementation that is used as main entry point of Great Age IoC
- * container. TODO: make constructor that defines internal logger
+ * container.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -25,20 +25,19 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<String, ServiceStatus<?>> servicesById = CollectionUtils.newConcurrentMap();
 	private final Set<Class<?>> internalServices = CollectionUtils.newSet();
 
-	private final Logger logger;
-
 	/**
 	 * Creates new instance of service locator with defined modules.
 	 *
+	 * @param logger  system logger
 	 * @param modules modules
 	 */
-	ServiceLocatorImpl(final List<Module> modules) {
+	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
 		final Map<String, Service<?>> services = CollectionUtils.newMap();
 		for (Module module : modules) {
 			for (Service service : module.getServices()) {
 				final String serviceId = service.getServiceId();
 				if (services.containsKey(serviceId) && !service.isOverride()) {
-					throw new IllegalStateException(String.format("Service with id '%s' already declared", serviceId));
+					throw new ApplicationException(String.format("Service with id '%s' already declared", serviceId));
 				}
 				services.put(serviceId, service);
 			}
@@ -77,9 +76,6 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			statisticsBuilder.append(String.format(format,
 					status.getServiceId(), status.getServiceScope(), status.getServiceClass()));
 		}
-
-		final LoggerSource loggerSource = getService(LoggerSource.class);
-		logger = loggerSource.getLogger(ServiceLocator.class);
 		logger.info(statisticsBuilder.toString());
 	}
 
@@ -87,7 +83,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * {@inheritDoc}
 	 */
 	public Set<String> getServiceIds() {
-		return CollectionUtils.newSet(servicesById.keySet());
+		return servicesById.keySet();
 	}
 
 	/**
@@ -100,7 +96,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @throws IllegalStateException if service not found
+	 * @throws ApplicationException if service not found
 	 */
 	public <T> T getService(final String id, final Class<T> serviceClass) {
 		if (servicesById.containsKey(id)) {
@@ -108,20 +104,20 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			final Object service = status.getService();
 			return serviceClass.cast(service);
 		}
-		throw new IllegalStateException(String.format("Can't find service with id %s", id));
+		throw new ApplicationException(String.format("Can't find service with id %s", id));
 	}
 
 	/**
 	 * {@inheritDoc}
 	 *
-	 * @throws IllegalStateException if service not found
+	 * @throws ApplicationException if service not found
 	 */
 	public <T> T getService(final Class<T> serviceClass) {
 		final Set<T> services = findServices(serviceClass);
 		if (services.size() == 1) {
 			return services.iterator().next();
 		}
-		throw new IllegalStateException(String.format("Can't find service of class %s", serviceClass));
+		throw new ApplicationException(String.format("Can't find service of class %s", serviceClass));
 	}
 
 	/**

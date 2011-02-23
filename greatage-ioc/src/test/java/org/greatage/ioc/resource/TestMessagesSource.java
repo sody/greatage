@@ -39,7 +39,7 @@ public class TestMessagesSource extends Assert {
 	}
 
 	@Test(dataProvider = "getMessagesData")
-	public void testGetMessages(Class clazz, Locale locale, Map<String, String> expected) {
+	public void testGetMessages(final Class clazz, final Locale locale, final Map<String, String> expected) {
 		final Messages messages = messagesSource.getMessages(clazz, locale);
 		assertNotNull(messages);
 		for (Map.Entry<String, String> entry : expected.entrySet()) {
