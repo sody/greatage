@@ -4,6 +4,7 @@
 
 package org.greatage.ioc.resource;
 
+import org.greatage.ioc.ApplicationException;
 import org.greatage.util.CollectionUtils;
 
 import java.io.ByteArrayInputStream;
@@ -50,7 +51,7 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 			final Map<String, String> properties = readProperties(resource);
 			return new MessagesImpl(locale, properties);
 		}
-		throw new IllegalStateException(String.format("Can't find messages for %s", name));
+		throw new ApplicationException(String.format("Can't find messages for %s", name));
 	}
 
 	/**
@@ -91,7 +92,7 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 			}
 			return result;
 		} catch (IOException e) {
-			throw new RuntimeException("Can't load messages from input stream", e);
+			throw new ApplicationException("Can't load messages from input stream", e);
 		} finally {
 			if (reader != null) {
 				try {

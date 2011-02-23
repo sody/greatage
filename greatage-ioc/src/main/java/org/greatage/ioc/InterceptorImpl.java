@@ -34,15 +34,19 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 	private final String orderId;
 	private final List<String> orderConstraints;
 
+	private final Logger logger;
+
 	/**
 	 * Creates new instance of service interceptor definition with defined module class and method used for service
 	 * interception. Interception method must have {@link MethodAdvice} return type and be annotated with {@link Intercept}
 	 * annotation. For interceptors ordering it may also be annotated with {@link Order} annotation.
 	 *
+	 * @param logger		  system logger
 	 * @param moduleClass	 module class
 	 * @param interceptMethod module method used for service interception
 	 */
-	InterceptorImpl(final Class<?> moduleClass, final Method interceptMethod) {
+	InterceptorImpl(final Logger logger, final Class<?> moduleClass, final Method interceptMethod) {
+		this.logger = logger;
 		this.moduleClass = moduleClass;
 		this.interceptMethod = interceptMethod;
 
@@ -89,7 +93,6 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 	 * {@inheritDoc} It intercepts service by invoking configured module method.
 	 */
 	public MethodAdvice intercept(final ServiceResources<T> resources) {
-		final Logger logger = resources.getResource(Logger.class);
 		logger.info("Intercepting service (%s, %s) from module (%s, %s)", resources.getServiceId(),
 				resources.getServiceClass(), moduleClass, interceptMethod);
 
@@ -99,7 +102,7 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, interceptMethod);
 			return (MethodAdvice) interceptMethod.invoke(moduleInstance, parameters);
 		} catch (Exception e) {
-			throw new RuntimeException(
+			throw new ApplicationException(
 					String.format("Can't create service interceptor with id '%s'", resources.getServiceId()), e);
 		}
 	}

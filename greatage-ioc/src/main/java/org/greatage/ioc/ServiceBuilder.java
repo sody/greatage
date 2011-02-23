@@ -65,7 +65,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	 *
 	 * @param delegate service instance
 	 * @return decorated service instance
-	 * @throws IllegalStateException when decorator returns the same service instance or null
+	 * @throws ApplicationException when decorator returns the same service instance or null
 	 */
 	private T decorateService(final T delegate) {
 		final List<Decorator<T>> ordered = OrderingUtils.order(decorators);
@@ -75,7 +75,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 					new ServiceDecorateResources<T>(resources, decoratedService);
 			decoratedService = decorator.decorate(decorateResources);
 			if (decoratedService == null || decoratedService.equals(decorateResources.getServiceInstance())) {
-				throw new IllegalStateException("Decorator returns the same instance");
+				throw new ApplicationException("Decorator returns the same instance");
 			}
 		}
 		return decoratedService;

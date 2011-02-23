@@ -40,7 +40,7 @@ public abstract class AbstractConfiguration<T, V, C> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, constructor);
 			return valueClass.cast(constructor.newInstance(parameters));
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("Can't create object of class '%s'", valueClass), e);
+			throw new ApplicationException(String.format("Can't create object of class '%s'", valueClass), e);
 		}
 	}
 

@@ -4,6 +4,7 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
 
 /**
@@ -63,9 +64,10 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	/**
 	 * Creates new instance of configured service definition.
 	 *
+	 * @param logger system logger
 	 * @return new instance of configured service definition, not null
 	 */
-	public Service<T> createService() {
-		return new ServiceImpl<T>(serviceId, serviceClass, implementationClass, serviceScope, override);
+	public Service<T> createService(final Logger logger) {
+		return new ServiceImpl<T>(logger, serviceId, serviceClass, implementationClass, serviceScope, override);
 	}
 }

@@ -4,10 +4,7 @@
 
 package org.greatage.ioc.symbol;
 
-import org.greatage.ioc.symbol.DefaultSymbolProvider;
-import org.greatage.ioc.symbol.SymbolProvider;
-import org.greatage.ioc.symbol.SymbolSource;
-import org.greatage.ioc.symbol.SymbolSourceImpl;
+import org.greatage.ioc.ApplicationException;
 import org.greatage.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -62,7 +59,7 @@ public class TestSymbolSource extends Assert {
 		assertEquals(actual, expected);
 	}
 
-	@Test(dataProvider = "symbolSourceWrongData", expectedExceptions = RuntimeException.class)
+	@Test(dataProvider = "symbolSourceWrongData", expectedExceptions = ApplicationException.class)
 	public void testSymbolSourceWrong(final String expression) {
 		symbolSource.getValue(expression);
 	}

@@ -33,7 +33,7 @@ public class HibernateModule {
 		binder.bind(EntityFilterProcessor.class, CompositeFilterProcessor.class).withId("HibernateFilterProcessor");
 	}
 
-	@Contribute(value = SymbolProvider.class, serviceId = "ApplicationSymbolProvider")
+	@Contribute(value = SymbolProvider.class)
 	public void contributeApplicationSymbolProvider(final MappedConfiguration<String, String> configuration) {
 		configuration.add(DomainConstants.HIBERNATE_PROPERTIES, "hibernate.properties");
 	}

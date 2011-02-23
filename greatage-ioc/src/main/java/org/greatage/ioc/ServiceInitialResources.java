@@ -94,7 +94,7 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 		if (symbol != null) {
 			// if return type is not String throw an exception
 			if (!String.class.equals(resourceClass)) {
-				throw new IllegalArgumentException("Symbol annotation can be used only with String parameters");
+				throw new ApplicationException("Symbol annotation can be used only with String parameters");
 			}
 			final SymbolSource symbolSource = getResource(SymbolSource.class);
 			final String value = symbolSource.getValue(symbol.value());

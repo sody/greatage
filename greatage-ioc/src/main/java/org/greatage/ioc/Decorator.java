@@ -30,6 +30,7 @@ public interface Decorator<T> extends Ordered {
 	 *
 	 * @param resources configured service resources
 	 * @return decorated service instance
+	 * @throws ApplicationException if error occurs while decorating service
 	 */
 	T decorate(ServiceResources<T> resources);
 }

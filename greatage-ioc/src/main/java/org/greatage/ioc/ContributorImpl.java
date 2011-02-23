@@ -26,19 +26,24 @@ public class ContributorImpl<T> implements Contributor<T> {
 	private final Class<T> serviceClass;
 	private final String serviceId;
 
+	private final Logger logger;
+
 	/**
 	 * Creates new instance of service contribution definition with defined module class and method used for service
 	 * configuration. Configuration method must have void return type and be annotated with {@link Contribute} annotation.
 	 *
+	 * @param logger		  system logger
 	 * @param moduleClass	 module class
 	 * @param configureMethod module method used for service configuration
+	 * @throws ApplicationException if configure method doesn't correspond to requirements
 	 */
-	ContributorImpl(final Class<?> moduleClass, final Method configureMethod) {
+	ContributorImpl(final Logger logger, final Class<?> moduleClass, final Method configureMethod) {
+		this.logger = logger;
 		this.moduleClass = moduleClass;
 		this.configureMethod = configureMethod;
 
 		if (!configureMethod.getReturnType().equals(Void.TYPE)) {
-			throw new IllegalArgumentException("Configuration method can not return anu value");
+			throw new ApplicationException("Configuration method can not return anu value");
 		}
 
 		final Contribute contribute = configureMethod.getAnnotation(Contribute.class);
@@ -61,7 +66,6 @@ public class ContributorImpl<T> implements Contributor<T> {
 	 * {@inheritDoc} It configures service by invoking configured module method.
 	 */
 	public void contribute(final ServiceResources<T> resources) {
-		final Logger logger = resources.getResource(Logger.class);
 		logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(),
 				resources.getServiceClass(), moduleClass, configureMethod);
 
@@ -71,7 +75,7 @@ public class ContributorImpl<T> implements Contributor<T> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, configureMethod);
 			configureMethod.invoke(moduleInstance, parameters);
 		} catch (Exception e) {
-			throw new RuntimeException(
+			throw new ApplicationException(
 					String.format("Can't create service configuration with id '%s'", resources.getServiceId()), e);
 		}
 	}

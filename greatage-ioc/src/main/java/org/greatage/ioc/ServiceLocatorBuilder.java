@@ -5,6 +5,8 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Dependency;
+import org.greatage.ioc.logging.ConsoleLogger;
+import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
 
@@ -20,10 +22,23 @@ public class ServiceLocatorBuilder {
 	private final List<Module> modules = CollectionUtils.newList();
 	private final Locker locker = new Locker();
 
+	private final Logger logger;
+
 	/**
-	 * Creates new service locator builder with defined {@link IOCModule} core module.
+	 * Creates new service locator builder with defined {@link IOCModule} core module. It will use console logger for
+	 * system logs.
 	 */
 	public ServiceLocatorBuilder() {
+		this(new ConsoleLogger(ServiceLocator.class.getName()));
+	}
+
+	/**
+	 * Creates new service locator builder with defined {@link IOCModule} core module and system logger.
+	 *
+	 * @param logger system logger
+	 */
+	public ServiceLocatorBuilder(final Logger logger) {
+		this.logger = logger;
 		addModule(IOCModule.class);
 	}
 
@@ -85,7 +100,7 @@ public class ServiceLocatorBuilder {
 		if (dependency != null) {
 			addModules(dependency.value());
 		}
-		addModule(new ModuleImpl<T>(moduleClass));
+		addModule(new ModuleImpl<T>(logger, moduleClass));
 		return this;
 	}
 
@@ -96,17 +111,30 @@ public class ServiceLocatorBuilder {
 	 */
 	public ServiceLocator build() {
 		locker.lock();
-		return new ServiceLocatorImpl(modules);
+		return new ServiceLocatorImpl(logger, modules);
 	}
 
 	/**
-	 * Creates new service locator instance for specified module classes + IOCModule.
+	 * Creates new service locator instance for specified module classes + IOCModule. It will use console logger for all
+	 * system logs.
 	 *
 	 * @param moduleClasses module classes
 	 * @return new service locator instance
 	 */
 	public static ServiceLocator createServiceLocator(final Class... moduleClasses) {
 		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder().addModules(moduleClasses);
+		return builder.build();
+	}
+
+	/**
+	 * Creates new service locator instance for specified module classes + IOCModule with defined system logger.
+	 *
+	 * @param logger		system logger
+	 * @param moduleClasses module classes
+	 * @return new service locator instance
+	 */
+	public static ServiceLocator createServiceLocator(final Logger logger, final Class... moduleClasses) {
+		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder(logger).addModules(moduleClasses);
 		return builder.build();
 	}
 }

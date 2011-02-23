@@ -28,6 +28,7 @@ public interface Configuration<V> {
 	 *
 	 * @param itemClass item class
 	 * @return this configuration instance
+	 * @throws ApplicationException if error occurs while creating new instance
 	 */
 	Configuration<V> addInstance(Class<? extends V> itemClass);
 }

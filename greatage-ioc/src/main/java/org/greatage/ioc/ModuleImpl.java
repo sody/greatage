@@ -9,6 +9,7 @@ import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Intercept;
+import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.util.CollectionUtils;
 
@@ -35,27 +36,28 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	 * Build}, {@link Contribute}, {@link Decorate}, {@link Intercept} and {@link Bind} annotations and creates for them
 	 * service, contribute, decorate, intercept and bind definitions respectively.
 	 *
+	 * @param logger system logger
 	 * @param moduleClass module class
 	 */
-	ModuleImpl(final Class<T> moduleClass) {
-		super(moduleClass.getName(), moduleClass, ScopeConstants.GLOBAL, false);
+	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
+		super(logger, moduleClass.getName(), moduleClass, ScopeConstants.GLOBAL, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {
-				services.add(new ServiceFactory(moduleClass, method));
+				services.add(new ServiceFactory(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
-				contributors.add(new ContributorImpl(moduleClass, method));
+				contributors.add(new ContributorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
-				decorators.add(new DecoratorImpl(moduleClass, method));
+				decorators.add(new DecoratorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Intercept.class)) {
-				interceptors.add(new InterceptorImpl(moduleClass, method));
+				interceptors.add(new InterceptorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
 					method.invoke(null, binder);
-					services.addAll(binder.getServices());
+					services.addAll(binder.createServices(logger));
 				} catch (Exception e) {
-					throw new RuntimeException("Exception in bind method", e);
+					throw new ApplicationException("Exception in bind method", e);
 				}
 			}
 		}

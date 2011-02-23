@@ -28,14 +28,18 @@ public class ServiceFactory<T> implements Service<T> {
 	private final String scope;
 	private final boolean override;
 
+	private final Logger logger;
+
 	/**
 	 * Creates new instance of service definition with defined module class and build method, service class. Build method
 	 * must have return equal to service type and be annotated with {@link Build} annotation.
 	 *
+	 * @param logger		system logger
 	 * @param factoryClass  module class
 	 * @param factoryMethod build method
 	 */
-	ServiceFactory(final Class<?> factoryClass, final Method factoryMethod) {
+	ServiceFactory(final Logger logger, final Class<?> factoryClass, final Method factoryMethod) {
+		this.logger = logger;
 		this.factoryClass = factoryClass;
 		this.factoryMethod = factoryMethod;
 
@@ -80,7 +84,6 @@ public class ServiceFactory<T> implements Service<T> {
 	 * {@inheritDoc} It builds service instance by invoking configured module method.
 	 */
 	public T build(final ServiceResources<T> resources) {
-		final Logger logger = resources.getResource(Logger.class);
 		logger.info("Building service (%s, %s) from module (%s, %s)", serviceId, serviceClass, factoryClass,
 				factoryMethod);
 
@@ -90,7 +93,7 @@ public class ServiceFactory<T> implements Service<T> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, factoryMethod);
 			return serviceClass.cast(factoryMethod.invoke(moduleInstance, parameters));
 		} catch (Exception e) {
-			throw new RuntimeException(
+			throw new ApplicationException(
 					String.format("Can't create service of class '%s' with id '%s'", serviceClass, serviceId), e);
 		}
 	}

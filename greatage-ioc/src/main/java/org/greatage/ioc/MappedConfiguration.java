@@ -31,6 +31,7 @@ public interface MappedConfiguration<K, V> {
 	 * @param key		item key
 	 * @param valueClass item class
 	 * @return this configuration instance
+	 * @throws ApplicationException if error occurs while creating new instance
 	 */
 	MappedConfiguration<K, V> addInstance(K key, Class<? extends V> valueClass);
 }

@@ -49,6 +49,7 @@ public interface Service<T> {
 	 *
 	 * @param resources configured service resources
 	 * @return service instance, not null
+	 * @throws ApplicationException if error occurs while building service
 	 */
 	T build(ServiceResources<T> resources);
 }
