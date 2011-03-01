@@ -1,12 +1,24 @@
 /*
- * Copyright 2000 - 2010 Ivan Khalopik. All Rights Reserved.
+ * Copyright 2011 Ivan Khalopik
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Inject;
 import org.greatage.ioc.annotations.Symbol;
-import org.greatage.ioc.logging.ConsoleLogger;
+import org.greatage.ioc.coerce.TypeCoercer;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.symbol.SymbolSource;
@@ -81,23 +93,13 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 	public <E> E getResource(final Class<E> resourceClass, final Annotation... annotations) {
 		// if resource type is Logger trying to retrieve service specific logger using LoggerSource service
 		if (Logger.class.equals(resourceClass)) {
-			if (LoggerSource.class.equals(serviceClass)) {
-				return resourceClass.cast(new ConsoleLogger(LoggerSource.class.getName()));
-			}
-			final LoggerSource loggerSource = locator.getService(LoggerSource.class);
-			return resourceClass.cast(loggerSource.getLogger(serviceClass));
+			return resourceClass.cast(getLogger());
 		}
 
 		// if annotated with Symbol annotation trying to find symbol using SymbolSource service
 		final Symbol symbol = findAnnotation(annotations, Symbol.class);
 		if (symbol != null) {
-			// if return type is not String throw an exception
-			if (!String.class.equals(resourceClass)) {
-				throw new ApplicationException("Symbol annotation can be used only with String parameters");
-			}
-			final SymbolSource symbolSource = getResource(SymbolSource.class);
-			final String value = symbolSource.getValue(symbol.value());
-			return resourceClass.cast(value);
+			return getSymbol(resourceClass, symbol.value());
 		}
 
 		// if annotated with Inject annotation trying to find service with specified service identifier
@@ -129,5 +131,18 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 			}
 		}
 		return null;
+	}
+
+	private <E> E getSymbol(final Class<E> resourceClass, final String symbol) {
+		final SymbolSource symbolSource = locator.getService(SymbolSource.class);
+		final String value = symbolSource.getValue(symbol);
+
+		final TypeCoercer typeCoercer = locator.getService(TypeCoercer.class);
+		return typeCoercer.coerce(value, resourceClass);
+	}
+
+	private Logger getLogger() {
+		final LoggerSource loggerSource = locator.getService(LoggerSource.class);
+		return loggerSource.getLogger(serviceClass);
 	}
 }
