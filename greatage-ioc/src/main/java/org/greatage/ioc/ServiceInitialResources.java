@@ -6,7 +6,6 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Inject;
 import org.greatage.ioc.annotations.Symbol;
-import org.greatage.ioc.logging.ConsoleLogger;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.symbol.SymbolSource;
@@ -81,9 +80,6 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 	public <E> E getResource(final Class<E> resourceClass, final Annotation... annotations) {
 		// if resource type is Logger trying to retrieve service specific logger using LoggerSource service
 		if (Logger.class.equals(resourceClass)) {
-			if (LoggerSource.class.equals(serviceClass)) {
-				return resourceClass.cast(new ConsoleLogger(LoggerSource.class.getName()));
-			}
 			final LoggerSource loggerSource = locator.getService(LoggerSource.class);
 			return resourceClass.cast(loggerSource.getLogger(serviceClass));
 		}

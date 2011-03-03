@@ -5,10 +5,11 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Dependency;
-import org.greatage.ioc.logging.ConsoleLogger;
 import org.greatage.ioc.logging.Logger;
+import org.greatage.ioc.logging.Slf4jLogger;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class ServiceLocatorBuilder {
 	 * system logs.
 	 */
 	public ServiceLocatorBuilder() {
-		this(new ConsoleLogger(ServiceLocator.class.getName()));
+		this(new Slf4jLogger(LoggerFactory.getLogger(ServiceLocator.class)));
 	}
 
 	/**

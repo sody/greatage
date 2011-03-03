@@ -4,13 +4,15 @@
 
 package org.greatage.ioc.logging;
 
+import org.greatage.util.DescriptionBuilder;
+
 /**
- * This class represents logger implementation through Slf4j logging API.
+ * This class represents logger implementation through slf4j logging API.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class Slf4jLogger extends AbstractLogger {
+public class Slf4jLogger implements Logger {
 	private final org.slf4j.Logger delegate;
 
 	/**
@@ -25,68 +27,122 @@ public class Slf4jLogger extends AbstractLogger {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void trace(final Throwable exception, final String format, final Object... parameters) {
-		final String message = String.format(format, parameters);
-		if (exception != null) {
-			delegate.trace(message, exception);
-		} else {
-			delegate.trace(message);
-		}
+	public String getName() {
+		return delegate.getName();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void debug(final Throwable exception, final String format, final Object... parameters) {
-		final String message = String.format(format, parameters);
-		if (exception != null) {
-			delegate.debug(message, exception);
-		} else {
-			delegate.debug(message);
-		}
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+	public void trace(final String format, final Object... parameters) {
+		final LogData data = format(format, parameters);
+		delegate.trace(data.getMessage(), data.getThrowable());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void info(final Throwable exception, final String format, final Object... parameters) {
-		final String message = String.format(format, parameters);
-		if (exception != null) {
-			delegate.info(message, exception);
-		} else {
-			delegate.info(message);
-		}
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+	public void debug(final String format, final Object... parameters) {
+		final LogData data = format(format, parameters);
+		delegate.debug(data.getMessage(), data.getThrowable());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void warn(final Throwable exception, final String format, final Object... parameters) {
-		final String message = String.format(format, parameters);
-		if (exception != null) {
-			delegate.warn(message, exception);
-		} else {
-			delegate.warn(message);
-		}
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+	public void info(final String format, final Object... parameters) {
+		final LogData data = format(format, parameters);
+		delegate.info(data.getMessage(), data.getThrowable());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void error(final Throwable exception, final String format, final Object... parameters) {
-		final String message = String.format(format, parameters);
-		if (exception != null) {
-			delegate.error(message, exception);
-		} else {
-			delegate.error(message);
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+	public void warn(final String format, final Object... parameters) {
+		final LogData data = format(format, parameters);
+		delegate.warn(data.getMessage(), data.getThrowable());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+	public void error(final String format, final Object... parameters) {
+		final LogData data = format(format, parameters);
+		delegate.error(data.getMessage(), data.getThrowable());
+	}
+
+	/**
+	 * Formats log data from specified message format and parameters.
+	 *
+	 * @param format	 message format
+	 * @param parameters parameters to format message with, the last parameter can be attached exception
+	 * @return formatted log data
+	 */
+	protected LogData format(final String format, final Object... parameters) {
+		if (parameters == null || parameters.length == 0) {
+			return new LogData(format, null);
 		}
+
+		final int lastParameterIndex = parameters.length - 1;
+		final Object lastParameter = parameters[lastParameterIndex];
+		if (lastParameter instanceof Throwable) {
+			final Object[] trimmed = new Object[lastParameterIndex];
+			System.arraycopy(parameters, 0, trimmed, 0, lastParameterIndex);
+			return new LogData(String.format(format, trimmed), (Throwable) lastParameter);
+		}
+
+		return new LogData(String.format(format, parameters), null);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected String getName() {
-		return delegate.getName();
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(getName());
+		return builder.toString();
+	}
+
+	/**
+	 * This class represents log message data with attached exception
+	 */
+	class LogData {
+		private final String message;
+		private final Throwable throwable;
+
+		/**
+		 * Creates new instance of log message data with specified message text and attached exception.
+		 *
+		 * @param message   message text
+		 * @param throwable attached exception
+		 */
+		LogData(String message, Throwable throwable) {
+			this.message = message;
+			this.throwable = throwable;
+		}
+
+		/**
+		 * Gets log message, ready for use.
+		 *
+		 * @return log message
+		 */
+		public String getMessage() {
+			return message;
+		}
+
+		/**
+		 * Gets attached exception.
+		 *
+		 * @return attached exception or null
+		 */
+		public Throwable getThrowable() {
+			return throwable;
+		}
 	}
 }
