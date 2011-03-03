@@ -133,6 +133,14 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 		return null;
 	}
 
+	/**
+	 * Gets coerced value for specified symbol expression as service resource.
+	 *
+	 * @param resourceClass class to coerce to
+	 * @param symbol		symbol expression
+	 * @param <E>           resource type
+	 * @return coerced value for specified symbol expression
+	 */
 	private <E> E getSymbol(final Class<E> resourceClass, final String symbol) {
 		final SymbolSource symbolSource = locator.getService(SymbolSource.class);
 		final String value = symbolSource.getValue(symbol);
@@ -141,6 +149,11 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 		return typeCoercer.coerce(value, resourceClass);
 	}
 
+	/**
+	 * Gets logger as injected resource for service represented by this service resources.
+	 *
+	 * @return service logger
+	 */
 	private Logger getLogger() {
 		final LoggerSource loggerSource = locator.getService(LoggerSource.class);
 		return loggerSource.getLogger(serviceClass);
