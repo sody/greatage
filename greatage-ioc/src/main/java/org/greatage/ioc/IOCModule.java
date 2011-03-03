@@ -20,38 +20,17 @@ import org.greatage.ioc.access.ClassAccessSource;
 import org.greatage.ioc.access.ClassAccessSourceImpl;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.coerce.BooleanToStringCoercion;
-import org.greatage.ioc.coerce.Coercion;
-import org.greatage.ioc.coerce.CoercionProvider;
-import org.greatage.ioc.coerce.DefaultCoercionProvider;
-import org.greatage.ioc.coerce.EnumToStringCoercion;
-import org.greatage.ioc.coerce.NumberToStringCoercion;
-import org.greatage.ioc.coerce.StringToBooleanCoercion;
-import org.greatage.ioc.coerce.StringToDoubleCoercion;
-import org.greatage.ioc.coerce.StringToEnumCoercionProvider;
-import org.greatage.ioc.coerce.StringToIntegerCoercion;
-import org.greatage.ioc.coerce.TypeCoercer;
-import org.greatage.ioc.coerce.TypeCoercerImpl;
-import org.greatage.ioc.logging.Log4jLoggerSource;
+import org.greatage.ioc.coerce.*;
 import org.greatage.ioc.logging.LoggerSource;
+import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JavassistProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.resource.ClasspathResourceLocator;
 import org.greatage.ioc.resource.MessagesSource;
 import org.greatage.ioc.resource.MessagesSourceImpl;
 import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.ioc.scope.GlobalScope;
-import org.greatage.ioc.scope.PrototypeScope;
-import org.greatage.ioc.scope.Scope;
-import org.greatage.ioc.scope.ScopeConstants;
-import org.greatage.ioc.scope.ScopeManager;
-import org.greatage.ioc.scope.ScopeManagerImpl;
-import org.greatage.ioc.scope.ThreadScope;
-import org.greatage.ioc.symbol.DefaultSymbolProvider;
-import org.greatage.ioc.symbol.SymbolProvider;
-import org.greatage.ioc.symbol.SymbolSource;
-import org.greatage.ioc.symbol.SymbolSourceImpl;
-import org.greatage.ioc.symbol.SystemSymbolProvider;
+import org.greatage.ioc.scope.*;
+import org.greatage.ioc.symbol.*;
 
 /**
  * This class represents base module for Great Age IoC container that configures all needed core services. This are
@@ -73,7 +52,7 @@ public class IOCModule {
 	@Bind
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
-		binder.bind(LoggerSource.class, Log4jLoggerSource.class);
+		binder.bind(LoggerSource.class, Slf4jLoggerSource.class);
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
 		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
 		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class).withAlias(DefaultCoercionProvider.class);
