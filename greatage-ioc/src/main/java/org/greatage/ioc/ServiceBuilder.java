@@ -17,7 +17,6 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.proxy.ObjectBuilder;
-import org.greatage.util.OrderingUtils;
 
 import java.util.List;
 
@@ -80,9 +79,8 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	 * @throws ApplicationException when decorator returns the same service instance or null
 	 */
 	private T decorateService(final T delegate) {
-		final List<Decorator<T>> ordered = OrderingUtils.order(decorators);
 		T decoratedService = delegate;
-		for (Decorator<T> decorator : ordered) {
+		for (Decorator<T> decorator : decorators) {
 			final ServiceDecorateResources<T> decorateResources =
 					new ServiceDecorateResources<T>(resources, decoratedService);
 			decoratedService = decorator.decorate(decorateResources);

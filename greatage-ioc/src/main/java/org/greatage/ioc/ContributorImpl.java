@@ -17,10 +17,14 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Contribute;
+import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.logging.Logger;
+import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class represents default implementation of service contribution definition that distributively configures
@@ -36,6 +40,9 @@ public class ContributorImpl<T> implements Contributor<T> {
 
 	private final Class<T> serviceClass;
 	private final String serviceId;
+
+	private final String orderId;
+	private final List<String> orderConstraints;
 
 	private final Logger logger;
 
@@ -61,6 +68,15 @@ public class ContributorImpl<T> implements Contributor<T> {
 		serviceId = InternalUtils.generateServiceId(contribute.value(), contribute.id());
 		//noinspection unchecked
 		serviceClass = contribute.service();
+
+		final Order order = configureMethod.getAnnotation(Order.class);
+		if (order != null) {
+			orderId = order.value();
+			orderConstraints = Arrays.asList(order.constraints());
+		} else {
+			orderId = "";
+			orderConstraints = CollectionUtils.newList();
+		}
 	}
 
 	/**
@@ -71,6 +87,20 @@ public class ContributorImpl<T> implements Contributor<T> {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
 				serviceClass.isAssignableFrom(service.getServiceClass());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getOrderId() {
+		return orderId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public List<String> getOrderConstraints() {
+		return orderConstraints;
 	}
 
 	/**

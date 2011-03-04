@@ -31,20 +31,19 @@ public class TransactionalAdvice implements MethodAdvice {
 		this.executor = executor;
 	}
 
-	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-		final Transactional transactional = invocation.getAnnotation(Transactional.class);
-		if (transactional != null) {
-			final Transaction transaction = executor.begin();
-			try {
-				final Object result = invocation.proceed(parameters);
-				transaction.commit();
-				return result;
-			} catch (Throwable throwable) {
-				transaction.rollback();
-				throw throwable;
-			}
-		}
-		return invocation.proceed(parameters);
+	public boolean supports(final Invocation invocation) {
+		return invocation.getRealMethod().isAnnotationPresent(Transactional.class);
 	}
 
+	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+		final Transaction transaction = executor.begin();
+		try {
+			final Object result = invocation.proceed(parameters);
+			transaction.commit();
+			return result;
+		} catch (Throwable throwable) {
+			transaction.rollback();
+			throw throwable;
+		}
+	}
 }

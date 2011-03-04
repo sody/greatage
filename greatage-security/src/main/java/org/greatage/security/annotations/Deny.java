@@ -16,10 +16,15 @@
 
 package org.greatage.security.annotations;
 
+import java.lang.annotation.*;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
 public @interface Deny {
 
 	String[] value();

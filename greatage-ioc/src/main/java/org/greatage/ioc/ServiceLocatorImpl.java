@@ -16,12 +16,15 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.coerce.TypeCoercer;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.util.CollectionUtils;
+import org.greatage.util.OrderingUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -36,6 +39,7 @@ import java.util.Set;
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<String, ServiceStatus<?>> servicesById = CollectionUtils.newConcurrentMap();
 	private final Set<Class<?>> internalServices = CollectionUtils.newSet();
+	private final Logger logger;
 
 	/**
 	 * Creates new instance of service locator with defined modules.
@@ -44,6 +48,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @param modules modules
 	 */
 	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
+		this.logger = logger;
+
 		final Map<String, Service<?>> services = CollectionUtils.newMap();
 		for (Module module : modules) {
 			for (Service service : module.getServices()) {
@@ -59,36 +65,18 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		internalServices.add(LoggerSource.class);
 		internalServices.add(ProxyFactory.class);
 		internalServices.add(ScopeManager.class);
+		internalServices.add(TypeCoercer.class);
 
 		final ServiceStatus<ServiceLocator> serviceLocatorStatus = new ServiceLocatorStatus(this);
 		servicesById.put(serviceLocatorStatus.getServiceId(), serviceLocatorStatus);
-		int maxLength = serviceLocatorStatus.getServiceId().length();
-		for (Map.Entry<String, Service<?>> entry : services.entrySet()) {
-			final String serviceId = entry.getKey();
-			final Service<?> service = entry.getValue();
-			final List<Contributor<?>> contributors = CollectionUtils.newList();
-			final List<Decorator<?>> decorators = CollectionUtils.newList();
-			final List<Interceptor<?>> interceptors = CollectionUtils.newList();
-			for (Module module : modules) {
-				contributors.addAll(module.getContributors(service));
-				decorators.addAll(module.getDecorators(service));
-				interceptors.addAll(module.getInterceptors(service));
-			}
-			final ServiceStatus<?> status = createServiceStatus(service, contributors, decorators, interceptors);
-			servicesById.put(serviceId, status);
-			if (serviceId.length() > maxLength) {
-				maxLength = serviceId.length();
-			}
+
+		for (Service<?> service : services.values()) {
+			final ServiceStatus<?> status = createServiceStatus(service, modules);
+			servicesById.put(status.getServiceId(), status);
 		}
 
 		// building statistics for log
-		final StringBuilder statisticsBuilder = new StringBuilder("Services:\n");
-		final String format = "%" + maxLength + "s[%s] : %s\n";
-		for (ServiceStatus<?> status : servicesById.values()) {
-			statisticsBuilder.append(String.format(format,
-					status.getServiceId(), status.getServiceScope(), status.getServiceClass()));
-		}
-		logger.info(statisticsBuilder.toString());
+		logStatistics();
 	}
 
 	/**
@@ -147,33 +135,56 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	}
 
 	/**
-	 * Creates {@link ServiceStatus} instance for specified service with defined service contributors, decorators and
-	 * interceptors.
+	 * Creates {@link ServiceStatus} instance for specified service with defined sorted service contributors, decorators
+	 * and interceptors.
 	 *
-	 * @param service	  service definition
-	 * @param contributors service contributors
-	 * @param decorators   service decorators
-	 * @param interceptors service interceptors
+	 * @param service service definition
+	 * @param modules module definitions
 	 * @return service status instance, not null
 	 */
 	@SuppressWarnings("unchecked")
 	private ServiceStatus<?> createServiceStatus(final Service<?> service,
-												 final List<Contributor<?>> contributors,
-												 final List<Decorator<?>> decorators,
-												 final List<Interceptor<?>> interceptors) {
+												 final Collection<Module> modules) {
+		final List<Contributor<?>> contributors = CollectionUtils.newList();
+		final List<Decorator<?>> decorators = CollectionUtils.newList();
+		final List<Interceptor<?>> interceptors = CollectionUtils.newList();
+		for (Module module : modules) {
+			contributors.addAll(module.getContributors(service));
+			decorators.addAll(module.getDecorators(service));
+			interceptors.addAll(module.getInterceptors(service));
+		}
+
+		final List<Contributor<?>> orderedContributors = OrderingUtils.order(contributors);
+		final List<Decorator<?>> orderedDecorators = OrderingUtils.order(decorators);
+		final List<Interceptor<?>> orderedInterceptors = OrderingUtils.order(interceptors);
+
 		return isInternal(service) ?
-				new InternalServiceStatus(this, service, contributors, decorators) :
-				new ServiceStatusImpl(this, service, contributors, decorators, interceptors);
+				new InternalServiceStatus(this, service, orderedContributors, orderedDecorators) :
+				new ServiceStatusImpl(this, service, orderedContributors, orderedDecorators, orderedInterceptors);
 	}
 
 	/**
-	 * Checks if service definition is internal. Internal services are {@link ProxyFactory}, {@link LoggerSource} and
-	 * {@link ScopeManager}.
+	 * Checks if service definition is internal. Internal services are {@link ProxyFactory}, {@link LoggerSource}, {@link
+	 * TypeCoercer} and {@link ScopeManager}.
 	 *
 	 * @param service service definition
 	 * @return true if service is internal, false otherwise
 	 */
 	private boolean isInternal(final Service<?> service) {
 		return internalServices.contains(service.getServiceClass());
+	}
+
+	private void logStatistics() {
+		int maxLength = 0;
+		for (String serviceId : getServiceIds()) {
+			if (serviceId.length() > maxLength) {
+				maxLength = serviceId.length();
+			}
+		}
+
+		final String format = "%" + maxLength + "s[%s] : %s\n";
+		for (ServiceStatus<?> status : servicesById.values()) {
+			logger.info(format, status.getServiceId(), status.getServiceScope(), status.getServiceClass());
+		}
 	}
 }

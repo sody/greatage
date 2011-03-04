@@ -21,7 +21,6 @@ import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.Locker;
-import org.greatage.util.OrderingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,8 +103,7 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 */
 	private List<MethodAdvice> createAdvices() {
 		final List<MethodAdvice> advices = new ArrayList<MethodAdvice>();
-		final List<Interceptor<T>> ordered = OrderingUtils.order(interceptors);
-		for (Interceptor<T> interceptor : ordered) {
+		for (Interceptor<T> interceptor : interceptors) {
 			final MethodAdvice advice = interceptor.intercept(resources);
 			advices.add(advice);
 		}

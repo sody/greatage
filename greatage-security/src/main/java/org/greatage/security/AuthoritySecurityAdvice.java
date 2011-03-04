@@ -23,6 +23,7 @@ import org.greatage.security.annotations.Deny;
 import org.greatage.security.annotations.Operation;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,9 +38,15 @@ public class AuthoritySecurityAdvice implements MethodAdvice {
 		this.securityContext = securityContext;
 	}
 
+	public boolean supports(final Invocation invocation) {
+		final Method realMethod = invocation.getRealMethod();
+		return realMethod.isAnnotationPresent(Allow.class) || realMethod.isAnnotationPresent(Deny.class);
+	}
+
 	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-		final Allow allow = invocation.getAnnotation(Allow.class);
-		final Deny deny = invocation.getAnnotation(Deny.class);
+		final Method realMethod = invocation.getRealMethod();
+		final Allow allow = realMethod.getAnnotation(Allow.class);
+		final Deny deny = realMethod.getAnnotation(Deny.class);
 		if (allow != null || deny != null) {
 			final List<String> authorities = getAuthorities();
 			if (allow != null) {
