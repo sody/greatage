@@ -16,7 +16,7 @@
 
 package org.greatage.ioc.proxy;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * This class represents {@link Invocation} proxy implementation that adds method advices logic to invocation delegate.
@@ -42,29 +42,15 @@ public class AdvisedInvocation implements Invocation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getName() {
-		return delegate.getName();
+	public Method getMethod() {
+		return delegate.getMethod();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
-		return delegate.getAnnotation(annotationClass);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?> getReturnType() {
-		return delegate.getReturnType();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?>[] getParameterTypes() {
-		return delegate.getParameterTypes();
+	public Method getRealMethod() {
+		return delegate.getRealMethod();
 	}
 
 	/**

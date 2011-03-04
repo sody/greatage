@@ -54,6 +54,10 @@ public class TestJdkProxyFactory extends Assert {
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl3.class),
 						CollectionUtils.newList(
 								new MethodAdvice() {
+									public boolean supports(final Invocation invocation) {
+										return true;
+									}
+
 									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
 										return "advice:" + invocation.proceed(parameters);
 									}
@@ -65,11 +69,19 @@ public class TestJdkProxyFactory extends Assert {
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
 						CollectionUtils.newList(
 								new MethodAdvice() {
+									public boolean supports(final Invocation invocation) {
+										return true;
+									}
+
 									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
 										return "advice1:" + invocation.proceed(parameters);
 									}
 								},
 								new MethodAdvice() {
+									public boolean supports(final Invocation invocation) {
+										return true;
+									}
+
 									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
 										return "advice2:" + invocation.proceed(parameters);
 									}

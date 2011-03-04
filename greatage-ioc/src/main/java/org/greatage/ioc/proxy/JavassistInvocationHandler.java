@@ -47,10 +47,14 @@ public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> 
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Invokes specified method with specified parameters on delegate instance
+	 *
+	 * @param method	 interface method
+	 * @param parameters invocation parameters
+	 * @return delegated from invocation return object
+	 * @throws Throwable if some problems occurs while invoking method
 	 */
-	@Override
 	public Object invoke(final Method method, final Object... parameters) throws Throwable {
-		return super.invoke(method, parameters);
+		return createInvocation(method).proceed(parameters);
 	}
 }

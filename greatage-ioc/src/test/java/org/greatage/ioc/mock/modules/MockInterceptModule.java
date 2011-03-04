@@ -49,12 +49,12 @@ public class MockInterceptModule {
 	@Order("first")
 	public MethodAdvice interceptTalkService() {
 		return new MethodAdvice() {
+			public boolean supports(final Invocation invocation) {
+				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
+			}
+
 			public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-				final Deprecated annotation = invocation.getAnnotation(Deprecated.class);
-				if (annotation != null) {
-					return "deprecated1:" + invocation.proceed(parameters);
-				}
-				return invocation.proceed(parameters);
+				return "deprecated1:" + invocation.proceed(parameters);
 			}
 		};
 	}
@@ -63,14 +63,13 @@ public class MockInterceptModule {
 	@Order(value = "second", constraints = "after:first")
 	public MethodAdvice interceptTalkService2() {
 		return new MethodAdvice() {
+			public boolean supports(final Invocation invocation) {
+				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
+			}
+
 			public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-				final Deprecated annotation = invocation.getAnnotation(Deprecated.class);
-				if (annotation != null) {
-					return "deprecated2:" + invocation.proceed(parameters);
-				}
-				return invocation.proceed(parameters);
+				return "deprecated2:" + invocation.proceed(parameters);
 			}
 		};
 	}
-
 }

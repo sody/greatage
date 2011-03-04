@@ -16,7 +16,6 @@
 
 package org.greatage.ioc.proxy;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -29,43 +28,37 @@ public class MethodInvocation implements Invocation {
 	private final Object instance;
 	private final Method method;
 
+	private final Method realMethod;
+
 	/**
-	 * Creates new instance of method invocation with defined object instance and method.
+	 * Creates new instance of method invocation with defined object instance, service and implementation methods.
 	 *
 	 * @param instance object instance
-	 * @param method   method
+	 * @param method   service method
 	 */
 	public MethodInvocation(final Object instance, final Method method) {
 		this.instance = instance;
 		this.method = method;
+
+		try {
+			this.realMethod = instance.getClass().getMethod(method.getName(), method.getParameterTypes());
+		} catch (NoSuchMethodException e) {
+			throw new IllegalArgumentException("Could not create invocation instance", e);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getName() {
-		return method.getName();
+	public Method getMethod() {
+		return method;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
-		return method.getAnnotation(annotationClass);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?> getReturnType() {
-		return method.getReturnType();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?>[] getParameterTypes() {
-		return method.getParameterTypes();
+	public Method getRealMethod() {
+		return realMethod;
 	}
 
 	/**

@@ -55,29 +55,18 @@ public abstract class AbstractInvocationHandler<T> {
 	}
 
 	/**
-	 * Invokes specified method with specified parameters on delegate instance
-	 *
-	 * @param method	 interface method
-	 * @param parameters invocation parameters
-	 * @return delegated from invocation return object
-	 * @throws Throwable if some problems occurs while invoking method
-	 */
-	protected Object invoke(final Method method, final Object... parameters) throws Throwable {
-		final Method realMethod = getDelegate().getClass().getMethod(method.getName(), method.getParameterTypes());
-		return createInvocation(realMethod).proceed(parameters);
-	}
-
-	/**
 	 * Creates new invocation instance for specified method with defined method advices.
 	 *
 	 * @param method method
 	 * @return new invocation instance for specified method with defined method advices
 	 */
-	private Invocation createInvocation(final Method method) {
+	protected Invocation createInvocation(final Method method) {
 		Invocation invocation = new MethodInvocation(getDelegate(), method);
 		if (advices != null) {
 			for (MethodAdvice advice : advices) {
-				invocation = new AdvisedInvocation(invocation, advice);
+				if (advice.supports(invocation)) {
+					invocation = new AdvisedInvocation(invocation, advice);
+				}
 			}
 		}
 		return invocation;

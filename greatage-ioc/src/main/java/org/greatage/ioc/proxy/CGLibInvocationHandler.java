@@ -44,6 +44,6 @@ public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> impl
 	 * {@inheritDoc} Delegates all method invocations to delegate instance.
 	 */
 	public Object invoke(final Object obj, final Method method, final Object[] args) throws Throwable {
-		return invoke(method, args);
+		return createInvocation(method).proceed(args);
 	}
 }
