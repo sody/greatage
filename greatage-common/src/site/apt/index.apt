@@ -8,27 +8,25 @@ Introduction
   from other java-based frameworks like hibernate, javassist, etc. They doesn't provide any architecture, only base,
   most-needed methods. All utilities are divided to:
 
-  * {{Common utilities}}
+  * {{{Common_utilities}Common utilities}}
 
-    * {{Collection utilities}}
+    * {{{Collection_utilities}Collection utilities}}
 
-    * {{String utilities}}
+    * {{{String_utilities}String utilities}}
 
-    * {{Encode utilities}}
+    * {{{Encode_utilities}Encode utilities}}
 
-    * {{Internationalization utilities}}
+    * {{{Internationalization_utilities}Internationalization utilities}}
 
-    * {{Reflection utilities}}
+    * {{{Reflection_utilities}Reflection utilities}}
 
-    * {{Ordering utilities}}
+    * {{{Ordering_utilities}Ordering utilities}}
 
-    * {{Lock utilities}}
+    * {{{Other_helpers}Other helpers}}
 
-    * {{Other helpers}}
+  * {{{Javassist_utilities}Javassist utilities}}
 
-  * {{Javassist utilities}}
-
-  * {{Hibernate utilities}}
+  * {{{Hibernate_utilities}Hibernate utilities}}
 
   []
 
@@ -180,10 +178,125 @@ try {
 +----+
 
 * {Ordering utilities}
+  
+  They are represented by abstract class OrderingUtils. This utility makes possibility to sort items that implements 
+  Ordered interface. Such items has identifier and sort constraints like after:id1 or before:id2. 
+  
+  For example we have items:
 
-* {Lock utilities}
+----  
+id2: before:id3,after:id1
+id4: -
+id5: after:id4
+id3: before:id5,after:id1
+id1: -
+----
 
+  First rule says that id2 item are placed between id1 and id3. Third rule says that id5 are placed after id4. Fourth
+  rule says that id3 are placed between id1 and id5. If there are no constraints for items they will be placed according 
+  to adding order. All this rules together sets up such items order: id1, id2, id3, id4, id5. Following code demonstrates
+  using of OrderingUtils:
+
++----+
+final List<Ordered> unsorted = calculateItems();
+final List<Ordered> sorted = OrderingUtils.order(unsorted);
++----+  
+  
 * {Other helpers}
+
+  Locker can be used for locking access to some code at runtime to prevent use it again. It most useful with builder
+  pattern when build method locks instance:
+
++----+
+public class FooterBuilder {
+  private final Locker locker = new Locker();
+  private Date date;
+  private String title;
+
+  public FooterBuilder setDate(final Date date) {
+    locker.check();
+    this.date = date;
+    return this;
+  }
+
+  public FooterBuilder setTitle(final String title) {
+    locker.check();
+    this.title = title;
+    return this;
+  }
+
+  public String build() {
+    locker.lock();
+    return "["+ date + "] " + title;
+  }
+}
++----+
+
+  It has two methods:
+  * check - checks locker and throws exception if already locked
+  * lock - locks locker and throws exception if already locked
+
+  MultiLocker are the same as Locker with only difference that it locks code by key. It makes possible to have different
+  triggers for code locking:
+
++----+
+public class ArticleBuilder {
+  private final MultiLocker<String> locker = new MultiLocker<String>();
+
+  private Date date;
+  private String title;
+  private String author;
+
+  public ArticleBuilder setDate(final Date date) {
+    locker.check("header");
+    locker.check("footer");
+    this.date = date;
+    return this;
+  }
+
+  public ArticleBuilder setTitle(final String title) {
+    locker.check("header");
+    locker.check("footer");
+    this.title = title;
+    return this;
+  }
+
+  public ArticleBuilder setAuthor(final String author) {
+    locker.check("footer");
+    this.author = author;
+    return this;
+  }
+
+  public String buildHeader() {
+    locker.lock("header");
+    return title + " - " + date;
+  }
+
+  public String buildFooter() {
+    locker.lock("footer");
+    return "[" + date + "] " + title + " - " + author;
+  }
+}
++----+
+
+  CompositeKey represents utility that unites multiply keys in one instance. It is useful as alternative to nested maps
+  when values needs to be mapped by multiply keys:
+
++----+
+public class ArticleRepository {
+  private final Map<CompositeKey, String> articles = new HashMap<CompositeKey, String>();
+
+  public void addArticle(final String author, final String title, final String article) {
+    final CompositeKey key = new CompositeKey(author, title);
+    articles.put(key, article);
+  }
+
+  public String getArticle(final String author, final String title) {
+    final CompositeKey key = new CompositeKey(author, title);
+    return articles.get(key);
+  }
+}
++----+
 
 {Javassist utilities}
 
