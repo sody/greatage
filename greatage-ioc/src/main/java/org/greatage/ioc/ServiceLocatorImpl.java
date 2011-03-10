@@ -50,6 +50,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
 		this.logger = logger;
 
+		//TODO: implement this using set
 		final Map<String, Service<?>> services = CollectionUtils.newMap();
 		for (Module module : modules) {
 			for (Service service : module.getServices()) {
@@ -146,21 +147,18 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	private ServiceStatus<?> createServiceStatus(final Service<?> service,
 												 final Collection<Module> modules) {
 		final List<Contributor<?>> contributors = CollectionUtils.newList();
-		final List<Decorator<?>> decorators = CollectionUtils.newList();
 		final List<Interceptor<?>> interceptors = CollectionUtils.newList();
 		for (Module module : modules) {
 			contributors.addAll(module.getContributors(service));
-			decorators.addAll(module.getDecorators(service));
 			interceptors.addAll(module.getInterceptors(service));
 		}
 
 		final List<Contributor<?>> orderedContributors = OrderingUtils.order(contributors);
-		final List<Decorator<?>> orderedDecorators = OrderingUtils.order(decorators);
 		final List<Interceptor<?>> orderedInterceptors = OrderingUtils.order(interceptors);
 
 		return isInternal(service) ?
-				new InternalServiceStatus(this, service, orderedContributors, orderedDecorators) :
-				new ServiceStatusImpl(this, service, orderedContributors, orderedDecorators, orderedInterceptors);
+				new InternalServiceStatus(this, service, orderedContributors) :
+				new ServiceStatusImpl(this, service, orderedContributors, orderedInterceptors);
 	}
 
 	/**

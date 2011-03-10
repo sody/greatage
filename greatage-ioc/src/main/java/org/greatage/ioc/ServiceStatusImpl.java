@@ -49,16 +49,14 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 * @param locator	  service locator
 	 * @param service	  service definition
 	 * @param contributors service contributors
-	 * @param decorators   service decorators
 	 * @param interceptors service interceptors
 	 */
 	ServiceStatusImpl(final ServiceLocator locator,
 					  final Service<T> service,
 					  final List<Contributor<T>> contributors,
-					  final List<Decorator<T>> decorators,
 					  final List<Interceptor<T>> interceptors) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, contributors, decorators);
+		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, contributors);
 		this.builder = new ScopedBuilder<T>(resources, serviceBuilder);
 		this.interceptors = interceptors;
 	}

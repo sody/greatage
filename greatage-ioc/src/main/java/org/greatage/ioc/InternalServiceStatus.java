@@ -42,14 +42,12 @@ public class InternalServiceStatus<T> implements ServiceStatus<T> {
 	 * @param locator	  service locator
 	 * @param service	  service definition
 	 * @param contributors service contribute definitions
-	 * @param decorators   service decorate definitions
 	 */
 	InternalServiceStatus(final ServiceLocator locator,
 						  final Service<T> service,
-						  final List<Contributor<T>> contributors,
-						  final List<Decorator<T>> decorators) {
+						  final List<Contributor<T>> contributors) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		this.builder = new ServiceBuilder<T>(resources, service, contributors, decorators);
+		this.builder = new ServiceBuilder<T>(resources, service, contributors);
 	}
 
 	/**

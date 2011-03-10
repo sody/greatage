@@ -19,7 +19,6 @@ package org.greatage.ioc;
 import org.greatage.ioc.mock.MockTalkService;
 import org.greatage.ioc.mock.modules.MockBindModule;
 import org.greatage.ioc.mock.modules.MockConfigureModule;
-import org.greatage.ioc.mock.modules.MockDecorateModule;
 import org.greatage.ioc.mock.modules.MockInterceptModule;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,14 +37,6 @@ public class TestServiceLocator extends Assert {
 		assertEquals(service.say(), "hello");
 		assertEquals(service.say(), "world");
 		assertEquals(service.say(), "!!!");
-	}
-
-	@Test
-	public void testServiceDecorator() {
-		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockDecorateModule.class);
-		final MockTalkService service = locator.getService(MockTalkService.class);
-		assertNotNull(service);
-		assertEquals(service.say(), "{[hello]}");
 	}
 
 	@Test

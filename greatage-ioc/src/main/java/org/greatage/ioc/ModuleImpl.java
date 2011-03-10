@@ -19,7 +19,6 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
@@ -40,15 +39,14 @@ import java.util.List;
 public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Service> services = CollectionUtils.newList();
 	private final List<Contributor> contributors = CollectionUtils.newList();
-	private final List<Decorator> decorators = CollectionUtils.newList();
 	private final List<Interceptor> interceptors = CollectionUtils.newList();
 
 	/**
 	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
-	 * Build}, {@link Contribute}, {@link Decorate}, {@link Intercept} and {@link Bind} annotations and creates for them
-	 * service, contribute, decorate, intercept and bind definitions respectively.
+	 * Build}, {@link Contribute}, {@link Intercept} and {@link Bind} annotations and creates for them service, contribute,
+	 * decorate, intercept and bind definitions respectively.
 	 *
-	 * @param logger system logger
+	 * @param logger	  system logger
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
@@ -59,8 +57,6 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 				services.add(new ServiceFactory(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
 				contributors.add(new ContributorImpl(logger, moduleClass, method));
-			} else if (method.isAnnotationPresent(Decorate.class)) {
-				decorators.add(new DecoratorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Intercept.class)) {
 				interceptors.add(new InterceptorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
@@ -91,20 +87,6 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 			if (contributor.supports(service)) {
 				//noinspection unchecked
 				result.add(contributor);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public <T> List<Decorator<T>> getDecorators(final Service<T> service) {
-		final List<Decorator<T>> result = CollectionUtils.newList();
-		for (Decorator decorator : decorators) {
-			if (decorator.supports(service)) {
-				//noinspection unchecked
-				result.add(decorator);
 			}
 		}
 		return result;

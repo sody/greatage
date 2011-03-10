@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation marks ordered objects and adds order id and order constraints. It is used in addition to {@link
- * org.greatage.ioc.annotations.Decorate} and {@link org.greatage.ioc.annotations.Intercept} annotations.
+ * org.greatage.ioc.annotations.Intercept} annotations.
  *
  * @author Ivan Khalopik
  * @since 1.0
