@@ -32,14 +32,14 @@ public class JdkProxyFactory extends AbstractProxyFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+	public <T> T createProxy(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
 		validate(builder);
 
 		final ClassLoader classLoader = builder.getObjectClass().getClassLoader();
 
 		final Object proxyInstance = Proxy.newProxyInstance(classLoader,
 				new Class<?>[]{builder.getObjectClass()},
-				new JdkInvocationHandler<T>(builder, advices));
+				new JdkInvocationHandler<T>(builder, interceptors));
 		return builder.getObjectClass().cast(proxyInstance);
 	}
 

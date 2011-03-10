@@ -17,11 +17,15 @@
 package org.greatage.ioc.mock.modules;
 
 import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Intercept;
+import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
-import org.greatage.ioc.mock.*;
+import org.greatage.ioc.mock.MockMessageService;
+import org.greatage.ioc.mock.MockMessageServiceImpl;
+import org.greatage.ioc.mock.MockTalkService;
+import org.greatage.ioc.mock.MockTalkServiceDelegate;
+import org.greatage.ioc.mock.MockTalkServiceImpl;
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
-import org.greatage.ioc.proxy.MethodAdvice;
 
 /**
  * @author Ivan Khalopik
@@ -45,10 +49,10 @@ public class MockInterceptModule {
 		return new MockTalkServiceDelegate(service, "[", "]");
 	}
 
-	@Intercept(service = MockTalkService.class)
+	@Decorate(service = MockTalkService.class)
 	@Order("first")
-	public MethodAdvice interceptTalkService() {
-		return new MethodAdvice() {
+	public Interceptor interceptTalkService() {
+		return new Interceptor() {
 			public boolean supports(final Invocation invocation) {
 				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
 			}
@@ -59,10 +63,10 @@ public class MockInterceptModule {
 		};
 	}
 
-	@Intercept(service = MockTalkService.class)
+	@Decorate(service = MockTalkService.class)
 	@Order(value = "second", constraints = "after:first")
-	public MethodAdvice interceptTalkService2() {
-		return new MethodAdvice() {
+	public Interceptor interceptTalkService2() {
+		return new Interceptor() {
 			public boolean supports(final Invocation invocation) {
 				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
 			}

@@ -16,8 +16,8 @@
 
 package org.greatage.security;
 
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
-import org.greatage.ioc.proxy.MethodAdvice;
 import org.greatage.security.annotations.Allow;
 import org.greatage.security.annotations.Deny;
 import org.greatage.security.annotations.Operation;
@@ -31,7 +31,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AuthoritySecurityAdvice implements MethodAdvice {
+public class AuthoritySecurityAdvice implements Interceptor {
 	private final SecurityContext securityContext;
 
 	public AuthoritySecurityAdvice(final SecurityContext securityContext) {

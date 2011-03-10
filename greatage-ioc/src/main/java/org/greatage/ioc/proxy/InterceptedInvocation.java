@@ -19,52 +19,44 @@ package org.greatage.ioc.proxy;
 import java.lang.reflect.Method;
 
 /**
- * This class represents {@link Invocation} implementation that is based on configured instance method invocation.
+ * This class represents {@link Invocation} proxy implementation that adds method advices logic to invocation delegate.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class MethodInvocation implements Invocation {
-	private final Object instance;
-	private final Method method;
-
-	private final Method realMethod;
+public class InterceptedInvocation implements Invocation {
+	private final Invocation delegate;
+	private final Interceptor interceptor;
 
 	/**
-	 * Creates new instance of method invocation with defined object instance, service and implementation methods.
+	 * Creates new instance of invocation proxy that adds method advices logic to invocation delegate.
 	 *
-	 * @param instance object instance
-	 * @param method   service method
+	 * @param delegate	invocation delegate
+	 * @param interceptor invocation method interceptor, can be null
 	 */
-	public MethodInvocation(final Object instance, final Method method) {
-		this.instance = instance;
-		this.method = method;
-
-		try {
-			this.realMethod = instance.getClass().getMethod(method.getName(), method.getParameterTypes());
-		} catch (NoSuchMethodException e) {
-			throw new IllegalArgumentException("Could not create invocation instance", e);
-		}
+	InterceptedInvocation(final Invocation delegate, final Interceptor interceptor) {
+		this.delegate = delegate;
+		this.interceptor = interceptor;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Method getMethod() {
-		return method;
+		return delegate.getMethod();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Method getRealMethod() {
-		return realMethod;
+		return delegate.getRealMethod();
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * {@inheritDoc} Adds method advices logic to invocation delegate.
 	 */
 	public Object proceed(final Object... parameters) throws Throwable {
-		return method.invoke(instance, parameters);
+		return interceptor.advice(delegate, parameters);
 	}
 }

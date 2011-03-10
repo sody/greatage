@@ -19,8 +19,8 @@ package org.greatage.ioc.proxy;
 import java.lang.reflect.Method;
 
 /**
- * This class represent method invocation in environment of {@link org.greatage.ioc.proxy.MethodAdvice}. It provides
- * information about method name, its signature and annotations.
+ * This class represent method invocation in environment of {@link Interceptor}. It provides information about method
+ * name, its signature and annotations.
  *
  * @author Ivan Khalopik
  * @since 1.0

@@ -30,19 +30,19 @@ import java.util.List;
  */
 public abstract class AbstractInvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
-	private final List<MethodAdvice> advices;
+	private final List<Interceptor> interceptors;
 
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
-	 * @param builder object builder
-	 * @param advices method advices
+	 * @param builder	  object builder
+	 * @param interceptors method interceptors
 	 */
-	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
 		assert builder != null;
 
 		this.builder = builder;
-		this.advices = advices;
+		this.interceptors = interceptors;
 	}
 
 	/**
@@ -55,17 +55,17 @@ public abstract class AbstractInvocationHandler<T> {
 	}
 
 	/**
-	 * Creates new invocation instance for specified method with defined method advices.
+	 * Creates new invocation instance for specified method with defined method interceptors.
 	 *
 	 * @param method method
-	 * @return new invocation instance for specified method with defined method advices
+	 * @return new invocation instance for specified method with defined method interceptors
 	 */
 	protected Invocation createInvocation(final Method method) {
-		Invocation invocation = new MethodInvocation(getDelegate(), method);
-		if (advices != null) {
-			for (MethodAdvice advice : advices) {
+		Invocation invocation = new InvocationImpl(getDelegate(), method);
+		if (interceptors != null) {
+			for (Interceptor advice : interceptors) {
 				if (advice.supports(invocation)) {
-					invocation = new AdvisedInvocation(invocation, advice);
+					invocation = new InterceptedInvocation(invocation, advice);
 				}
 			}
 		}
@@ -79,7 +79,7 @@ public abstract class AbstractInvocationHandler<T> {
 	public String toString() {
 		final DescriptionBuilder db = new DescriptionBuilder(getClass());
 		db.append("builder", builder);
-		db.append("advices", advices);
+		db.append("interceptors", interceptors);
 		return db.toString();
 	}
 }

@@ -22,7 +22,7 @@ package org.greatage.ioc.proxy;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface MethodAdvice {
+public interface Interceptor {
 
 	boolean supports(Invocation invocation);
 

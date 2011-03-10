@@ -17,14 +17,14 @@
 package org.greatage.domain;
 
 import org.greatage.domain.annotations.Transactional;
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
-import org.greatage.ioc.proxy.MethodAdvice;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TransactionalAdvice implements MethodAdvice {
+public class TransactionalAdvice implements Interceptor {
 	private final TransactionExecutor executor;
 
 	public TransactionalAdvice(final TransactionExecutor executor) {

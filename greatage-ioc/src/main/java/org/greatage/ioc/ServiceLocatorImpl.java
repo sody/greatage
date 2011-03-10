@@ -147,18 +147,18 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	private ServiceStatus<?> createServiceStatus(final Service<?> service,
 												 final Collection<Module> modules) {
 		final List<Contributor<?>> contributors = CollectionUtils.newList();
-		final List<Interceptor<?>> interceptors = CollectionUtils.newList();
+		final List<Decorator<?>> decorators = CollectionUtils.newList();
 		for (Module module : modules) {
 			contributors.addAll(module.getContributors(service));
-			interceptors.addAll(module.getInterceptors(service));
+			decorators.addAll(module.getDecorators(service));
 		}
 
 		final List<Contributor<?>> orderedContributors = OrderingUtils.order(contributors);
-		final List<Interceptor<?>> orderedInterceptors = OrderingUtils.order(interceptors);
+		final List<Decorator<?>> orderedDecorators = OrderingUtils.order(decorators);
 
 		return isInternal(service) ?
 				new InternalServiceStatus(this, service, orderedContributors) :
-				new ServiceStatusImpl(this, service, orderedContributors, orderedInterceptors);
+				new ServiceStatusImpl(this, service, orderedContributors, orderedDecorators);
 	}
 
 	/**

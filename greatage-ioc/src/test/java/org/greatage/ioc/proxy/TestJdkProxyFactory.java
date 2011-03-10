@@ -16,7 +16,12 @@
 
 package org.greatage.ioc.proxy;
 
-import org.greatage.ioc.mock.*;
+import org.greatage.ioc.mock.MockIOCInterface;
+import org.greatage.ioc.mock.MockIOCInterfaceImpl1;
+import org.greatage.ioc.mock.MockIOCInterfaceImpl2;
+import org.greatage.ioc.mock.MockIOCInterfaceImpl3;
+import org.greatage.ioc.mock.MockIOCInterfaceImpl4;
+import org.greatage.ioc.mock.MockObjectBuilder;
 import org.greatage.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -36,12 +41,14 @@ public class TestJdkProxyFactory extends Assert {
 	public Object[][] createProxyData() {
 		return new Object[][]{
 				{
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl1.class, "test1"),
+						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl1.class,
+								"test1"),
 						CollectionUtils.newList(),
 						"test", "test1"
 				},
 				{
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl2.class, "test2"),
+						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl2.class,
+								"test2"),
 						null,
 						"test", "test2"
 				},
@@ -53,12 +60,13 @@ public class TestJdkProxyFactory extends Assert {
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl3.class),
 						CollectionUtils.newList(
-								new MethodAdvice() {
+								new Interceptor() {
 									public boolean supports(final Invocation invocation) {
 										return true;
 									}
 
-									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+									public Object advice(final Invocation invocation, final Object... parameters)
+											throws Throwable {
 										return "advice:" + invocation.proceed(parameters);
 									}
 								}
@@ -66,23 +74,26 @@ public class TestJdkProxyFactory extends Assert {
 						"advice:test", "advice:" + MockIOCInterfaceImpl3.MESSAGE
 				},
 				{
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
+						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl4.class,
+								new MockIOCInterfaceImpl3()),
 						CollectionUtils.newList(
-								new MethodAdvice() {
+								new Interceptor() {
 									public boolean supports(final Invocation invocation) {
 										return true;
 									}
 
-									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+									public Object advice(final Invocation invocation, final Object... parameters)
+											throws Throwable {
 										return "advice1:" + invocation.proceed(parameters);
 									}
 								},
-								new MethodAdvice() {
+								new Interceptor() {
 									public boolean supports(final Invocation invocation) {
 										return true;
 									}
 
-									public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+									public Object advice(final Invocation invocation, final Object... parameters)
+											throws Throwable {
 										return "advice2:" + invocation.proceed(parameters);
 									}
 								}
@@ -96,23 +107,28 @@ public class TestJdkProxyFactory extends Assert {
 	public Object[][] createProxyWrongData() {
 		return new Object[][]{
 				{
-						new MockObjectBuilder<MockIOCInterfaceImpl1>(MockIOCInterfaceImpl1.class, MockIOCInterfaceImpl1.class, "test1"),
+						new MockObjectBuilder<MockIOCInterfaceImpl1>(MockIOCInterfaceImpl1.class,
+								MockIOCInterfaceImpl1.class, "test1"),
 						null
 				},
 				{
-						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class),
+						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class,
+								MockIOCInterfaceImpl2.class),
 						null
 				},
 				{
-						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class, "test3"),
+						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class,
+								MockIOCInterfaceImpl2.class, "test3"),
 						null
 				},
 				{
-						new MockObjectBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class, MockIOCInterfaceImpl3.class),
+						new MockObjectBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class,
+								MockIOCInterfaceImpl3.class),
 						null
 				},
 				{
-						new MockObjectBuilder<MockIOCInterfaceImpl4>(MockIOCInterfaceImpl4.class, MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
+						new MockObjectBuilder<MockIOCInterfaceImpl4>(MockIOCInterfaceImpl4.class,
+								MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
 						null
 				},
 		};
@@ -125,7 +141,7 @@ public class TestJdkProxyFactory extends Assert {
 
 	@Test(dataProvider = "createProxyData")
 	public void testCreateProxy(final ObjectBuilder<? extends MockIOCInterface> builder,
-								final List<MethodAdvice> advices,
+								final List<Interceptor> advices,
 								final String expected1,
 								final String expected2) {
 		final MockIOCInterface proxy = proxyFactory.createProxy(builder, advices);
@@ -135,10 +151,9 @@ public class TestJdkProxyFactory extends Assert {
 
 	@Test(dataProvider = "createProxyWrongData", expectedExceptions = IllegalArgumentException.class)
 	public void testCreateProxyWrong(final ObjectBuilder<? extends MockIOCInterface> builder,
-									 final List<MethodAdvice> advices) {
+									 final List<Interceptor> advices) {
 		final MockIOCInterface proxy = proxyFactory.createProxy(builder, advices);
 		proxy.say("test");
 		proxy.say();
 	}
-
 }

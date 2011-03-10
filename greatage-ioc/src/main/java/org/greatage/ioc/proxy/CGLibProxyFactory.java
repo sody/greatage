@@ -31,13 +31,13 @@ public class CGLibProxyFactory extends AbstractProxyFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T createProxy(final ObjectBuilder<T> objectBuilder, final List<MethodAdvice> advices) {
+	public <T> T createProxy(final ObjectBuilder<T> objectBuilder, final List<Interceptor> interceptors) {
 		validate(objectBuilder);
 
 		final Class superClass = objectBuilder.getObjectClass().isInterface() ?
 				Object.class :
 				objectBuilder.getObjectClass();
-		final CGLibInvocationHandler<T> handler = new CGLibInvocationHandler<T>(objectBuilder, advices);
+		final CGLibInvocationHandler<T> handler = new CGLibInvocationHandler<T>(objectBuilder, interceptors);
 		final Object proxy = objectBuilder.getObjectClass().isInterface() ?
 				Enhancer.create(superClass, new Class[]{objectBuilder.getObjectClass()}, handler) :
 				Enhancer.create(superClass, handler);

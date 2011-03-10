@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @see org.greatage.ioc.Service
  * @see org.greatage.ioc.Contributor
- * @see org.greatage.ioc.Interceptor
+ * @see Decorator
  * @since 1.0
  */
 public interface Module {
@@ -56,5 +56,5 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
-	<T> List<Interceptor<T>> getInterceptors(Service<T> service);
+	<T> List<Decorator<T>> getDecorators(Service<T> service);
 }

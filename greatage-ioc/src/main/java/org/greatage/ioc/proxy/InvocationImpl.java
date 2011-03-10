@@ -19,44 +19,52 @@ package org.greatage.ioc.proxy;
 import java.lang.reflect.Method;
 
 /**
- * This class represents {@link Invocation} proxy implementation that adds method advices logic to invocation delegate.
+ * This class represents {@link Invocation} implementation that is based on configured instance method invocation.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AdvisedInvocation implements Invocation {
-	private final Invocation delegate;
-	private final MethodAdvice advice;
+public class InvocationImpl implements Invocation {
+	private final Object instance;
+	private final Method method;
+
+	private final Method realMethod;
 
 	/**
-	 * Creates new instance of invocation proxy that adds method advices logic to invocation delegate.
+	 * Creates new instance of method invocation with defined object instance, service and implementation methods.
 	 *
-	 * @param delegate invocation delegate
-	 * @param advice   invocation method advice, can be null
+	 * @param instance object instance
+	 * @param method   service method
 	 */
-	public AdvisedInvocation(final Invocation delegate, final MethodAdvice advice) {
-		this.delegate = delegate;
-		this.advice = advice;
+	InvocationImpl(final Object instance, final Method method) {
+		this.instance = instance;
+		this.method = method;
+
+		try {
+			this.realMethod = instance.getClass().getMethod(method.getName(), method.getParameterTypes());
+		} catch (NoSuchMethodException e) {
+			throw new IllegalArgumentException("Could not create invocation instance", e);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Method getMethod() {
-		return delegate.getMethod();
+		return method;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Method getRealMethod() {
-		return delegate.getRealMethod();
+		return realMethod;
 	}
 
 	/**
-	 * {@inheritDoc} Adds method advices logic to invocation delegate.
+	 * {@inheritDoc}
 	 */
 	public Object proceed(final Object... parameters) throws Throwable {
-		return advice.advice(delegate, parameters);
+		return method.invoke(instance, parameters);
 	}
 }

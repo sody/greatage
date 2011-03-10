@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Intercept {
+public @interface Decorate {
 
 	/**
 	 * This property defines service alias (class name) that represents service unique id.

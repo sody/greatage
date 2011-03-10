@@ -58,11 +58,11 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T createProxy(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
+	public <T> T createProxy(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
 		validate(builder);
 
 		final Class<T> proxyClass = createProxyClass(builder);
-		return ReflectionUtils.newInstance(proxyClass, builder, advices);
+		return ReflectionUtils.newInstance(proxyClass, builder, interceptors);
 	}
 
 	/**

@@ -16,7 +16,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.proxy.MethodAdvice;
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.util.DescriptionBuilder;
@@ -36,7 +36,7 @@ import java.util.List;
 public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	private final ServiceResources<T> resources;
 	private final ObjectBuilder<T> builder;
-	private final List<Interceptor<T>> interceptors;
+	private final List<Decorator<T>> decorators;
 
 	private final Locker locker = new Locker();
 
@@ -49,16 +49,16 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 * @param locator	  service locator
 	 * @param service	  service definition
 	 * @param contributors service contributors
-	 * @param interceptors service interceptors
+	 * @param decorators   service decorators
 	 */
 	ServiceStatusImpl(final ServiceLocator locator,
 					  final Service<T> service,
 					  final List<Contributor<T>> contributors,
-					  final List<Interceptor<T>> interceptors) {
+					  final List<Decorator<T>> decorators) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
 		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, contributors);
 		this.builder = new ScopedBuilder<T>(resources, serviceBuilder);
-		this.interceptors = interceptors;
+		this.decorators = decorators;
 	}
 
 	/**
@@ -89,7 +89,7 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 		if (serviceInstance == null) {
 			locker.lock();
 			final ProxyFactory proxyFactory = resources.getResource(ProxyFactory.class);
-			serviceInstance = proxyFactory.createProxy(builder, createAdvices());
+			serviceInstance = proxyFactory.createProxy(builder, createInterceptors());
 		}
 		return serviceInstance;
 	}
@@ -99,13 +99,13 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 *
 	 * @return list of method advices for service or empty list
 	 */
-	private List<MethodAdvice> createAdvices() {
-		final List<MethodAdvice> advices = new ArrayList<MethodAdvice>();
-		for (Interceptor<T> interceptor : interceptors) {
-			final MethodAdvice advice = interceptor.intercept(resources);
-			advices.add(advice);
+	private List<Interceptor> createInterceptors() {
+		final List<Interceptor> interceptors = new ArrayList<Interceptor>();
+		for (Decorator<T> decorator : decorators) {
+			final Interceptor interceptor = decorator.decorate(resources);
+			interceptors.add(interceptor);
 		}
-		return advices;
+		return interceptors;
 	}
 
 	/**
