@@ -34,7 +34,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ContributorImpl<T> implements Contributor<T> {
+public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	private final Class<?> moduleClass;
 	private final Method configureMethod;
 
@@ -55,7 +55,7 @@ public class ContributorImpl<T> implements Contributor<T> {
 	 * @param configureMethod module method used for service configuration
 	 * @throws ApplicationException if configure method doesn't correspond to requirements
 	 */
-	ContributorImpl(final Logger logger, final Class<?> moduleClass, final Method configureMethod) {
+	ServiceContributorImpl(final Logger logger, final Class<?> moduleClass, final Method configureMethod) {
 		this.logger = logger;
 		this.moduleClass = moduleClass;
 		this.configureMethod = configureMethod;

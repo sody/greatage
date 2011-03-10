@@ -31,7 +31,7 @@ import org.greatage.ioc.proxy.Invocation;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class MockInterceptModule {
+public class MockDecorateModule {
 
 	@Build
 	public MockMessageService buildMessageService() {

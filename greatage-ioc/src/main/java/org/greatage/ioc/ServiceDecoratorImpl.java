@@ -35,7 +35,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class DecoratorImpl<T> implements Decorator<T> {
+public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	private final Class<?> moduleClass;
 	private final Method decorateMethod;
 
@@ -57,7 +57,7 @@ public class DecoratorImpl<T> implements Decorator<T> {
 	 * @param moduleClass	module class
 	 * @param decorateMethod module method used for service interception
 	 */
-	DecoratorImpl(final Logger logger, final Class<?> moduleClass, final Method decorateMethod) {
+	ServiceDecoratorImpl(final Logger logger, final Class<?> moduleClass, final Method decorateMethod) {
 		this.logger = logger;
 		this.moduleClass = moduleClass;
 		this.decorateMethod = decorateMethod;

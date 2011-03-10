@@ -26,7 +26,7 @@ import org.greatage.util.Ordered;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface Contributor<T> extends Ordered {
+public interface ServiceContributor<T> extends Ordered {
 
 	/**
 	 * Checks if this service contribution definition supports specified service.

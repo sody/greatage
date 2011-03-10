@@ -26,9 +26,9 @@ import java.util.List;
  * modules.
  *
  * @author Ivan Khalopik
- * @see org.greatage.ioc.Service
- * @see org.greatage.ioc.Contributor
- * @see Decorator
+ * @see Service
+ * @see ServiceContributor
+ * @see ServiceDecorator
  * @since 1.0
  */
 public interface Module {
@@ -47,7 +47,7 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service contributor definitions for specified service or empty list
 	 */
-	<T> List<Contributor<T>> getContributors(Service<T> service);
+	<T> List<ServiceContributor<T>> getContributors(Service<T> service);
 
 	/**
 	 * Gets an ordered list of all service interceptor definitions for specified service.
@@ -56,5 +56,5 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
-	<T> List<Decorator<T>> getDecorators(Service<T> service);
+	<T> List<ServiceDecorator<T>> getDecorators(Service<T> service);
 }

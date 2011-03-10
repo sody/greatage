@@ -30,7 +30,7 @@ import org.greatage.util.Ordered;
  * @see org.greatage.ioc.proxy.Interceptor
  * @since 1.0
  */
-public interface Decorator<T> extends Ordered {
+public interface ServiceDecorator<T> extends Ordered {
 
 	/**
 	 * Checks if this service interceptor definition supports specified service.

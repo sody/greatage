@@ -20,7 +20,7 @@ import org.apache.tapestry5.ioc.ObjectCreator;
 import org.apache.tapestry5.ioc.ScopeConstants;
 import org.apache.tapestry5.ioc.ServiceBuilderResources;
 import org.apache.tapestry5.ioc.def.ServiceDef;
-import org.greatage.ioc.ServiceStatus;
+import org.greatage.ioc.ServiceProvider;
 
 import java.util.Collections;
 import java.util.Set;
@@ -30,9 +30,9 @@ import java.util.Set;
  * @since 1.0
  */
 public class GreatAgeServiceDef implements ServiceDef {
-	private final ServiceStatus service;
+	private final ServiceProvider service;
 
-	public GreatAgeServiceDef(final ServiceStatus service) {
+	public GreatAgeServiceDef(final ServiceProvider service) {
 		this.service = service;
 	}
 

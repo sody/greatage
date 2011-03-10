@@ -26,17 +26,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents implementation of {@link ServiceStatus} that is used by default for all services. It lazily
+ * This class represents implementation of {@link ServiceProvider} that is used by default for all services. It lazily
  * creates, configures, decorates and intercepts service using {@link ProxyFactory} service and scoped builder.
  *
  * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceStatusImpl<T> implements ServiceStatus<T> {
+public class ServiceProviderImpl<T> implements ServiceProvider<T> {
 	private final ServiceResources<T> resources;
 	private final ObjectBuilder<T> builder;
-	private final List<Decorator<T>> decorators;
+	private final List<ServiceDecorator<T>> decorators;
 
 	private final Locker locker = new Locker();
 
@@ -51,13 +51,13 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 * @param contributors service contributors
 	 * @param decorators   service decorators
 	 */
-	ServiceStatusImpl(final ServiceLocator locator,
-					  final Service<T> service,
-					  final List<Contributor<T>> contributors,
-					  final List<Decorator<T>> decorators) {
+	ServiceProviderImpl(final ServiceLocator locator,
+						final Service<T> service,
+						final List<ServiceContributor<T>> contributors,
+						final List<ServiceDecorator<T>> decorators) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, contributors);
-		this.builder = new ScopedBuilder<T>(resources, serviceBuilder);
+		final ConfiguredBuilder<T> configuredBuilder = new ConfiguredBuilder<T>(resources, service, contributors);
+		this.builder = new ScopedBuilder<T>(resources, configuredBuilder);
 		this.decorators = decorators;
 	}
 
@@ -101,7 +101,7 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 */
 	private List<Interceptor> createInterceptors() {
 		final List<Interceptor> interceptors = new ArrayList<Interceptor>();
-		for (Decorator<T> decorator : decorators) {
+		for (ServiceDecorator<T> decorator : decorators) {
 			final Interceptor interceptor = decorator.decorate(resources);
 			interceptors.add(interceptor);
 		}

@@ -38,8 +38,8 @@ import java.util.List;
  */
 public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Service> services = CollectionUtils.newList();
-	private final List<Contributor> contributors = CollectionUtils.newList();
-	private final List<Decorator> decorators = CollectionUtils.newList();
+	private final List<ServiceContributor> contributors = CollectionUtils.newList();
+	private final List<ServiceDecorator> decorators = CollectionUtils.newList();
 
 	/**
 	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
@@ -56,9 +56,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 			if (method.isAnnotationPresent(Build.class)) {
 				services.add(new ServiceFactory(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
-				contributors.add(new ContributorImpl(logger, moduleClass, method));
+				contributors.add(new ServiceContributorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
-				decorators.add(new DecoratorImpl(logger, moduleClass, method));
+				decorators.add(new ServiceDecoratorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
@@ -81,9 +81,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<Contributor<T>> getContributors(final Service<T> service) {
-		final List<Contributor<T>> result = CollectionUtils.newList();
-		for (Contributor contributor : contributors) {
+	public <T> List<ServiceContributor<T>> getContributors(final Service<T> service) {
+		final List<ServiceContributor<T>> result = CollectionUtils.newList();
+		for (ServiceContributor contributor : contributors) {
 			if (contributor.supports(service)) {
 				//noinspection unchecked
 				result.add(contributor);
@@ -95,9 +95,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<Decorator<T>> getDecorators(final Service<T> service) {
-		final List<Decorator<T>> result = CollectionUtils.newList();
-		for (Decorator decorator : decorators) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final Service<T> service) {
+		final List<ServiceDecorator<T>> result = CollectionUtils.newList();
+		for (ServiceDecorator decorator : decorators) {
 			if (decorator.supports(service)) {
 				//noinspection unchecked
 				result.add(decorator);

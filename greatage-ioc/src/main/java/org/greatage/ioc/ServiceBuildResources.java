@@ -32,7 +32,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class ServiceBuildResources<T> extends ServiceAdditionalResources<T> {
-	private final List<Contributor<T>> contributors;
+	private final List<ServiceContributor<T>> contributors;
 	private final Locker locker = new Locker();
 
 	/**
@@ -42,7 +42,7 @@ public class ServiceBuildResources<T> extends ServiceAdditionalResources<T> {
 	 * @param delegate	 service resources delegate
 	 * @param contributors service contributors
 	 */
-	ServiceBuildResources(final ServiceResources<T> delegate, final List<Contributor<T>> contributors) {
+	ServiceBuildResources(final ServiceResources<T> delegate, final List<ServiceContributor<T>> contributors) {
 		super(delegate);
 		this.contributors = contributors;
 	}
@@ -113,7 +113,7 @@ public class ServiceBuildResources<T> extends ServiceAdditionalResources<T> {
 	 */
 	private void configure(final Object configuration) {
 		final ServiceConfigureResources<T> resources = new ServiceConfigureResources<T>(getDelegate(), configuration);
-		for (Contributor<T> contributor : contributors) {
+		for (ServiceContributor<T> contributor : contributors) {
 			contributor.contribute(resources);
 		}
 	}

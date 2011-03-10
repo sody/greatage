@@ -28,10 +28,10 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceBuilder<T> implements ObjectBuilder<T> {
+public class ConfiguredBuilder<T> implements ObjectBuilder<T> {
 	private final Service<T> service;
 	private final ServiceResources<T> resources;
-	private final List<Contributor<T>> contributors;
+	private final List<ServiceContributor<T>> contributors;
 
 	/**
 	 * Creates new instance of service builder with defined initial service resources, service, contributors and decorators
@@ -41,9 +41,9 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	 * @param service	  service definition
 	 * @param contributors service contributor definitions
 	 */
-	ServiceBuilder(final ServiceResources<T> resources,
-				   final Service<T> service,
-				   final List<Contributor<T>> contributors) {
+	ConfiguredBuilder(final ServiceResources<T> resources,
+					  final Service<T> service,
+					  final List<ServiceContributor<T>> contributors) {
 		this.service = service;
 		this.resources = resources;
 		this.contributors = contributors;
