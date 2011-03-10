@@ -17,7 +17,7 @@
 package org.greatage.ioc.proxy;
 
 /**
- * This class represent method advice that is used to advice object proxy methods with some additional functionality.
+ * This class represent method invoke that is used to invoke object proxy methods with some additional functionality.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -32,7 +32,7 @@ public interface Interceptor {
 	 * @param invocation method invocation
 	 * @param parameters invocation parameters
 	 * @return method return result
-	 * @throws Throwable when error occurs during invocation or may be added by this method advice
+	 * @throws Throwable when error occurs during invocation or may be added by this method invoke
 	 */
-	Object advice(Invocation invocation, Object... parameters) throws Throwable;
+	Object invoke(Invocation invocation, Object... parameters) throws Throwable;
 }

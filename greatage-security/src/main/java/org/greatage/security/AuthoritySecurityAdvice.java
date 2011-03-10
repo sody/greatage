@@ -43,7 +43,7 @@ public class AuthoritySecurityAdvice implements Interceptor {
 		return realMethod.isAnnotationPresent(Allow.class) || realMethod.isAnnotationPresent(Deny.class);
 	}
 
-	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 		final Method realMethod = invocation.getRealMethod();
 		final Allow allow = realMethod.getAnnotation(Allow.class);
 		final Deny deny = realMethod.getAnnotation(Deny.class);

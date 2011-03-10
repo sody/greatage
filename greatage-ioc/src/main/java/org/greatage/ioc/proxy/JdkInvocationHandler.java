@@ -43,6 +43,6 @@ public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T>
 	 * {@inheritDoc} Delegates all method invocations to delegate instance.
 	 */
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-		return createInvocation(method).proceed(args);
+		return getInvocation(method).proceed(args);
 	}
 }

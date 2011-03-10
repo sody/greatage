@@ -57,7 +57,7 @@ public class MockDecorateModule {
 				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
 			}
 
-			public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 				return "deprecated1:" + invocation.proceed(parameters);
 			}
 		};
@@ -71,7 +71,7 @@ public class MockDecorateModule {
 				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
 			}
 
-			public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 				return "deprecated2:" + invocation.proceed(parameters);
 			}
 		};

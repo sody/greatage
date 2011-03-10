@@ -56,6 +56,6 @@ public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> 
 	 */
 	@SuppressWarnings("UnusedDeclaration")
 	public Object invoke(final Method method, final Object... parameters) throws Throwable {
-		return createInvocation(method).proceed(parameters);
+		return getInvocation(method).proceed(parameters);
 	}
 }

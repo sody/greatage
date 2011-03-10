@@ -16,8 +16,6 @@
 
 package org.greatage.ioc.proxy;
 
-import java.util.List;
-
 /**
  * This class represents utility producing proxy creation around object builders that instantiates the actual object
  * only as needed with all configured method advices.
@@ -33,9 +31,8 @@ public interface ProxyFactory {
 	 *
 	 * @param objectBuilder object builder
 	 * @param interceptors  method interceptors
-	 * @param <T>           type of proxy object
 	 * @return proxy around specified object builder
 	 * @throws RuntimeException if proxy creation is impossible or if an error occurs instantiating it
 	 */
-	<T> T createProxy(ObjectBuilder<T> objectBuilder, List<Interceptor> interceptors);
+	<T> T createProxy(ObjectBuilder<T> objectBuilder, Interceptor... interceptors);
 }

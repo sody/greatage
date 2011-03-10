@@ -44,7 +44,7 @@ public interface ServiceDecorator<T> extends Ordered {
 	 * Configures service method advices using service resource.
 	 *
 	 * @param resources service resources
-	 * @return service method advice
+	 * @return service method invoke
 	 * @throws ApplicationException if error occurs while creating method interceptor
 	 */
 	Interceptor decorate(ServiceResources<T> resources);

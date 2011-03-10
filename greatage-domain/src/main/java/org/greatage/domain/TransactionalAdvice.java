@@ -35,7 +35,7 @@ public class TransactionalAdvice implements Interceptor {
 		return invocation.getRealMethod().isAnnotationPresent(Transactional.class);
 	}
 
-	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
+	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 		final Transaction transaction = executor.begin();
 		try {
 			final Object result = invocation.proceed(parameters);

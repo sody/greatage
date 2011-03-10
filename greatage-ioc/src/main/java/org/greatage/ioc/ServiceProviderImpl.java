@@ -22,7 +22,6 @@ import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.Locker;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -99,11 +98,11 @@ public class ServiceProviderImpl<T> implements ServiceProvider<T> {
 	 *
 	 * @return list of method advices for service or empty list
 	 */
-	private List<Interceptor> createInterceptors() {
-		final List<Interceptor> interceptors = new ArrayList<Interceptor>();
+	private Interceptor[] createInterceptors() {
+		int i = 0;
+		final Interceptor[] interceptors = new Interceptor[decorators.size()];
 		for (ServiceDecorator<T> decorator : decorators) {
-			final Interceptor interceptor = decorator.decorate(resources);
-			interceptors.add(interceptor);
+			interceptors[i++] = decorator.decorate(resources);
 		}
 		return interceptors;
 	}

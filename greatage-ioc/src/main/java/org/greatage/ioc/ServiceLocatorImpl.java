@@ -90,7 +90,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ServiceProvider<?> getServiceStatus(final String id) {
+	public ServiceProvider<?> getServiceProvider(final String id) {
 		return servicesById.get(id);
 	}
 

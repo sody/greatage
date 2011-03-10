@@ -22,13 +22,10 @@ import org.greatage.ioc.mock.MockIOCInterfaceImpl2;
 import org.greatage.ioc.mock.MockIOCInterfaceImpl3;
 import org.greatage.ioc.mock.MockIOCInterfaceImpl4;
 import org.greatage.ioc.mock.MockObjectBuilder;
-import org.greatage.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 /**
  * @author Ivan Khalopik
@@ -42,47 +39,42 @@ public class TestJdkProxyFactory extends Assert {
 		return new Object[][]{
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl1.class,
-								"test1"),
-						CollectionUtils.newList(),
-						"test", "test1"
+								"test1"), new Interceptor[]{}, "test", "test1"
 				},
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl2.class,
-								"test2"),
-						null,
-						"test", "test2"
+								"test2"), null, "test", "test2"
 				},
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl2.class),
-						null,
-						"test", null
+						null, "test", null
 				},
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl3.class),
-						CollectionUtils.newList(
+						new Interceptor[]{
 								new Interceptor() {
 									public boolean supports(final Invocation invocation) {
 										return true;
 									}
 
-									public Object advice(final Invocation invocation, final Object... parameters)
+									public Object invoke(final Invocation invocation, final Object... parameters)
 											throws Throwable {
-										return "advice:" + invocation.proceed(parameters);
+										return "invoke:" + invocation.proceed(parameters);
 									}
 								}
-						),
-						"advice:test", "advice:" + MockIOCInterfaceImpl3.MESSAGE
+						},
+						"invoke:test", "invoke:" + MockIOCInterfaceImpl3.MESSAGE
 				},
 				{
 						new MockObjectBuilder<MockIOCInterface>(MockIOCInterface.class, MockIOCInterfaceImpl4.class,
 								new MockIOCInterfaceImpl3()),
-						CollectionUtils.newList(
+						new Interceptor[]{
 								new Interceptor() {
 									public boolean supports(final Invocation invocation) {
 										return true;
 									}
 
-									public Object advice(final Invocation invocation, final Object... parameters)
+									public Object invoke(final Invocation invocation, final Object... parameters)
 											throws Throwable {
 										return "advice1:" + invocation.proceed(parameters);
 									}
@@ -92,12 +84,12 @@ public class TestJdkProxyFactory extends Assert {
 										return true;
 									}
 
-									public Object advice(final Invocation invocation, final Object... parameters)
+									public Object invoke(final Invocation invocation, final Object... parameters)
 											throws Throwable {
 										return "advice2:" + invocation.proceed(parameters);
 									}
 								}
-						),
+						},
 						"advice2:advice1:test", "advice2:advice1:" + MockIOCInterfaceImpl3.MESSAGE
 				},
 		};
@@ -141,7 +133,7 @@ public class TestJdkProxyFactory extends Assert {
 
 	@Test(dataProvider = "createProxyData")
 	public void testCreateProxy(final ObjectBuilder<? extends MockIOCInterface> builder,
-								final List<Interceptor> advices,
+								final Interceptor[] advices,
 								final String expected1,
 								final String expected2) {
 		final MockIOCInterface proxy = proxyFactory.createProxy(builder, advices);
@@ -151,7 +143,7 @@ public class TestJdkProxyFactory extends Assert {
 
 	@Test(dataProvider = "createProxyWrongData", expectedExceptions = IllegalArgumentException.class)
 	public void testCreateProxyWrong(final ObjectBuilder<? extends MockIOCInterface> builder,
-									 final List<Interceptor> advices) {
+									 final Interceptor[] advices) {
 		final MockIOCInterface proxy = proxyFactory.createProxy(builder, advices);
 		proxy.say("test");
 		proxy.say();

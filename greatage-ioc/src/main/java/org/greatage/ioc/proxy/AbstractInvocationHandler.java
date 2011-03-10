@@ -16,10 +16,12 @@
 
 package org.greatage.ioc.proxy;
 
+import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents utility for lazy creation of object from object builder.
@@ -32,15 +34,15 @@ public abstract class AbstractInvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
 	private final List<Interceptor> interceptors;
 
+	private final Map<Method, Invocation> invocations = CollectionUtils.newConcurrentMap();
+
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
-	 * @param builder	  object builder
+	 * @param builder	  object builder, not null
 	 * @param interceptors method interceptors
 	 */
 	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
-		assert builder != null;
-
 		this.builder = builder;
 		this.interceptors = interceptors;
 	}
@@ -60,16 +62,19 @@ public abstract class AbstractInvocationHandler<T> {
 	 * @param method method
 	 * @return new invocation instance for specified method with defined method interceptors
 	 */
-	protected Invocation createInvocation(final Method method) {
-		Invocation invocation = new InvocationImpl(getDelegate(), method);
-		if (interceptors != null) {
-			for (Interceptor advice : interceptors) {
-				if (advice.supports(invocation)) {
-					invocation = new InterceptedInvocation(invocation, advice);
+	protected Invocation getInvocation(final Method method) {
+		if (!invocations.containsKey(method)) {
+			Invocation invocation = new InvocationImpl(getDelegate(), method);
+			if (interceptors != null) {
+				for (Interceptor interceptor : interceptors) {
+					if (interceptor.supports(invocation)) {
+						invocation = new InterceptedInvocation(invocation, interceptor);
+					}
 				}
 			}
+			invocations.put(method, invocation);
 		}
-		return invocation;
+		return invocations.get(method);
 	}
 
 	/**

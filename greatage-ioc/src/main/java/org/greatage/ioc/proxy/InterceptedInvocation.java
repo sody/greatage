@@ -57,6 +57,6 @@ public class InterceptedInvocation implements Invocation {
 	 * {@inheritDoc} Adds method advices logic to invocation delegate.
 	 */
 	public Object proceed(final Object... parameters) throws Throwable {
-		return interceptor.advice(delegate, parameters);
+		return interceptor.invoke(delegate, parameters);
 	}
 }
