@@ -25,26 +25,25 @@ import java.lang.reflect.Method;
  * @since 1.0
  */
 public class InvocationImpl implements Invocation {
-	private final Object instance;
+	private final Object target;
 	private final Method method;
 
-	private final Method realMethod;
+	/**
+	 * Creates new instance of method invocation with defined target instance and invocation method.
+	 *
+	 * @param target object instance
+	 * @param method invocation method
+	 */
+	InvocationImpl(final Object target, final Method method) {
+		this.target = target;
+		this.method = method;
+	}
 
 	/**
-	 * Creates new instance of method invocation with defined object instance, service and implementation methods.
-	 *
-	 * @param instance object instance
-	 * @param method   service method
+	 * {@inheritDoc}
 	 */
-	InvocationImpl(final Object instance, final Method method) {
-		this.instance = instance;
-		this.method = method;
-
-		try {
-			this.realMethod = instance.getClass().getMethod(method.getName(), method.getParameterTypes());
-		} catch (NoSuchMethodException e) {
-			throw new IllegalArgumentException("Could not create invocation instance", e);
-		}
+	public Object getTarget() {
+		return target;
 	}
 
 	/**
@@ -57,14 +56,7 @@ public class InvocationImpl implements Invocation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Method getRealMethod() {
-		return realMethod;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Object proceed(final Object... parameters) throws Throwable {
-		return method.invoke(instance, parameters);
+		return method.invoke(target, parameters);
 	}
 }

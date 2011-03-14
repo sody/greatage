@@ -27,9 +27,9 @@ import java.lang.reflect.Method;
  */
 public interface Invocation {
 
-	Method getMethod();
+	Object getTarget();
 
-	Method getRealMethod();
+	Method getMethod();
 
 	/**
 	 * Proceeds an underlying method invocation with specified parameters.

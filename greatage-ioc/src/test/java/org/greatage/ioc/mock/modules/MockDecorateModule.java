@@ -54,7 +54,7 @@ public class MockDecorateModule {
 	public Interceptor interceptTalkService() {
 		return new Interceptor() {
 			public boolean supports(final Invocation invocation) {
-				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
+				return invocation.getMethod().isAnnotationPresent(Deprecated.class);
 			}
 
 			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
@@ -68,7 +68,7 @@ public class MockDecorateModule {
 	public Interceptor interceptTalkService2() {
 		return new Interceptor() {
 			public boolean supports(final Invocation invocation) {
-				return invocation.getRealMethod().isAnnotationPresent(Deprecated.class);
+				return invocation.getMethod().isAnnotationPresent(Deprecated.class);
 			}
 
 			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {

@@ -39,14 +39,14 @@ public class AuthoritySecurityAdvice implements Interceptor {
 	}
 
 	public boolean supports(final Invocation invocation) {
-		final Method realMethod = invocation.getRealMethod();
-		return realMethod.isAnnotationPresent(Allow.class) || realMethod.isAnnotationPresent(Deny.class);
+		final Method method = invocation.getMethod();
+		return method.isAnnotationPresent(Allow.class) || method.isAnnotationPresent(Deny.class);
 	}
 
 	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
-		final Method realMethod = invocation.getRealMethod();
-		final Allow allow = realMethod.getAnnotation(Allow.class);
-		final Deny deny = realMethod.getAnnotation(Deny.class);
+		final Method method = invocation.getMethod();
+		final Allow allow = method.getAnnotation(Allow.class);
+		final Deny deny = method.getAnnotation(Deny.class);
 		if (allow != null || deny != null) {
 			final List<String> authorities = getAuthorities();
 			if (allow != null) {

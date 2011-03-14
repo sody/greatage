@@ -64,15 +64,21 @@ public abstract class AbstractInvocationHandler<T> {
 	 */
 	protected Invocation getInvocation(final Method method) {
 		if (!invocations.containsKey(method)) {
-			Invocation invocation = new InvocationImpl(getDelegate(), method);
-			if (interceptors != null) {
-				for (Interceptor interceptor : interceptors) {
-					if (interceptor.supports(invocation)) {
-						invocation = new InterceptedInvocation(invocation, interceptor);
+			try {
+				final T target = getDelegate();
+				final Method realMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
+				Invocation invocation = new InvocationImpl(target, realMethod);
+				if (interceptors != null) {
+					for (Interceptor interceptor : interceptors) {
+						if (interceptor.supports(invocation)) {
+							invocation = new InterceptedInvocation(invocation, interceptor);
+						}
 					}
 				}
+				invocations.put(method, invocation);
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException("Could not create invocation instance", e);
 			}
-			invocations.put(method, invocation);
 		}
 		return invocations.get(method);
 	}

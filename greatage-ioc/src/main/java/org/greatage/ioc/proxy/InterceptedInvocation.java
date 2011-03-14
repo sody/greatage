@@ -42,15 +42,15 @@ public class InterceptedInvocation implements Invocation {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Method getMethod() {
-		return delegate.getMethod();
+	public Object getTarget() {
+		return delegate.getTarget();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Method getRealMethod() {
-		return delegate.getRealMethod();
+	public Method getMethod() {
+		return delegate.getMethod();
 	}
 
 	/**

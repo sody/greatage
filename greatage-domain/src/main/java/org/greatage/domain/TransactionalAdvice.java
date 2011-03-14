@@ -32,7 +32,7 @@ public class TransactionalAdvice implements Interceptor {
 	}
 
 	public boolean supports(final Invocation invocation) {
-		return invocation.getRealMethod().isAnnotationPresent(Transactional.class);
+		return invocation.getMethod().isAnnotationPresent(Transactional.class);
 	}
 
 	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
