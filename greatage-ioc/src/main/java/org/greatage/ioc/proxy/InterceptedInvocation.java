@@ -16,7 +16,7 @@
 
 package org.greatage.ioc.proxy;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
  * This class represents {@link Invocation} proxy implementation that adds method advices logic to invocation delegate.
@@ -24,53 +24,39 @@ import java.lang.annotation.Annotation;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AdvisedInvocation implements Invocation {
+public class InterceptedInvocation implements Invocation {
 	private final Invocation delegate;
-	private final MethodAdvice advice;
+	private final Interceptor interceptor;
 
 	/**
 	 * Creates new instance of invocation proxy that adds method advices logic to invocation delegate.
 	 *
-	 * @param delegate invocation delegate
-	 * @param advice   invocation method advice, can be null
+	 * @param delegate	invocation delegate
+	 * @param interceptor invocation method interceptor, can be null
 	 */
-	public AdvisedInvocation(final Invocation delegate, final MethodAdvice advice) {
+	InterceptedInvocation(final Invocation delegate, final Interceptor interceptor) {
 		this.delegate = delegate;
-		this.advice = advice;
+		this.interceptor = interceptor;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getName() {
-		return delegate.getName();
+	public Object getTarget() {
+		return delegate.getTarget();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T extends Annotation> T getAnnotation(final Class<T> annotationClass) {
-		return delegate.getAnnotation(annotationClass);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?> getReturnType() {
-		return delegate.getReturnType();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<?>[] getParameterTypes() {
-		return delegate.getParameterTypes();
+	public Method getMethod() {
+		return delegate.getMethod();
 	}
 
 	/**
 	 * {@inheritDoc} Adds method advices logic to invocation delegate.
 	 */
 	public Object proceed(final Object... parameters) throws Throwable {
-		return advice.advice(delegate, parameters);
+		return interceptor.invoke(delegate, parameters);
 	}
 }

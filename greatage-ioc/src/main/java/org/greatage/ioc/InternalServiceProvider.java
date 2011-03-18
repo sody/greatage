@@ -21,8 +21,8 @@ import org.greatage.ioc.proxy.ObjectBuilder;
 import java.util.List;
 
 /**
- * This class represents implementation of {@link ServiceStatus} that is used for internal services. Such services have
- * specific scope - something similar with global and can not be intercepted. They include {@link
+ * This class represents implementation of {@link ServiceProvider} that is used for internal services. Such services
+ * have specific scope - something similar with global and can not be intercepted. They include {@link
  * org.greatage.ioc.proxy.ProxyFactory}, {@link org.greatage.ioc.logging.LoggerSource}, {@link
  * org.greatage.ioc.scope.ScopeManager}.
  *
@@ -30,7 +30,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class InternalServiceStatus<T> implements ServiceStatus<T> {
+public class InternalServiceProvider<T> implements ServiceProvider<T> {
 	private final ServiceResources<T> resources;
 	private final ObjectBuilder<T> builder;
 	private T serviceInstance;
@@ -42,14 +42,12 @@ public class InternalServiceStatus<T> implements ServiceStatus<T> {
 	 * @param locator	  service locator
 	 * @param service	  service definition
 	 * @param contributors service contribute definitions
-	 * @param decorators   service decorate definitions
 	 */
-	InternalServiceStatus(final ServiceLocator locator,
-						  final Service<T> service,
-						  final List<Contributor<T>> contributors,
-						  final List<Decorator<T>> decorators) {
+	InternalServiceProvider(final ServiceLocator locator,
+							final Service<T> service,
+							final List<ServiceContributor<T>> contributors) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		this.builder = new ServiceBuilder<T>(resources, service, contributors, decorators);
+		this.builder = new ConfiguredBuilder<T>(resources, service, contributors);
 	}
 
 	/**

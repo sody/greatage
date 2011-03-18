@@ -40,7 +40,7 @@ public interface ServiceLocator {
 	 * @param id unique service id
 	 * @return service status or null if not found
 	 */
-	ServiceStatus<?> getServiceStatus(String id);
+	ServiceProvider<?> getServiceProvider(String id);
 
 	/**
 	 * Gets a service instance by specified service id. It returns the service's proxy that implements the same interface

@@ -23,9 +23,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation marks methods inside the IoC module as service decorate points that decorates services with specified
- * service id or service interface. Such methods can get as arguments other services, existing service
- * instance,collection, list and map for unordered, ordered and mapped configurations respectively.
+ * This annotation marks methods inside the IoC module as service invoke points that will invoke service methods with
+ * specified unique id or service interface. Such methods can get as arguments other services, collection, list and map
+ * for unordered, ordered and mapped configurations respectively.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -46,7 +46,7 @@ public @interface Decorate {
 	String id() default "";
 
 	/**
-	 * This property defines service interface for decoration.
+	 * This property defines service interface for intercepting.
 	 */
 	Class service() default Void.class;
 }

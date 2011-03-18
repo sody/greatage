@@ -20,7 +20,6 @@ import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Decorate;
-import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.util.CollectionUtils;
@@ -39,16 +38,15 @@ import java.util.List;
  */
 public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	private final List<Service> services = CollectionUtils.newList();
-	private final List<Contributor> contributors = CollectionUtils.newList();
-	private final List<Decorator> decorators = CollectionUtils.newList();
-	private final List<Interceptor> interceptors = CollectionUtils.newList();
+	private final List<ServiceContributor> contributors = CollectionUtils.newList();
+	private final List<ServiceDecorator> decorators = CollectionUtils.newList();
 
 	/**
 	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
-	 * Build}, {@link Contribute}, {@link Decorate}, {@link Intercept} and {@link Bind} annotations and creates for them
-	 * service, contribute, decorate, intercept and bind definitions respectively.
+	 * Build}, {@link Contribute}, {@link org.greatage.ioc.annotations.Decorate} and {@link Bind} annotations and creates
+	 * for them service, contribute, decorate, decorate and bind definitions respectively.
 	 *
-	 * @param logger system logger
+	 * @param logger	  system logger
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
@@ -58,11 +56,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 			if (method.isAnnotationPresent(Build.class)) {
 				services.add(new ServiceFactory(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
-				contributors.add(new ContributorImpl(logger, moduleClass, method));
+				contributors.add(new ServiceContributorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
-				decorators.add(new DecoratorImpl(logger, moduleClass, method));
-			} else if (method.isAnnotationPresent(Intercept.class)) {
-				interceptors.add(new InterceptorImpl(logger, moduleClass, method));
+				decorators.add(new ServiceDecoratorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
@@ -85,9 +81,9 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<Contributor<T>> getContributors(final Service<T> service) {
-		final List<Contributor<T>> result = CollectionUtils.newList();
-		for (Contributor contributor : contributors) {
+	public <T> List<ServiceContributor<T>> getContributors(final Service<T> service) {
+		final List<ServiceContributor<T>> result = CollectionUtils.newList();
+		for (ServiceContributor contributor : contributors) {
 			if (contributor.supports(service)) {
 				//noinspection unchecked
 				result.add(contributor);
@@ -99,26 +95,12 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<Decorator<T>> getDecorators(final Service<T> service) {
-		final List<Decorator<T>> result = CollectionUtils.newList();
-		for (Decorator decorator : decorators) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final Service<T> service) {
+		final List<ServiceDecorator<T>> result = CollectionUtils.newList();
+		for (ServiceDecorator decorator : decorators) {
 			if (decorator.supports(service)) {
 				//noinspection unchecked
 				result.add(decorator);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public <T> List<Interceptor<T>> getInterceptors(final Service<T> service) {
-		final List<Interceptor<T>> result = CollectionUtils.newList();
-		for (Interceptor interceptor : interceptors) {
-			if (interceptor.supports(service)) {
-				//noinspection unchecked
-				result.add(interceptor);
 			}
 		}
 		return result;

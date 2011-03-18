@@ -21,15 +21,14 @@ import java.util.List;
 
 /**
  * This class represents module definition that is used to build {@link org.greatage.ioc.ServiceLocator}. By default it
- * is configured by simple class with all needed methods that represent service build, configure, decorate and advice
+ * is configured by simple class with all needed methods that represent service build, configure, decorate and invoke
  * points. It is also may be annotated by {@link org.greatage.ioc.annotations.Dependency} class to define children
  * modules.
  *
  * @author Ivan Khalopik
- * @see org.greatage.ioc.Service
- * @see org.greatage.ioc.Contributor
- * @see org.greatage.ioc.Decorator
- * @see org.greatage.ioc.Interceptor
+ * @see Service
+ * @see ServiceContributor
+ * @see ServiceDecorator
  * @since 1.0
  */
 public interface Module {
@@ -48,16 +47,7 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service contributor definitions for specified service or empty list
 	 */
-	<T> List<Contributor<T>> getContributors(Service<T> service);
-
-	/**
-	 * Gets an ordered list of all service decorator definitions for specified service.
-	 *
-	 * @param service service definition
-	 * @param <T>     type of service
-	 * @return ordered list of all service decorator definitions for specified service or empty list
-	 */
-	<T> List<Decorator<T>> getDecorators(Service<T> service);
+	<T> List<ServiceContributor<T>> getContributors(Service<T> service);
 
 	/**
 	 * Gets an ordered list of all service interceptor definitions for specified service.
@@ -66,5 +56,5 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
-	<T> List<Interceptor<T>> getInterceptors(Service<T> service);
+	<T> List<ServiceDecorator<T>> getDecorators(Service<T> service);
 }

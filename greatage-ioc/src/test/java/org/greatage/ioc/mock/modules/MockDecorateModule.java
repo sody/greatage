@@ -19,7 +19,13 @@ package org.greatage.ioc.mock.modules;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
-import org.greatage.ioc.mock.*;
+import org.greatage.ioc.mock.MockMessageService;
+import org.greatage.ioc.mock.MockMessageServiceImpl;
+import org.greatage.ioc.mock.MockTalkService;
+import org.greatage.ioc.mock.MockTalkServiceDelegate;
+import org.greatage.ioc.mock.MockTalkServiceImpl;
+import org.greatage.ioc.proxy.Interceptor;
+import org.greatage.ioc.proxy.Invocation;
 
 /**
  * @author Ivan Khalopik
@@ -32,21 +38,42 @@ public class MockDecorateModule {
 		return new MockMessageServiceImpl("hello");
 	}
 
-	@Build
+	@Build(id = "talkService1")
 	public MockTalkService buildTalkService(final MockMessageService messageService) {
 		return new MockTalkServiceImpl(messageService);
 	}
 
-	@Decorate(MockTalkService.class)
-	@Order("first")
-	public MockTalkService decorateTalkService(final MockTalkService talkService) {
-		return new MockTalkServiceDelegate(talkService, "[", "]");
+	@Build(id = "talkService2")
+	public MockTalkService buildTalkService2(final MockMessageService messageService) {
+		final MockTalkServiceImpl service = new MockTalkServiceImpl(messageService);
+		return new MockTalkServiceDelegate(service, "[", "]");
 	}
 
-	@Decorate(MockTalkService.class)
+	@Decorate(service = MockTalkService.class)
+	@Order("first")
+	public Interceptor interceptTalkService() {
+		return new Interceptor() {
+			public boolean supports(final Invocation invocation) {
+				return invocation.getMethod().isAnnotationPresent(Deprecated.class);
+			}
+
+			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
+				return "deprecated1:" + invocation.proceed(parameters);
+			}
+		};
+	}
+
+	@Decorate(service = MockTalkService.class)
 	@Order(value = "second", constraints = "after:first")
-	public MockTalkService redecorateTalkService(final MockTalkService talkService) {
-		return new MockTalkServiceDelegate(talkService, "{", "}");
+	public Interceptor interceptTalkService2() {
+		return new Interceptor() {
+			public boolean supports(final Invocation invocation) {
+				return invocation.getMethod().isAnnotationPresent(Deprecated.class);
+			}
+
+			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
+				return "deprecated2:" + invocation.proceed(parameters);
+			}
+		};
 	}
 }
-

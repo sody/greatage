@@ -16,46 +16,20 @@
 
 package org.greatage.ioc.proxy;
 
-import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 /**
- * This class represent method invocation in environment of {@link org.greatage.ioc.proxy.MethodAdvice}. It provides
- * information about method name, its signature and annotations.
+ * This class represent method invocation in environment of {@link Interceptor}. It provides information about method
+ * name, its signature and annotations.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
 public interface Invocation {
 
-	/**
-	 * Gets method name.
-	 *
-	 * @return method name
-	 */
-	String getName();
+	Object getTarget();
 
-	/**
-	 * Gets method annotation of specified annotation class if presents.
-	 *
-	 * @param annotationClass annotation class
-	 * @param <T>             type of annotation
-	 * @return method annotation of specified annotation class or null if missed
-	 */
-	<T extends Annotation> T getAnnotation(Class<T> annotationClass);
-
-	/**
-	 * Gets method return type.
-	 *
-	 * @return method return type
-	 */
-	Class<?> getReturnType();
-
-	/**
-	 * Gets method parameter types.
-	 *
-	 * @return method parameter types
-	 */
-	Class<?>[] getParameterTypes();
+	Method getMethod();
 
 	/**
 	 * Proceeds an underlying method invocation with specified parameters.

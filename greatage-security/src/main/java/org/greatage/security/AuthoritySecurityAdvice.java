@@ -16,13 +16,14 @@
 
 package org.greatage.security;
 
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
-import org.greatage.ioc.proxy.MethodAdvice;
 import org.greatage.security.annotations.Allow;
 import org.greatage.security.annotations.Deny;
 import org.greatage.security.annotations.Operation;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,16 +31,22 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AuthoritySecurityAdvice implements MethodAdvice {
+public class AuthoritySecurityAdvice implements Interceptor {
 	private final SecurityContext securityContext;
 
 	public AuthoritySecurityAdvice(final SecurityContext securityContext) {
 		this.securityContext = securityContext;
 	}
 
-	public Object advice(final Invocation invocation, final Object... parameters) throws Throwable {
-		final Allow allow = invocation.getAnnotation(Allow.class);
-		final Deny deny = invocation.getAnnotation(Deny.class);
+	public boolean supports(final Invocation invocation) {
+		final Method method = invocation.getMethod();
+		return method.isAnnotationPresent(Allow.class) || method.isAnnotationPresent(Deny.class);
+	}
+
+	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
+		final Method method = invocation.getMethod();
+		final Allow allow = method.getAnnotation(Allow.class);
+		final Deny deny = method.getAnnotation(Deny.class);
 		if (allow != null || deny != null) {
 			final List<String> authorities = getAuthorities();
 			if (allow != null) {

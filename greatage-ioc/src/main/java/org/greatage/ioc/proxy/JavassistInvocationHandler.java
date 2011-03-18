@@ -31,11 +31,11 @@ public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> 
 	/**
 	 * Creates new instance of invocation handler for javassist proxy objects.
 	 *
-	 * @param builder object builder
-	 * @param advices method advices
+	 * @param builder	  object builder
+	 * @param interceptors method interceptors
 	 */
-	public JavassistInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
-		super(builder, advices);
+	public JavassistInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
+		super(builder, interceptors);
 	}
 
 	/**
@@ -47,10 +47,15 @@ public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> 
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * Invokes specified method with specified parameters on delegate instance
+	 *
+	 * @param method	 interface method
+	 * @param parameters invocation parameters
+	 * @return delegated from invocation return object
+	 * @throws Throwable if some problems occurs while invoking method
 	 */
-	@Override
+	@SuppressWarnings("UnusedDeclaration")
 	public Object invoke(final Method method, final Object... parameters) throws Throwable {
-		return super.invoke(method, parameters);
+		return getInvocation(method).proceed(parameters);
 	}
 }

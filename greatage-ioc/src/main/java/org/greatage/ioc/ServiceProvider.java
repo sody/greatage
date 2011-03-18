@@ -23,7 +23,7 @@ package org.greatage.ioc;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface ServiceStatus<T> {
+public interface ServiceProvider<T> {
 
 	/**
 	 * Gets unique service id used to locate the service object.

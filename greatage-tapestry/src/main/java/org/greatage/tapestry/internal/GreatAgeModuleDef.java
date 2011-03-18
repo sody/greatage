@@ -41,7 +41,7 @@ public class GreatAgeModuleDef implements ModuleDef {
 			moduleClass = Class.forName(moduleName);
 			final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(moduleClass);
 			for (String serviceId : locator.getServiceIds()) {
-				services.put(serviceId, new GreatAgeServiceDef(locator.getServiceStatus(serviceId)));
+				services.put(serviceId, new GreatAgeServiceDef(locator.getServiceProvider(serviceId)));
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException("Couldn't find module class", e);

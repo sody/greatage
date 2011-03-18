@@ -16,28 +16,26 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.proxy.MethodAdvice;
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.Locker;
-import org.greatage.util.OrderingUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This class represents implementation of {@link ServiceStatus} that is used by default for all services. It lazily
+ * This class represents implementation of {@link ServiceProvider} that is used by default for all services. It lazily
  * creates, configures, decorates and intercepts service using {@link ProxyFactory} service and scoped builder.
  *
  * @param <T> service type
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceStatusImpl<T> implements ServiceStatus<T> {
+public class ServiceProviderImpl<T> implements ServiceProvider<T> {
 	private final ServiceResources<T> resources;
 	private final ObjectBuilder<T> builder;
-	private final List<Interceptor<T>> interceptors;
+	private final List<ServiceDecorator<T>> decorators;
 
 	private final Locker locker = new Locker();
 
@@ -51,17 +49,15 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 * @param service	  service definition
 	 * @param contributors service contributors
 	 * @param decorators   service decorators
-	 * @param interceptors service interceptors
 	 */
-	ServiceStatusImpl(final ServiceLocator locator,
-					  final Service<T> service,
-					  final List<Contributor<T>> contributors,
-					  final List<Decorator<T>> decorators,
-					  final List<Interceptor<T>> interceptors) {
+	ServiceProviderImpl(final ServiceLocator locator,
+						final Service<T> service,
+						final List<ServiceContributor<T>> contributors,
+						final List<ServiceDecorator<T>> decorators) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
-		final ServiceBuilder<T> serviceBuilder = new ServiceBuilder<T>(resources, service, contributors, decorators);
-		this.builder = new ScopedBuilder<T>(resources, serviceBuilder);
-		this.interceptors = interceptors;
+		final ConfiguredBuilder<T> configuredBuilder = new ConfiguredBuilder<T>(resources, service, contributors);
+		this.builder = new ScopedBuilder<T>(resources, configuredBuilder);
+		this.decorators = decorators;
 	}
 
 	/**
@@ -92,7 +88,7 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 		if (serviceInstance == null) {
 			locker.lock();
 			final ProxyFactory proxyFactory = resources.getResource(ProxyFactory.class);
-			serviceInstance = proxyFactory.createProxy(builder, createAdvices());
+			serviceInstance = proxyFactory.createProxy(builder, createInterceptors());
 		}
 		return serviceInstance;
 	}
@@ -102,14 +98,13 @@ public class ServiceStatusImpl<T> implements ServiceStatus<T> {
 	 *
 	 * @return list of method advices for service or empty list
 	 */
-	private List<MethodAdvice> createAdvices() {
-		final List<MethodAdvice> advices = new ArrayList<MethodAdvice>();
-		final List<Interceptor<T>> ordered = OrderingUtils.order(interceptors);
-		for (Interceptor<T> interceptor : ordered) {
-			final MethodAdvice advice = interceptor.intercept(resources);
-			advices.add(advice);
+	private Interceptor[] createInterceptors() {
+		int i = 0;
+		final Interceptor[] interceptors = new Interceptor[decorators.size()];
+		for (ServiceDecorator<T> decorator : decorators) {
+			interceptors[i++] = decorator.decorate(resources);
 		}
-		return advices;
+		return interceptors;
 	}
 
 	/**

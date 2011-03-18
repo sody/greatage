@@ -32,17 +32,17 @@ public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T>
 	/**
 	 * Creates new instance of invocation handler for JDK proxy objects.
 	 *
-	 * @param builder object builder
-	 * @param advices method advices
+	 * @param builder	  object builder
+	 * @param interceptors method interceptors
 	 */
-	JdkInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
-		super(builder, advices);
+	JdkInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
+		super(builder, interceptors);
 	}
 
 	/**
 	 * {@inheritDoc} Delegates all method invocations to delegate instance.
 	 */
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-		return invoke(method, args);
+		return getInvocation(method).proceed(args);
 	}
 }

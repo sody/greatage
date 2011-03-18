@@ -16,12 +16,11 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Intercept;
+import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.logging.Logger;
-import org.greatage.ioc.proxy.MethodAdvice;
+import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.StringUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -36,9 +35,9 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class InterceptorImpl<T> implements Interceptor<T> {
+public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	private final Class<?> moduleClass;
-	private final Method interceptMethod;
+	private final Method decorateMethod;
 
 	private final Class<T> serviceClass;
 	private final String serviceId;
@@ -50,24 +49,25 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 
 	/**
 	 * Creates new instance of service interceptor definition with defined module class and method used for service
-	 * interception. Interception method must have {@link MethodAdvice} return type and be annotated with {@link Intercept}
-	 * annotation. For interceptors ordering it may also be annotated with {@link Order} annotation.
+	 * interception. Interception method must have {@link org.greatage.ioc.proxy.Interceptor} return type and be annotated
+	 * with {@link org.greatage.ioc.annotations.Decorate} annotation. For interceptors ordering it may also be annotated
+	 * with {@link Order} annotation.
 	 *
-	 * @param logger		  system logger
-	 * @param moduleClass	 module class
-	 * @param interceptMethod module method used for service interception
+	 * @param logger		 system logger
+	 * @param moduleClass	module class
+	 * @param decorateMethod module method used for service interception
 	 */
-	InterceptorImpl(final Logger logger, final Class<?> moduleClass, final Method interceptMethod) {
+	ServiceDecoratorImpl(final Logger logger, final Class<?> moduleClass, final Method decorateMethod) {
 		this.logger = logger;
 		this.moduleClass = moduleClass;
-		this.interceptMethod = interceptMethod;
+		this.decorateMethod = decorateMethod;
 
-		final Intercept intercept = interceptMethod.getAnnotation(Intercept.class);
-		serviceId = InternalUtils.generateServiceId(intercept.value(), intercept.id());
+		final Decorate decorate = decorateMethod.getAnnotation(Decorate.class);
+		serviceId = InternalUtils.generateServiceId(decorate.value(), decorate.id());
 		//noinspection unchecked
-		serviceClass = intercept.service();
+		serviceClass = decorate.service();
 
-		final Order order = interceptMethod.getAnnotation(Order.class);
+		final Order order = decorateMethod.getAnnotation(Order.class);
 		if (order != null) {
 			orderId = order.value();
 			orderConstraints = Arrays.asList(order.constraints());
@@ -104,18 +104,18 @@ public class InterceptorImpl<T> implements Interceptor<T> {
 	/**
 	 * {@inheritDoc} It intercepts service by invoking configured module method.
 	 */
-	public MethodAdvice intercept(final ServiceResources<T> resources) {
-		logger.info("Intercepting service (%s, %s) from module (%s, %s)", resources.getServiceId(),
-				resources.getServiceClass(), moduleClass, interceptMethod);
+	public Interceptor decorate(final ServiceResources<T> resources) {
+		logger.info("Decorate service (%s, %s) from module (%s, %s)", resources.getServiceId(),
+				resources.getServiceClass(), moduleClass, decorateMethod);
 
 		try {
 			final Object moduleInstance =
-					Modifier.isStatic(interceptMethod.getModifiers()) ? null : resources.getResource(moduleClass);
-			final Object[] parameters = InternalUtils.calculateParameters(resources, interceptMethod);
-			return (MethodAdvice) interceptMethod.invoke(moduleInstance, parameters);
+					Modifier.isStatic(decorateMethod.getModifiers()) ? null : resources.getResource(moduleClass);
+			final Object[] parameters = InternalUtils.calculateParameters(resources, decorateMethod);
+			return (Interceptor) decorateMethod.invoke(moduleInstance, parameters);
 		} catch (Exception e) {
 			throw new ApplicationException(
-					String.format("Can't create service interceptor with id '%s'", resources.getServiceId()), e);
+					String.format("Can't create service decorator with id '%s'", resources.getServiceId()), e);
 		}
 	}
 }

@@ -18,6 +18,9 @@ package org.greatage.ioc.proxy;
 
 import org.greatage.util.DescriptionBuilder;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * This class represents abstract proxy factory representation that helps to validate input parameters for creation
  * proxy.
@@ -51,6 +54,13 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
 						String.format("Proxy class '%s' must have default constructor", proxyClass), e);
 			}
 		}
+	}
+
+	protected <T> List<T> toList(final T... elements) {
+		if (elements == null || elements.length == 0) {
+			return null;
+		}
+		return Arrays.asList(elements);
 	}
 
 	/**

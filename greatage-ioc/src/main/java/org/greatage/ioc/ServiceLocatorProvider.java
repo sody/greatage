@@ -19,13 +19,13 @@ package org.greatage.ioc;
 import org.greatage.ioc.scope.ScopeConstants;
 
 /**
- * This class represents {@link ServiceStatus} implementation for {@link ServiceLocator} service. It always has hardly
+ * This class represents {@link ServiceProvider} implementation for {@link ServiceLocator} service. It always has hardly
  * specified service identifier, class, scope and instance.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceLocatorStatus implements ServiceStatus<ServiceLocator> {
+public class ServiceLocatorProvider implements ServiceProvider<ServiceLocator> {
 	private final ServiceLocator locator;
 
 	/**
@@ -33,7 +33,7 @@ public class ServiceLocatorStatus implements ServiceStatus<ServiceLocator> {
 	 *
 	 * @param locator service locator
 	 */
-	ServiceLocatorStatus(final ServiceLocator locator) {
+	ServiceLocatorProvider(final ServiceLocator locator) {
 		this.locator = locator;
 	}
 

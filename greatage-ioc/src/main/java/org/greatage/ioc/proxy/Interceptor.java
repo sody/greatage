@@ -14,20 +14,25 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc.mock;
+package org.greatage.ioc.proxy;
 
 /**
+ * This class represent method invoke that is used to invoke object proxy methods with some additional functionality.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class MockProcessServiceDelegate implements MockProcessService {
-	private final MockProcessService delegate;
+public interface Interceptor {
 
-	public MockProcessServiceDelegate(final MockProcessService delegate) {
-		this.delegate = delegate;
-	}
+	boolean supports(Invocation invocation);
 
-	public void process(final String message) {
-		delegate.process(message);
-	}
+	/**
+	 * Advices method invocation. It can override method or add some additional functionality to method.
+	 *
+	 * @param invocation method invocation
+	 * @param parameters invocation parameters
+	 * @return method return result
+	 * @throws Throwable when error occurs during invocation or may be added by this method invoke
+	 */
+	Object invoke(Invocation invocation, Object... parameters) throws Throwable;
 }

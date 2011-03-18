@@ -16,10 +16,12 @@
 
 package org.greatage.ioc.proxy;
 
+import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents utility for lazy creation of object from object builder.
@@ -30,19 +32,19 @@ import java.util.List;
  */
 public abstract class AbstractInvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
-	private final List<MethodAdvice> advices;
+	private final List<Interceptor> interceptors;
+
+	private final Map<Method, Invocation> invocations = CollectionUtils.newConcurrentMap();
 
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
-	 * @param builder object builder
-	 * @param advices method advices
+	 * @param builder	  object builder, not null
+	 * @param interceptors method interceptors
 	 */
-	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<MethodAdvice> advices) {
-		assert builder != null;
-
+	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
 		this.builder = builder;
-		this.advices = advices;
+		this.interceptors = interceptors;
 	}
 
 	/**
@@ -55,32 +57,30 @@ public abstract class AbstractInvocationHandler<T> {
 	}
 
 	/**
-	 * Invokes specified method with specified parameters on delegate instance
-	 *
-	 * @param method	 interface method
-	 * @param parameters invocation parameters
-	 * @return delegated from invocation return object
-	 * @throws Throwable if some problems occurs while invoking method
-	 */
-	protected Object invoke(final Method method, final Object... parameters) throws Throwable {
-		final Method realMethod = getDelegate().getClass().getMethod(method.getName(), method.getParameterTypes());
-		return createInvocation(realMethod).proceed(parameters);
-	}
-
-	/**
-	 * Creates new invocation instance for specified method with defined method advices.
+	 * Creates new invocation instance for specified method with defined method interceptors.
 	 *
 	 * @param method method
-	 * @return new invocation instance for specified method with defined method advices
+	 * @return new invocation instance for specified method with defined method interceptors
 	 */
-	private Invocation createInvocation(final Method method) {
-		Invocation invocation = new MethodInvocation(getDelegate(), method);
-		if (advices != null) {
-			for (MethodAdvice advice : advices) {
-				invocation = new AdvisedInvocation(invocation, advice);
+	protected Invocation getInvocation(final Method method) {
+		if (!invocations.containsKey(method)) {
+			try {
+				final T target = getDelegate();
+				final Method realMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
+				Invocation invocation = new InvocationImpl(target, realMethod);
+				if (interceptors != null) {
+					for (Interceptor interceptor : interceptors) {
+						if (interceptor.supports(invocation)) {
+							invocation = new InterceptedInvocation(invocation, interceptor);
+						}
+					}
+				}
+				invocations.put(method, invocation);
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException("Could not create invocation instance", e);
 			}
 		}
-		return invocation;
+		return invocations.get(method);
 	}
 
 	/**
@@ -90,7 +90,7 @@ public abstract class AbstractInvocationHandler<T> {
 	public String toString() {
 		final DescriptionBuilder db = new DescriptionBuilder(getClass());
 		db.append("builder", builder);
-		db.append("advices", advices);
+		db.append("interceptors", interceptors);
 		return db.toString();
 	}
 }
