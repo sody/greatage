@@ -16,6 +16,10 @@
 
 package org.greatage.ioc.guice;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
+import com.google.inject.name.Names;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
 import org.testng.Assert;
@@ -29,10 +33,10 @@ public class TestGuiceIntegration extends Assert {
 
 	@Test
 	public void testGreatAgeSide() {
-		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder();
-		builder.addModule(MockGreatAgeModule.class);
-		builder.addModule(new GuiceModule(new MockGuiceModule()));
-		final ServiceLocator locator = builder.build();
+		final ServiceLocator locator = new ServiceLocatorBuilder()
+				.addModules(MockGreatAgeModule1.class, MockGreatAgeModule2.class)
+				.addModule(new GuiceIntegration(new MockGuiceModule1()))
+				.build();
 		assertNotNull(locator);
 
 		MockMessageService messageService = locator.getService("GreatAgeMessageService", MockMessageService.class);
@@ -49,8 +53,28 @@ public class TestGuiceIntegration extends Assert {
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertTrue(messageService.generateMessage().startsWith("Invocation from greatage:"));
+	}
 
-		messageService = locator.getService("GuiceMessageServiceDelegate", MockMessageService.class);
+	@Test
+	public void testGuiceSide() {
+		final Injector injector = Guice.createInjector(new MockGuiceModule1(), new MockGuiceModule2(),
+				new GreatAgeIntegration(MockGreatAgeModule1.class));
+		assertNotNull(injector);
+
+		MockMessageService messageService =
+				injector.getInstance(Key.get(MockMessageService.class, Names.named("GreatAgeMessageService")));
+		assertNotNull(messageService);
+		assertNotNull(messageService.generateMessage());
+		assertNotNull(messageService.generateMessage());
+
+		messageService =
+				injector.getInstance(Key.get(MockMessageService.class, Names.named("GuiceMessageService")));
+		assertNotNull(messageService);
+		assertNotNull(messageService.generateMessage());
+		assertNotNull(messageService.generateMessage());
+
+		messageService =
+				injector.getInstance(Key.get(MockMessageService.class, Names.named("GuiceMessageServiceDelegate")));
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertTrue(messageService.generateMessage().startsWith("Invocation from guice:"));

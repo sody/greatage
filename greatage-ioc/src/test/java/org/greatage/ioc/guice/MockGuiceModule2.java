@@ -26,25 +26,19 @@ import com.google.inject.name.Named;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class MockGuiceModule extends AbstractModule {
+public class MockGuiceModule2 extends AbstractModule {
 
 	@Override
 	protected void configure() {
 	}
 
-//	@Named("GuiceMessageServiceDelegate")
-//	@Inject
-//	@Singleton
-//	@Provides
-//	public MockMessageService provideGuiceMessageServiceDelegate(
-//			@Named("GreatAgeMessageService") final MockMessageService messageService) {
-//		return new MockMessageServiceDelegate(messageService, "Invocation from guice: ");
-//	}
-
-	@Named("GuiceMessageService")
+	@Named("GuiceMessageServiceDelegate")
+	@Inject
 	@Singleton
 	@Provides
-	public MockMessageService provideGuiceMessageService() {
-		return new MockMessageServiceImpl("Google", "Guice");
+	public MockMessageService provideGuiceMessageServiceDelegate(
+			@Named("GreatAgeMessageService") final MockMessageService messageService) {
+		return new MockMessageServiceDelegate(messageService, "Invocation from guice: ");
 	}
+
 }

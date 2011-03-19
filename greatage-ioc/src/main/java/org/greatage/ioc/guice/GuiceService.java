@@ -36,6 +36,7 @@ public class GuiceService<T> implements Service<T> {
 	private final String serviceId;
 	private final Class<T> serviceClass;
 
+	@SuppressWarnings("unchecked")
 	public GuiceService(final Injector injector, final Key<T> key) {
 		this.injector = injector;
 		this.key = key;

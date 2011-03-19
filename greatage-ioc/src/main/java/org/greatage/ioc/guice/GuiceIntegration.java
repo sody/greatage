@@ -29,14 +29,15 @@ import java.util.Set;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class GuiceModule implements Module {
+public class GuiceIntegration implements Module {
 	private final Set<Service> services = CollectionUtils.newSet();
 
-	public GuiceModule(final com.google.inject.Module... modules) {
+	public GuiceIntegration(final com.google.inject.Module... modules) {
 		this(Guice.createInjector(modules));
 	}
 
-	public GuiceModule(final Injector injector) {
+	@SuppressWarnings("unchecked")
+	public GuiceIntegration(final Injector injector) {
 		for (Key<?> key : injector.getBindings().keySet()) {
 			services.add(new GuiceService(injector, key));
 		}

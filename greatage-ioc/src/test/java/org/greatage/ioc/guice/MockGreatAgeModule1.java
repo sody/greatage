@@ -19,7 +19,6 @@ package org.greatage.ioc.guice;
 import org.greatage.ioc.OrderedConfiguration;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Inject;
 
 import java.util.List;
 
@@ -27,17 +26,11 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class MockGreatAgeModule {
+public class MockGreatAgeModule1 {
 
 	@Build(id = "GreatAgeMessageService")
 	public MockMessageService buildGreatAgeMessageService(final List<String> messages) {
 		return new MockMessageServiceImpl(messages);
-	}
-
-	@Build(id = "GreatAgeMessageServiceDelegate")
-	public MockMessageService buildGreatAgeMessageServiceDelegate(
-			@Inject(id = "GuiceMessageService") final MockMessageService messageService) {
-		return new MockMessageServiceDelegate(messageService, "Invocation from greatage:");
 	}
 
 	@Contribute(id = "GreatAgeMessageService")

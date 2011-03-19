@@ -127,6 +127,16 @@ public class ServiceLocatorBuilder {
 		return new ServiceLocatorImpl(logger, modules);
 	}
 
+	public static ServiceLocator createServiceLocator(final Logger logger, final Module... modules) {
+		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder(logger).addModules(modules);
+		return builder.build();
+	}
+
+	public static ServiceLocator createServiceLocator(final Module... modules) {
+		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder().addModules(modules);
+		return builder.build();
+	}
+
 	/**
 	 * Creates new service locator instance for specified module classes + IOCModule. It will use console logger for all
 	 * system logs.
