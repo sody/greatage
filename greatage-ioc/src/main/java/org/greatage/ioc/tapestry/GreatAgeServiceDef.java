@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.greatage.tapestry.internal;
+package org.greatage.ioc.tapestry;
 
 import org.apache.tapestry5.ioc.ObjectCreator;
 import org.apache.tapestry5.ioc.ScopeConstants;
@@ -30,22 +30,22 @@ import java.util.Set;
  * @since 1.0
  */
 public class GreatAgeServiceDef implements ServiceDef {
-	private final ServiceProvider service;
+	private final ServiceProvider serviceProvider;
 
-	public GreatAgeServiceDef(final ServiceProvider service) {
-		this.service = service;
+	GreatAgeServiceDef(final ServiceProvider serviceProvider) {
+		this.serviceProvider = serviceProvider;
 	}
 
 	public ObjectCreator createServiceCreator(final ServiceBuilderResources resources) {
 		return new ObjectCreator() {
 			public Object createObject() {
-				return service.getService();
+				return serviceProvider.getService();
 			}
 		};
 	}
 
 	public String getServiceId() {
-		return service.getServiceId();
+		return serviceProvider.getServiceId();
 	}
 
 	public Set<Class> getMarkers() {
@@ -53,7 +53,7 @@ public class GreatAgeServiceDef implements ServiceDef {
 	}
 
 	public Class getServiceInterface() {
-		return service.getServiceClass();
+		return serviceProvider.getServiceClass();
 	}
 
 	public String getServiceScope() {
