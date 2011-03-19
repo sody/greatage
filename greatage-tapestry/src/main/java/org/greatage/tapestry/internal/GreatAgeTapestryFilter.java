@@ -23,14 +23,15 @@ import javax.servlet.ServletContext;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class GreatAgeTapestryFilter extends TapestryFilter {
 
 	@Override
 	protected ModuleDef[] provideExtraModuleDefs(final ServletContext context) {
+		final String moduleName = context.getInitParameter("greatage.module");
 		return new ModuleDef[]{
-				new GreatAgeModuleDef(context.getInitParameter("greatage.module"))
+				new GreatAgeModuleDef(moduleName)
 		};
 	}
 }
