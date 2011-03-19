@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 Ivan Khalopik
+ * Copyright (c) 2008-2011 Ivan Khalopik.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -125,6 +125,16 @@ public class ServiceLocatorBuilder {
 	public ServiceLocator build() {
 		locker.lock();
 		return new ServiceLocatorImpl(logger, modules);
+	}
+
+	public static ServiceLocator createServiceLocator(final Logger logger, final Module... modules) {
+		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder(logger).addModules(modules);
+		return builder.build();
+	}
+
+	public static ServiceLocator createServiceLocator(final Module... modules) {
+		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder().addModules(modules);
+		return builder.build();
 	}
 
 	/**
