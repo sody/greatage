@@ -16,9 +16,13 @@
 
 package org.greatage.ioc.guice;
 
-import com.google.inject.*;
-import org.greatage.ioc.*;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 import org.greatage.ioc.Module;
+import org.greatage.ioc.Service;
+import org.greatage.ioc.ServiceContributor;
+import org.greatage.ioc.ServiceDecorator;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;
@@ -47,15 +51,11 @@ public class GuiceIntegration implements Module {
 		return services;
 	}
 
-	public <T> List<Contributor<T>> getContributors(final Service<T> service) {
+	public <T> List<ServiceContributor<T>> getContributors(final Service<T> service) {
 		return CollectionUtils.newList();
 	}
 
-	public <T> List<Decorator<T>> getDecorators(final Service<T> service) {
-		return CollectionUtils.newList();
-	}
-
-	public <T> List<Interceptor<T>> getInterceptors(final Service<T> service) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final Service<T> service) {
 		return CollectionUtils.newList();
 	}
 }

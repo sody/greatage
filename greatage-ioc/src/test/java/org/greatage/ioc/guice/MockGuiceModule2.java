@@ -40,5 +40,4 @@ public class MockGuiceModule2 extends AbstractModule {
 			@Named("GreatAgeMessageService") final MockMessageService messageService) {
 		return new MockMessageServiceDelegate(messageService, "Invocation from guice: ");
 	}
-
 }

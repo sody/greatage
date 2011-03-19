@@ -21,7 +21,7 @@ import com.google.inject.Module;
 import com.google.inject.name.Names;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
-import org.greatage.ioc.ServiceStatus;
+import org.greatage.ioc.ServiceProvider;
 
 /**
  * @author Ivan Khalopik
@@ -45,7 +45,7 @@ public class GreatAgeIntegration implements Module {
 	@SuppressWarnings("unchecked")
 	public void configure(final Binder binder) {
 		for (String serviceId : locator.getServiceIds()) {
-			final ServiceStatus<?> serviceStatus = locator.getServiceStatus(serviceId);
+			final ServiceProvider<?> serviceStatus = locator.getServiceProvider(serviceId);
 			binder.bind(serviceStatus.getServiceClass())
 					.annotatedWith(Names.named(serviceStatus.getServiceId()))
 					.toProvider(new GreatAgeProvider(serviceStatus));

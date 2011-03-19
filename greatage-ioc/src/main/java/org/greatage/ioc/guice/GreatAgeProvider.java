@@ -17,20 +17,20 @@
 package org.greatage.ioc.guice;
 
 import com.google.inject.Provider;
-import org.greatage.ioc.ServiceStatus;
+import org.greatage.ioc.ServiceProvider;
 
 /**
  * @author Ivan Khalopik
  * @since 1.1
  */
 public class GreatAgeProvider<T> implements Provider<T> {
-	private final ServiceStatus<T> serviceStatus;
+	private final ServiceProvider<T> serviceProvider;
 
-	public GreatAgeProvider(final ServiceStatus<T> serviceStatus) {
-		this.serviceStatus = serviceStatus;
+	GreatAgeProvider(final ServiceProvider<T> serviceProvider) {
+		this.serviceProvider = serviceProvider;
 	}
 
 	public T get() {
-		return serviceStatus.getService();
+		return serviceProvider.getService();
 	}
 }

@@ -23,5 +23,4 @@ package org.greatage.ioc.guice;
 public interface MockMessageService {
 
 	String generateMessage();
-
 }
