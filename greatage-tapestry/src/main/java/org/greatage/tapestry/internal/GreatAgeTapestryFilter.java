@@ -18,6 +18,7 @@ package org.greatage.tapestry.internal;
 
 import org.apache.tapestry5.TapestryFilter;
 import org.apache.tapestry5.ioc.def.ModuleDef;
+import org.greatage.ioc.tapestry.GreatAgeIntegration;
 
 import javax.servlet.ServletContext;
 
@@ -26,11 +27,17 @@ import javax.servlet.ServletContext;
  * @since 1.0
  */
 public class GreatAgeTapestryFilter extends TapestryFilter {
+	private static final String GREATAGE_MODULE_PARAMETER = "greatage.module";
 
 	@Override
 	protected ModuleDef[] provideExtraModuleDefs(final ServletContext context) {
-		return new ModuleDef[]{
-				new GreatAgeModuleDef(context.getInitParameter("greatage.module"))
-		};
+		try {
+			final String moduleName = context.getInitParameter(GREATAGE_MODULE_PARAMETER);
+			final Class<?> moduleClass = Class.forName(moduleName);
+
+			return new ModuleDef[]{new GreatAgeIntegration(moduleClass)};
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Couldn't find module class", e);
+		}
 	}
 }

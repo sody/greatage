@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.greatage.tapestry.internal;
+package org.greatage.ioc.tapestry;
 
 import org.apache.tapestry5.ioc.def.ContributionDef;
 import org.apache.tapestry5.ioc.def.DecoratorDef;
@@ -32,19 +32,20 @@ import java.util.Set;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GreatAgeModuleDef implements ModuleDef {
+public class GreatAgeIntegration implements ModuleDef {
 	private final Map<String, ServiceDef> services = CollectionFactory.newMap();
 
-	public GreatAgeModuleDef(final String moduleName) {
-		try {
-			final Class<?> moduleClass;
-			moduleClass = Class.forName(moduleName);
-			final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(moduleClass);
-			for (String serviceId : locator.getServiceIds()) {
-				services.put(serviceId, new GreatAgeServiceDef(locator.getServiceProvider(serviceId)));
-			}
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException("Couldn't find module class", e);
+	public GreatAgeIntegration(final Class... moduleClasses) {
+		this(ServiceLocatorBuilder.createServiceLocator(moduleClasses));
+	}
+
+	public GreatAgeIntegration(final org.greatage.ioc.Module... modules) {
+		this(ServiceLocatorBuilder.createServiceLocator(modules));
+	}
+
+	public GreatAgeIntegration(final ServiceLocator locator) {
+		for (String serviceId : locator.getServiceIds()) {
+			services.put(serviceId, new GreatAgeServiceDef(locator.getServiceProvider(serviceId)));
 		}
 	}
 
@@ -69,6 +70,6 @@ public class GreatAgeModuleDef implements ModuleDef {
 	}
 
 	public String getLoggerName() {
-		return GreatAgeModuleDef.class.getName();
+		return GreatAgeIntegration.class.getName();
 	}
 }

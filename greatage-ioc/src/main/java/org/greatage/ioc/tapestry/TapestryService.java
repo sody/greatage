@@ -14,35 +14,26 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc.guice;
+package org.greatage.ioc.tapestry;
 
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.name.Named;
+import org.apache.tapestry5.ioc.Registry;
 import org.greatage.ioc.Service;
 import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.scope.ScopeConstants;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class GuiceService<T> implements Service<T> {
-	private final Injector injector;
-	private final Key<T> key;
-
+public class TapestryService<T> implements Service<T> {
+	private final Registry registry;
 	private final String serviceId;
 	private final Class<T> serviceClass;
 
-	@SuppressWarnings("unchecked")
-	GuiceService(final Injector injector, final Key<T> key) {
-		this.injector = injector;
-		this.key = key;
-
-		serviceId = obtainServiceId(key);
-		serviceClass = (Class<T>) key.getTypeLiteral().getType();
+	TapestryService(final Registry registry, final String serviceId, final Class<T> serviceClass) {
+		this.registry = registry;
+		this.serviceId = serviceId;
+		this.serviceClass = serviceClass;
 	}
 
 	public String getServiceId() {
@@ -62,14 +53,6 @@ public class GuiceService<T> implements Service<T> {
 	}
 
 	public T build(final ServiceResources<T> resources) {
-		return injector.getInstance(key);
-	}
-
-	private String obtainServiceId(final Key<T> key) {
-		final Annotation annotation = key.getAnnotation();
-		if (annotation != null && Named.class.isInstance(annotation)) {
-			return ((Named) annotation).value();
-		}
-		return key.getTypeLiteral().getRawType().getName();
+		return registry.getService(serviceId, serviceClass);
 	}
 }
