@@ -16,6 +16,8 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.annotations.MarkerAnnotation;
+import org.greatage.ioc.annotations.Service;
 import org.greatage.util.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -30,12 +32,35 @@ import java.lang.reflect.Method;
  */
 public class InternalUtils {
 
+	public static <T> Marker<T> generateMarker(final Class<T> defaultClass, final Annotation... annotations) {
+		final Service service = findAnnotation(Service.class, annotations);
+		final MarkerAnnotation marker = findAnnotation(MarkerAnnotation.class, annotations);
+		if (service != null) {
+			final Class serviceClass = void.class.equals(service.service()) ? defaultClass : service.service();
+			final Class targetClass = void.class.equals(service.value()) ? serviceClass : service.value();
+			//noinspection unchecked
+			return new MarkerImpl<T>(serviceClass, targetClass, marker);
+		} else {
+			//noinspection unchecked
+			return new MarkerImpl<T>(defaultClass, defaultClass, marker);
+		}
+	}
+
+	public static boolean supports(final Marker<?> first, final Marker<?> second) {
+		if (first.getTargetClass().isAssignableFrom(second.getTargetClass())) {
+			if (first.getAnnotation() != null && first.getAnnotation().equals(second.getAnnotation())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/**
 	 * Generates service identifier by specified class alias and id. If class alias no equal to void, it class name will be
 	 * used as service id or string id otherwise.
 	 *
 	 * @param alias service class alias
-	 * @param id default service id
+	 * @param id	default service id
 	 * @return generated service id or null
 	 */
 	public static String generateServiceId(final Class alias, final String id) {
@@ -83,5 +108,14 @@ public class InternalUtils {
 			parameters[i] = resources.getResource(types[i], annotations[i]);
 		}
 		return parameters;
+	}
+
+	private static <A extends Annotation> A findAnnotation(final Class<A> annotationClass, final Annotation... annotations) {
+		for (Annotation annotation : annotations) {
+			if (annotationClass.isInstance(annotation)) {
+				return annotationClass.cast(annotation);
+			}
+		}
+		return null;
 	}
 }
