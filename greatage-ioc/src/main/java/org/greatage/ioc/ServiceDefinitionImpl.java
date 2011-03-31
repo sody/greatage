@@ -28,7 +28,7 @@ import java.lang.reflect.Constructor;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceImpl<T> implements Service<T> {
+public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	private final Class<T> serviceClass;
 	private final Class<? extends T> implementationClass;
 	private final String serviceId;
@@ -47,11 +47,11 @@ public class ServiceImpl<T> implements Service<T> {
 	 * @param scope		service scope
 	 * @param override	 option that determines is service overrides its default definition
 	 */
-	ServiceImpl(final Logger logger,
-				final String serviceId,
-				final Class<T> serviceClass,
-				final String scope,
-				final boolean override) {
+	ServiceDefinitionImpl(final Logger logger,
+						  final String serviceId,
+						  final Class<T> serviceClass,
+						  final String scope,
+						  final boolean override) {
 		this(logger, serviceId, serviceClass, serviceClass, scope, override);
 	}
 
@@ -66,12 +66,12 @@ public class ServiceImpl<T> implements Service<T> {
 	 * @param scope			   service scope
 	 * @param override			option that determines is service overrides its default definition
 	 */
-	ServiceImpl(final Logger logger,
-				final String serviceId,
-				final Class<T> serviceClass,
-				final Class<? extends T> implementationClass,
-				final String scope,
-				final boolean override) {
+	ServiceDefinitionImpl(final Logger logger,
+						  final String serviceId,
+						  final Class<T> serviceClass,
+						  final Class<? extends T> implementationClass,
+						  final String scope,
+						  final boolean override) {
 		this.logger = logger;
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;

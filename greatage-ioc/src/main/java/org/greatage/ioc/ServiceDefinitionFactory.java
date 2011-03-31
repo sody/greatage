@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceFactory<T> implements Service<T> {
+public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	private final Class<?> factoryClass;
 	private final Method factoryMethod;
 
@@ -49,7 +49,7 @@ public class ServiceFactory<T> implements Service<T> {
 	 * @param factoryClass  module class
 	 * @param factoryMethod build method
 	 */
-	ServiceFactory(final Logger logger, final Class<?> factoryClass, final Method factoryMethod) {
+	ServiceDefinitionFactory(final Logger logger, final Class<?> factoryClass, final Method factoryMethod) {
 		this.logger = logger;
 		this.factoryClass = factoryClass;
 		this.factoryMethod = factoryMethod;

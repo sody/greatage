@@ -24,7 +24,7 @@ package org.greatage.ioc;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface Service<T> {
+public interface ServiceDefinition<T> {
 
 	/**
 	 * Gets unique service id used to locate the service object.
