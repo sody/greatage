@@ -1,6 +1,5 @@
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Service;
 import org.greatage.ioc.mock.MockIOCInterface;
 import org.greatage.ioc.mock.MockIOCInterfaceEx;
 import org.greatage.ioc.mock.MockIOCInterfaceExImpl;
@@ -15,7 +14,43 @@ import java.lang.annotation.Annotation;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class TestInternalUtils extends Assert {
+public class TestMarker extends Assert {
+
+	@DataProvider
+	public Object[][] testAssignableFromData() {
+		return new Object[][] {
+				{
+						marker(Object.class, Object.class, null),
+						marker(Object.class, Object.class, null),
+						true
+				},
+				{
+						marker(Object.class, Object.class, null),
+						marker(MockIOCInterface.class, MockIOCInterface.class, null),
+						true
+				},
+				{
+						marker(MockIOCInterface.class, MockIOCInterface.class, null),
+						marker(Object.class, Object.class, null),
+						false
+				},
+				{
+						marker(MockIOCInterface.class, MockIOCInterfaceEx.class, null),
+						marker(MockIOCInterfaceEx.class, MockIOCInterfaceEx.class, null),
+						true
+				},
+				{
+						marker(MockIOCInterface.class, MockIOCInterfaceEx.class, null),
+						marker(MockIOCInterfaceEx.class, MockIOCInterfaceExImpl.class, null),
+						true
+				},
+				{
+						marker(MockIOCInterface.class, MockIOCInterfaceEx.class, null),
+						marker(MockIOCInterface.class, MockIOCInterface.class, null),
+						false
+				},
+		};
+	}
 
 	@DataProvider
 	public Object[][] testGenerateMarkerData() {
@@ -148,10 +183,16 @@ public class TestInternalUtils extends Assert {
 		};
 	}
 
+	@Test(dataProvider = "testAssignableFromData")
+	public void testAssignableFrom(final Marker first, final Marker second, final boolean expected) {
+		final boolean actual = first.isAssignableFrom(second);
+		assertEquals(actual, expected);
+	}
+
 	@Test(dataProvider = "testGenerateMarkerData")
 	public <T> void testGenerateMarker(final Class<T> defaultClass, final Annotation[] annotations,
 									   final Marker<T> expected) {
-		final Marker<T> actual = InternalUtils.generateMarker(defaultClass, annotations);
+		final Marker<T> actual = Marker.generate(defaultClass, annotations);
 		assertNotNull(actual);
 
 		assertEquals(actual.getServiceClass(), expected.getServiceClass());
@@ -161,15 +202,15 @@ public class TestInternalUtils extends Assert {
 
 	@Test(dataProvider = "testGenerateMarkerWrongData", expectedExceptions = IllegalArgumentException.class)
 	public <T> void testGenerateMarkerWrong(final Class<T> defaultClass, final Annotation[] annotations) {
-		InternalUtils.generateMarker(defaultClass, annotations);
+		Marker.generate(defaultClass, annotations);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final Class<? extends T> targetClass, final Annotation annotation) {
-		return new MarkerImpl<T>(serviceClass, targetClass, annotation);
+		return new Marker<T>(serviceClass, targetClass, annotation);
 	}
 
-	private Service service(final Class serviceClass, final Class value) {
-		return new Service() {
+	private org.greatage.ioc.annotations.Service service(final Class serviceClass, final Class value) {
+		return new org.greatage.ioc.annotations.Service() {
 			public Class service() {
 				return serviceClass;
 			}
@@ -179,7 +220,7 @@ public class TestInternalUtils extends Assert {
 			}
 
 			public Class<? extends Annotation> annotationType() {
-				return Service.class;
+				return org.greatage.ioc.annotations.Service.class;
 			}
 		};
 	}

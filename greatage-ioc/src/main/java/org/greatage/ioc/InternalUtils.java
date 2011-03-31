@@ -16,8 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.MarkerAnnotation;
-import org.greatage.ioc.annotations.Service;
 import org.greatage.util.StringUtils;
 
 import java.lang.annotation.Annotation;
@@ -31,37 +29,6 @@ import java.lang.reflect.Method;
  * @since 1.0
  */
 public class InternalUtils {
-
-	public static <T> Marker<T> generateMarker(final Class<T> defaultClass, final Annotation... annotations) {
-		final Service service = findAnnotation(Service.class, annotations);
-		final MarkerAnnotation marker = findAnnotation(MarkerAnnotation.class, annotations);
-		if (service == null) {
-			final Class serviceClass = defaultClass != null ? defaultClass : Object.class;
-			//noinspection unchecked
-			return new MarkerImpl<T>(serviceClass, serviceClass, marker);
-		}
-
-		final Class serviceClass = !void.class.equals(service.service()) ? service.service() :
-				defaultClass != null ? defaultClass :
-						void.class.equals(service.value()) ? Object.class : service.value();
-
-		final Class targetClass = void.class.equals(service.value()) ? serviceClass : service.value();
-
-		if (!serviceClass.isAssignableFrom(targetClass)) {
-			throw new IllegalArgumentException("Marker class should be subclassed from service class");
-		}
-		//noinspection unchecked
-		return new MarkerImpl<T>(serviceClass, targetClass, marker);
-	}
-
-	public static boolean supports(final Marker<?> first, final Marker<?> second) {
-		if (first.getTargetClass().isAssignableFrom(second.getTargetClass())) {
-			if (first.getAnnotation() != null && first.getAnnotation().equals(second.getAnnotation())) {
-				return true;
-			}
-		}
-		return false;
-	}
 
 	/**
 	 * Generates service identifier by specified class alias and id. If class alias no equal to void, it class name will be used as
@@ -118,7 +85,7 @@ public class InternalUtils {
 		return parameters;
 	}
 
-	private static <A extends Annotation> A findAnnotation(final Class<A> annotationClass, final Annotation... annotations) {
+	public static <A extends Annotation> A findAnnotation(final Class<A> annotationClass, final Annotation... annotations) {
 		if (annotations != null) {
 			for (Annotation annotation : annotations) {
 				if (annotationClass.isInstance(annotation)) {
