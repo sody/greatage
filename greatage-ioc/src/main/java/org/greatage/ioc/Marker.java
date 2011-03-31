@@ -24,9 +24,9 @@ import java.lang.annotation.Annotation;
  */
 public interface Marker<T> {
 
-	Class<T> getServiceClass();
+	Class<T> getServiceClass();//not null
 
-	Class<? extends T> getTargetClass();
+	Class<? extends T> getTargetClass();//not null
 
-	Annotation getAnnotation();
+	Annotation getAnnotation();//nullable
 }

@@ -35,15 +35,23 @@ public class InternalUtils {
 	public static <T> Marker<T> generateMarker(final Class<T> defaultClass, final Annotation... annotations) {
 		final Service service = findAnnotation(Service.class, annotations);
 		final MarkerAnnotation marker = findAnnotation(MarkerAnnotation.class, annotations);
-		if (service != null) {
-			final Class serviceClass = void.class.equals(service.service()) ? defaultClass : service.service();
-			final Class targetClass = void.class.equals(service.value()) ? serviceClass : service.value();
+		if (service == null) {
+			final Class serviceClass = defaultClass != null ? defaultClass : Object.class;
 			//noinspection unchecked
-			return new MarkerImpl<T>(serviceClass, targetClass, marker);
-		} else {
-			//noinspection unchecked
-			return new MarkerImpl<T>(defaultClass, defaultClass, marker);
+			return new MarkerImpl<T>(serviceClass, serviceClass, marker);
 		}
+
+		final Class serviceClass = !void.class.equals(service.service()) ? service.service() :
+				defaultClass != null ? defaultClass :
+						void.class.equals(service.value()) ? Object.class : service.value();
+
+		final Class targetClass = void.class.equals(service.value()) ? serviceClass : service.value();
+
+		if (!serviceClass.isAssignableFrom(targetClass)) {
+			throw new IllegalArgumentException("Marker class should be subclassed from service class");
+		}
+		//noinspection unchecked
+		return new MarkerImpl<T>(serviceClass, targetClass, marker);
 	}
 
 	public static boolean supports(final Marker<?> first, final Marker<?> second) {
@@ -56,8 +64,8 @@ public class InternalUtils {
 	}
 
 	/**
-	 * Generates service identifier by specified class alias and id. If class alias no equal to void, it class name will be
-	 * used as service id or string id otherwise.
+	 * Generates service identifier by specified class alias and id. If class alias no equal to void, it class name will be used as
+	 * service id or string id otherwise.
 	 *
 	 * @param alias service class alias
 	 * @param id	default service id
@@ -111,9 +119,11 @@ public class InternalUtils {
 	}
 
 	private static <A extends Annotation> A findAnnotation(final Class<A> annotationClass, final Annotation... annotations) {
-		for (Annotation annotation : annotations) {
-			if (annotationClass.isInstance(annotation)) {
-				return annotationClass.cast(annotation);
+		if (annotations != null) {
+			for (Annotation annotation : annotations) {
+				if (annotationClass.isInstance(annotation)) {
+					return annotationClass.cast(annotation);
+				}
 			}
 		}
 		return null;
