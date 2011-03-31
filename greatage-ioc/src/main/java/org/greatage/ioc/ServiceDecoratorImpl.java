@@ -81,7 +81,7 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	 * {@inheritDoc} This decorator supports service if its service identifier or service class correspond to configured
 	 * ones.
 	 */
-	public boolean supports(final Service service) {
+	public boolean supports(final ServiceDefinition service) {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
 				serviceClass.isAssignableFrom(service.getServiceClass());

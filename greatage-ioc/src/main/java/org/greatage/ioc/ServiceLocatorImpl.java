@@ -51,9 +51,9 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		this.logger = logger;
 
 		//TODO: implement this using set
-		final Map<String, Service<?>> services = CollectionUtils.newMap();
+		final Map<String, ServiceDefinition<?>> services = CollectionUtils.newMap();
 		for (Module module : modules) {
-			for (Service service : module.getServices()) {
+			for (ServiceDefinition service : module.getServices()) {
 				final String serviceId = service.getServiceId();
 				if (services.containsKey(serviceId) && !service.isOverride()) {
 					throw new ApplicationException(String.format("Service with id '%s' already declared", serviceId));
@@ -71,7 +71,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		final ServiceProvider<ServiceLocator> serviceLocatorProvider = new ServiceLocatorProvider(this);
 		servicesById.put(serviceLocatorProvider.getServiceId(), serviceLocatorProvider);
 
-		for (Service<?> service : services.values()) {
+		for (ServiceDefinition<?> service : services.values()) {
 			final ServiceProvider<?> provider = createServiceStatus(service, modules);
 			servicesById.put(provider.getServiceId(), provider);
 		}
@@ -144,7 +144,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @return service status instance, not null
 	 */
 	@SuppressWarnings("unchecked")
-	private ServiceProvider<?> createServiceStatus(final Service<?> service,
+	private ServiceProvider<?> createServiceStatus(final ServiceDefinition<?> service,
 												   final Collection<Module> modules) {
 		final List<ServiceContributor<?>> contributors = CollectionUtils.newList();
 		final List<ServiceDecorator<?>> decorators = CollectionUtils.newList();
@@ -168,7 +168,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @param service service definition
 	 * @return true if service is internal, false otherwise
 	 */
-	private boolean isInternal(final Service<?> service) {
+	private boolean isInternal(final ServiceDefinition<?> service) {
 		return internalServices.contains(service.getServiceClass());
 	}
 

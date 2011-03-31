@@ -1,5 +1,6 @@
 package org.greatage.ioc;
 
+import org.greatage.ioc.annotations.Service;
 import org.greatage.ioc.mock.MockIOCInterface;
 import org.greatage.ioc.mock.MockIOCInterfaceEx;
 import org.greatage.ioc.mock.MockIOCInterfaceExImpl;
@@ -209,8 +210,8 @@ public class TestMarker extends Assert {
 		return new Marker<T>(serviceClass, targetClass, annotation);
 	}
 
-	private org.greatage.ioc.annotations.Service service(final Class serviceClass, final Class value) {
-		return new org.greatage.ioc.annotations.Service() {
+	private Service service(final Class serviceClass, final Class value) {
+		return new Service() {
 			public Class service() {
 				return serviceClass;
 			}
@@ -220,7 +221,7 @@ public class TestMarker extends Assert {
 			}
 
 			public Class<? extends Annotation> annotationType() {
-				return org.greatage.ioc.annotations.Service.class;
+				return Service.class;
 			}
 		};
 	}

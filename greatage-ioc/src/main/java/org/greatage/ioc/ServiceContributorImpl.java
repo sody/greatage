@@ -83,7 +83,7 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	 * {@inheritDoc} This contributor supports service if its service identifier or service class correspond to configured
 	 * ones.
 	 */
-	public boolean supports(final Service service) {
+	public boolean supports(final ServiceDefinition service) {
 		return serviceId != null ?
 				service.getServiceId().equals(serviceId) :
 				serviceClass.isAssignableFrom(service.getServiceClass());

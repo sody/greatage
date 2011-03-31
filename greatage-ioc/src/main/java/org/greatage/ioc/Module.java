@@ -26,7 +26,7 @@ import java.util.List;
  * modules.
  *
  * @author Ivan Khalopik
- * @see Service
+ * @see ServiceDefinition
  * @see ServiceContributor
  * @see ServiceDecorator
  * @since 1.0
@@ -38,7 +38,7 @@ public interface Module {
 	 *
 	 * @return all service definitions
 	 */
-	Collection<Service> getServices();
+	Collection<ServiceDefinition> getServices();
 
 	/**
 	 * Gets an ordered list of all service contributor definitions for specified service.
@@ -47,7 +47,7 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service contributor definitions for specified service or empty list
 	 */
-	<T> List<ServiceContributor<T>> getContributors(Service<T> service);
+	<T> List<ServiceContributor<T>> getContributors(ServiceDefinition<T> service);
 
 	/**
 	 * Gets an ordered list of all service interceptor definitions for specified service.
@@ -56,5 +56,5 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
-	<T> List<ServiceDecorator<T>> getDecorators(Service<T> service);
+	<T> List<ServiceDecorator<T>> getDecorators(ServiceDefinition<T> service);
 }

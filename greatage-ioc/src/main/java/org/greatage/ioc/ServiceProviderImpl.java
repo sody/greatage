@@ -51,7 +51,7 @@ public class ServiceProviderImpl<T> implements ServiceProvider<T> {
 	 * @param decorators   service decorators
 	 */
 	ServiceProviderImpl(final ServiceLocator locator,
-						final Service<T> service,
+						final ServiceDefinition<T> service,
 						final List<ServiceContributor<T>> contributors,
 						final List<ServiceDecorator<T>> decorators) {
 		this.resources = new ServiceInitialResources<T>(locator, service);

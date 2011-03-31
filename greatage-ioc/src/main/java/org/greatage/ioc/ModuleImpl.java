@@ -36,8 +36,8 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
-	private final List<Service> services = CollectionUtils.newList();
+public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
+	private final List<ServiceDefinition> services = CollectionUtils.newList();
 	private final List<ServiceContributor> contributors = CollectionUtils.newList();
 	private final List<ServiceDecorator> decorators = CollectionUtils.newList();
 
@@ -54,7 +54,7 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {
-				services.add(new ServiceFactory(logger, moduleClass, method));
+				services.add(new ServiceDefinitionFactory(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
 				contributors.add(new ServiceContributorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
@@ -74,14 +74,14 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<Service> getServices() {
+	public Collection<ServiceDefinition> getServices() {
 		return services;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<ServiceContributor<T>> getContributors(final Service<T> service) {
+	public <T> List<ServiceContributor<T>> getContributors(final ServiceDefinition<T> service) {
 		final List<ServiceContributor<T>> result = CollectionUtils.newList();
 		for (ServiceContributor contributor : contributors) {
 			if (contributor.supports(service)) {
@@ -95,7 +95,7 @@ public class ModuleImpl<T> extends ServiceImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<ServiceDecorator<T>> getDecorators(final Service<T> service) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final ServiceDefinition<T> service) {
 		final List<ServiceDecorator<T>> result = CollectionUtils.newList();
 		for (ServiceDecorator decorator : decorators) {
 			if (decorator.supports(service)) {

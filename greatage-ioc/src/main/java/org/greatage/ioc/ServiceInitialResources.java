@@ -45,7 +45,7 @@ public class ServiceInitialResources<T> implements ServiceResources<T> {
 	 * @param locator service locator
 	 * @param service service definition
 	 */
-	ServiceInitialResources(final ServiceLocator locator, final Service<T> service) {
+	ServiceInitialResources(final ServiceLocator locator, final ServiceDefinition<T> service) {
 		this(locator, service.getServiceId(), service.getServiceClass(), service.getScope());
 	}
 

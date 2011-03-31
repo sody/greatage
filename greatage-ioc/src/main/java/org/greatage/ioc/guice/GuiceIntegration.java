@@ -20,7 +20,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import org.greatage.ioc.Module;
-import org.greatage.ioc.Service;
+import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceDecorator;
 import org.greatage.util.CollectionUtils;
@@ -34,7 +34,7 @@ import java.util.Set;
  * @since 1.1
  */
 public class GuiceIntegration implements Module {
-	private final Set<Service> services = CollectionUtils.newSet();
+	private final Set<ServiceDefinition> services = CollectionUtils.newSet();
 
 	public GuiceIntegration(final com.google.inject.Module... modules) {
 		this(Guice.createInjector(modules));
@@ -43,19 +43,19 @@ public class GuiceIntegration implements Module {
 	@SuppressWarnings("unchecked")
 	public GuiceIntegration(final Injector injector) {
 		for (Key<?> key : injector.getBindings().keySet()) {
-			services.add(new GuiceService(injector, key));
+			services.add(new GuiceServiceDefinition(injector, key));
 		}
 	}
 
-	public Collection<Service> getServices() {
+	public Collection<ServiceDefinition> getServices() {
 		return services;
 	}
 
-	public <T> List<ServiceContributor<T>> getContributors(final Service<T> service) {
+	public <T> List<ServiceContributor<T>> getContributors(final ServiceDefinition<T> service) {
 		return CollectionUtils.newList();
 	}
 
-	public <T> List<ServiceDecorator<T>> getDecorators(final Service<T> service) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final ServiceDefinition<T> service) {
 		return CollectionUtils.newList();
 	}
 }

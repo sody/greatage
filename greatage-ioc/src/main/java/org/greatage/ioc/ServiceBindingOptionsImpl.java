@@ -86,7 +86,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 * @param logger system logger
 	 * @return new instance of configured service definition, not null
 	 */
-	public Service<T> createService(final Logger logger) {
-		return new ServiceImpl<T>(logger, serviceId, serviceClass, implementationClass, serviceScope, override);
+	public ServiceDefinition<T> createService(final Logger logger) {
+		return new ServiceDefinitionImpl<T>(logger, serviceId, serviceClass, implementationClass, serviceScope, override);
 	}
 }

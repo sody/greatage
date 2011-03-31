@@ -38,7 +38,7 @@ public interface ServiceDecorator<T> extends Ordered {
 	 * @param service service definition
 	 * @return true if this service interceptor definition supports specified service, false otherwise
 	 */
-	boolean supports(Service service);
+	boolean supports(ServiceDefinition service);
 
 	/**
 	 * Configures service method advices using service resource.

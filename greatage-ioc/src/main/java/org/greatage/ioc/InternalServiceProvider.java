@@ -44,7 +44,7 @@ public class InternalServiceProvider<T> implements ServiceProvider<T> {
 	 * @param contributors service contribute definitions
 	 */
 	InternalServiceProvider(final ServiceLocator locator,
-							final Service<T> service,
+							final ServiceDefinition<T> service,
 							final List<ServiceContributor<T>> contributors) {
 		this.resources = new ServiceInitialResources<T>(locator, service);
 		this.builder = new ConfiguredBuilder<T>(resources, service, contributors);

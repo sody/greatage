@@ -21,7 +21,7 @@ import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.services.ServiceActivity;
 import org.apache.tapestry5.ioc.services.ServiceActivityScoreboard;
 import org.greatage.ioc.Module;
-import org.greatage.ioc.Service;
+import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceDecorator;
 import org.greatage.util.CollectionUtils;
@@ -35,7 +35,7 @@ import java.util.Set;
  * @since 1.1
  */
 public class TapestryIntegration implements Module {
-	private final Set<Service> services = CollectionUtils.newSet();
+	private final Set<ServiceDefinition> services = CollectionUtils.newSet();
 
 	public TapestryIntegration(final Class... moduleClasses) {
 		this(RegistryBuilder.buildAndStartupRegistry(moduleClasses));
@@ -45,19 +45,19 @@ public class TapestryIntegration implements Module {
 	public TapestryIntegration(final Registry registry) {
 		final ServiceActivityScoreboard scoreboard = registry.getService(ServiceActivityScoreboard.class);
 		for (ServiceActivity activity : scoreboard.getServiceActivity()) {
-			services.add(new TapestryService(registry, activity.getServiceId(), activity.getServiceInterface()));
+			services.add(new TapestryServiceDefinition(registry, activity.getServiceId(), activity.getServiceInterface()));
 		}
 	}
 
-	public Collection<Service> getServices() {
+	public Collection<ServiceDefinition> getServices() {
 		return services;
 	}
 
-	public <T> List<ServiceContributor<T>> getContributors(final Service<T> service) {
+	public <T> List<ServiceContributor<T>> getContributors(final ServiceDefinition<T> service) {
 		return CollectionUtils.newList();
 	}
 
-	public <T> List<ServiceDecorator<T>> getDecorators(final Service<T> service) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final ServiceDefinition<T> service) {
 		return CollectionUtils.newList();
 	}
 }

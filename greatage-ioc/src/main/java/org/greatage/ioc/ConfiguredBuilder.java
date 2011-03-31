@@ -29,7 +29,7 @@ import java.util.List;
  * @since 1.0
  */
 public class ConfiguredBuilder<T> implements ObjectBuilder<T> {
-	private final Service<T> service;
+	private final ServiceDefinition<T> service;
 	private final ServiceResources<T> resources;
 	private final List<ServiceContributor<T>> contributors;
 
@@ -42,7 +42,7 @@ public class ConfiguredBuilder<T> implements ObjectBuilder<T> {
 	 * @param contributors service contributor definitions
 	 */
 	ConfiguredBuilder(final ServiceResources<T> resources,
-					  final Service<T> service,
+					  final ServiceDefinition<T> service,
 					  final List<ServiceContributor<T>> contributors) {
 		this.service = service;
 		this.resources = resources;

@@ -34,7 +34,7 @@ public interface ServiceContributor<T> extends Ordered {
 	 * @param service service definition
 	 * @return true if this service configuration definition supports specified service, false otherwise
 	 */
-	boolean supports(Service service);
+	boolean supports(ServiceDefinition service);
 
 	/**
 	 * Contributes to service configuration using service resource. It manipulates with three types of service

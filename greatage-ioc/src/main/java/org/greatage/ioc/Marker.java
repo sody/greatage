@@ -59,7 +59,7 @@ public class Marker<T> {
 	}
 
 	public static <T> Marker<T> generate(final Class<T> defaultClass, final Annotation... annotations) {
-		final org.greatage.ioc.annotations.Service service = InternalUtils.findAnnotation(org.greatage.ioc.annotations.Service.class, annotations);
+		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
 		final MarkerAnnotation marker = InternalUtils.findAnnotation(MarkerAnnotation.class, annotations);
 		if (service == null) {
 			final Class serviceClass = defaultClass != null ? defaultClass : Object.class;
