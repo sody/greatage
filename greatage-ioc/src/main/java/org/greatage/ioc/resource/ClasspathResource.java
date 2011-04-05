@@ -23,7 +23,7 @@ import java.util.Locale;
  * This class represents {@link Resource} implementation that is based on application classpath.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ClasspathResource extends AbstractResource {
 	private final ClassLoader classLoader;

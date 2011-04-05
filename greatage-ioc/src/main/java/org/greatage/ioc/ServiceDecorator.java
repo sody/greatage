@@ -16,6 +16,7 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.Ordered;
 
@@ -28,17 +29,11 @@ import org.greatage.util.Ordered;
  * @author Ivan Khalopik
  * @see org.greatage.ioc.proxy.ProxyFactory
  * @see org.greatage.ioc.proxy.Interceptor
- * @since 1.0
+ * @since 1.1
  */
 public interface ServiceDecorator<T> extends Ordered {
 
-	/**
-	 * Checks if this service interceptor definition supports specified service.
-	 *
-	 * @param service service definition
-	 * @return true if this service interceptor definition supports specified service, false otherwise
-	 */
-	boolean supports(ServiceDefinition service);
+	Marker<T> getMarker();
 
 	/**
 	 * Configures service method advices using service resource.

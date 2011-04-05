@@ -21,6 +21,7 @@ import org.apache.tapestry5.ioc.def.DecoratorDef;
 import org.apache.tapestry5.ioc.def.ModuleDef;
 import org.apache.tapestry5.ioc.def.ServiceDef;
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
+import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
 
@@ -30,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class GreatAgeIntegration implements ModuleDef {
 	private final Map<String, ServiceDef> services = CollectionFactory.newMap();
@@ -44,8 +45,9 @@ public class GreatAgeIntegration implements ModuleDef {
 	}
 
 	public GreatAgeIntegration(final ServiceLocator locator) {
-		for (String serviceId : locator.getServiceIds()) {
-			services.put(serviceId, new GreatAgeServiceDef(locator.getServiceProvider(serviceId)));
+		for (Marker<?> marker : locator.getMarkers()) {
+			//TODO: make it work
+			services.put(marker.toString(), new GreatAgeServiceDef(locator.getServiceProvider(marker)));
 		}
 	}
 

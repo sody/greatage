@@ -32,7 +32,7 @@ import java.util.Properties;
  * locate message bundles, reads them in UTF-8 encoding and creates {@link MessagesImpl} instance as result.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class MessagesSourceImpl extends AbstractMessagesSource {
 	private static final String DEFAULT_CHARSET = "UTF-8";

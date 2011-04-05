@@ -18,10 +18,13 @@ package org.greatage.ioc.guice;
 
 import com.google.inject.Binder;
 import com.google.inject.Module;
+import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.name.Names;
+import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
 import org.greatage.ioc.ServiceProvider;
+import org.greatage.ioc.annotations.Named;
 
 /**
  * @author Ivan Khalopik
@@ -44,11 +47,13 @@ public class GreatAgeIntegration implements Module {
 
 	@SuppressWarnings("unchecked")
 	public void configure(final Binder binder) {
-		for (String serviceId : locator.getServiceIds()) {
-			final ServiceProvider<?> serviceStatus = locator.getServiceProvider(serviceId);
-			binder.bind(serviceStatus.getServiceClass())
-					.annotatedWith(Names.named(serviceStatus.getServiceId()))
-					.toProvider(new GreatAgeProvider(serviceStatus));
+		for (Marker<?> marker : locator.getMarkers()) {
+			final ServiceProvider<?> serviceStatus = locator.getServiceProvider(marker);
+			final AnnotatedBindingBuilder builder = binder.bind(serviceStatus.getMarker().getServiceClass());
+			if (marker.getAnnotation() != null && marker.getAnnotation().annotationType().equals(Named.class)) {
+				builder.annotatedWith(Names.named(((Named) marker.getAnnotation()).value()));
+			}
+			builder.toProvider(new GreatAgeProvider(serviceStatus));
 		}
 	}
 }

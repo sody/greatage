@@ -2,7 +2,7 @@ package org.greatage.ioc.mock;
 
 /**
  * @author Ivan Khalopik
- * @since 8.0
+ * @since 1.1
  */
 public class MockIOCInterfaceExImpl extends MockIOCInterfaceImpl1 implements MockIOCInterfaceEx {
 

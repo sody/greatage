@@ -26,7 +26,7 @@ import java.util.List;
  * their automatically built instances. It is based on binding services by invoking module static method.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceBinderImpl implements ServiceBinder {
 	private final List<ServiceBindingOptionsImpl> services = CollectionUtils.newList();
@@ -49,8 +49,7 @@ public class ServiceBinderImpl implements ServiceBinder {
 	 * {@inheritDoc}
 	 */
 	public <T> ServiceBindingOptions bind(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
-		final ServiceBindingOptionsImpl<T> options =
-				new ServiceBindingOptionsImpl<T>(serviceClass, implementationClass);
+		final ServiceBindingOptionsImpl<T> options = new ServiceBindingOptionsImpl<T>(serviceClass, implementationClass);
 		services.add(options);
 		return options;
 	}
@@ -61,8 +60,8 @@ public class ServiceBinderImpl implements ServiceBinder {
 	 * @param logger system logger
 	 * @return list of configured automatically built service definitions or empty list
 	 */
-	public List<ServiceDefinition> createServices(final Logger logger) {
-		final List<ServiceDefinition> result = CollectionUtils.newList();
+	public List<ServiceDefinition<?>> createServices(final Logger logger) {
+		final List<ServiceDefinition<?>> result = CollectionUtils.newList();
 		for (ServiceBindingOptionsImpl options : services) {
 			result.add(options.createService(logger));
 		}

@@ -26,7 +26,7 @@ import java.lang.reflect.Constructor;
  * @param <V> type of configuration items
  * @param <C> configuration resulting type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractConfiguration<T, V, C> {
 	private final ServiceResources<T> resources;

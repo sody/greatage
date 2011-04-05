@@ -23,7 +23,7 @@ package org.greatage.ioc;
  * class.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ServiceBinder {
 

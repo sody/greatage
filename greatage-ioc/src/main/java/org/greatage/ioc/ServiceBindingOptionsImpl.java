@@ -19,19 +19,20 @@ package org.greatage.ioc;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
 
+import java.lang.annotation.Annotation;
+
 /**
  * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id,
  * service scope and is it overrides the existing service.
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private final Class<T> serviceClass;
 	private final Class<? extends T> implementationClass;
 
-	private String serviceId;
 	private String serviceScope;
 	private boolean override;
 
@@ -44,24 +45,8 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	ServiceBindingOptionsImpl(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;
-		this.serviceId = serviceClass.getName();
 		this.serviceScope = ScopeConstants.GLOBAL;
 		this.override = false;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ServiceBindingOptions withId(final String id) {
-		serviceId = id;
-		return this;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ServiceBindingOptions withAlias(final Class alias) {
-		return withId(alias.getName());
 	}
 
 	/**
@@ -87,6 +72,6 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 * @return new instance of configured service definition, not null
 	 */
 	public ServiceDefinition<T> createService(final Logger logger) {
-		return new ServiceDefinitionImpl<T>(logger, serviceId, serviceClass, implementationClass, serviceScope, override);
+		return new ServiceDefinitionImpl<T>(logger, serviceClass, implementationClass, serviceScope, override);
 	}
 }

@@ -30,22 +30,12 @@ import java.lang.annotation.Target;
  * and map for unordered, ordered and mapped configurations respectively.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Build {
-
-	/**
-	 * This property defines service alias (class name) that represents service unique id.
-	 */
-	Class value() default Void.class;
-
-	/**
-	 * This property defines service unique id.
-	 */
-	String id() default "";
 
 	/**
 	 * This property defines if service definition will be overridden or not.

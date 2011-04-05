@@ -20,6 +20,7 @@ import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.services.ServiceActivity;
 import org.apache.tapestry5.ioc.services.ServiceActivityScoreboard;
+import org.greatage.ioc.Marker;
 import org.greatage.ioc.Module;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceContributor;
@@ -35,7 +36,7 @@ import java.util.Set;
  * @since 1.1
  */
 public class TapestryIntegration implements Module {
-	private final Set<ServiceDefinition> services = CollectionUtils.newSet();
+	private final Set<ServiceDefinition<?>> services = CollectionUtils.newSet();
 
 	public TapestryIntegration(final Class... moduleClasses) {
 		this(RegistryBuilder.buildAndStartupRegistry(moduleClasses));
@@ -49,15 +50,15 @@ public class TapestryIntegration implements Module {
 		}
 	}
 
-	public Collection<ServiceDefinition> getServices() {
+	public Collection<ServiceDefinition<?>> getDefinitions() {
 		return services;
 	}
 
-	public <T> List<ServiceContributor<T>> getContributors(final ServiceDefinition<T> service) {
+	public <T> List<ServiceContributor<T>> getContributors(final Marker<T> marker) {
 		return CollectionUtils.newList();
 	}
 
-	public <T> List<ServiceDecorator<T>> getDecorators(final ServiceDefinition<T> service) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final Marker<T> marker) {
 		return CollectionUtils.newList();
 	}
 }

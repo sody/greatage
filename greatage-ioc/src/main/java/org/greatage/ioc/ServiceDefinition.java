@@ -16,29 +16,19 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.inject.Injector;
+
 /**
  * This class represents service definition that instantiates service. By default it is configured by module build
  * methods annotated with {@link org.greatage.ioc.annotations.Build} class.
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ServiceDefinition<T> {
 
-	/**
-	 * Gets unique service id used to locate the service object.
-	 *
-	 * @return unique service id, not null
-	 */
-	String getServiceId();
-
-	/**
-	 * Gets service interface that both service implementation and service proxy will implement.
-	 *
-	 * @return service interface, not null
-	 */
-	Class<T> getServiceClass();
+	Marker<T> getMarker();
 
 	/**
 	 * Determines if this service definition overrides existing or not. The default value is false.
@@ -59,7 +49,6 @@ public interface ServiceDefinition<T> {
 	 * Builds service instance using configured service resource. They are configured by {@link ServiceContributor}
 	 * instances correspondent to this service instance.
 	 *
-	 * @param resources configured service resources
 	 * @return service instance, not null
 	 * @throws ApplicationException if error occurs while building service
 	 */

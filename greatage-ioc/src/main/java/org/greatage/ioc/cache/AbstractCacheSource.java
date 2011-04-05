@@ -23,7 +23,7 @@ import org.greatage.util.DescriptionBuilder;
  * class name.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractCacheSource implements CacheSource {
 

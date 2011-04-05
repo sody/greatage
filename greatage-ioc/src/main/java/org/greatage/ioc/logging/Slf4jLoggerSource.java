@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * This class represents logger source implementation through Slf4j logging API.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class Slf4jLoggerSource implements LoggerSource {
 

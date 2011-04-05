@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
  * This class represents {@link Invocation} implementation that is based on configured instance method invocation.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class InvocationImpl implements Invocation {
 	private final Object target;

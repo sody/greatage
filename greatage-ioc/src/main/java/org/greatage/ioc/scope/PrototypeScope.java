@@ -16,29 +16,49 @@
 
 package org.greatage.ioc.scope;
 
-import org.greatage.ioc.ServiceResources;
-import org.greatage.ioc.proxy.ObjectBuilder;
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.proxy.ProxyFactory;
+
+import java.util.Map;
 
 /**
  * This class represents {@link Scope} implementation that It is used for services that have different state for all
  * points where it is accessed. Default scope identifier is {@link ScopeConstants#PROTOTYPE}.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
-public class PrototypeScope implements Scope {
+public class PrototypeScope extends AbstractScope {
 
-	/**
-	 * {@inheritDoc} Always creates new service instance.
-	 */
-	public <E> E get(final ServiceResources<E> resources, final ObjectBuilder<E> builder) {
-		return builder.build();
+	public PrototypeScope(final ProxyFactory proxyFactory) {
+		super(ScopeConstants.PROTOTYPE, proxyFactory);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void cleanup() {
 		//do nothing
+	}
+
+	@Override
+	protected <S> void putService(final Marker<S> marker, final S service) {
+		//do nothing
+	}
+
+	@Override
+	protected <S> S getService(final Marker<S> marker) {
+		return null;
+	}
+
+	@Override
+	protected <S> boolean containsService(final Marker<S> marker) {
+		return false;
+	}
+
+	@Override
+	protected Map<Marker, Object> getScopeServices() {
+		return null;
 	}
 }

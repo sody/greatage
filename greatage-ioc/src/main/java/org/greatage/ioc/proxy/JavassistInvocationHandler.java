@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @param <T> object type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> {
 
@@ -32,10 +32,9 @@ public class JavassistInvocationHandler<T> extends AbstractInvocationHandler<T> 
 	 * Creates new instance of invocation handler for javassist proxy objects.
 	 *
 	 * @param builder	  object builder
-	 * @param interceptors method interceptors
 	 */
-	public JavassistInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
-		super(builder, interceptors);
+	public JavassistInvocationHandler(final ObjectBuilder<T> builder) {
+		super(builder);
 	}
 
 	/**

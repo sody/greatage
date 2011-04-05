@@ -28,7 +28,7 @@ import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Inject;
+import org.greatage.ioc.annotations.Service;
 import org.greatage.ioc.annotations.Symbol;
 import org.greatage.ioc.resource.ResourceLocator;
 import org.greatage.ioc.scope.ScopeConstants;
@@ -41,21 +41,20 @@ import java.util.Map;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class HibernateModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(HibernateConfiguration.class, HibernateAnnotationConfiguration.class)
-				.withAlias(HibernateAnnotationConfiguration.class);
-		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class)
-				.withAlias(HibernatePropertyConfiguration.class);
+		binder.bind(HibernateConfiguration.class, HibernateAnnotationConfiguration.class);
+		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class);
 		binder.bind(HibernateExecutor.class, HibernateExecutorImpl.class).withScope(ScopeConstants.THREAD);
 		binder.bind(EntityFilterProcessor.class, CompositeFilterProcessor.class);
 	}
 
-	@Contribute(DefaultSymbolProvider.class)
+	@Contribute
+	@Service(DefaultSymbolProvider.class)
 	public void contributeApplicationSymbolProvider(final MappedConfiguration<String, String> configuration) {
 		configuration.add(DomainConstants.HIBERNATE_PROPERTIES, "hibernate.properties");
 	}
@@ -69,10 +68,11 @@ public class HibernateModule {
 		return configuration.buildSessionFactory();
 	}
 
-	@Contribute(SessionFactory.class)
+	@Contribute
+	@Service(SessionFactory.class)
 	public void contributeSessionFactory(final OrderedConfiguration<HibernateConfiguration> configuration,
-										 @Inject(HibernatePropertyConfiguration.class) final HibernateConfiguration propertyConfiguration,
-										 @Inject(HibernateAnnotationConfiguration.class) final HibernateConfiguration annotationConfiguration,
+										 @Service(HibernatePropertyConfiguration.class) final HibernateConfiguration propertyConfiguration,
+										 @Service(HibernateAnnotationConfiguration.class) final HibernateConfiguration annotationConfiguration,
 										 @Symbol(DomainConstants.HIBERNATE_PROPERTIES) final String hibernatePropertiesResource,
 										 final ResourceLocator resourceLocator) throws IOException {
 		configuration.add(new HibernateBaseConfiguration(resourceLocator, hibernatePropertiesResource), "Base");
@@ -87,7 +87,8 @@ public class HibernateModule {
 		return new HibernateRepository(aliases, executor, processor);
 	}
 
-	@Contribute(EntityFilterProcessor.class)
+	@Contribute
+	@Service(EntityFilterProcessor.class)
 	public void contributeHibernateFilterProcessor(final Configuration<EntityFilterProcessor> configuration) {
 		configuration.addInstance(BaseFilterProcessor.class);
 	}

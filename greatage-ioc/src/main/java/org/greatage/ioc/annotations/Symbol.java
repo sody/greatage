@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * expression provided by {@link org.greatage.ioc.symbol.SymbolSource}.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

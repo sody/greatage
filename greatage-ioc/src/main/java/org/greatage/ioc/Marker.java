@@ -16,7 +16,10 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.*;
+import org.greatage.ioc.annotations.MarkerAnnotation;
+import org.greatage.ioc.annotations.Named;
+import org.greatage.ioc.annotations.Service;
+import org.greatage.util.DescriptionBuilder;
 
 import java.lang.annotation.Annotation;
 
@@ -29,10 +32,14 @@ public class Marker<T> {
 	private final Class<? extends T> targetClass;
 	private final Annotation annotation;
 
+	private final int hashCode;
+
 	Marker(final Class<T> serviceClass, final Class<? extends T> targetClass, final Annotation annotation) {
 		this.serviceClass = serviceClass;
 		this.targetClass = targetClass;
 		this.annotation = annotation;
+
+		this.hashCode = calculateHashCode();
 	}
 
 	public Class<T> getServiceClass() {
@@ -50,15 +57,60 @@ public class Marker<T> {
 	public boolean isAssignableFrom(final Marker<?> marker) {
 		if (!serviceClass.isAssignableFrom(marker.getServiceClass())) {
 			return false;
-		} else if (!targetClass.isAssignableFrom(marker.getTargetClass())) {
+		}
+		else if (!targetClass.isAssignableFrom(marker.getTargetClass())) {
 			return false;
-		} else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
+		}
+		else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
 			return false;
 		}
 		return true;
 	}
 
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
+
+	@SuppressWarnings("SimplifiableIfStatement")
+	@Override
+	public boolean equals(final Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof Marker)) {
+			return false;
+		}
+		final Marker<?> marker = (Marker<?>) object;
+		if (serviceClass.equals(marker.getServiceClass()) && targetClass.equals(marker.getTargetClass())) {
+			if (annotation == null && marker.getAnnotation() == null) {
+				return true;
+			}
+			return annotation != null && annotation.equals(marker.getAnnotation());
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("service", serviceClass);
+		builder.append("target", targetClass);
+		builder.append("annotation", annotation);
+		return builder.toString();
+	}
+
+	private int calculateHashCode() {
+		final int result = 31 * serviceClass.hashCode() + targetClass.hashCode();
+		return 31 * result + (annotation != null ? annotation.hashCode() : 0);
+	}
+
+	public static <T> Marker<T> generate(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
+		return generate(serviceClass, implementationClass.getAnnotations());
+	}
+
 	public static <T> Marker<T> generate(final Class<T> defaultClass, final Annotation... annotations) {
+		//TODO: make it generate right implementation class
 		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
 		final MarkerAnnotation marker = InternalUtils.findAnnotation(MarkerAnnotation.class, annotations);
 		if (service == null) {
@@ -78,5 +130,17 @@ public class Marker<T> {
 		}
 		//noinspection unchecked
 		return new Marker<T>(serviceClass, targetClass, marker);
+	}
+
+	public static Named named(final String name) {
+		return new Named() {
+			public String value() {
+				return name;
+			}
+
+			public Class<? extends Annotation> annotationType() {
+				return Named.class;
+			}
+		};
 	}
 }

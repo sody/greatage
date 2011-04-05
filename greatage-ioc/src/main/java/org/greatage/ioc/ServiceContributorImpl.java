@@ -27,19 +27,18 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * This class represents default implementation of service contribution definition that distributively configures
- * services. It is based on configuring service by invoking module method.
+ * This class represents default implementation of service contribution definition that distributively configures services. It is
+ * based on configuring service by invoking module method.
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	private final Class<?> moduleClass;
 	private final Method configureMethod;
 
-	private final Class<T> serviceClass;
-	private final String serviceId;
+	private final Marker<T> marker;
 
 	private final String orderId;
 	private final List<String> orderConstraints;
@@ -47,8 +46,8 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	private final Logger logger;
 
 	/**
-	 * Creates new instance of service contribution definition with defined module class and method used for service
-	 * configuration. Configuration method must have void return type and be annotated with {@link Contribute} annotation.
+	 * Creates new instance of service contribution definition with defined module class and method used for service configuration.
+	 * Configuration method must have void return type and be annotated with {@link Contribute} annotation.
 	 *
 	 * @param logger		  system logger
 	 * @param moduleClass	 module class
@@ -60,33 +59,26 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 		this.moduleClass = moduleClass;
 		this.configureMethod = configureMethod;
 
-		if (!configureMethod.getReturnType().equals(Void.TYPE)) {
+		if (!configureMethod.getReturnType().equals(void.class)) {
 			throw new ApplicationException("Configuration method can not return any value");
 		}
 
-		final Contribute contribute = configureMethod.getAnnotation(Contribute.class);
-		serviceId = InternalUtils.generateServiceId(contribute.value(), contribute.id());
-		//noinspection unchecked
-		serviceClass = contribute.service();
+		//TODO: add check is service annotation present
+		marker = Marker.generate(null, configureMethod.getAnnotations());
 
 		final Order order = configureMethod.getAnnotation(Order.class);
 		if (order != null) {
 			orderId = order.value();
 			orderConstraints = Arrays.asList(order.constraints());
-		} else {
+		}
+		else {
 			orderId = "";
 			orderConstraints = CollectionUtils.newList();
 		}
 	}
 
-	/**
-	 * {@inheritDoc} This contributor supports service if its service identifier or service class correspond to configured
-	 * ones.
-	 */
-	public boolean supports(final ServiceDefinition service) {
-		return serviceId != null ?
-				service.getServiceId().equals(serviceId) :
-				serviceClass.isAssignableFrom(service.getServiceClass());
+	public Marker<T> getMarker() {
+		return marker;
 	}
 
 	/**
@@ -107,8 +99,7 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	 * {@inheritDoc} It configures service by invoking configured module method.
 	 */
 	public void contribute(final ServiceResources<T> resources) {
-		logger.info("Configuring service (%s, %s) from module (%s, %s)", resources.getServiceId(),
-				resources.getServiceClass(), moduleClass, configureMethod);
+		logger.info("Configuring service (%s) from module (%s, %s)", resources.getMarker(), moduleClass, configureMethod);
 
 		try {
 			final Object moduleInstance =
@@ -116,8 +107,7 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, configureMethod);
 			configureMethod.invoke(moduleInstance, parameters);
 		} catch (Exception e) {
-			throw new ApplicationException(
-					String.format("Can't create service configuration with id '%s'", resources.getServiceId()), e);
+			throw new ApplicationException(String.format("Can't configure service (%s)", resources.getMarker()), e);
 		}
 	}
 }

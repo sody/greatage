@@ -27,7 +27,7 @@ import java.util.Set;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class GreatAgeServiceDef implements ServiceDef {
 	private final ServiceProvider serviceProvider;
@@ -45,7 +45,8 @@ public class GreatAgeServiceDef implements ServiceDef {
 	}
 
 	public String getServiceId() {
-		return serviceProvider.getServiceId();
+		//TODO: make it work
+		return serviceProvider.getMarker().toString();
 	}
 
 	public Set<Class> getMarkers() {
@@ -53,7 +54,7 @@ public class GreatAgeServiceDef implements ServiceDef {
 	}
 
 	public Class getServiceInterface() {
-		return serviceProvider.getServiceClass();
+		return serviceProvider.getMarker().getServiceClass();
 	}
 
 	public String getServiceScope() {

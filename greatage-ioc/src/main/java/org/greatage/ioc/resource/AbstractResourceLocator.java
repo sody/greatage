@@ -21,7 +21,7 @@ package org.greatage.ioc.resource;
  * retrieving other resources.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractResourceLocator implements ResourceLocator {
 	private final Resource rootResource;

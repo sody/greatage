@@ -34,12 +34,12 @@ import java.util.List;
  *
  * @param <T> module service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
-	private final List<ServiceDefinition> services = CollectionUtils.newList();
-	private final List<ServiceContributor> contributors = CollectionUtils.newList();
-	private final List<ServiceDecorator> decorators = CollectionUtils.newList();
+	private final List<ServiceDefinition<?>> services = CollectionUtils.newList();
+	private final List<ServiceContributor<?>> contributors = CollectionUtils.newList();
+	private final List<ServiceDecorator<?>> decorators = CollectionUtils.newList();
 
 	/**
 	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
@@ -50,7 +50,7 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
-		super(logger, moduleClass.getName(), moduleClass, ScopeConstants.GLOBAL, false);
+		super(logger, moduleClass, ScopeConstants.GLOBAL, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {
@@ -74,19 +74,19 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Collection<ServiceDefinition> getServices() {
+	public Collection<ServiceDefinition<?>> getDefinitions() {
 		return services;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<ServiceContributor<T>> getContributors(final ServiceDefinition<T> service) {
+	public <T> List<ServiceContributor<T>> getContributors(final Marker<T> marker) {
 		final List<ServiceContributor<T>> result = CollectionUtils.newList();
-		for (ServiceContributor contributor : contributors) {
-			if (contributor.supports(service)) {
+		for (ServiceContributor<?> contributor : contributors) {
+			if (contributor.getMarker().isAssignableFrom(marker)) {
 				//noinspection unchecked
-				result.add(contributor);
+				result.add((ServiceContributor<T>) contributor);
 			}
 		}
 		return result;
@@ -95,12 +95,12 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<ServiceDecorator<T>> getDecorators(final ServiceDefinition<T> service) {
+	public <T> List<ServiceDecorator<T>> getDecorators(final Marker<T> marker) {
 		final List<ServiceDecorator<T>> result = CollectionUtils.newList();
-		for (ServiceDecorator decorator : decorators) {
-			if (decorator.supports(service)) {
+		for (ServiceDecorator<?> decorator : decorators) {
+			if (decorator.getMarker().isAssignableFrom(marker)) {
 				//noinspection unchecked
-				result.add(decorator);
+				result.add((ServiceDecorator<T>) decorator);
 			}
 		}
 		return result;

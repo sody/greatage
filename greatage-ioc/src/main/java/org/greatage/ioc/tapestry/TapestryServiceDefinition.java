@@ -17,8 +17,10 @@
 package org.greatage.ioc.tapestry;
 
 import org.apache.tapestry5.ioc.Registry;
-import org.greatage.ioc.ServiceDefinition;
+import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.inject.Injector;
+import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.scope.ScopeConstants;
 
 /**
@@ -28,20 +30,16 @@ import org.greatage.ioc.scope.ScopeConstants;
 public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 	private final Registry registry;
 	private final String serviceId;
-	private final Class<T> serviceClass;
+	private final Marker<T> marker;
 
 	TapestryServiceDefinition(final Registry registry, final String serviceId, final Class<T> serviceClass) {
 		this.registry = registry;
 		this.serviceId = serviceId;
-		this.serviceClass = serviceClass;
+		marker = Marker.generate(serviceClass, Marker.named(serviceId));
 	}
 
-	public String getServiceId() {
-		return serviceId;
-	}
-
-	public Class<T> getServiceClass() {
-		return serviceClass;
+	public Marker<T> getMarker() {
+		return marker;
 	}
 
 	public boolean isOverride() {
@@ -53,6 +51,6 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 	}
 
 	public T build(final ServiceResources<T> resources) {
-		return registry.getService(serviceId, serviceClass);
+		return registry.getService(serviceId, marker.getServiceClass());
 	}
 }

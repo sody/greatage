@@ -17,6 +17,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Build;
+import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.logging.Logger;
 
 import java.lang.reflect.Method;
@@ -28,14 +29,13 @@ import java.lang.reflect.Modifier;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	private final Class<?> factoryClass;
 	private final Method factoryMethod;
 
-	private final Class<T> serviceClass;
-	private final String serviceId;
+	private final Marker<T> marker;
 	private final String scope;
 	private final boolean override;
 
@@ -54,28 +54,19 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 		this.factoryClass = factoryClass;
 		this.factoryMethod = factoryMethod;
 
-		//noinspection unchecked
-		serviceClass = (Class<T>) factoryMethod.getReturnType();
-
 		final Build build = factoryMethod.getAnnotation(Build.class);
-		final String proposedId = InternalUtils.generateServiceId(build.value(), build.id());
-		serviceId = proposedId != null ? proposedId : serviceClass.getName();
 		scope = build.scope();
 		override = build.override();
+
+		//noinspection unchecked
+		marker = (Marker<T>) Marker.generate(factoryMethod.getReturnType(), factoryMethod.getAnnotations());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getServiceId() {
-		return serviceId;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<T> getServiceClass() {
-		return serviceClass;
+	public Marker<T> getMarker() {
+		return marker;
 	}
 
 	/**
@@ -96,17 +87,15 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	 * {@inheritDoc} It builds service instance by invoking configured module method.
 	 */
 	public T build(final ServiceResources<T> resources) {
-		logger.info("Building service (%s, %s) from module (%s, %s)", serviceId, serviceClass, factoryClass,
-				factoryMethod);
+		logger.info("Building service (%s) from module (%s, %s)", marker, factoryClass, factoryMethod);
 
 		try {
 			final Object moduleInstance =
 					Modifier.isStatic(factoryMethod.getModifiers()) ? null : resources.getResource(factoryClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, factoryMethod);
-			return serviceClass.cast(factoryMethod.invoke(moduleInstance, parameters));
+			return marker.getServiceClass().cast(factoryMethod.invoke(moduleInstance, parameters));
 		} catch (Exception e) {
-			throw new ApplicationException(
-					String.format("Can't create service of class '%s' with id '%s'", serviceClass, serviceId), e);
+			throw new ApplicationException(String.format("Can't create service (%s)", marker), e);
 		}
 	}
 }

@@ -23,14 +23,13 @@ import org.greatage.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * This class represents proxy factory implementation using javassist library.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class JavassistProxyFactory extends AbstractProxyFactory {
 	private static final AtomicLong UID_GENERATOR = new AtomicLong(System.currentTimeMillis());
@@ -58,11 +57,11 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T createProxy(final ObjectBuilder<T> builder, final Interceptor... interceptors) {
+	public <T> T createProxy(final ObjectBuilder<T> builder) {
 		validate(builder);
 
 		final Class<T> proxyClass = createProxyClass(builder);
-		return ReflectionUtils.newInstance(proxyClass, builder, toList(interceptors));
+		return ReflectionUtils.newInstance(proxyClass, builder);
 	}
 
 	/**
@@ -78,7 +77,7 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 		final ClassBuilder<T> classBuilder = new ClassBuilder<T>(pool, className, false, proxyClass);
 
 		classBuilder.addField(HANDLER_FIELD, Modifier.PRIVATE | Modifier.FINAL, JavassistInvocationHandler.class);
-		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, List.class}, null,
+		classBuilder.addConstructor(new Class[] { ObjectBuilder.class }, null,
 				String.format("%s = new %s($$);", HANDLER_FIELD, JavassistInvocationHandler.class.getName()));
 
 		for (Method method : proxyClass.getMethods()) {
@@ -97,8 +96,8 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 	}
 
 	/**
-	 * Generates name for proxy class. The name will look like simplified original class name prefixed with <tt>$</tt> and
-	 * suffixed with generated unique long number.
+	 * Generates name for proxy class. The name will look like simplified original class name prefixed with <tt>$</tt> and suffixed
+	 * with generated unique long number.
 	 *
 	 * @param inputClass original class
 	 * @return generated name for proxy class

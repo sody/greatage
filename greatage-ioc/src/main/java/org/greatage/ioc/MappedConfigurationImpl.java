@@ -28,7 +28,7 @@ import java.util.Map;
  * @param <K> type of configuration keys
  * @param <V> type of configuration values
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class MappedConfigurationImpl<T, K, V> extends AbstractConfiguration<T, V, Map<K, V>>
 		implements MappedConfiguration<K, V> {

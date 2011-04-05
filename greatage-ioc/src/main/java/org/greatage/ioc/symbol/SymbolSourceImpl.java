@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * understands expressions like <tt>${another symbol}</tt>.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class SymbolSourceImpl implements SymbolSource {
 	private static final String VARIABLE_PREFIX = "\\$\\{";

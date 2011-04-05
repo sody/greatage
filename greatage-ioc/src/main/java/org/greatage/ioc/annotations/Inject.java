@@ -27,20 +27,10 @@ import java.lang.annotation.Target;
  * unique id or service interface.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Inject {
-
-	/**
-	 * This property defines service alias (class name) that represents service unique id.
-	 */
-	Class value() default Void.class;
-
-	/**
-	 * This property defines service unique id for injection. If is empty service will be injected by its interface.
-	 */
-	String id() default "";
 }

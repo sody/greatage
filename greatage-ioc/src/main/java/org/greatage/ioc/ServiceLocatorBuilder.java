@@ -29,7 +29,7 @@ import java.util.List;
  * This class represents utility that simplifies {@link ServiceLocator} building process.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceLocatorBuilder {
 	private final List<Module> modules = CollectionUtils.newList();

@@ -16,28 +16,18 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.scope.Scope;
+
 /**
  * This class represents specific information about service inside the IoC container.
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ServiceProvider<T> {
 
-	/**
-	 * Gets unique service id used to locate the service object.
-	 *
-	 * @return unique service id, not null
-	 */
-	String getServiceId();
-
-	/**
-	 * Gets service interface that both service implementation and service proxy will implement.
-	 *
-	 * @return service interface, not null
-	 */
-	Class<T> getServiceClass();
+	Marker<T> getMarker();
 
 	/**
 	 * Gets service scope. {@link org.greatage.ioc.scope.ScopeManager} service must be configured to understand this value
@@ -45,7 +35,7 @@ public interface ServiceProvider<T> {
 	 *
 	 * @return service scope, not null
 	 */
-	String getServiceScope();
+	Scope getScope();
 
 	/**
 	 * Retrieves service instance. It returns the service's proxy that implements the same interface as the actual service

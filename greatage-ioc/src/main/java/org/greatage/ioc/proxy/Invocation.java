@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
  * name, its signature and annotations.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface Invocation {
 

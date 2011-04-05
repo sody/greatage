@@ -21,7 +21,7 @@ package org.greatage.ioc.symbol;
  * values by their names.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface SymbolProvider {
 

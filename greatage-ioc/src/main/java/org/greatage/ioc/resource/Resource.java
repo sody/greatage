@@ -24,7 +24,7 @@ import java.util.Locale;
  * This interface represents application hierarchical localized resource that can be represented as input stream.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface Resource {
 

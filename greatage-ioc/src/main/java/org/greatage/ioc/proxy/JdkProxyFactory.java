@@ -24,21 +24,21 @@ import java.lang.reflect.Proxy;
  * This class represents proxy factory implementation using JDK.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class JdkProxyFactory extends AbstractProxyFactory {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T createProxy(final ObjectBuilder<T> builder, final Interceptor... interceptors) {
+	public <T> T createProxy(final ObjectBuilder<T> builder) {
 		validate(builder);
 
 		final ClassLoader classLoader = builder.getObjectClass().getClassLoader();
 
 		final Object proxyInstance = Proxy.newProxyInstance(classLoader,
-				new Class<?>[]{builder.getObjectClass()},
-				new JdkInvocationHandler<T>(builder, toList(interceptors)));
+				new Class<?>[] { builder.getObjectClass() },
+				new JdkInvocationHandler<T>(builder));
 		return builder.getObjectClass().cast(proxyInstance);
 	}
 
