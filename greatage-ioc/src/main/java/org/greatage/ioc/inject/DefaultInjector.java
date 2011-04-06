@@ -16,11 +16,8 @@
 
 package org.greatage.ioc.inject;
 
-import org.greatage.ioc.InternalUtils;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.annotations.Symbol;
-import org.greatage.ioc.logging.Logger;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -53,15 +50,15 @@ public class DefaultInjector implements Injector {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <R, S> R inject(final Marker<S> marker, final Class<R> resourceClass, final Annotation... annotations) {
+	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
 		for (Injector injector : injectors) {
-			final R resource = injector.inject(marker, resourceClass, annotations);
+			final T resource = injector.inject(marker, resourceClass, annotations);
 			if (resource != null) {
 				return resource;
 			}
 		}
 
-		final Marker<R> resourceMarker = Marker.generate(resourceClass, annotations);
+		final Marker<T> resourceMarker = Marker.generate(resourceClass, annotations);
 		return locator.getService(resourceMarker);
 	}
 }

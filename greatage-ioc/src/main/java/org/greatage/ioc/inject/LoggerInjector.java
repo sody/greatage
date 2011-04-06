@@ -19,7 +19,7 @@ public class LoggerInjector implements Injector {
 		this.loggerSource = loggerSource;
 	}
 
-	public <R, S> R inject(final Marker<S> marker, final Class<R> resourceClass, final Annotation... annotations) {
+	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
 		// if resource type is Logger trying to retrieve service specific logger using LoggerSource service
 		if (Logger.class.equals(resourceClass)) {
 			//TODO: maybe it need to use target class instead of service class?

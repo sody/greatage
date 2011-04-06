@@ -36,9 +36,8 @@ public interface Injector {
 	 *
 	 * @param resourceClass resource class
 	 * @param annotations   resource annotation
-	 * @param <R>           resource type
 	 * @return requested resource that implements specified class
 	 * @throws org.greatage.ioc.ApplicationException if an error occurs instantiating resource
 	 */
-	<R, S> R inject(Marker<S> marker, Class<R> resourceClass, Annotation... annotations);
+	<T> T inject(Marker<?> marker, Class<T> resourceClass, Annotation... annotations);
 }

@@ -24,7 +24,7 @@ public class SymbolInjector implements Injector {
 		this.typeCoercer = typeCoercer;
 	}
 
-	public <R, S> R inject(final Marker<S> marker, final Class<R> resourceClass, final Annotation... annotations) {
+	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
 		final Symbol symbol = InternalUtils.findAnnotation(Symbol.class, annotations);
 		if (symbol != null) {
 			final String value = symbolSource.getValue(symbol.value());

@@ -22,7 +22,7 @@ public class InternalInjector implements Injector {
 		scopeManager = new ScopeManagerImpl(CollectionUtils.<Scope>newSet(), scope);
 	}
 
-	public <R, S> R inject(final Marker<S> marker, final Class<R> resourceClass, final Annotation... annotations) {
+	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
 		if (resourceClass.equals(ScopeManager.class)) {
 			return resourceClass.cast(scopeManager);
 		}
@@ -31,7 +31,7 @@ public class InternalInjector implements Injector {
 			return resourceClass.cast(scope);
 		}
 
-		final Marker<R> resourceMarker = Marker.generate(resourceClass, annotations);
+		final Marker<T> resourceMarker = Marker.generate(resourceClass, annotations);
 		return scope.get(resourceMarker);
 	}
 }
