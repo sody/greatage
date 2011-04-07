@@ -22,7 +22,6 @@ import org.apache.tapestry5.ioc.ServiceBuilderResources;
 import org.apache.tapestry5.ioc.def.ServiceDef;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.ServiceProvider;
 
 import java.util.Collections;
 import java.util.Set;

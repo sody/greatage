@@ -19,7 +19,6 @@ package org.greatage.ioc.guice;
 import com.google.inject.Provider;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.ServiceProvider;
 
 /**
  * @author Ivan Khalopik
