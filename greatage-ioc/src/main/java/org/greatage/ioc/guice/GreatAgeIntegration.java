@@ -23,7 +23,6 @@ import com.google.inject.name.Names;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
-import org.greatage.ioc.ServiceProvider;
 import org.greatage.ioc.annotations.Named;
 
 /**
@@ -48,12 +47,11 @@ public class GreatAgeIntegration implements Module {
 	@SuppressWarnings("unchecked")
 	public void configure(final Binder binder) {
 		for (Marker<?> marker : locator.getMarkers()) {
-			final ServiceProvider<?> serviceStatus = locator.getServiceProvider(marker);
-			final AnnotatedBindingBuilder builder = binder.bind(serviceStatus.getMarker().getServiceClass());
+			final AnnotatedBindingBuilder builder = binder.bind(marker.getServiceClass());
 			if (marker.getAnnotation() != null && marker.getAnnotation().annotationType().equals(Named.class)) {
 				builder.annotatedWith(Names.named(((Named) marker.getAnnotation()).value()));
 			}
-			builder.toProvider(new GreatAgeProvider(serviceStatus));
+			builder.toProvider(new GreatAgeProvider(locator, marker));
 		}
 	}
 }

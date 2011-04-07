@@ -47,7 +47,8 @@ public class GreatAgeIntegration implements ModuleDef {
 	public GreatAgeIntegration(final ServiceLocator locator) {
 		for (Marker<?> marker : locator.getMarkers()) {
 			//TODO: make it work
-			services.put(marker.toString(), new GreatAgeServiceDef(locator.getServiceProvider(marker)));
+			final GreatAgeServiceDef serviceDef = new GreatAgeServiceDef(locator, marker);
+			services.put(serviceDef.getServiceId(), serviceDef);
 		}
 	}
 

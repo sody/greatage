@@ -19,9 +19,11 @@ package org.greatage.ioc;
 import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.inject.InternalInjector;
 import org.greatage.ioc.logging.Logger;
+import org.greatage.ioc.proxy.ObjectBuilder;
+import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeConstants;
+import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.OrderingUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,7 +38,7 @@ import java.util.Set;
  * @since 1.1
  */
 public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<ServiceLocator> {
-	private final Map<Marker<?>, ServiceProvider<?>> servicesById = CollectionUtils.newConcurrentMap();
+	private final Map<Marker<?>, Scope> servicesById = CollectionUtils.newConcurrentMap();
 
 	private final Marker<ServiceLocator> marker;
 	private final Logger logger;
@@ -49,6 +51,7 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 	 */
 	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
 		this.logger = logger;
+		marker = Marker.generate(ServiceLocator.class);
 
 		//creating and overriding service definitions
 		//TODO: implement this using set
@@ -72,20 +75,17 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 		//adding service locator as internal service
 		//internal services use separate sandbox injector to prevent cyclic dependency injection
 		final Injector internalInjector = new InternalInjector();
-		marker = Marker.generate(ServiceLocator.class);
-		servicesById.put(marker, createServiceStatus(internalInjector, this, modules));
+		addService(internalInjector, this, modules);
 
 		//initializing internal services
 		for (ServiceDefinition<?> service : internalServices.values()) {
-			final ServiceProvider<?> provider = createServiceStatus(internalInjector, service, modules);
-			servicesById.put(provider.getMarker(), provider);
+			addService(internalInjector, service, modules);
 		}
 
 		//initializing services
-		final Injector injector = (Injector) servicesById.get(Marker.generate(Injector.class)).getService();
+		final Injector injector = internalInjector.inject(marker, Injector.class);
 		for (ServiceDefinition<?> service : services.values()) {
-			final ServiceProvider<?> provider = createServiceStatus(injector, service, modules);
-			servicesById.put(provider.getMarker(), provider);
+			addService(injector, service, modules);
 		}
 
 		//logging statistics
@@ -112,19 +112,6 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 		return servicesById.keySet();
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T> ServiceProvider<T> getServiceProvider(final Marker<T> marker) {
-		return (ServiceProvider<T>) servicesById.get(marker);
-	}
-
-	public <T> T getService(final Marker<T> marker) {
-		final ServiceProvider<T> provider = getServiceProvider(marker);
-		if (provider == null) {
-			throw new ApplicationException(String.format("Can't find service (%s)", marker));
-		}
-		return provider.getService();
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -134,15 +121,20 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 		return getService(Marker.generate(serviceClass));
 	}
 
-	public <T> Set<T> findServices(final Marker<T> marker) {
-		final Set<T> result = CollectionUtils.newSet();
-		for (ServiceProvider<?> serviceProvider : servicesById.values()) {
-			if (marker.isAssignableFrom(serviceProvider.getMarker())) {
-				//noinspection unchecked
-				result.add((T) serviceProvider.getService());
-			}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws ApplicationException if service not found
+	 */
+	public <T> T getService(final Marker<T> marker) {
+		final Set<T> services = findServices(marker);
+		if (services.size() > 1) {
+			throw new ApplicationException(String.format("Can't find service (%s). More than one service available", marker));
 		}
-		return result;
+		if (services.size() < 1) {
+			throw new ApplicationException(String.format("Can't find service (%s)", marker));
+		}
+		return services.iterator().next();
 	}
 
 	/**
@@ -152,30 +144,34 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 		return findServices(Marker.generate(serviceClass));
 	}
 
-	/**
-	 * Creates {@link ServiceProvider} instance for specified service with defined sorted service contributors, decorators and
-	 * interceptors.
-	 *
-	 * @param service service definition
-	 * @param modules module definitions
-	 * @return service status instance, not null
-	 */
-	@SuppressWarnings("unchecked")
-	private ServiceProvider<?> createServiceStatus(final Injector injector,
-												   final ServiceDefinition<?> service,
-												   final Collection<Module> modules) {
-		final Marker<?> marker = service.getMarker();
-		final List<ServiceContributor<?>> contributors = CollectionUtils.newList();
-		final List<ServiceDecorator<?>> decorators = CollectionUtils.newList();
+	public <T> Set<T> findServices(final Marker<T> marker) {
+		final Set<T> result = CollectionUtils.newSet();
+		for (Map.Entry<Marker<?>, Scope> entry : servicesById.entrySet()) {
+			if (marker.isAssignableFrom(entry.getKey())) {
+				final Object service = entry.getValue().get(entry.getKey());
+				result.add(marker.getServiceClass().cast(service));
+			}
+		}
+		return result;
+	}
+
+	private <T> void addService(final Injector injector,
+								final ServiceDefinition<T> service,
+								final Collection<Module> modules) {
+		final Marker<T> marker = service.getMarker();
+		final List<ServiceContributor<T>> contributors = CollectionUtils.newList();
+		final List<ServiceDecorator<T>> decorators = CollectionUtils.newList();
 		for (Module module : modules) {
 			contributors.addAll(module.getContributors(marker));
 			decorators.addAll(module.getDecorators(marker));
 		}
+		final ObjectBuilder<T> builder = new ServiceBuilder<T>(injector, service, contributors, decorators);
 
-		final List<ServiceContributor<?>> orderedContributors = OrderingUtils.order(contributors);
-		final List<ServiceDecorator<?>> orderedDecorators = OrderingUtils.order(decorators);
+		final ScopeManager scopeManager = injector.inject(service.getMarker(), ScopeManager.class);
+		final Scope scope = scopeManager.getScope(service.getScope());
+		scope.put(marker, builder);
 
-		return new ServiceProviderImpl(injector, service, orderedContributors, orderedDecorators);
+		servicesById.put(marker, scope);
 	}
 
 	private void logStatistics() {
@@ -189,10 +185,10 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 
 		final StringBuilder statistics = new StringBuilder("Statistics:\n");
 		final String format = "%" + maxLength + "s : [%s] %s\n";
-		for (ServiceProvider<?> provider : servicesById.values()) {
-			final String name = provider.getMarker().getServiceClass().getSimpleName();
-			final String scope = provider.getScope().getName();
-			final String implementation = provider.getMarker().getTargetClass().getName();
+		for (Map.Entry<Marker<?>, Scope> entry : servicesById.entrySet()) {
+			final String name = entry.getKey().getServiceClass().getSimpleName();
+			final String scope = entry.getValue().getName();
+			final String implementation = entry.getKey().getTargetClass().getName();
 			statistics.append(String.format(format, name, scope, implementation));
 		}
 		logger.info(statistics.toString());

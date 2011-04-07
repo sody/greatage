@@ -35,14 +35,6 @@ public interface ServiceLocator {
 	Set<Marker<?>> getMarkers();
 
 	/**
-	 * Gets service status by specified service id.
-	 *
-	 * @param marker service marker
-	 * @return service status or null if not found
-	 */
-	<T> ServiceProvider<T> getServiceProvider(Marker<T> marker);
-
-	/**
 	 * Gets a service instance by specified service id. It returns the service's proxy that implements the same interface
 	 * as the actual service and instantiates the actual service only as needed with all configured method advices.
 	 *
