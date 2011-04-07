@@ -12,11 +12,11 @@ import java.lang.annotation.Annotation;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class SymbolInjector implements Injector {
+public class SymbolInjectionProvider implements InjectionProvider {
 	private final SymbolSource symbolSource;
 	private final TypeCoercer typeCoercer;
 
-	public SymbolInjector(final SymbolSource symbolSource, final TypeCoercer typeCoercer) {
+	public SymbolInjectionProvider(final SymbolSource symbolSource, final TypeCoercer typeCoercer) {
 		assert symbolSource != null;
 		assert typeCoercer != null;
 

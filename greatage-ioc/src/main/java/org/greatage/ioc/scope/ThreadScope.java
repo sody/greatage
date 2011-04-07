@@ -37,8 +37,8 @@ public class ThreadScope extends AbstractScope {
 		}
 	};
 
-	public ThreadScope(final ProxyFactory proxyFactory) {
-		super(ScopeConstants.THREAD, proxyFactory);
+	public ThreadScope() {
+		super(ScopeConstants.THREAD);
 	}
 
 	/**

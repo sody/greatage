@@ -32,8 +32,8 @@ import java.util.Map;
 public class GlobalScope extends AbstractScope {
 	private final Map<Marker, Object> services = CollectionUtils.newConcurrentMap();
 
-	public GlobalScope(final ProxyFactory proxyFactory) {
-		super(ScopeConstants.GLOBAL, proxyFactory);
+	public GlobalScope() {
+		super(ScopeConstants.GLOBAL);
 	}
 
 	/**

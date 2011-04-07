@@ -10,10 +10,10 @@ import java.lang.annotation.Annotation;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class LoggerInjector implements Injector {
+public class LoggerInjectionProvider implements InjectionProvider {
 	private final LoggerSource loggerSource;
 
-	public LoggerInjector(final LoggerSource loggerSource) {
+	public LoggerInjectionProvider(final LoggerSource loggerSource) {
 		assert loggerSource != null;
 
 		this.loggerSource = loggerSource;

@@ -17,7 +17,14 @@
 package org.greatage.ioc.inject;
 
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.ServiceLocator;
+import org.greatage.ioc.ServiceContributor;
+import org.greatage.ioc.ServiceDecorator;
+import org.greatage.ioc.ServiceDefinition;
+import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.proxy.ProxyFactory;
+import org.greatage.ioc.scope.Scope;
+import org.greatage.ioc.scope.ScopeManager;
+import org.greatage.util.OrderingUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -30,35 +37,55 @@ import java.util.List;
  * @since 1.1
  */
 public class DefaultInjector implements Injector {
-	private final List<Injector> injectors;
-	private final ServiceLocator locator;
+	private final List<InjectionProvider> providers;
+	private final ProxyFactory proxyFactory;
+	private final ScopeManager scopeManager;
 
-	/**
-	 * Creates new instance of service initial resources with defined service locator, service identifier, service class and scope.
-	 *
-	 * @param locator service locator
-	 */
-	public DefaultInjector(final List<Injector> injectors,
-					final ServiceLocator locator) {
-		assert injectors != null;
-		assert locator != null;
+	public DefaultInjector(final List<InjectionProvider> providers,
+						   final ProxyFactory proxyFactory,
+						   final ScopeManager scopeManager) {
+		assert providers != null;
+		assert proxyFactory != null;
+		assert scopeManager != null;
 
-		this.injectors = injectors;
-		this.locator = locator;
+		this.providers = providers;
+		this.proxyFactory = proxyFactory;
+		this.scopeManager = scopeManager;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
-		for (Injector injector : injectors) {
-			final T resource = injector.inject(marker, resourceClass, annotations);
-			if (resource != null) {
-				return resource;
-			}
+	public <T> T createService(final ServiceDefinition<T> service,
+							   final List<ServiceContributor<T>> contributors,
+							   final List<ServiceDecorator<T>> decorators) {
+
+		final DefaultServiceResources<T> resources = new DefaultServiceResources<T>(service.getMarker());
+		final Scope scope = scopeManager.getScope(service.getScope());
+		final List<ServiceContributor<T>> orderedContributors = OrderingUtils.order(contributors);
+		final List<ServiceDecorator<T>> orderedDecorators = OrderingUtils.order(decorators);
+
+		final ServiceBuilder<T> builder =
+				new ServiceBuilder<T>(service, orderedContributors, orderedDecorators, resources, scope);
+		return proxyFactory.createProxy(builder);
+	}
+
+	class DefaultServiceResources<T> implements ServiceResources<T> {
+		private final Marker<T> marker;
+
+		DefaultServiceResources(final Marker<T> marker) {
+			this.marker = marker;
 		}
 
-		final Marker<T> resourceMarker = Marker.generate(resourceClass, annotations);
-		return locator.getService(resourceMarker);
+		public Marker<T> getMarker() {
+			return marker;
+		}
+
+		public <R> R getResource(final Class<R> resourceClass, final Annotation... annotations) {
+			for (InjectionProvider provider : providers) {
+				final R resource = provider.inject(marker, resourceClass, annotations);
+				if (resource != null) {
+					return resource;
+				}
+			}
+			return null;
+		}
 	}
 }

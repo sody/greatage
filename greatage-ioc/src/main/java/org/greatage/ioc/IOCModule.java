@@ -33,10 +33,12 @@ import org.greatage.ioc.coerce.StringToEnumCoercionProvider;
 import org.greatage.ioc.coerce.StringToIntegerCoercion;
 import org.greatage.ioc.coerce.TypeCoercer;
 import org.greatage.ioc.coerce.TypeCoercerImpl;
+import org.greatage.ioc.inject.DefaultInjectionProvider;
 import org.greatage.ioc.inject.DefaultInjector;
+import org.greatage.ioc.inject.InjectionProvider;
 import org.greatage.ioc.inject.Injector;
-import org.greatage.ioc.inject.LoggerInjector;
-import org.greatage.ioc.inject.SymbolInjector;
+import org.greatage.ioc.inject.LoggerInjectionProvider;
+import org.greatage.ioc.inject.SymbolInjectionProvider;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JavassistProxyFactory;
@@ -108,9 +110,10 @@ public class IOCModule {
 
 	@Contribute
 	@Service(Injector.class)
-	public static void contributeInjector(final OrderedConfiguration<Injector> configuration) {
-		configuration.addInstance(LoggerInjector.class, "Logger");
-		configuration.addInstance(SymbolInjector.class, "Symbol", "after:Logger");
+	public static void contributeInjector(final OrderedConfiguration<InjectionProvider> configuration) {
+		configuration.addInstance(DefaultInjectionProvider.class, "Default");
+		configuration.addInstance(SymbolInjectionProvider.class, "Symbol", "before:Default");
+		configuration.addInstance(LoggerInjectionProvider.class, "Logger", "before:Symbol");
 	}
 
 	/**

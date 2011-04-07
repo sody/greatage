@@ -94,8 +94,8 @@ public class Marker<T> {
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("service", serviceClass);
-		builder.append("target", targetClass);
+		builder.append("service", serviceClass.getSimpleName());
+		builder.append("target", targetClass.getSimpleName());
 		builder.append("annotation", annotation);
 		return builder.toString();
 	}

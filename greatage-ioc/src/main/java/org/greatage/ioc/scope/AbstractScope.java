@@ -16,9 +16,9 @@
 
 package org.greatage.ioc.scope;
 
+import org.greatage.ioc.ApplicationException;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.proxy.ObjectBuilder;
-import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Map;
@@ -34,11 +34,9 @@ public abstract class AbstractScope implements Scope {
 	private final Map<Marker, ObjectBuilder> serviceBuilders = CollectionUtils.newConcurrentMap();
 
 	private final String name;
-	private final ProxyFactory proxyFactory;
 
-	protected AbstractScope(final String name, final ProxyFactory proxyFactory) {
+	protected AbstractScope(final String name) {
 		this.name = name;
-		this.proxyFactory = proxyFactory;
 	}
 
 	public String getName() {
@@ -46,10 +44,14 @@ public abstract class AbstractScope implements Scope {
 	}
 
 	public <S> S get(final Marker<S> marker) {
+		if (!serviceBuilders.containsKey(marker)) {
+			throw new ApplicationException(String.format("Cannot find service (%s) in %s scope", marker, name));
+		}
+
 		if (!containsService(marker)) {
 			@SuppressWarnings("unchecked")
 			final ObjectBuilder<S> builder = serviceBuilders.get(marker);
-			final S service = proxyFactory.createProxy(builder);
+			final S service = builder.build();
 			putService(marker, service);
 			return service;
 		}

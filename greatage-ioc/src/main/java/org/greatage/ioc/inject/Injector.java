@@ -17,8 +17,12 @@
 package org.greatage.ioc.inject;
 
 import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceContributor;
+import org.greatage.ioc.ServiceDecorator;
+import org.greatage.ioc.ServiceDefinition;
+import org.greatage.ioc.ServiceResources;
 
-import java.lang.annotation.Annotation;
+import java.util.List;
 
 /**
  * This class represents service resources that may be provided to a service when it initializes, are configurated or are
@@ -34,10 +38,11 @@ public interface Injector {
 	 * {@link org.greatage.ioc.symbol.SymbolSource} (needs {@link org.greatage.ioc.annotations.Symbol} annotation), injected services
 	 * by id (needs {@link org.greatage.ioc.annotations.Inject} annotation) or services by their interfaces by default.
 	 *
-	 * @param resourceClass resource class
-	 * @param annotations   resource annotation
 	 * @return requested resource that implements specified class
-	 * @throws org.greatage.ioc.ApplicationException if an error occurs instantiating resource
+	 * @throws org.greatage.ioc.ApplicationException
+	 *          if an error occurs instantiating resource
 	 */
-	<T> T inject(Marker<?> marker, Class<T> resourceClass, Annotation... annotations);
+	<T> T createService(ServiceDefinition<T> service,
+						List<ServiceContributor<T>> contributors,
+						List<ServiceDecorator<T>> decorators);
 }

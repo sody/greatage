@@ -30,8 +30,8 @@ import java.util.Map;
  */
 public class PrototypeScope extends AbstractScope {
 
-	public PrototypeScope(final ProxyFactory proxyFactory) {
-		super(ScopeConstants.PROTOTYPE, proxyFactory);
+	public PrototypeScope() {
+		super(ScopeConstants.PROTOTYPE);
 	}
 
 	/**
