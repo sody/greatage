@@ -16,7 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.logging.Logger;
 
 import java.lang.reflect.Constructor;
@@ -67,11 +66,18 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 						  final Class<? extends T> implementationClass,
 						  final String scope,
 						  final boolean override) {
+		this(logger, Marker.generate(serviceClass, implementationClass), scope, override);
+	}
+
+	ServiceDefinitionImpl(final Logger logger,
+						  final Marker<T> marker,
+						  final String scope,
+						  final boolean override) {
 		this.logger = logger;
+		this.marker = marker;
 		this.scope = scope;
 		this.override = override;
-		this.implementationClass = implementationClass;
-		marker = Marker.generate(serviceClass, implementationClass);
+		this.implementationClass = marker.getTargetClass();
 	}
 
 	public Marker<T> getMarker() {
@@ -102,7 +108,8 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 			final Constructor constructor = implementationClass.getConstructors()[0];
 			final Object[] parameters = InternalUtils.calculateParameters(resources, constructor);
 			return implementationClass.cast(constructor.newInstance(parameters));
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create service (%s)", resources.getMarker()), e);
 		}
 	}

@@ -16,8 +16,10 @@
 
 package org.greatage.ioc;
 
-import com.example.app0.MockTalkService;
+import com.example.app0.MockBindModule;
 import com.example.app0.MockConfigureModule;
+import com.example.app0.MockTalkService;
+import com.example.app0.MockTalkServiceImpl1;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -37,18 +39,19 @@ public class ITApp0 extends Assert {
 		assertEquals(service.say(), "!!!");
 	}
 
-//	@Test
-//	public void testServiceBinder() {
-//		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockBindModule.class);
-//		MockTalkService service = locator.getService("talkService1", MockTalkService.class);
-//		assertNotNull(service);
-//		assertEquals(service.say(), "hello");
-//
-//		service = locator.getService("talkService2", MockTalkService.class);
-//		assertNotNull(service);
-//		assertEquals(service.say(), "hello");
-//	}
-//
+	@Test
+	public void testServiceBinder() {
+		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockBindModule.class);
+
+		MockTalkService service = locator.getService(Marker.generate(MockTalkService.class, Marker.named("service1")));
+		assertNotNull(service);
+		assertEquals(service.say(), "hello");
+
+		service = locator.getService(Marker.generate(MockTalkService.class, Marker.named("service2")));
+		assertNotNull(service);
+		assertEquals(service.say(), "hello");
+	}
+
 //	@Test
 //	public void testServiceInterceptor() {
 //		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockDecorateModule.class);

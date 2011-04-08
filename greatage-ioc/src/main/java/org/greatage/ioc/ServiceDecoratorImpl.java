@@ -61,11 +61,10 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 		this.decorateMethod = decorateMethod;
 
 		if (!decorateMethod.getReturnType().equals(Interceptor.class)) {
-			throw new ApplicationException("Decoration method should return value of Interceptor type");
+			throw new IllegalStateException("Decoration method should return value of Interceptor type");
 		}
 
-		//TODO: add check is service annotation present
-		marker = Marker.generate(null, decorateMethod.getAnnotations());
+		marker = Marker.generate(decorateMethod.getAnnotations());
 
 		final Order order = decorateMethod.getAnnotation(Order.class);
 		if (order != null) {

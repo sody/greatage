@@ -22,8 +22,8 @@ import org.greatage.ioc.scope.ScopeConstants;
 import java.lang.annotation.Annotation;
 
 /**
- * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id,
- * service scope and is it overrides the existing service.
+ * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id, service
+ * scope and is it overrides the existing service.
  *
  * @param <T> service type
  * @author Ivan Khalopik
@@ -34,6 +34,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private final Class<? extends T> implementationClass;
 
 	private String serviceScope;
+	private Annotation annotation;
 	private boolean override;
 
 	/**
@@ -57,6 +58,11 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 		return this;
 	}
 
+	public ServiceBindingOptions annotatedWith(final Annotation annotation) {
+		this.annotation = annotation;
+		return this;
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -72,6 +78,9 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 * @return new instance of configured service definition, not null
 	 */
 	public ServiceDefinition<T> createService(final Logger logger) {
-		return new ServiceDefinitionImpl<T>(logger, serviceClass, implementationClass, serviceScope, override);
+		final Marker<T> marker = Marker.generate(serviceClass, implementationClass);
+		return annotation != null ?
+				new ServiceDefinitionImpl<T>(logger, marker.annotated(annotation), serviceScope, override) :
+				new ServiceDefinitionImpl<T>(logger, marker, serviceScope, override);
 	}
 }

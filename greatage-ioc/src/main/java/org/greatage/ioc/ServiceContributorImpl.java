@@ -60,11 +60,10 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 		this.configureMethod = configureMethod;
 
 		if (!configureMethod.getReturnType().equals(void.class)) {
-			throw new ApplicationException("Configuration method can not return any value");
+			throw new IllegalStateException("Configuration method can not return any value");
 		}
 
-		//TODO: add check is service annotation present
-		marker = Marker.generate(null, configureMethod.getAnnotations());
+		marker = Marker.generate(configureMethod.getAnnotations());
 
 		final Order order = configureMethod.getAnnotation(Order.class);
 		if (order != null) {

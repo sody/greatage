@@ -35,6 +35,18 @@ public class Marker<T> {
 	private final int hashCode;
 
 	Marker(final Class<T> serviceClass, final Class<? extends T> targetClass, final Annotation annotation) {
+		if (serviceClass == null || targetClass == null) {
+			throw new IllegalArgumentException("Both service class and target class should not be null");
+		}
+
+		if (serviceClass.equals(void.class) || targetClass.equals(void.class)) {
+			throw new IllegalArgumentException("Both service class and target class should not be null");
+		}
+
+		if (!serviceClass.isAssignableFrom(targetClass)) {
+			throw new IllegalArgumentException("Target class should be subclassed from service class");
+		}
+
 		this.serviceClass = serviceClass;
 		this.targetClass = targetClass;
 		this.annotation = annotation;
@@ -65,6 +77,10 @@ public class Marker<T> {
 			return false;
 		}
 		return true;
+	}
+
+	public Marker<T> annotated(final Annotation annotation) {
+		return new Marker<T>(serviceClass, targetClass, annotation);
 	}
 
 	@Override
@@ -105,29 +121,33 @@ public class Marker<T> {
 		return 31 * result + (annotation != null ? annotation.hashCode() : 0);
 	}
 
-	public static <T> Marker<T> generate(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
-		return generate(serviceClass, implementationClass.getAnnotations());
+	public static <T> Marker<T> generate(final Annotation... annotations) {
+		return generate(null, null, annotations);
 	}
 
-	public static <T> Marker<T> generate(final Class<T> defaultClass, final Annotation... annotations) {
-		//TODO: make it generate right implementation class
+	public static <T> Marker<T> generate(final Class<T> defaultServiceClass, final Annotation... annotations) {
+		return generate(defaultServiceClass, defaultServiceClass, annotations);
+	}
+
+	public static <T> Marker<T> generate(final Class<T> defaultServiceClass, final Class<? extends T> defaultTargetClass) {
+		return generate(defaultServiceClass, defaultTargetClass, defaultTargetClass.getAnnotations());
+	}
+
+	public static <T> Marker<T> generate(final Class<T> defaultServiceClass,
+										 final Class<? extends T> defaultTargetClass,
+										 final Annotation... annotations) {
 		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
 		final MarkerAnnotation marker = InternalUtils.findAnnotation(MarkerAnnotation.class, annotations);
 		if (service == null) {
-			final Class serviceClass = defaultClass != null ? defaultClass : Object.class;
 			//noinspection unchecked
-			return new Marker<T>(serviceClass, serviceClass, marker);
+			return new Marker<T>(defaultServiceClass, defaultTargetClass, marker);
 		}
 
 		final Class serviceClass = !void.class.equals(service.service()) ? service.service() :
-				defaultClass != null ? defaultClass :
-						void.class.equals(service.value()) ? Object.class : service.value();
+				defaultServiceClass != null ? defaultServiceClass : service.value();
+		final Class targetClass = !void.class.equals(service.value()) ? service.value() :
+				defaultTargetClass != null ? defaultTargetClass : service.service();
 
-		final Class targetClass = void.class.equals(service.value()) ? serviceClass : service.value();
-
-		if (!serviceClass.isAssignableFrom(targetClass)) {
-			throw new IllegalArgumentException("Marker class should be subclassed from service class");
-		}
 		//noinspection unchecked
 		return new Marker<T>(serviceClass, targetClass, marker);
 	}
