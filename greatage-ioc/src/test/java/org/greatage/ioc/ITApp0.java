@@ -20,6 +20,7 @@ import com.example.app0.MockBindModule;
 import com.example.app0.MockConfigureModule;
 import com.example.app0.MockTalkService;
 import com.example.app0.MockTalkServiceImpl1;
+import org.greatage.ioc.annotations.NamedImpl;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -43,11 +44,11 @@ public class ITApp0 extends Assert {
 	public void testServiceBinder() {
 		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockBindModule.class);
 
-		MockTalkService service = locator.getService(Marker.generate(MockTalkService.class, Marker.named("service1")));
+		MockTalkService service = locator.getService(Marker.generate(MockTalkService.class, new NamedImpl("service1")));
 		assertNotNull(service);
 		assertEquals(service.say(), "hello");
 
-		service = locator.getService(Marker.generate(MockTalkService.class, Marker.named("service2")));
+		service = locator.getService(Marker.generate(MockTalkService.class, new NamedImpl("service2")));
 		assertNotNull(service);
 		assertEquals(service.say(), "hello");
 	}

@@ -19,6 +19,7 @@ package org.greatage.ioc.tapestry;
 import org.apache.tapestry5.ioc.Registry;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.scope.ScopeConstants;
@@ -35,7 +36,7 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 	TapestryServiceDefinition(final Registry registry, final String serviceId, final Class<T> serviceClass) {
 		this.registry = registry;
 		this.serviceId = serviceId;
-		marker = Marker.generate(serviceClass, Marker.named(serviceId));
+		marker = Marker.generate(serviceClass, new NamedImpl(serviceId));
 	}
 
 	public Marker<T> getMarker() {

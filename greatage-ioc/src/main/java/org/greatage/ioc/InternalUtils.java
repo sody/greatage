@@ -16,7 +16,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.inject.Injector;
+import org.greatage.ioc.annotations.MarkerAnnotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -78,6 +78,18 @@ public class InternalUtils {
 			for (Annotation annotation : annotations) {
 				if (annotationClass.isInstance(annotation)) {
 					return annotationClass.cast(annotation);
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Annotation findMarker(final Annotation... annotations) {
+		if (annotations != null) {
+			for (Annotation annotation : annotations) {
+				final MarkerAnnotation marker = findAnnotation(MarkerAnnotation.class, annotation.annotationType().getAnnotations());
+				if (marker != null) {
+					return annotation;
 				}
 			}
 		}

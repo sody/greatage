@@ -63,7 +63,7 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		final Class<T> serviceClass = (Class<T>) key.getTypeLiteral().getType();
 		final Annotation annotation = key.getAnnotation();
 		if (annotation != null && Named.class.isInstance(annotation)) {
-			return Marker.generate(serviceClass, Marker.named(((Named) annotation).value()));
+			return Marker.generate(serviceClass, annotation);
 		}
 		return Marker.generate(serviceClass);
 	}

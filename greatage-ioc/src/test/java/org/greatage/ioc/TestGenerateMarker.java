@@ -1,5 +1,8 @@
 package org.greatage.ioc;
 
+import org.greatage.ioc.annotations.Contribute;
+import org.greatage.ioc.annotations.Named;
+import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.ioc.annotations.Service;
 import org.greatage.ioc.mock.MockIOCInterface;
 import org.greatage.ioc.mock.MockIOCInterfaceEx;
@@ -19,6 +22,23 @@ public class TestGenerateMarker extends Assert {
 	@DataProvider
 	public Object[][] testGenerateMarkerData() {
 		return new Object[][] {
+				{
+						MockIOCInterface.class,
+						new Annotation[] { named("test") },
+						marker(MockIOCInterface.class, named("test"))
+				},
+				{
+						MockIOCInterface.class,
+						new Annotation[] { service(MockIOCInterfaceEx.class), named("test") },
+						marker(MockIOCInterfaceEx.class, named("test"))
+				},
+				{
+						MockIOCInterface.class,
+						new Annotation[] { contribute(), service(MockIOCInterfaceEx.class), named("test") },
+						marker(MockIOCInterfaceEx.class, named("test"))
+				},
+
+
 				{
 						MockIOCInterface.class,
 						null,
@@ -74,6 +94,22 @@ public class TestGenerateMarker extends Assert {
 						new Annotation[] { service(MockIOCInterfaceImpl1.class) },
 						marker(MockIOCInterfaceImpl1.class, null)
 				},
+
+				{
+						MockIOCInterface.class,
+						new Annotation[] { named("test") },
+						marker(MockIOCInterface.class, named("test"))
+				},
+				{
+						MockIOCInterface.class,
+						new Annotation[] { service(MockIOCInterfaceEx.class), named("test") },
+						marker(MockIOCInterfaceEx.class, named("test"))
+				},
+				{
+						MockIOCInterface.class,
+						new Annotation[] { contribute(), service(MockIOCInterfaceEx.class), named("test") },
+						marker(MockIOCInterfaceEx.class, named("test"))
+				},
 		};
 	}
 
@@ -121,6 +157,18 @@ public class TestGenerateMarker extends Assert {
 
 			public Class<? extends Annotation> annotationType() {
 				return Service.class;
+			}
+		};
+	}
+
+	private Named named(final String name) {
+		return new NamedImpl(name);
+	}
+
+	private Contribute contribute() {
+		return new Contribute() {
+			public Class<? extends Annotation> annotationType() {
+				return Contribute.class;
 			}
 		};
 	}

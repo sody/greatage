@@ -16,8 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.MarkerAnnotation;
-import org.greatage.ioc.annotations.Named;
 import org.greatage.ioc.annotations.Service;
 import org.greatage.util.DescriptionBuilder;
 
@@ -61,10 +59,6 @@ public class Marker<T> {
 		return true;
 	}
 
-	public Marker<T> annotated(final Annotation annotation) {
-		return new Marker<T>(serviceClass, annotation);
-	}
-
 	@Override
 	public int hashCode() {
 		return hashCode;
@@ -99,8 +93,8 @@ public class Marker<T> {
 
 	public static <T> Marker<T> generate(final Class<T> defaultServiceClass,
 										 final Annotation... annotations) {
+		final Annotation marker = InternalUtils.findMarker(annotations);
 		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
-		final MarkerAnnotation marker = InternalUtils.findAnnotation(MarkerAnnotation.class, annotations);
 		if (service == null) {
 			//noinspection unchecked
 			return new Marker<T>(defaultServiceClass, marker);
@@ -110,17 +104,5 @@ public class Marker<T> {
 
 		//noinspection unchecked
 		return new Marker<T>(serviceClass, marker);
-	}
-
-	public static Named named(final String name) {
-		return new Named() {
-			public String value() {
-				return name;
-			}
-
-			public Class<? extends Annotation> annotationType() {
-				return Named.class;
-			}
-		};
 	}
 }
