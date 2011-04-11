@@ -64,7 +64,7 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 			throw new IllegalStateException("Decoration method should return value of Interceptor type");
 		}
 
-		marker = Marker.generate(decorateMethod.getAnnotations());
+		marker = Marker.generate(null, decorateMethod.getAnnotations());
 
 		final Order order = decorateMethod.getAnnotation(Order.class);
 		if (order != null) {

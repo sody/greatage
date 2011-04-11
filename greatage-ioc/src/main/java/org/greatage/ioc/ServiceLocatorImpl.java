@@ -179,12 +179,11 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 		}
 
 		final StringBuilder statistics = new StringBuilder("Statistics:\n");
-		final String format = "%" + maxLength + "s : [%s] %s\n";
+		final String format = "%" + maxLength + "s : [%s]\n";
 		for (Marker<?> marker : services.keySet()) {
 			final String name = marker.getServiceClass().getSimpleName();
-			final String implementation = marker.getTargetClass().getName();
 			final String scope = scopes.get(marker);
-			statistics.append(String.format(format, name, scope, implementation));
+			statistics.append(String.format(format, name, scope));
 		}
 		logger.info(statistics.toString());
 	}

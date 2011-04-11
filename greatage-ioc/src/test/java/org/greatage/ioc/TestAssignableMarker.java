@@ -2,7 +2,6 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.mock.MockIOCInterface;
 import org.greatage.ioc.mock.MockIOCInterfaceEx;
-import org.greatage.ioc.mock.MockIOCInterfaceExImpl;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -19,34 +18,34 @@ public class TestAssignableMarker extends Assert {
 	public Object[][] testAssignableFromData() {
 		return new Object[][] {
 				{
-						marker(Object.class, Object.class, null),
-						marker(Object.class, Object.class, null),
+						marker(Object.class, null),
+						marker(Object.class, null),
 						true
 				},
 				{
-						marker(Object.class, Object.class, null),
-						marker(MockIOCInterface.class, MockIOCInterface.class, null),
+						marker(Object.class, null),
+						marker(MockIOCInterface.class, null),
 						true
 				},
 				{
-						marker(MockIOCInterface.class, MockIOCInterface.class, null),
-						marker(Object.class, Object.class, null),
+						marker(MockIOCInterface.class, null),
+						marker(Object.class, null),
 						false
 				},
 				{
-						marker(MockIOCInterface.class, MockIOCInterfaceEx.class, null),
-						marker(MockIOCInterfaceEx.class, MockIOCInterfaceEx.class, null),
+						marker(MockIOCInterface.class, null),
+						marker(MockIOCInterfaceEx.class, null),
 						true
 				},
 				{
-						marker(MockIOCInterface.class, MockIOCInterfaceEx.class, null),
-						marker(MockIOCInterfaceEx.class, MockIOCInterfaceExImpl.class, null),
+						marker(MockIOCInterface.class, null),
+						marker(MockIOCInterfaceEx.class, null),
 						true
 				},
 				{
-						marker(MockIOCInterface.class, MockIOCInterfaceEx.class, null),
-						marker(MockIOCInterface.class, MockIOCInterface.class, null),
-						false
+						marker(MockIOCInterface.class, null),
+						marker(MockIOCInterface.class, null),
+						true
 				},
 		};
 	}
@@ -57,7 +56,7 @@ public class TestAssignableMarker extends Assert {
 		assertEquals(actual, expected);
 	}
 
-	private <T> Marker<T> marker(final Class<T> serviceClass, final Class<? extends T> targetClass, final Annotation annotation) {
-		return new Marker<T>(serviceClass, targetClass, annotation);
+	private <T> Marker<T> marker(final Class<T> serviceClass, final Annotation annotation) {
+		return new Marker<T>(serviceClass, annotation);
 	}
 }

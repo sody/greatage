@@ -29,37 +29,23 @@ import java.lang.annotation.Annotation;
  */
 public class Marker<T> {
 	private final Class<T> serviceClass;
-	private final Class<? extends T> targetClass;
 	private final Annotation annotation;
 
 	private final int hashCode;
 
-	Marker(final Class<T> serviceClass, final Class<? extends T> targetClass, final Annotation annotation) {
-		if (serviceClass == null || targetClass == null) {
-			throw new IllegalArgumentException("Both service class and target class should not be null");
-		}
-
-		if (serviceClass.equals(void.class) || targetClass.equals(void.class)) {
-			throw new IllegalArgumentException("Both service class and target class should not be null");
-		}
-
-		if (!serviceClass.isAssignableFrom(targetClass)) {
-			throw new IllegalArgumentException("Target class should be subclassed from service class");
+	Marker(final Class<T> serviceClass, final Annotation annotation) {
+		if (serviceClass == null || serviceClass.equals(void.class)) {
+			throw new IllegalArgumentException("Service class should not be null");
 		}
 
 		this.serviceClass = serviceClass;
-		this.targetClass = targetClass;
 		this.annotation = annotation;
 
-		this.hashCode = calculateHashCode();
+		this.hashCode = 31 * serviceClass.hashCode() + (annotation != null ? annotation.hashCode() : 0);
 	}
 
 	public Class<T> getServiceClass() {
 		return serviceClass;
-	}
-
-	public Class<? extends T> getTargetClass() {
-		return targetClass;
 	}
 
 	public Annotation getAnnotation() {
@@ -69,18 +55,14 @@ public class Marker<T> {
 	public boolean isAssignableFrom(final Marker<?> marker) {
 		if (!serviceClass.isAssignableFrom(marker.getServiceClass())) {
 			return false;
-		}
-		else if (!targetClass.isAssignableFrom(marker.getTargetClass())) {
-			return false;
-		}
-		else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
+		} else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
 			return false;
 		}
 		return true;
 	}
 
 	public Marker<T> annotated(final Annotation annotation) {
-		return new Marker<T>(serviceClass, targetClass, annotation);
+		return new Marker<T>(serviceClass, annotation);
 	}
 
 	@Override
@@ -98,7 +80,7 @@ public class Marker<T> {
 			return false;
 		}
 		final Marker<?> marker = (Marker<?>) object;
-		if (serviceClass.equals(marker.getServiceClass()) && targetClass.equals(marker.getTargetClass())) {
+		if (serviceClass.equals(marker.getServiceClass())) {
 			if (annotation == null && marker.getAnnotation() == null) {
 				return true;
 			}
@@ -111,45 +93,23 @@ public class Marker<T> {
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
 		builder.append("service", serviceClass.getSimpleName());
-		builder.append("target", targetClass.getSimpleName());
 		builder.append("annotation", annotation);
 		return builder.toString();
 	}
 
-	private int calculateHashCode() {
-		final int result = 31 * serviceClass.hashCode() + targetClass.hashCode();
-		return 31 * result + (annotation != null ? annotation.hashCode() : 0);
-	}
-
-	public static <T> Marker<T> generate(final Annotation... annotations) {
-		return generate(null, null, annotations);
-	}
-
-	public static <T> Marker<T> generate(final Class<T> defaultServiceClass, final Annotation... annotations) {
-		return generate(defaultServiceClass, defaultServiceClass, annotations);
-	}
-
-	public static <T> Marker<T> generate(final Class<T> defaultServiceClass, final Class<? extends T> defaultTargetClass) {
-		return generate(defaultServiceClass, defaultTargetClass, defaultTargetClass.getAnnotations());
-	}
-
 	public static <T> Marker<T> generate(final Class<T> defaultServiceClass,
-										 final Class<? extends T> defaultTargetClass,
 										 final Annotation... annotations) {
 		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
 		final MarkerAnnotation marker = InternalUtils.findAnnotation(MarkerAnnotation.class, annotations);
 		if (service == null) {
 			//noinspection unchecked
-			return new Marker<T>(defaultServiceClass, defaultTargetClass, marker);
+			return new Marker<T>(defaultServiceClass, marker);
 		}
 
-		final Class serviceClass = !void.class.equals(service.service()) ? service.service() :
-				defaultServiceClass != null ? defaultServiceClass : service.value();
-		final Class targetClass = !void.class.equals(service.value()) ? service.value() :
-				defaultTargetClass != null ? defaultTargetClass : service.service();
+		final Class serviceClass = !void.class.equals(service.value()) ? service.value() : defaultServiceClass;
 
 		//noinspection unchecked
-		return new Marker<T>(serviceClass, targetClass, marker);
+		return new Marker<T>(serviceClass, marker);
 	}
 
 	public static Named named(final String name) {

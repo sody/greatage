@@ -63,7 +63,7 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 			throw new IllegalStateException("Configuration method can not return any value");
 		}
 
-		marker = Marker.generate(configureMethod.getAnnotations());
+		marker = Marker.generate(null, configureMethod.getAnnotations());
 
 		final Order order = configureMethod.getAnnotation(Order.class);
 		if (order != null) {
