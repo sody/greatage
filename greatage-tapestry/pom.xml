@@ -108,19 +108,19 @@
 		<dependency>
 			<groupId>org.greatage</groupId>
 			<artifactId>greatage-ioc</artifactId>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>org.greatage</groupId>
 			<artifactId>greatage-security</artifactId>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
 			<groupId>org.greatage</groupId>
 			<artifactId>greatage-domain</artifactId>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
