@@ -172,7 +172,7 @@ public class ServiceLocatorBuilder {
 		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
 		final Scope scope = new GlobalScope();
 		final ScopeManager fakeScopeManager = new ScopeManagerImpl(CollectionUtils.<Scope, Scope>newList(scope));
-		cache.put(Marker.generate(Scope.class), scope);
+		cache.put(Marker.get(Scope.class), scope);
 
 		injector = new DefaultInjector(
 				CollectionUtils.<InjectionProvider, InjectionProvider>newList(new InternalInjectionProvider()),
@@ -189,7 +189,7 @@ public class ServiceLocatorBuilder {
 	}
 
 	private <T> T getService(final Class<T> serviceClass) {
-		final Marker<T> marker = Marker.generate(serviceClass);
+		final Marker<T> marker = Marker.get(serviceClass);
 		if (!cache.containsKey(marker)) {
 			final ServiceDefinition<T> service = services.get(marker);
 			final List<ServiceContributor<T>> contributors = CollectionUtils.newList();

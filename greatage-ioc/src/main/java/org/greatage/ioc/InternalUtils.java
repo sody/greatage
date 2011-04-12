@@ -17,6 +17,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.MarkerAnnotation;
+import org.greatage.ioc.annotations.Service;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -29,6 +30,25 @@ import java.lang.reflect.Method;
  * @since 1.1
  */
 public class InternalUtils {
+
+	@SuppressWarnings("unchecked")
+	public static <T> Marker<T> generateMarker(final Annotation... annotations) {
+		return (Marker<T>) generateMarker(Object.class, annotations);
+	}
+
+	public static <T> Marker<T> generateMarker(final Class<T> defaultServiceClass, final Annotation... annotations) {
+		final Annotation marker = findMarker(annotations);
+		final Service service = findAnnotation(Service.class, annotations);
+		if (service == null) {
+			//noinspection unchecked
+			return new Marker<T>(defaultServiceClass, marker);
+		}
+
+		final Class serviceClass = !void.class.equals(service.value()) ? service.value() : defaultServiceClass;
+
+		//noinspection unchecked
+		return new Marker<T>(serviceClass, marker);
+	}
 
 	/**
 	 * Calculates service dependencies according to specified build constructor.

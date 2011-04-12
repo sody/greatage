@@ -16,6 +16,8 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.annotations.AnnotationFactory;
+import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
 
@@ -61,6 +63,16 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 
 	public ServiceBindingOptions annotatedWith(final Annotation annotation) {
 		this.annotation = annotation;
+		return this;
+	}
+
+	public ServiceBindingOptions annotatedWith(final Class<? extends Annotation> annotationClass) {
+		this.annotation = AnnotationFactory.create(annotationClass);
+		return this;
+	}
+
+	public ServiceBindingOptions named(final String name) {
+		this.annotation = new NamedImpl(name);
 		return this;
 	}
 

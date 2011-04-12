@@ -73,7 +73,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @throws ApplicationException if service not found
 	 */
 	public <T> T getService(final Class<T> serviceClass) {
-		return getService(Marker.generate(serviceClass));
+		return getService(Marker.get(serviceClass));
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * {@inheritDoc}
 	 */
 	public <T> Set<T> findServices(final Class<T> serviceClass) {
-		return findServices(Marker.generate(serviceClass));
+		return findServices(Marker.get(serviceClass));
 	}
 
 	public <T> Set<T> findServices(final Marker<T> marker) {

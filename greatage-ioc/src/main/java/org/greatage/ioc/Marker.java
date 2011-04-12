@@ -16,7 +16,8 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Service;
+import org.greatage.ioc.annotations.AnnotationFactory;
+import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.annotation.Annotation;
@@ -53,7 +54,8 @@ public class Marker<T> {
 	public boolean isAssignableFrom(final Marker<?> marker) {
 		if (!serviceClass.isAssignableFrom(marker.getServiceClass())) {
 			return false;
-		} else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
+		}
+		else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
 			return false;
 		}
 		return true;
@@ -83,26 +85,28 @@ public class Marker<T> {
 		return false;
 	}
 
+	public static <T> Marker<T> get(final Class<T> serviceClass) {
+		return new Marker<T>(serviceClass, null);
+	}
+
+	public static <T> Marker<T> get(final Class<T> serviceClass, final Annotation annotation) {
+		return new Marker<T>(serviceClass, annotation);
+	}
+
+	public static <T> Marker<T> get(final Class<T> serviceClass, final Class<? extends Annotation> annotationClass) {
+		final Annotation annotation = AnnotationFactory.create(annotationClass);
+		return new Marker<T>(serviceClass, annotation);
+	}
+
+	public static <T> Marker<T> get(final Class<T> serviceClass, final String name) {
+		return new Marker<T>(serviceClass, new NamedImpl(name));
+	}
+
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
 		builder.append("service", serviceClass.getSimpleName());
 		builder.append("annotation", annotation);
 		return builder.toString();
-	}
-
-	public static <T> Marker<T> generate(final Class<T> defaultServiceClass,
-										 final Annotation... annotations) {
-		final Annotation marker = InternalUtils.findMarker(annotations);
-		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
-		if (service == null) {
-			//noinspection unchecked
-			return new Marker<T>(defaultServiceClass, marker);
-		}
-
-		final Class serviceClass = !void.class.equals(service.value()) ? service.value() : defaultServiceClass;
-
-		//noinspection unchecked
-		return new Marker<T>(serviceClass, marker);
 	}
 }
