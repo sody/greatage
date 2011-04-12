@@ -24,8 +24,6 @@ package org.greatage.ioc.scope;
  */
 public abstract class ScopeConstants {
 
-	public static final String INTERNAL = "internal";
-
 	/**
 	 * Identifier for global scope. It is used for services that have the same state for whole application.
 	 */
