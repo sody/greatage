@@ -37,6 +37,8 @@ public interface ServiceDefinition<T> {
 	 */
 	boolean isOverride();
 
+	boolean isEager();
+
 	/**
 	 * Gets service scope. {@link org.greatage.ioc.scope.ScopeManager} service must be configured to understand this value
 	 * of scope.

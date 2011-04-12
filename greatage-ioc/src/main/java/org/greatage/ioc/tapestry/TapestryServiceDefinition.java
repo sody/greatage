@@ -47,6 +47,10 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 		return false;
 	}
 
+	public boolean isEager() {
+		return false;
+	}
+
 	public String getScope() {
 		return ScopeConstants.PROTOTYPE;
 	}

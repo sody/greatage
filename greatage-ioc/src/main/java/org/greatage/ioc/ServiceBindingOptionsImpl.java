@@ -36,6 +36,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private String serviceScope;
 	private Annotation annotation;
 	private boolean override;
+	private boolean eager;
 
 	/**
 	 * Creates new instance of service binding options with defined service class and service implementation class.
@@ -71,6 +72,11 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 		return this;
 	}
 
+	public ServiceBindingOptions eager() {
+		eager = true;
+		return this;
+	}
+
 	/**
 	 * Creates new instance of configured service definition.
 	 *
@@ -78,6 +84,6 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 * @return new instance of configured service definition, not null
 	 */
 	public ServiceDefinition<T> createService(final Logger logger) {
-		return new ServiceDefinitionImpl<T>(logger, serviceClass, implementationClass, annotation, serviceScope, override);
+		return new ServiceDefinitionImpl<T>(logger, serviceClass, implementationClass, annotation, serviceScope, override, eager);
 	}
 }

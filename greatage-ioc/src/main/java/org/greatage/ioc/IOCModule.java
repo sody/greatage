@@ -77,11 +77,12 @@ public class IOCModule {
 	 */
 	@Bind
 	public static void bind(final ServiceBinder binder) {
+		binder.bind(ProxyFactory.class, JavassistProxyFactory.class).eager();
+		binder.bind(ScopeManager.class, ScopeManagerImpl.class).eager();
+		binder.bind(LoggerSource.class, Slf4jLoggerSource.class).eager();
+
 		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
 		binder.bind(Injector.class, DefaultInjector.class);
-		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
-		binder.bind(LoggerSource.class, Slf4jLoggerSource.class);
-		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
 		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
 		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
@@ -149,7 +150,7 @@ public class IOCModule {
 	 * @param configuration default coercion provider configuration
 	 */
 	@Contribute
-	@Service(DefaultCoercionProvider.class)
+	@Service(CoercionProvider.class)
 	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
 		configuration.addInstance(BooleanToStringCoercion.class);
 		configuration.addInstance(NumberToStringCoercion.class);

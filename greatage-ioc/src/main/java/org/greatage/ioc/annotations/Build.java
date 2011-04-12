@@ -42,6 +42,8 @@ public @interface Build {
 	 */
 	boolean override() default false;
 
+	boolean eager() default false;
+
 	/**
 	 * This property defines service scope. This scope must present inside {@link org.greatage.ioc.scope.ScopeManager}
 	 * configuration. The default scope is global.

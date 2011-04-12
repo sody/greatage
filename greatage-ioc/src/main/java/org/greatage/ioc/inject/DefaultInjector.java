@@ -64,7 +64,7 @@ public class DefaultInjector implements Injector {
 
 		final ServiceBuilder<T> builder =
 				new ServiceBuilder<T>(service, orderedContributors, orderedDecorators, resources, scope);
-		return proxyFactory.createProxy(builder);
+		return service.isEager() ? builder.build() : proxyFactory.createProxy(builder);
 	}
 
 	class DefaultServiceResources<T> implements ServiceResources<T> {

@@ -38,6 +38,7 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	private final Marker<T> marker;
 	private final String scope;
 	private final boolean override;
+	private final boolean eager;
 
 	private final Logger logger;
 
@@ -57,6 +58,7 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 		final Build build = factoryMethod.getAnnotation(Build.class);
 		scope = build.scope();
 		override = build.override();
+		eager = build.eager();
 
 		//noinspection unchecked
 		marker = (Marker<T>) Marker.generate(factoryMethod.getReturnType(), factoryMethod.getAnnotations());
@@ -74,6 +76,10 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	 */
 	public boolean isOverride() {
 		return override;
+	}
+
+	public boolean isEager() {
+		return eager;
 	}
 
 	/**

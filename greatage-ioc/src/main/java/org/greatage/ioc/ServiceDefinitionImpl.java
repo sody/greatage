@@ -34,6 +34,7 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	private final Class<? extends T> implementationClass;
 	private final String scope;
 	private final boolean override;
+	private final boolean eager;
 
 	private final Logger logger;
 
@@ -48,8 +49,9 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	ServiceDefinitionImpl(final Logger logger,
 						  final Class<T> serviceClass,
 						  final String scope,
-						  final boolean override) {
-		this(logger, serviceClass, serviceClass, scope, override);
+						  final boolean override,
+						  final boolean eager) {
+		this(logger, serviceClass, serviceClass, scope, override, eager);
 	}
 
 	/**
@@ -66,8 +68,9 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 						  final Class<T> serviceClass,
 						  final Class<? extends T> implementationClass,
 						  final String scope,
-						  final boolean override) {
-		this(logger, serviceClass, implementationClass, null, scope, override);
+						  final boolean override,
+						  final boolean eager) {
+		this(logger, serviceClass, implementationClass, null, scope, override, eager);
 	}
 
 	ServiceDefinitionImpl(final Logger logger,
@@ -75,10 +78,12 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 						  final Class<? extends T> implementationClass,
 						  final Annotation annotation,
 						  final String scope,
-						  final boolean override) {
+						  final boolean override,
+						  final boolean eager) {
 		this.logger = logger;
 		this.scope = scope;
 		this.override = override;
+		this.eager = eager;
 		this.implementationClass = implementationClass;
 
 		marker = annotation != null ?
@@ -95,6 +100,10 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	 */
 	public boolean isOverride() {
 		return override;
+	}
+
+	public boolean isEager() {
+		return eager;
 	}
 
 	/**
