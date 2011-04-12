@@ -47,10 +47,8 @@ import org.greatage.ioc.resource.ClasspathResourceLocator;
 import org.greatage.ioc.resource.MessagesSource;
 import org.greatage.ioc.resource.MessagesSourceImpl;
 import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.ioc.scope.GlobalScope;
 import org.greatage.ioc.scope.PrototypeScope;
 import org.greatage.ioc.scope.Scope;
-import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.ioc.scope.ScopeManagerImpl;
 import org.greatage.ioc.scope.ThreadScope;
@@ -79,14 +77,15 @@ public class IOCModule {
 	 */
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(Injector.class, DefaultInjector.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(ProxyFactory.class, JavassistProxyFactory.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(LoggerSource.class, Slf4jLoggerSource.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(ScopeManager.class, ScopeManagerImpl.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(TypeCoercer.class, TypeCoercerImpl.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(SymbolSource.class, SymbolSourceImpl.class).withScope(ScopeConstants.INTERNAL);
-		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withScope(ScopeConstants.INTERNAL);
+		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
+		binder.bind(Injector.class, DefaultInjector.class);
+		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
+		binder.bind(LoggerSource.class, Slf4jLoggerSource.class);
+		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
+		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
+		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class);
+		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
+		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class);
 
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
@@ -102,8 +101,8 @@ public class IOCModule {
 	 */
 	@Contribute
 	@Service(ScopeManager.class)
-	public static void contributeScopeManager(final Configuration<Scope> configuration) {
-		configuration.addInstance(GlobalScope.class);
+	public static void contributeScopeManager(final Configuration<Scope> configuration, final Scope defaultScope) {
+		configuration.add(defaultScope);
 		configuration.addInstance(PrototypeScope.class);
 		configuration.addInstance(ThreadScope.class);
 	}

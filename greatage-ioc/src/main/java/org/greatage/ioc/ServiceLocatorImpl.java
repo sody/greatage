@@ -17,9 +17,6 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.inject.Injector;
-import org.greatage.ioc.inject.InternalInjector;
-import org.greatage.ioc.logging.Logger;
-import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;
@@ -34,76 +31,36 @@ import java.util.Set;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<ServiceLocator> {
+public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();
 	private final Map<Marker<?>, String> scopes = CollectionUtils.newConcurrentMap();
-
-	private final Marker<ServiceLocator> marker;
-	private final Logger logger;
 
 	/**
 	 * Creates new instance of service locator with defined modules.
 	 *
-	 * @param logger  system logger
 	 * @param modules modules
+	 * @param injector injector
 	 */
-	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
-		this.logger = logger;
-		marker = Marker.generate(ServiceLocator.class);
-
+	public ServiceLocatorImpl(final Collection<Module> modules, final Injector injector) {
 		//creating and overriding service definitions
 		//TODO: implement this using set
 		final Map<Marker<?>, ServiceDefinition<?>> internalServices = CollectionUtils.newMap();
-		final Map<Marker<?>, ServiceDefinition<?>> otherServices = CollectionUtils.newMap();
 		for (Module module : modules) {
 			for (ServiceDefinition<?> service : module.getDefinitions()) {
 				final Marker<?> marker = service.getMarker();
-				if (!service.isOverride() && (otherServices.containsKey(marker) || internalServices.containsKey(marker))) {
+				if (!service.isOverride() && internalServices.containsKey(marker)) {
 					throw new ApplicationException(String.format("Service (%s) already declared", marker));
 				}
-				if (ScopeConstants.INTERNAL.equals(service.getScope())) {
-					internalServices.put(marker, service);
-				}
-				else {
-					otherServices.put(marker, service);
-				}
+				internalServices.put(marker, service);
 			}
 		}
 
-		//adding service locator as internal service
-		//internal services use separate sandbox injector to prevent cyclic dependency injection
-		final InternalInjector internalInjector = new InternalInjector();
-		addService(internalInjector, this, modules);
-
-		//initializing internal services
 		for (ServiceDefinition<?> service : internalServices.values()) {
-			addService(internalInjector, service, modules);
-		}
-
-		//initializing services
-		final Injector injector = getService(Injector.class);
-		for (ServiceDefinition<?> service : otherServices.values()) {
 			addService(injector, service, modules);
 		}
 
 		//logging statistics
 		logStatistics();
-	}
-
-	public Marker<ServiceLocator> getMarker() {
-		return marker;
-	}
-
-	public String getScope() {
-		return ScopeConstants.INTERNAL;
-	}
-
-	public boolean isOverride() {
-		return false;
-	}
-
-	public ServiceLocator build(final ServiceResources<ServiceLocator> serviceLocatorServiceResources) {
-		return this;
 	}
 
 	public Set<Marker<?>> getMarkers() {
@@ -185,6 +142,6 @@ public class ServiceLocatorImpl implements ServiceLocator, ServiceDefinition<Ser
 			final String scope = scopes.get(marker);
 			statistics.append(String.format(format, name, scope));
 		}
-		logger.info(statistics.toString());
+//		logger.info(statistics.toString());
 	}
 }

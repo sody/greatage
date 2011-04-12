@@ -16,14 +16,22 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Dependency;
+import org.greatage.ioc.inject.ServiceBuilder;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.Slf4jLogger;
+import org.greatage.ioc.proxy.JdkProxyFactory;
+import org.greatage.ioc.proxy.ProxyFactory;
+import org.greatage.ioc.scope.GlobalScope;
+import org.greatage.ioc.scope.Scope;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
+import org.greatage.util.OrderingUtils;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class represents utility that simplifies {@link ServiceLocator} building process.
@@ -32,14 +40,17 @@ import java.util.List;
  * @since 1.1
  */
 public class ServiceLocatorBuilder {
-	private final List<Module> modules = CollectionUtils.newList();
+	private final ServiceLocatorModule rootModule;
 	private final Locker locker = new Locker();
 
-	private final Logger logger;
+	private Scope scope;
+	private ProxyFactory proxyFactory;
+	private final Collection<Module> modules = CollectionUtils.newList();
+	private final Map<Marker, ServiceDefinition> services = CollectionUtils.newMap();
+	private final Map<Marker, Object> cache = CollectionUtils.newMap();
 
 	/**
-	 * Creates new service locator builder with defined {@link IOCModule} core module. It will use console logger for
-	 * system logs.
+	 * Creates new service locator builder with defined {@link IOCModule} core module. It will use console logger for system logs.
 	 */
 	public ServiceLocatorBuilder() {
 		this(new Slf4jLogger(LoggerFactory.getLogger(ServiceLocator.class)));
@@ -51,8 +62,7 @@ public class ServiceLocatorBuilder {
 	 * @param logger system logger
 	 */
 	public ServiceLocatorBuilder(final Logger logger) {
-		this.logger = logger;
-		addModule(IOCModule.class);
+		rootModule = new ServiceLocatorModule(logger);
 	}
 
 	/**
@@ -63,9 +73,7 @@ public class ServiceLocatorBuilder {
 	 */
 	public ServiceLocatorBuilder addModules(final Module... moduleInstances) {
 		locker.check();
-		for (Module module : moduleInstances) {
-			addModule(module);
-		}
+		rootModule.addModules(moduleInstances);
 		return this;
 	}
 
@@ -77,9 +85,7 @@ public class ServiceLocatorBuilder {
 	 */
 	public ServiceLocatorBuilder addModules(final Class<?>... moduleClasses) {
 		locker.check();
-		for (Class<?> moduleClass : moduleClasses) {
-			addModule(moduleClass);
-		}
+		rootModule.addModules(moduleClasses);
 		return this;
 	}
 
@@ -91,9 +97,7 @@ public class ServiceLocatorBuilder {
 	 */
 	public ServiceLocatorBuilder addModule(final Module moduleInstance) {
 		locker.check();
-		assert moduleInstance != null;
-
-		modules.add(moduleInstance);
+		rootModule.addModules(moduleInstance);
 		return this;
 	}
 
@@ -106,14 +110,7 @@ public class ServiceLocatorBuilder {
 	 */
 	public <T> ServiceLocatorBuilder addModule(final Class<T> moduleClass) {
 		locker.check();
-		assert moduleClass != null;
-
-		// if module class is annotated with Dependency annotation, adds specified module classes
-		final Dependency dependency = moduleClass.getAnnotation(Dependency.class);
-		if (dependency != null) {
-			addModules(dependency.value());
-		}
-		addModule(new ModuleImpl<T>(logger, moduleClass));
+		rootModule.addModules(moduleClass);
 		return this;
 	}
 
@@ -124,7 +121,24 @@ public class ServiceLocatorBuilder {
 	 */
 	public ServiceLocator build() {
 		locker.lock();
-		return new ServiceLocatorImpl(logger, modules);
+		scope = new GlobalScope();
+		proxyFactory = new JdkProxyFactory();
+		modules.addAll(rootModule.getModules());
+
+		for (Module module : modules) {
+			for (ServiceDefinition<?> service : module.getDefinitions()) {
+				final Marker<?> marker = service.getMarker();
+				if (!service.isOverride() && services.containsKey(marker)) {
+					throw new ApplicationException(String.format("Service (%s) already declared", marker));
+				}
+				services.put(marker, service);
+			}
+		}
+
+		final Marker<ServiceLocator> marker = Marker.generate(ServiceLocator.class);
+		final ServiceResources<ServiceLocator> resources = new InternalServiceResources<ServiceLocator>(marker);
+		proxyFactory = resources.getResource(ProxyFactory.class);
+		return resources.getResource(ServiceLocator.class);
 	}
 
 	public static ServiceLocator createServiceLocator(final Logger logger, final Module... modules) {
@@ -138,8 +152,8 @@ public class ServiceLocatorBuilder {
 	}
 
 	/**
-	 * Creates new service locator instance for specified module classes + IOCModule. It will use console logger for all
-	 * system logs.
+	 * Creates new service locator instance for specified module classes + IOCModule. It will use console logger for all system
+	 * logs.
 	 *
 	 * @param moduleClasses module classes
 	 * @return new service locator instance
@@ -159,5 +173,47 @@ public class ServiceLocatorBuilder {
 	public static ServiceLocator createServiceLocator(final Logger logger, final Class... moduleClasses) {
 		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder(logger).addModules(moduleClasses);
 		return builder.build();
+	}
+
+	class InternalServiceResources<T> implements ServiceResources<T> {
+		private final Marker<T> marker;
+
+		InternalServiceResources(final Marker<T> marker) {
+			this.marker = marker;
+		}
+
+		public Marker<T> getMarker() {
+			return marker;
+		}
+
+		public <R> R getResource(final Class<R> resourceClass, final Annotation... annotations) {
+			if (Scope.class.equals(resourceClass)) {
+				return resourceClass.cast(scope);
+			}
+			final Marker<R> resourceMarker = Marker.generate(resourceClass, annotations);
+			if (!cache.containsKey(resourceMarker)) {
+				final R service = createService(resourceMarker);
+				cache.put(resourceMarker, service);
+			}
+			return resourceClass.cast(cache.get(resourceMarker));
+		}
+
+		public <R> R createService(final Marker<R> marker) {
+			final ServiceDefinition<R> service = services.get(marker);
+			final List<ServiceContributor<R>> contributors = CollectionUtils.newList();
+			final List<ServiceDecorator<R>> decorators = CollectionUtils.newList();
+			for (Module module : modules) {
+				contributors.addAll(module.getContributors(marker));
+				decorators.addAll(module.getDecorators(marker));
+			}
+			final List<ServiceContributor<R>> orderedContributors = OrderingUtils.order(contributors);
+			final List<ServiceDecorator<R>> orderedDecorators = OrderingUtils.order(decorators);
+
+			final InternalServiceResources<R> resources = new InternalServiceResources<R>(marker);
+
+			final ServiceBuilder<R> builder =
+					new ServiceBuilder<R>(service, orderedContributors, orderedDecorators, resources, scope);
+			return proxyFactory.createProxy(builder);
+		}
 	}
 }

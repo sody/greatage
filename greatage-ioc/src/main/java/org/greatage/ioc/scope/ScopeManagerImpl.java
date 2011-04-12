@@ -36,11 +36,9 @@ public class ScopeManagerImpl implements ScopeManager {
 	 *
 	 * @param scopes scope instances mapped by their identifiers
 	 */
-	public ScopeManagerImpl(final Collection<Scope> scopes, final Scope internalScope) {
+	public ScopeManagerImpl(final Collection<Scope> scopes) {
 		assert scopes != null;
-		assert internalScope != null;
 
-		this.scopes.put(internalScope.getName(), internalScope);
 		for (Scope scope : scopes) {
 			this.scopes.put(scope.getName(), scope);
 		}
