@@ -20,7 +20,7 @@ package org.greatage.ioc.cache;
  * This class represents simple cache source implementation.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class SimpleCacheSource extends AbstractCacheSource {
 

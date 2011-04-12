@@ -27,7 +27,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class TestSymbolSource extends Assert {
 	private SymbolSource symbolSource;

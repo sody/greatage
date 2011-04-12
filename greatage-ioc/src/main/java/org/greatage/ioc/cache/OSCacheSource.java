@@ -22,7 +22,7 @@ import org.greatage.util.DescriptionBuilder;
  * This class represents cache source implementation for OSCache cache API.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class OSCacheSource extends AbstractCacheSource {
 	private final boolean useMemoryCaching;

@@ -20,7 +20,7 @@ package org.greatage.ioc.resource;
  * This class represents {@link ResourceLocator} implementation that works with classpath resources.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ClasspathResourceLocator extends AbstractResourceLocator {
 

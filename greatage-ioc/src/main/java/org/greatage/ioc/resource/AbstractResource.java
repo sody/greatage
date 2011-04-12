@@ -30,7 +30,7 @@ import java.util.Locale;
  * This class represents abstract {@link Resource} implementation that implements all base logic.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractResource implements Resource {
 	private static final char FILE_DELIMITER = '.';

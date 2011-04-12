@@ -16,30 +16,16 @@
 
 package org.greatage.ioc;
 
+import java.lang.annotation.Annotation;
+
 /**
- * This class represents service binding options that is returned by {@link org.greatage.ioc.ServiceBinder} to define
- * service unique id, service scope and is it overrides the existing service.
+ * This class represents service binding options that is returned by {@link org.greatage.ioc.ServiceBinder} to define service
+ * unique id, service scope and is it overrides the existing service.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ServiceBindingOptions {
-
-	/**
-	 * Defines service unique id.
-	 *
-	 * @param id service unique id
-	 * @return this service binding options
-	 */
-	ServiceBindingOptions withId(String id);
-
-	/**
-	 * Defines service alias that represent service unique id as class.
-	 *
-	 * @param alias service alias
-	 * @return this service binding options
-	 */
-	ServiceBindingOptions withAlias(Class alias);
 
 	/**
 	 * Defines service scope.
@@ -49,10 +35,14 @@ public interface ServiceBindingOptions {
 	 */
 	ServiceBindingOptions withScope(String scope);
 
+	ServiceBindingOptions annotatedWith(Annotation annotation);
+
 	/**
 	 * Defines option that service overrides the existing service definition.
 	 *
 	 * @return this service binding options
 	 */
 	ServiceBindingOptions override();
+
+	ServiceBindingOptions eager();
 }

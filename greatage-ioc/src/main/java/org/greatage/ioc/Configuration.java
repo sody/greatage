@@ -22,7 +22,7 @@ package org.greatage.ioc;
  *
  * @param <V> type of configuration items
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface Configuration<V> {
 

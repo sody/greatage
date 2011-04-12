@@ -24,7 +24,7 @@ import org.greatage.util.DescriptionBuilder;
  * This class represents cache source implementation for Ehcache cache API.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class EhcacheCacheSource extends AbstractCacheSource {
 	private final CacheManager cacheManager;

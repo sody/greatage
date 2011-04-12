@@ -20,7 +20,7 @@ package org.greatage.ioc.proxy;
  * This class represent method invoke that is used to invoke object proxy methods with some additional functionality.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface Interceptor {
 

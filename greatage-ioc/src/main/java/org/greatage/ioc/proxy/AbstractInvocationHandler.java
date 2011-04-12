@@ -28,23 +28,20 @@ import java.util.Map;
  *
  * @param <T> delegate type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractInvocationHandler<T> {
 	private final ObjectBuilder<T> builder;
-	private final List<Interceptor> interceptors;
 
 	private final Map<Method, Invocation> invocations = CollectionUtils.newConcurrentMap();
 
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
-	 * @param builder	  object builder, not null
-	 * @param interceptors method interceptors
+	 * @param builder object builder, not null
 	 */
-	protected AbstractInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
+	protected AbstractInvocationHandler(final ObjectBuilder<T> builder) {
 		this.builder = builder;
-		this.interceptors = interceptors;
 	}
 
 	/**
@@ -68,6 +65,7 @@ public abstract class AbstractInvocationHandler<T> {
 				final T target = getDelegate();
 				final Method realMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
 				Invocation invocation = new InvocationImpl(target, realMethod);
+				final List<Interceptor> interceptors = builder.getInterceptors();
 				if (interceptors != null) {
 					for (Interceptor interceptor : interceptors) {
 						if (interceptor.supports(invocation)) {
@@ -76,7 +74,8 @@ public abstract class AbstractInvocationHandler<T> {
 					}
 				}
 				invocations.put(method, invocation);
-			} catch (NoSuchMethodException e) {
+			}
+			catch (NoSuchMethodException e) {
 				throw new IllegalArgumentException("Could not create invocation instance", e);
 			}
 		}
@@ -90,7 +89,6 @@ public abstract class AbstractInvocationHandler<T> {
 	public String toString() {
 		final DescriptionBuilder db = new DescriptionBuilder(getClass());
 		db.append("builder", builder);
-		db.append("interceptors", interceptors);
 		return db.toString();
 	}
 }

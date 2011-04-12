@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * argument of type {@link org.greatage.ioc.ServiceBinder}.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

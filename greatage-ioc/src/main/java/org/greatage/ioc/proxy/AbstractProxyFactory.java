@@ -26,7 +26,7 @@ import java.util.List;
  * proxy.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractProxyFactory implements ProxyFactory {
 
@@ -54,13 +54,6 @@ public abstract class AbstractProxyFactory implements ProxyFactory {
 						String.format("Proxy class '%s' must have default constructor", proxyClass), e);
 			}
 		}
-	}
-
-	protected <T> List<T> toList(final T... elements) {
-		if (elements == null || elements.length == 0) {
-			return null;
-		}
-		return Arrays.asList(elements);
 	}
 
 	/**

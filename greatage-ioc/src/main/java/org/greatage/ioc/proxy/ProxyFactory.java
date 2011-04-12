@@ -21,7 +21,7 @@ package org.greatage.ioc.proxy;
  * only as needed with all configured method advices.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ProxyFactory {
 
@@ -30,9 +30,8 @@ public interface ProxyFactory {
 	 * method interceptors.
 	 *
 	 * @param objectBuilder object builder
-	 * @param interceptors  method interceptors
 	 * @return proxy around specified object builder
 	 * @throws RuntimeException if proxy creation is impossible or if an error occurs instantiating it
 	 */
-	<T> T createProxy(ObjectBuilder<T> objectBuilder, Interceptor... interceptors);
+	<T> T createProxy(ObjectBuilder<T> objectBuilder);
 }

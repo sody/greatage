@@ -21,7 +21,7 @@ package org.greatage.ioc.symbol;
  * SymbolSource}.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class SystemSymbolProvider implements SymbolProvider {
 

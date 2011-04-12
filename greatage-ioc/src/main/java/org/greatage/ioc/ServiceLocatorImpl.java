@@ -16,13 +16,8 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.coerce.TypeCoercer;
-import org.greatage.ioc.logging.Logger;
-import org.greatage.ioc.logging.LoggerSource;
-import org.greatage.ioc.proxy.ProxyFactory;
-import org.greatage.ioc.scope.ScopeManager;
+import org.greatage.ioc.inject.Injector;
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.OrderingUtils;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,78 +29,42 @@ import java.util.Set;
  * container.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceLocatorImpl implements ServiceLocator {
-	private final Map<String, ServiceProvider<?>> servicesById = CollectionUtils.newConcurrentMap();
-	private final Set<Class<?>> internalServices = CollectionUtils.newSet();
-	private final Logger logger;
+	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();
+	private final Map<Marker<?>, String> scopes = CollectionUtils.newConcurrentMap();
 
 	/**
 	 * Creates new instance of service locator with defined modules.
 	 *
-	 * @param logger  system logger
 	 * @param modules modules
+	 * @param injector injector
 	 */
-	ServiceLocatorImpl(final Logger logger, final List<Module> modules) {
-		this.logger = logger;
-
+	public ServiceLocatorImpl(final Collection<Module> modules, final Injector injector) {
+		//creating and overriding service definitions
 		//TODO: implement this using set
-		final Map<String, ServiceDefinition<?>> services = CollectionUtils.newMap();
+		final Map<Marker<?>, ServiceDefinition<?>> internalServices = CollectionUtils.newMap();
 		for (Module module : modules) {
-			for (ServiceDefinition service : module.getServices()) {
-				final String serviceId = service.getServiceId();
-				if (services.containsKey(serviceId) && !service.isOverride()) {
-					throw new ApplicationException(String.format("Service with id '%s' already declared", serviceId));
+			for (ServiceDefinition<?> service : module.getDefinitions()) {
+				final Marker<?> marker = service.getMarker();
+				if (!service.isOverride() && internalServices.containsKey(marker)) {
+					throw new ApplicationException(String.format("Service (%s) already declared", marker));
 				}
-				services.put(serviceId, service);
+				internalServices.put(marker, service);
 			}
 		}
 
-		// initializing internal services collection
-		internalServices.add(LoggerSource.class);
-		internalServices.add(ProxyFactory.class);
-		internalServices.add(ScopeManager.class);
-		internalServices.add(TypeCoercer.class);
-
-		final ServiceProvider<ServiceLocator> serviceLocatorProvider = new ServiceLocatorProvider(this);
-		servicesById.put(serviceLocatorProvider.getServiceId(), serviceLocatorProvider);
-
-		for (ServiceDefinition<?> service : services.values()) {
-			final ServiceProvider<?> provider = createServiceStatus(service, modules);
-			servicesById.put(provider.getServiceId(), provider);
+		for (ServiceDefinition<?> service : internalServices.values()) {
+			addService(injector, service, modules);
 		}
 
-		// building statistics for log
+		//logging statistics
 		logStatistics();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Set<String> getServiceIds() {
-		return servicesById.keySet();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ServiceProvider<?> getServiceProvider(final String id) {
-		return servicesById.get(id);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws ApplicationException if service not found
-	 */
-	public <T> T getService(final String id, final Class<T> serviceClass) {
-		if (servicesById.containsKey(id)) {
-			final ServiceProvider<?> provider = servicesById.get(id);
-			final Object service = provider.getService();
-			return serviceClass.cast(service);
-		}
-		throw new ApplicationException(String.format("Can't find service with id %s", id));
+	public Set<Marker<?>> getMarkers() {
+		return services.keySet();
 	}
 
 	/**
@@ -114,75 +73,75 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @throws ApplicationException if service not found
 	 */
 	public <T> T getService(final Class<T> serviceClass) {
-		final Set<T> services = findServices(serviceClass);
-		if (services.size() == 1) {
-			return services.iterator().next();
+		return getService(Marker.generate(serviceClass));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws ApplicationException if service not found
+	 */
+	public <T> T getService(final Marker<T> marker) {
+		final Set<T> services = findServices(marker);
+		if (services.size() > 1) {
+			throw new ApplicationException(String.format("Can't find service (%s). More than one service available", marker));
 		}
-		throw new ApplicationException(String.format("Can't find service of class %s", serviceClass));
+		if (services.size() < 1) {
+			throw new ApplicationException(String.format("Can't find service (%s)", marker));
+		}
+		return services.iterator().next();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public <T> Set<T> findServices(final Class<T> serviceClass) {
+		return findServices(Marker.generate(serviceClass));
+	}
+
+	public <T> Set<T> findServices(final Marker<T> marker) {
 		final Set<T> result = CollectionUtils.newSet();
-		for (ServiceProvider<?> serviceProvider : servicesById.values()) {
-			if (serviceClass.isAssignableFrom(serviceProvider.getServiceClass())) {
-				final Object service = serviceProvider.getService();
-				result.add(serviceClass.cast(service));
+		for (Map.Entry<Marker<?>, ?> entry : services.entrySet()) {
+			if (marker.isAssignableFrom(entry.getKey())) {
+				final Object service = entry.getValue();
+				result.add(marker.getServiceClass().cast(service));
 			}
 		}
 		return result;
 	}
 
-	/**
-	 * Creates {@link ServiceProvider} instance for specified service with defined sorted service contributors, decorators
-	 * and interceptors.
-	 *
-	 * @param service service definition
-	 * @param modules module definitions
-	 * @return service status instance, not null
-	 */
-	@SuppressWarnings("unchecked")
-	private ServiceProvider<?> createServiceStatus(final ServiceDefinition<?> service,
-												   final Collection<Module> modules) {
-		final List<ServiceContributor<?>> contributors = CollectionUtils.newList();
-		final List<ServiceDecorator<?>> decorators = CollectionUtils.newList();
+	private <T> void addService(final Injector injector,
+								final ServiceDefinition<T> service,
+								final Collection<Module> modules) {
+		final Marker<T> marker = service.getMarker();
+		final List<ServiceContributor<T>> contributors = CollectionUtils.newList();
+		final List<ServiceDecorator<T>> decorators = CollectionUtils.newList();
 		for (Module module : modules) {
-			contributors.addAll(module.getContributors(service));
-			decorators.addAll(module.getDecorators(service));
+			contributors.addAll(module.getContributors(marker));
+			decorators.addAll(module.getDecorators(marker));
 		}
 
-		final List<ServiceContributor<?>> orderedContributors = OrderingUtils.order(contributors);
-		final List<ServiceDecorator<?>> orderedDecorators = OrderingUtils.order(decorators);
-
-		return isInternal(service) ?
-				new InternalServiceProvider(this, service, orderedContributors) :
-				new ServiceProviderImpl(this, service, orderedContributors, orderedDecorators);
-	}
-
-	/**
-	 * Checks if service definition is internal. Internal services are {@link ProxyFactory}, {@link LoggerSource}, {@link
-	 * TypeCoercer} and {@link ScopeManager}.
-	 *
-	 * @param service service definition
-	 * @return true if service is internal, false otherwise
-	 */
-	private boolean isInternal(final ServiceDefinition<?> service) {
-		return internalServices.contains(service.getServiceClass());
+		final T serviceInstance = injector.createService(service, contributors, decorators);
+		services.put(marker, serviceInstance);
+		scopes.put(marker, service.getScope());
 	}
 
 	private void logStatistics() {
 		int maxLength = 0;
-		for (String serviceId : getServiceIds()) {
-			if (serviceId.length() > maxLength) {
-				maxLength = serviceId.length();
+		for (Marker<?> marker : getMarkers()) {
+			final String name = marker.getServiceClass().getSimpleName();
+			if (name.length() > maxLength) {
+				maxLength = name.length();
 			}
 		}
 
-		final String format = "%" + maxLength + "s[%s] : %s\n";
-		for (ServiceProvider<?> provider : servicesById.values()) {
-			logger.info(format, provider.getServiceId(), provider.getServiceScope(), provider.getServiceClass());
+		final StringBuilder statistics = new StringBuilder("Statistics:\n");
+		final String format = "%" + maxLength + "s : [%s]\n";
+		for (Marker<?> marker : services.keySet()) {
+			final String name = marker.getServiceClass().getSimpleName();
+			final String scope = scopes.get(marker);
+			statistics.append(String.format(format, name, scope));
 		}
+//		logger.info(statistics.toString());
 	}
 }

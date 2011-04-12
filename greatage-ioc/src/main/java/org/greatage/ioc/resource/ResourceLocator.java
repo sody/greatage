@@ -20,7 +20,7 @@ package org.greatage.ioc.resource;
  * This interface represents utility producing resources by path.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ResourceLocator {
 

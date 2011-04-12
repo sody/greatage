@@ -28,25 +28,10 @@ import java.lang.annotation.Target;
  * for unordered, ordered and mapped configurations respectively.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Decorate {
-
-	/**
-	 * This property defines service alias (class name) that represents service unique id.
-	 */
-	Class value() default Void.class;
-
-	/**
-	 * This property defines service unique id.
-	 */
-	String id() default "";
-
-	/**
-	 * This property defines service interface for intercepting.
-	 */
-	Class service() default Void.class;
 }

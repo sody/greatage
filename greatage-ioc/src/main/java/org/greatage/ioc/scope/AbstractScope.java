@@ -16,29 +16,51 @@
 
 package org.greatage.ioc.scope;
 
-import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.ApplicationException;
+import org.greatage.ioc.Marker;
 import org.greatage.ioc.proxy.ObjectBuilder;
+import org.greatage.util.CollectionUtils;
 
 import java.util.Map;
 
 /**
- * This class represents abstract {@link Scope} implementation that look ups service instance inside the scope and if it
- * is not found creates new instance using specified service builder.
+ * This class represents abstract {@link Scope} implementation that look ups service instance inside the scope and if it is not
+ * found creates new instance using specified service builder.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractScope implements Scope {
+	private final Map<Marker, ObjectBuilder> serviceBuilders = CollectionUtils.newConcurrentMap();
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public <E> E get(final ServiceResources<E> resources, final ObjectBuilder<E> builder) {
-		if (!contains(resources)) {
-			final E service = builder.build();
-			put(resources, service);
+	private final String name;
+
+	protected AbstractScope(final String name) {
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public <S> S get(final Marker<S> marker) {
+		if (!serviceBuilders.containsKey(marker)) {
+			throw new ApplicationException(String.format("Cannot find service (%s) in %s scope", marker, name));
 		}
-		return get(resources);
+
+		if (!containsService(marker)) {
+			@SuppressWarnings("unchecked")
+			final ObjectBuilder<S> builder = serviceBuilders.get(marker);
+			final S service = builder.build();
+			putService(marker, service);
+			return service;
+		}
+
+		return getService(marker);
+	}
+
+	public <S> void put(final Marker<S> marker, final ObjectBuilder<S> builder) {
+		serviceBuilders.put(marker, builder);
 	}
 
 	/**
@@ -46,41 +68,41 @@ public abstract class AbstractScope implements Scope {
 	 */
 	public void cleanup() {
 		//TODO: add functionality of closing services, add init method
-		getServices().clear();
+		getScopeServices().clear();
 	}
 
 	/**
 	 * Checks are there a service instance inside the scope.
 	 *
-	 * @param resources service resources
-	 * @param <E>       service type
+	 * @param marker service resources
+	 * @param <S>    service type
 	 * @return true if there are a service instance inside the scope, false otherwise
 	 */
-	protected <E> boolean contains(final ServiceResources<E> resources) {
-		return getServices().containsKey(resources.getServiceId());
+	protected <S> boolean containsService(final Marker<S> marker) {
+		return getScopeServices().containsKey(marker);
 	}
 
 	/**
 	 * Gets service instance by its resources.
 	 *
-	 * @param resources service resources
-	 * @param <E>       service type
+	 * @param marker service resources
+	 * @param <S>    service type
 	 * @return service instance
 	 */
-	protected <E> E get(final ServiceResources<E> resources) {
-		final Class<E> serviceClass = resources.getServiceClass();
-		return serviceClass.cast(getServices().get(resources.getServiceId()));
+	protected <S> S getService(final Marker<S> marker) {
+		final Class<S> serviceClass = marker.getServiceClass();
+		return serviceClass.cast(getScopeServices().get(marker));
 	}
 
 	/**
 	 * Puts service instance to this scope.
 	 *
-	 * @param resources service resources
-	 * @param service   service instance
-	 * @param <E>       service type
+	 * @param marker  service resources
+	 * @param service service instance
+	 * @param <S>     service type
 	 */
-	protected <E> void put(final ServiceResources<E> resources, final E service) {
-		getServices().put(resources.getServiceId(), service);
+	protected <S> void putService(final Marker<S> marker, final S service) {
+		getScopeServices().put(marker, service);
 	}
 
 	/**
@@ -88,5 +110,5 @@ public abstract class AbstractScope implements Scope {
 	 *
 	 * @return all service instances mapped by their identifiers
 	 */
-	protected abstract Map<String, Object> getServices();
+	protected abstract Map<Marker, Object> getScopeServices();
 }

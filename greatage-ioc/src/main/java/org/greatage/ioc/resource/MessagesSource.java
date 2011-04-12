@@ -22,7 +22,7 @@ import java.util.Locale;
  * This interface represents utility producing messages by class or name.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface MessagesSource {
 

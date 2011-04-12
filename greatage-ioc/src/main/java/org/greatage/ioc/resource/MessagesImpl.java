@@ -23,7 +23,7 @@ import java.util.Map;
  * This class represents default implementation of {@link Messages} that uses map for storing localized string.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class MessagesImpl extends AbstractMessages {
 	private final Map<String, String> messages;

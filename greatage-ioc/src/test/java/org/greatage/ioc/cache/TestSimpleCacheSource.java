@@ -26,7 +26,7 @@ import java.util.Map;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class TestSimpleCacheSource extends Assert {
 	private CacheSource cacheSource;

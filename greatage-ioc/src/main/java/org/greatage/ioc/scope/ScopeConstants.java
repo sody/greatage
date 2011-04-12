@@ -20,7 +20,7 @@ package org.greatage.ioc.scope;
  * This class represents all base pre-defined scope identifiers.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class ScopeConstants {
 

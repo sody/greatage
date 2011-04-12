@@ -16,11 +16,12 @@
 
 package org.greatage.ioc.guice;
 
-import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
+import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.scope.ScopeConstants;
 
 import java.lang.annotation.Annotation;
@@ -30,30 +31,26 @@ import java.lang.annotation.Annotation;
  * @since 1.1
  */
 public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
-	private final Injector injector;
+	private final com.google.inject.Injector injector;
 	private final Key<T> key;
-
-	private final String serviceId;
-	private final Class<T> serviceClass;
+	private final Marker<T> marker;
 
 	@SuppressWarnings("unchecked")
-	GuiceServiceDefinition(final Injector injector, final Key<T> key) {
+	GuiceServiceDefinition(final com.google.inject.Injector injector, final Key<T> key) {
 		this.injector = injector;
 		this.key = key;
-
-		serviceId = obtainServiceId(key);
-		serviceClass = (Class<T>) key.getTypeLiteral().getType();
+		marker = obtainMarker(key);
 	}
 
-	public String getServiceId() {
-		return serviceId;
-	}
-
-	public Class<T> getServiceClass() {
-		return serviceClass;
+	public Marker<T> getMarker() {
+		return marker;
 	}
 
 	public boolean isOverride() {
+		return false;
+	}
+
+	public boolean isEager() {
 		return false;
 	}
 
@@ -65,11 +62,13 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		return injector.getInstance(key);
 	}
 
-	private String obtainServiceId(final Key<T> key) {
+	private Marker<T> obtainMarker(final Key<T> key) {
+		@SuppressWarnings("unchecked")
+		final Class<T> serviceClass = (Class<T>) key.getTypeLiteral().getType();
 		final Annotation annotation = key.getAnnotation();
 		if (annotation != null && Named.class.isInstance(annotation)) {
-			return ((Named) annotation).value();
+			return Marker.generate(serviceClass, annotation);
 		}
-		return key.getTypeLiteral().getRawType().getName();
+		return Marker.generate(serviceClass);
 	}
 }

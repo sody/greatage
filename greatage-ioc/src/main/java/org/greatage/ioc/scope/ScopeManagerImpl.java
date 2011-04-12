@@ -16,32 +16,46 @@
 
 package org.greatage.ioc.scope;
 
+import org.greatage.ioc.ApplicationException;
+import org.greatage.util.CollectionUtils;
+
+import java.util.Collection;
 import java.util.Map;
 
 /**
  * This class represents default {@link ScopeManager} implementation that obtains scope instances by their name.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ScopeManagerImpl implements ScopeManager {
-	private final Map<String, Scope> scopes;
+	private final Map<String, Scope> scopes = CollectionUtils.newMap();
 
 	/**
 	 * Creates new instance of scope manager with defined mapped configuration of scopes.
 	 *
 	 * @param scopes scope instances mapped by their identifiers
 	 */
-	public ScopeManagerImpl(final Map<String, Scope> scopes) {
+	public ScopeManagerImpl(final Collection<Scope> scopes) {
 		assert scopes != null;
 
-		this.scopes = scopes;
+		for (Scope scope : scopes) {
+			this.scopes.put(scope.getName(), scope);
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Scope getScope(final String scope) {
+		if (!scopes.containsKey(scope)) {
+			throw new ApplicationException(String.format("Cannot find scope with name '%s'", scope));
+		}
+
 		return scopes.get(scope);
+	}
+
+	public Collection<Scope> getScopes() {
+		return scopes.values();
 	}
 }

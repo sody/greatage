@@ -23,7 +23,7 @@ import java.util.Set;
  * interface. It is an entry point to Great Age IoC container.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ServiceLocator {
 
@@ -32,27 +32,18 @@ public interface ServiceLocator {
 	 *
 	 * @return all service ids or empty set
 	 */
-	Set<String> getServiceIds();
-
-	/**
-	 * Gets service status by specified service id.
-	 *
-	 * @param id unique service id
-	 * @return service status or null if not found
-	 */
-	ServiceProvider<?> getServiceProvider(String id);
+	Set<Marker<?>> getMarkers();
 
 	/**
 	 * Gets a service instance by specified service id. It returns the service's proxy that implements the same interface
 	 * as the actual service and instantiates the actual service only as needed with all configured method advices.
 	 *
-	 * @param id		   unique service id, case is sensitive
-	 * @param serviceClass service interface
+	 * @param marker		   service marker
 	 * @param <T>          service type
 	 * @return service instance that implement specified service interface
 	 * @throws ApplicationException if the service is not found, or if an error occurs instantiating it
 	 */
-	<T> T getService(String id, Class<T> serviceClass);
+	<T> T getService(Marker<T> marker);
 
 	/**
 	 * Gets a service instance by its service interface. It returns the service's proxy that implements the same interface
@@ -65,6 +56,8 @@ public interface ServiceLocator {
 	 *                              it
 	 */
 	<T> T getService(Class<T> serviceClass);
+
+	<T> Set<T> findServices(Marker<T> marker);
 
 	/**
 	 * Retrieves services by their service interface. It returns the service's proxies that implements the same interface

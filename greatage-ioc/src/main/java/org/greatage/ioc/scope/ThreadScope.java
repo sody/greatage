@@ -16,24 +16,30 @@
 
 package org.greatage.ioc.scope;
 
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Map;
 
 /**
- * This class represents {@link Scope} implementation that is used for services that have the same state inside one
- * application thread. Default scope identifier is {@link ScopeConstants#THREAD}.
+ * This class represents {@link Scope} implementation that is used for services that have the same state inside one application
+ * thread. Default scope identifier is {@link ScopeConstants#THREAD}.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ThreadScope extends AbstractScope {
-	private final ThreadLocal<Map<String, Object>> services = new ThreadLocal<Map<String, Object>>() {
+	private final ThreadLocal<Map<Marker, Object>> services = new ThreadLocal<Map<Marker, Object>>() {
 		@Override
-		protected Map<String, Object> initialValue() {
+		protected Map<Marker, Object> initialValue() {
 			return CollectionUtils.newConcurrentMap();
 		}
 	};
+
+	public ThreadScope() {
+		super(ScopeConstants.THREAD);
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -48,7 +54,7 @@ public class ThreadScope extends AbstractScope {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Map<String, Object> getServices() {
+	protected Map<Marker, Object> getScopeServices() {
 		return services.get();
 	}
 }

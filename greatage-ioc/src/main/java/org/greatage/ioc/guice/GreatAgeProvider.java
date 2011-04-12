@@ -17,20 +17,23 @@
 package org.greatage.ioc.guice;
 
 import com.google.inject.Provider;
-import org.greatage.ioc.ServiceProvider;
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceLocator;
 
 /**
  * @author Ivan Khalopik
  * @since 1.1
  */
 public class GreatAgeProvider<T> implements Provider<T> {
-	private final ServiceProvider<T> serviceProvider;
+	private final ServiceLocator locator;
+	private final Marker<T> marker;
 
-	GreatAgeProvider(final ServiceProvider<T> serviceProvider) {
-		this.serviceProvider = serviceProvider;
+	GreatAgeProvider(final ServiceLocator locator, final Marker<T> marker) {
+		this.locator = locator;
+		this.marker = marker;
 	}
 
 	public T get() {
-		return serviceProvider.getService();
+		return locator.getService(marker);
 	}
 }

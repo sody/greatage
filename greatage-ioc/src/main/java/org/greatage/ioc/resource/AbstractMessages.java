@@ -25,7 +25,7 @@ import java.util.Locale;
  * string key and uses {@link String#format(java.util.Locale, String, Object...)} for formatting.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public abstract class AbstractMessages implements Messages {
 	private static final String MISSING_KEY_PLACEHOLDER = "[[missing key: %s]]";

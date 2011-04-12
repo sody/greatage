@@ -16,11 +16,13 @@
 
 package org.greatage.ioc.scope;
 
+import java.util.Collection;
+
 /**
  * This interface represents utility service that obtains scope instances by their name.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface ScopeManager {
 
@@ -31,4 +33,6 @@ public interface ScopeManager {
 	 * @return scope instance correspondent to specified scope name or null if doesn't exist
 	 */
 	Scope getScope(String scope);
+
+	Collection<Scope> getScopes();
 }

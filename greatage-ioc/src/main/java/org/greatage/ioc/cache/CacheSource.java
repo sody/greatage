@@ -20,7 +20,7 @@ package org.greatage.ioc.cache;
  * This interface represents utility producing caches for various cache APIs by their class or name.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public interface CacheSource {
 

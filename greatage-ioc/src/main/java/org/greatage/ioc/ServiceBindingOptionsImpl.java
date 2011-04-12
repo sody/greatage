@@ -19,21 +19,24 @@ package org.greatage.ioc;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.scope.ScopeConstants;
 
+import java.lang.annotation.Annotation;
+
 /**
- * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id,
- * service scope and is it overrides the existing service.
+ * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id, service
+ * scope and is it overrides the existing service.
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private final Class<T> serviceClass;
 	private final Class<? extends T> implementationClass;
 
-	private String serviceId;
 	private String serviceScope;
+	private Annotation annotation;
 	private boolean override;
+	private boolean eager;
 
 	/**
 	 * Creates new instance of service binding options with defined service class and service implementation class.
@@ -44,7 +47,6 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	ServiceBindingOptionsImpl(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;
-		this.serviceId = serviceClass.getName();
 		this.serviceScope = ScopeConstants.GLOBAL;
 		this.override = false;
 	}
@@ -52,23 +54,13 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	/**
 	 * {@inheritDoc}
 	 */
-	public ServiceBindingOptions withId(final String id) {
-		serviceId = id;
+	public ServiceBindingOptions withScope(final String scope) {
+		serviceScope = scope;
 		return this;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ServiceBindingOptions withAlias(final Class alias) {
-		return withId(alias.getName());
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public ServiceBindingOptions withScope(final String scope) {
-		serviceScope = scope;
+	public ServiceBindingOptions annotatedWith(final Annotation annotation) {
+		this.annotation = annotation;
 		return this;
 	}
 
@@ -80,6 +72,11 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 		return this;
 	}
 
+	public ServiceBindingOptions eager() {
+		eager = true;
+		return this;
+	}
+
 	/**
 	 * Creates new instance of configured service definition.
 	 *
@@ -87,6 +84,6 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 * @return new instance of configured service definition, not null
 	 */
 	public ServiceDefinition<T> createService(final Logger logger) {
-		return new ServiceDefinitionImpl<T>(logger, serviceId, serviceClass, implementationClass, serviceScope, override);
+		return new ServiceDefinitionImpl<T>(logger, serviceClass, implementationClass, annotation, serviceScope, override, eager);
 	}
 }

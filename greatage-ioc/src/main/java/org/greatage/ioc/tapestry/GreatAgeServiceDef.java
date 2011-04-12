@@ -20,32 +20,36 @@ import org.apache.tapestry5.ioc.ObjectCreator;
 import org.apache.tapestry5.ioc.ScopeConstants;
 import org.apache.tapestry5.ioc.ServiceBuilderResources;
 import org.apache.tapestry5.ioc.def.ServiceDef;
-import org.greatage.ioc.ServiceProvider;
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceLocator;
 
 import java.util.Collections;
 import java.util.Set;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class GreatAgeServiceDef implements ServiceDef {
-	private final ServiceProvider serviceProvider;
+	private final ServiceLocator locator;
+	private final Marker<?> marker;
 
-	GreatAgeServiceDef(final ServiceProvider serviceProvider) {
-		this.serviceProvider = serviceProvider;
+	GreatAgeServiceDef(final ServiceLocator locator, Marker<?> marker) {
+		this.locator = locator;
+		this.marker = marker;
 	}
 
 	public ObjectCreator createServiceCreator(final ServiceBuilderResources resources) {
 		return new ObjectCreator() {
 			public Object createObject() {
-				return serviceProvider.getService();
+				return locator.getService(marker);
 			}
 		};
 	}
 
 	public String getServiceId() {
-		return serviceProvider.getServiceId();
+		//TODO: make it work
+		return marker.toString();
 	}
 
 	public Set<Class> getMarkers() {
@@ -53,7 +57,7 @@ public class GreatAgeServiceDef implements ServiceDef {
 	}
 
 	public Class getServiceInterface() {
-		return serviceProvider.getServiceClass();
+		return marker.getServiceClass();
 	}
 
 	public String getServiceScope() {

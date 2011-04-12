@@ -29,7 +29,7 @@ import java.util.List;
  * @see ServiceDefinition
  * @see ServiceContributor
  * @see ServiceDecorator
- * @since 1.0
+ * @since 1.1
  */
 public interface Module {
 
@@ -38,23 +38,23 @@ public interface Module {
 	 *
 	 * @return all service definitions
 	 */
-	Collection<ServiceDefinition> getServices();
+	Collection<ServiceDefinition<?>> getDefinitions();
 
 	/**
 	 * Gets an ordered list of all service contributor definitions for specified service.
 	 *
-	 * @param service service definition
+	 * @param marker service marker
 	 * @param <T>     type of service
 	 * @return ordered list of all service contributor definitions for specified service or empty list
 	 */
-	<T> List<ServiceContributor<T>> getContributors(ServiceDefinition<T> service);
+	<T> List<ServiceContributor<T>> getContributors(Marker<T> marker);
 
 	/**
 	 * Gets an ordered list of all service interceptor definitions for specified service.
 	 *
-	 * @param service service definition
+	 * @param marker service marker
 	 * @param <T>     type of service
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
-	<T> List<ServiceDecorator<T>> getDecorators(ServiceDefinition<T> service);
+	<T> List<ServiceDecorator<T>> getDecorators(Marker<T> marker);
 }

@@ -26,7 +26,7 @@ import org.greatage.util.DescriptionBuilder;
  * @param <K> type of cache keys
  * @param <V> type of cache items
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class EhcacheCache<K, V> implements Cache<K, V> {
 	private final Ehcache ehcache;

@@ -20,7 +20,25 @@ import org.greatage.ioc.access.ClassAccessSource;
 import org.greatage.ioc.access.ClassAccessSourceImpl;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.coerce.*;
+import org.greatage.ioc.annotations.Service;
+import org.greatage.ioc.coerce.BooleanToStringCoercion;
+import org.greatage.ioc.coerce.Coercion;
+import org.greatage.ioc.coerce.CoercionProvider;
+import org.greatage.ioc.coerce.DefaultCoercionProvider;
+import org.greatage.ioc.coerce.EnumToStringCoercion;
+import org.greatage.ioc.coerce.NumberToStringCoercion;
+import org.greatage.ioc.coerce.StringToBooleanCoercion;
+import org.greatage.ioc.coerce.StringToDoubleCoercion;
+import org.greatage.ioc.coerce.StringToEnumCoercionProvider;
+import org.greatage.ioc.coerce.StringToIntegerCoercion;
+import org.greatage.ioc.coerce.TypeCoercer;
+import org.greatage.ioc.coerce.TypeCoercerImpl;
+import org.greatage.ioc.inject.DefaultInjectionProvider;
+import org.greatage.ioc.inject.DefaultInjector;
+import org.greatage.ioc.inject.InjectionProvider;
+import org.greatage.ioc.inject.Injector;
+import org.greatage.ioc.inject.LoggerInjectionProvider;
+import org.greatage.ioc.inject.SymbolInjectionProvider;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JavassistProxyFactory;
@@ -29,35 +47,46 @@ import org.greatage.ioc.resource.ClasspathResourceLocator;
 import org.greatage.ioc.resource.MessagesSource;
 import org.greatage.ioc.resource.MessagesSourceImpl;
 import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.ioc.scope.*;
-import org.greatage.ioc.symbol.*;
+import org.greatage.ioc.scope.PrototypeScope;
+import org.greatage.ioc.scope.Scope;
+import org.greatage.ioc.scope.ScopeManager;
+import org.greatage.ioc.scope.ScopeManagerImpl;
+import org.greatage.ioc.scope.ThreadScope;
+import org.greatage.ioc.symbol.DefaultSymbolProvider;
+import org.greatage.ioc.symbol.SymbolProvider;
+import org.greatage.ioc.symbol.SymbolSource;
+import org.greatage.ioc.symbol.SymbolSourceImpl;
+import org.greatage.ioc.symbol.SystemSymbolProvider;
 
 /**
- * This class represents base module for Great Age IoC container that configures all needed core services. This are
- * {@link ProxyFactory}, {@link LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider},
- * {@link ResourceLocator}, {@link MessagesSource}, {@link ClassAccessSource}.
+ * This class represents base module for Great Age IoC container that configures all needed core services. This are {@link
+ * ProxyFactory}, {@link LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link
+ * ResourceLocator}, {@link MessagesSource}, {@link ClassAccessSource}.
  *
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class IOCModule {
 
 	/**
-	 * Binds all needed core services with their default implementations. This are {@link ProxyFactory}, {@link
-	 * LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link ResourceLocator}, {@link
-	 * MessagesSource}, {@link ClassAccessSource}.
+	 * Binds all needed core services with their default implementations. This are {@link ProxyFactory}, {@link LoggerSource}, {@link
+	 * ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link ResourceLocator}, {@link MessagesSource}, {@link
+	 * ClassAccessSource}.
 	 *
 	 * @param binder service binder
 	 */
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(ProxyFactory.class, JavassistProxyFactory.class);
-		binder.bind(LoggerSource.class, Slf4jLoggerSource.class);
-		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
+		binder.bind(ProxyFactory.class, JavassistProxyFactory.class).eager();
+		binder.bind(ScopeManager.class, ScopeManagerImpl.class).eager();
+		binder.bind(LoggerSource.class, Slf4jLoggerSource.class).eager();
+
+		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
+		binder.bind(Injector.class, DefaultInjector.class);
 		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
-		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class).withAlias(DefaultCoercionProvider.class);
+		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class);
-		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class).withAlias(DefaultSymbolProvider.class);
+		binder.bind(SymbolProvider.class, DefaultSymbolProvider.class);
 
 		binder.bind(ResourceLocator.class, ClasspathResourceLocator.class);
 		binder.bind(MessagesSource.class, MessagesSourceImpl.class);
@@ -71,11 +100,20 @@ public class IOCModule {
 	 *
 	 * @param configuration scope manager mapped configuration
 	 */
-	@Contribute(ScopeManager.class)
-	public static void contributeScopeManager(final MappedConfiguration<String, Scope> configuration) {
-		configuration.addInstance(ScopeConstants.GLOBAL, GlobalScope.class);
-		configuration.addInstance(ScopeConstants.PROTOTYPE, PrototypeScope.class);
-		configuration.addInstance(ScopeConstants.THREAD, ThreadScope.class);
+	@Contribute
+	@Service(ScopeManager.class)
+	public static void contributeScopeManager(final Configuration<Scope> configuration, final Scope defaultScope) {
+		configuration.add(defaultScope);
+		configuration.addInstance(PrototypeScope.class);
+		configuration.addInstance(ThreadScope.class);
+	}
+
+	@Contribute
+	@Service(Injector.class)
+	public static void contributeInjector(final OrderedConfiguration<InjectionProvider> configuration) {
+		configuration.addInstance(DefaultInjectionProvider.class, "Default");
+		configuration.addInstance(SymbolInjectionProvider.class, "Symbol", "before:Default");
+		configuration.addInstance(LoggerInjectionProvider.class, "Logger", "before:Symbol");
 	}
 
 	/**
@@ -84,7 +122,8 @@ public class IOCModule {
 	 * @param configuration  symbol source ordered configuration
 	 * @param symbolProvider configured application symbol provider
 	 */
-	@Contribute(SymbolSource.class)
+	@Contribute
+	@Service(SymbolSource.class)
 	public static void contributeSymbolSource(final OrderedConfiguration<SymbolProvider> configuration,
 											  final SymbolProvider symbolProvider) {
 		configuration.add(symbolProvider, "Application");
@@ -97,7 +136,8 @@ public class IOCModule {
 	 * @param configuration	type coercer configuration
 	 * @param coercionProvider default coercion provider service
 	 */
-	@Contribute(TypeCoercer.class)
+	@Contribute
+	@Service(TypeCoercer.class)
 	public static void contributeTypeCoercer(final Configuration<CoercionProvider> configuration,
 											 final CoercionProvider coercionProvider) {
 		configuration.add(coercionProvider);
@@ -109,7 +149,8 @@ public class IOCModule {
 	 *
 	 * @param configuration default coercion provider configuration
 	 */
-	@Contribute(DefaultCoercionProvider.class)
+	@Contribute
+	@Service(CoercionProvider.class)
 	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
 		configuration.addInstance(BooleanToStringCoercion.class);
 		configuration.addInstance(NumberToStringCoercion.class);

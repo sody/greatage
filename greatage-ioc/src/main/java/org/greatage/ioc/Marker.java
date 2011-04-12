@@ -16,7 +16,8 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.*;
+import org.greatage.ioc.annotations.Service;
+import org.greatage.util.DescriptionBuilder;
 
 import java.lang.annotation.Annotation;
 
@@ -26,21 +27,23 @@ import java.lang.annotation.Annotation;
  */
 public class Marker<T> {
 	private final Class<T> serviceClass;
-	private final Class<? extends T> targetClass;
 	private final Annotation annotation;
 
-	Marker(final Class<T> serviceClass, final Class<? extends T> targetClass, final Annotation annotation) {
+	private final int hashCode;
+
+	Marker(final Class<T> serviceClass, final Annotation annotation) {
+		if (serviceClass == null || serviceClass.equals(void.class)) {
+			throw new IllegalArgumentException("Service class should not be null");
+		}
+
 		this.serviceClass = serviceClass;
-		this.targetClass = targetClass;
 		this.annotation = annotation;
+
+		this.hashCode = 31 * serviceClass.hashCode() + (annotation != null ? annotation.hashCode() : 0);
 	}
 
 	public Class<T> getServiceClass() {
 		return serviceClass;
-	}
-
-	public Class<? extends T> getTargetClass() {
-		return targetClass;
 	}
 
 	public Annotation getAnnotation() {
@@ -50,33 +53,56 @@ public class Marker<T> {
 	public boolean isAssignableFrom(final Marker<?> marker) {
 		if (!serviceClass.isAssignableFrom(marker.getServiceClass())) {
 			return false;
-		} else if (!targetClass.isAssignableFrom(marker.getTargetClass())) {
-			return false;
 		} else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
 			return false;
 		}
 		return true;
 	}
 
-	public static <T> Marker<T> generate(final Class<T> defaultClass, final Annotation... annotations) {
+	@Override
+	public int hashCode() {
+		return hashCode;
+	}
+
+	@SuppressWarnings("SimplifiableIfStatement")
+	@Override
+	public boolean equals(final Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof Marker)) {
+			return false;
+		}
+		final Marker<?> marker = (Marker<?>) object;
+		if (serviceClass.equals(marker.getServiceClass())) {
+			if (annotation == null && marker.getAnnotation() == null) {
+				return true;
+			}
+			return annotation != null && annotation.equals(marker.getAnnotation());
+		}
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("service", serviceClass.getSimpleName());
+		builder.append("annotation", annotation);
+		return builder.toString();
+	}
+
+	public static <T> Marker<T> generate(final Class<T> defaultServiceClass,
+										 final Annotation... annotations) {
+		final Annotation marker = InternalUtils.findMarker(annotations);
 		final Service service = InternalUtils.findAnnotation(Service.class, annotations);
-		final MarkerAnnotation marker = InternalUtils.findAnnotation(MarkerAnnotation.class, annotations);
 		if (service == null) {
-			final Class serviceClass = defaultClass != null ? defaultClass : Object.class;
 			//noinspection unchecked
-			return new Marker<T>(serviceClass, serviceClass, marker);
+			return new Marker<T>(defaultServiceClass, marker);
 		}
 
-		final Class serviceClass = !void.class.equals(service.service()) ? service.service() :
-				defaultClass != null ? defaultClass :
-						void.class.equals(service.value()) ? Object.class : service.value();
+		final Class serviceClass = !void.class.equals(service.value()) ? service.value() : defaultServiceClass;
 
-		final Class targetClass = void.class.equals(service.value()) ? serviceClass : service.value();
-
-		if (!serviceClass.isAssignableFrom(targetClass)) {
-			throw new IllegalArgumentException("Marker class should be subclassed from service class");
-		}
 		//noinspection unchecked
-		return new Marker<T>(serviceClass, targetClass, marker);
+		return new Marker<T>(serviceClass, marker);
 	}
 }

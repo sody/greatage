@@ -24,7 +24,7 @@ import java.util.List;
  *
  * @param <T> object type
  * @author Ivan Khalopik
- * @since 1.0
+ * @since 1.1
  */
 public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T>
 		implements java.lang.reflect.InvocationHandler {
@@ -33,10 +33,9 @@ public class JdkInvocationHandler<T> extends AbstractInvocationHandler<T>
 	 * Creates new instance of invocation handler for JDK proxy objects.
 	 *
 	 * @param builder	  object builder
-	 * @param interceptors method interceptors
 	 */
-	JdkInvocationHandler(final ObjectBuilder<T> builder, final List<Interceptor> interceptors) {
-		super(builder, interceptors);
+	JdkInvocationHandler(final ObjectBuilder<T> builder) {
+		super(builder);
 	}
 
 	/**

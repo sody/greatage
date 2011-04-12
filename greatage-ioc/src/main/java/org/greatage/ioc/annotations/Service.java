@@ -27,7 +27,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface Service {
 
-	Class service() default void.class;
-
 	Class value() default void.class;
 }
