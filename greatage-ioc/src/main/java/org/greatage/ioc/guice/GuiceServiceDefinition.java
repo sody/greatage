@@ -17,11 +17,9 @@
 package org.greatage.ioc.guice;
 
 import com.google.inject.Key;
-import com.google.inject.name.Named;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
-import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.scope.ScopeConstants;
 
 import java.lang.annotation.Annotation;
@@ -66,9 +64,6 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		@SuppressWarnings("unchecked")
 		final Class<T> serviceClass = (Class<T>) key.getTypeLiteral().getType();
 		final Annotation annotation = key.getAnnotation();
-		if (annotation != null && Named.class.isInstance(annotation)) {
-			return Marker.generate(serviceClass, annotation);
-		}
-		return Marker.generate(serviceClass);
+		return Marker.get(serviceClass, annotation);
 	}
 }

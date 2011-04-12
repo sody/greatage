@@ -23,9 +23,6 @@ import com.example.tapestry0.MockTapestryModule1;
 import com.example.tapestry0.MockTapestryModule2;
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
-import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.ServiceLocatorBuilder;
-import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.ioc.tapestry.GreatAgeIntegration;
 import org.greatage.ioc.tapestry.TapestryIntegration;
 import org.testng.Assert;
@@ -45,19 +42,19 @@ public class ITTapestryIntegration0 extends Assert {
 				.build();
 		assertNotNull(locator);
 
-		Marker<MockMessageService> marker = Marker.generate(MockMessageService.class, new NamedImpl("GreatAgeMessageService"));
+		Marker<MockMessageService> marker = Marker.get(MockMessageService.class, "GreatAgeMessageService");
 		MockMessageService messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.generate(MockMessageService.class, new NamedImpl("TapestryMessageService"));
+		marker = Marker.get(MockMessageService.class, "TapestryMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.generate(MockMessageService.class, new NamedImpl("GreatAgeMessageServiceDelegate"));
+		marker = Marker.get(MockMessageService.class, "GreatAgeMessageServiceDelegate");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());

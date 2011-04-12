@@ -5,13 +5,15 @@ import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
- * @since 8.0
+ * @since 1.1
  */
 public class NamedImpl implements Named, Serializable {
 	private final String value;
+	private final int hashCode;
 
 	public NamedImpl(final String value) {
 		this.value = value;
+		this.hashCode = (127 * "value".hashCode()) ^ value.hashCode();
 	}
 
 	public String value() {
@@ -24,7 +26,7 @@ public class NamedImpl implements Named, Serializable {
 
 	@Override
 	public int hashCode() {
-		return (127 * "value".hashCode()) ^ value.hashCode();
+		return hashCode;
 	}
 
 	@Override

@@ -30,8 +30,8 @@ public class MockBindModule {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(MockTalkServiceImpl1.class).annotatedWith(new NamedImpl("service1"));
-		binder.bind(MockTalkService.class, MockTalkServiceImpl.class).annotatedWith(new NamedImpl("service2"));
+		binder.bind(MockTalkServiceImpl1.class).named("service1");
+		binder.bind(MockTalkService.class, MockTalkServiceImpl.class).named("service2");
 	}
 
 	@Build(scope = ScopeConstants.THREAD)

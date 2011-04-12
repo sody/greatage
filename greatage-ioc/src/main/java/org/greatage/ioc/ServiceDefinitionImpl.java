@@ -87,8 +87,8 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 		this.implementationClass = implementationClass;
 
 		marker = annotation != null ?
-				Marker.generate(serviceClass, annotation) :
-				Marker.generate(serviceClass, implementationClass.getAnnotations());
+				Marker.get(serviceClass, annotation) :
+				InternalUtils.generateMarker(serviceClass, implementationClass.getAnnotations());
 	}
 
 	public Marker<T> getMarker() {

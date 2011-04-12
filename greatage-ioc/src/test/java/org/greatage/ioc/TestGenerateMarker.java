@@ -131,7 +131,7 @@ public class TestGenerateMarker extends Assert {
 	public <T> void testGenerateMarker(final Class<T> serviceClass,
 									   final Annotation[] annotations,
 									   final Marker<T> expected) {
-		final Marker<T> actual = Marker.generate(serviceClass, annotations);
+		final Marker<T> actual = InternalUtils.generateMarker(serviceClass, annotations);
 		assertNotNull(actual);
 
 		assertEquals(actual.getServiceClass(), expected.getServiceClass());
@@ -142,7 +142,7 @@ public class TestGenerateMarker extends Assert {
 	@Test(dataProvider = "testGenerateMarkerWrongData", expectedExceptions = IllegalArgumentException.class)
 	public <T> void testGenerateMarkerWrong(final Class<T> serviceClass,
 											final Annotation[] annotations) {
-		Marker.generate(serviceClass, annotations);
+		InternalUtils.generateMarker(serviceClass, annotations);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final Annotation annotation) {

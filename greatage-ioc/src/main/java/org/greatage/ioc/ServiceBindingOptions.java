@@ -37,6 +37,10 @@ public interface ServiceBindingOptions {
 
 	ServiceBindingOptions annotatedWith(Annotation annotation);
 
+	ServiceBindingOptions annotatedWith(Class<? extends Annotation> annotationClass);
+
+	ServiceBindingOptions named(String name);
+
 	/**
 	 * Defines option that service overrides the existing service definition.
 	 *

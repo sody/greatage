@@ -14,7 +14,7 @@ import java.util.List;
  * @since 1.1
  */
 public class ServiceLocatorModule implements Module, ServiceContributor<ServiceLocator> {
-	private final Marker<ServiceLocator> marker = Marker.generate(ServiceLocator.class);
+	private final Marker<ServiceLocator> marker = Marker.get(ServiceLocator.class);
 	private final List<Module> modules = CollectionUtils.newList();
 
 	private final Logger logger;

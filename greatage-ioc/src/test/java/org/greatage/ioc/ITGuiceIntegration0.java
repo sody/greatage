@@ -25,7 +25,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.ioc.guice.GreatAgeIntegration;
 import org.greatage.ioc.guice.GuiceIntegration;
 import org.testng.Assert;
@@ -45,19 +44,19 @@ public class ITGuiceIntegration0 extends Assert {
 				.build();
 		assertNotNull(locator);
 
-		Marker<MockMessageService> marker = Marker.generate(MockMessageService.class, new NamedImpl("GreatAgeMessageService"));
+		Marker<MockMessageService> marker = Marker.get(MockMessageService.class, "GreatAgeMessageService");
 		MockMessageService messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.generate(MockMessageService.class, new NamedImpl("GuiceMessageService"));
+		marker = Marker.get(MockMessageService.class, "GuiceMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.generate(MockMessageService.class, new NamedImpl("GreatAgeMessageServiceDelegate"));
+		marker = Marker.get(MockMessageService.class, "GreatAgeMessageServiceDelegate");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
