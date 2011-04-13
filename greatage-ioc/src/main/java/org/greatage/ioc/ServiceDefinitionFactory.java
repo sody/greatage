@@ -31,8 +31,8 @@ import java.lang.reflect.Modifier;
  * @since 1.1
  */
 public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
-	private final Class<?> factoryClass;
-	private final Method factoryMethod;
+	private final Class<?> moduleClass;
+	private final Method buildMethod;
 
 	private final Marker<T> marker;
 	private final String scope;
@@ -43,20 +43,20 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	 * Creates new instance of service definition with defined module class and build method, service class. Build method must have
 	 * return equal to service type and be annotated with {@link Build} annotation.
 	 *
-	 * @param factoryClass  module class
-	 * @param factoryMethod build method
+	 * @param moduleClass module class
+	 * @param buildMethod build method
 	 */
-	ServiceDefinitionFactory(final Class<?> factoryClass, final Method factoryMethod) {
-		this.factoryClass = factoryClass;
-		this.factoryMethod = factoryMethod;
+	ServiceDefinitionFactory(final Class<?> moduleClass, final Method buildMethod) {
+		this.moduleClass = moduleClass;
+		this.buildMethod = buildMethod;
 
-		final Build build = factoryMethod.getAnnotation(Build.class);
+		final Build build = buildMethod.getAnnotation(Build.class);
 		scope = build.scope();
 		override = build.override();
 		eager = build.eager();
 
 		//noinspection unchecked
-		marker = (Marker<T>) InternalUtils.generateMarker(factoryMethod.getReturnType(), factoryMethod.getAnnotations());
+		marker = (Marker<T>) InternalUtils.generateMarker(buildMethod.getReturnType(), buildMethod.getAnnotations());
 	}
 
 	/**
@@ -89,11 +89,12 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	 */
 	public T build(final ServiceResources<T> resources) {
 		try {
-			final Object moduleInstance =
-					Modifier.isStatic(factoryMethod.getModifiers()) ? null : resources.getResource(factoryClass);
-			final Object[] parameters = InternalUtils.calculateParameters(resources, factoryMethod);
-			return marker.getServiceClass().cast(factoryMethod.invoke(moduleInstance, parameters));
-		} catch (Exception e) {
+			final Object moduleInstance = Modifier.isStatic(buildMethod.getModifiers()) ? null :
+					resources.getResource(moduleClass);
+			final Object[] parameters = InternalUtils.calculateParameters(resources, buildMethod);
+			return marker.getServiceClass().cast(buildMethod.invoke(moduleInstance, parameters));
+		}
+		catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create service (%s)", marker), e);
 		}
 	}
@@ -101,8 +102,8 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("module", factoryClass);
-		builder.append("method", factoryMethod);
+		builder.append("module", moduleClass.getName());
+		builder.append("method", buildMethod.getName());
 		return builder.toString();
 	}
 }

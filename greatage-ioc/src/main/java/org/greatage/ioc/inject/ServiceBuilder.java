@@ -48,7 +48,10 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 
 	public List<Interceptor> getInterceptors() {
 		final List<Interceptor> interceptors = CollectionUtils.newList();
+		final Logger logger = resources.getResource(Logger.class);
 		for (ServiceDecorator<T> decorator : decorators) {
+			logger.debug("Decoration service (%s) from (%s)", marker, decorator);
+
 			decorator.decorate(resources);
 		}
 		return interceptors;
@@ -70,7 +73,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 		public T build() {
 			final ServiceResources<T> buildResources = new BuildResources<T>(resources, contributors);
 
-			final Logger logger = buildResources.getResource(Logger.class);
+			final Logger logger = resources.getResource(Logger.class);
 			logger.debug("Building service (%s) from (%s)", marker, service);
 
 			return service.build(buildResources);

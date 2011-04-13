@@ -40,10 +40,14 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	/**
 	 * Creates new instance of service locator with defined modules.
 	 *
-	 * @param modules modules
+	 * @param modules  modules
 	 * @param injector injector
 	 */
 	public ServiceLocatorImpl(final Collection<Module> modules, final Logger logger, final Injector injector) {
+		assert modules != null;
+		assert logger != null;
+		assert injector != null;
+
 		this.logger = logger;
 		//creating and overriding service definitions
 		//TODO: implement this using set

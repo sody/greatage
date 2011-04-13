@@ -46,19 +46,18 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	 * Build}, {@link Contribute}, {@link org.greatage.ioc.annotations.Decorate} and {@link Bind} annotations and creates
 	 * for them service, contribute, decorate, decorate and bind definitions respectively.
 	 *
-	 * @param logger	  system logger
 	 * @param moduleClass module class
 	 */
-	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
+	ModuleImpl(final Class<T> moduleClass) {
 		super(Marker.get(moduleClass), moduleClass, ScopeConstants.GLOBAL, false, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {
 				services.add(new ServiceDefinitionFactory(moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
-				contributors.add(new ServiceContributorImpl(logger, moduleClass, method));
+				contributors.add(new ServiceContributorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
-				decorators.add(new ServiceDecoratorImpl(logger, moduleClass, method));
+				decorators.add(new ServiceDecoratorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
