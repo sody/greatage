@@ -25,7 +25,7 @@ import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JdkProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
-import org.greatage.ioc.scope.GlobalScope;
+import org.greatage.ioc.scope.SingletonScope;
 import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.ioc.scope.ScopeManagerImpl;
@@ -140,7 +140,7 @@ public class ServiceLocatorBuilder {
 		final LoggerSource fakeLoggerSource = new Slf4jLoggerSource();
 		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
 
-		final Scope scope = new GlobalScope();
+		final Scope scope = new SingletonScope();
 		final ScopeManager fakeScopeManager = new ScopeManagerImpl(CollectionUtils.<Scope, Scope>newList(scope));
 		cache.put(Scope.class, scope);
 

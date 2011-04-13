@@ -30,8 +30,8 @@ import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Named;
 import org.greatage.ioc.annotations.Symbol;
+import org.greatage.ioc.annotations.Threaded;
 import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.ioc.scope.ScopeConstants;
 import org.greatage.ioc.symbol.SymbolProvider;
 import org.hibernate.SessionFactory;
 
@@ -50,7 +50,7 @@ public class HibernateModule {
 		binder.bind(HibernateConfiguration.class, HibernateAnnotationConfiguration.class)
 				.named("HibernateAnnotationConfiguration");
 		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class).named("HibernateAnnotationConfiguration");
-		binder.bind(HibernateExecutor.class, HibernateExecutorImpl.class).withScope(ScopeConstants.THREAD);
+		binder.bind(HibernateExecutor.class, HibernateExecutorImpl.class).withScope(Threaded.class);
 		binder.bind(EntityFilterProcessor.class, CompositeFilterProcessor.class);
 	}
 

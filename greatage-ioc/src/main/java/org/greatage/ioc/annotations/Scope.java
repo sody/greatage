@@ -16,7 +16,11 @@
 
 package org.greatage.ioc.annotations;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * This annotation marks methods inside the IoC module as service build points that will build service instances with

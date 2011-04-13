@@ -17,13 +17,14 @@
 package org.greatage.ioc.scope;
 
 import org.greatage.ioc.Marker;
+import org.greatage.ioc.annotations.Prototype;
 import org.greatage.ioc.proxy.ProxyFactory;
 
 import java.util.Map;
 
 /**
  * This class represents {@link Scope} implementation that It is used for services that have different state for all
- * points where it is accessed. Default scope identifier is {@link ScopeConstants#PROTOTYPE}.
+ * points where it is accessed. Default scope identifier is {@link org.greatage.ioc.annotations.Prototype}.
  *
  * @author Ivan Khalopik
  * @since 1.1
@@ -31,7 +32,7 @@ import java.util.Map;
 public class PrototypeScope extends AbstractScope {
 
 	public PrototypeScope() {
-		super(ScopeConstants.PROTOTYPE);
+		super(Prototype.class);
 	}
 
 	/**

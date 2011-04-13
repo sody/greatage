@@ -17,14 +17,14 @@
 package org.greatage.ioc.scope;
 
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.proxy.ProxyFactory;
+import org.greatage.ioc.annotations.Singleton;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Map;
 
 /**
  * This class represents {@link Scope} implementation that is used for services that have the same state for whole application.
- * Default scope identifier is {@link ScopeConstants#GLOBAL}.
+ * Default scope identifier is {@link Singleton}.
  *
  * @author Ivan Khalopik
  * @since 1.1
@@ -33,7 +33,7 @@ public class SingletonScope extends AbstractScope {
 	private final Map<Marker, Object> services = CollectionUtils.newConcurrentMap();
 
 	public SingletonScope() {
-		super(ScopeConstants.GLOBAL);
+		super(Singleton.class);
 	}
 
 	/**

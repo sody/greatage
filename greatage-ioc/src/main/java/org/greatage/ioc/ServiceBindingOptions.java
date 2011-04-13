@@ -33,7 +33,7 @@ public interface ServiceBindingOptions {
 	 * @param scope service scope
 	 * @return this service binding options
 	 */
-	ServiceBindingOptions withScope(String scope);
+	ServiceBindingOptions withScope(Class<? extends Annotation> scope);
 
 	ServiceBindingOptions annotatedWith(Annotation annotation);
 

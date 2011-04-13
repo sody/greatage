@@ -25,7 +25,7 @@ public class SymbolInjectionProvider implements InjectionProvider {
 	}
 
 	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
-		final Symbol symbol = InternalUtils.findAnnotation(Symbol.class, annotations);
+		final Symbol symbol = InternalUtils.findInArray(Symbol.class, annotations);
 		if (symbol != null) {
 			final String value = symbolSource.getValue(symbol.value());
 			return typeCoercer.coerce(value, resourceClass);

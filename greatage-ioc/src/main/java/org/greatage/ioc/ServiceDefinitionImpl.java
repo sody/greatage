@@ -16,9 +16,9 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.logging.Logger;
 import org.greatage.util.DescriptionBuilder;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
 /**
@@ -32,13 +32,13 @@ import java.lang.reflect.Constructor;
 public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	private final Marker<T> marker;
 	private final Class<? extends T> implementationClass;
-	private final String scope;
+	private final Class<? extends Annotation> scope;
 	private final boolean override;
 	private final boolean eager;
 
 	ServiceDefinitionImpl(final Marker<T> marker,
 						  final Class<? extends T> implementationClass,
-						  final String scope,
+						  final Class<? extends Annotation> scope,
 						  final boolean override,
 						  final boolean eager) {
 		this.marker = marker;
@@ -66,7 +66,7 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getScope() {
+	public Class<? extends Annotation> getScope() {
 		return scope;
 	}
 

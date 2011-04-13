@@ -17,6 +17,8 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Qualifier;
+import org.greatage.ioc.annotations.Scope;
+import org.greatage.ioc.annotations.Singleton;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -30,8 +32,24 @@ import java.lang.reflect.Method;
  */
 public class InternalUtils {
 
+	public static <T> T findInArray(final Class<T> elementClass, final Object... elements) {
+		if (elements != null) {
+			for (Object element : elements) {
+				if (elementClass.isInstance(element)) {
+					return elementClass.cast(element);
+				}
+			}
+		}
+		return null;
+	}
+
+	public static Class<? extends Annotation> findScope(final Annotation... annotations) {
+		final Annotation scope = findAnnotation(Scope.class, annotations);
+		return scope != null ? scope.annotationType() : Singleton.class;
+	}
+
 	public static <T> Marker<T> generateMarker(final Class<T> serviceClass, final Annotation... annotations) {
-		final Annotation qualifier = findQualifier(annotations);
+		final Annotation qualifier = findAnnotation(Qualifier.class, annotations);
 		if (void.class.equals(serviceClass)) {
 			//noinspection unchecked
 			return (Marker<T>) Marker.get(Object.class, qualifier);
@@ -83,21 +101,11 @@ public class InternalUtils {
 		return parameters;
 	}
 
-	public static <A extends Annotation> A findAnnotation(final Class<A> annotationClass, final Annotation... annotations) {
+	private static Annotation findAnnotation(final Class<? extends Annotation> annotationClass,
+											 final Annotation... annotations) {
 		if (annotations != null) {
 			for (Annotation annotation : annotations) {
-				if (annotationClass.isInstance(annotation)) {
-					return annotationClass.cast(annotation);
-				}
-			}
-		}
-		return null;
-	}
-
-	public static Annotation findQualifier(final Annotation... annotations) {
-		if (annotations != null) {
-			for (Annotation annotation : annotations) {
-				final Qualifier qualifier = findAnnotation(Qualifier.class, annotation.annotationType().getAnnotations());
+				final Annotation qualifier = findInArray(annotationClass, annotation.annotationType().getAnnotations());
 				if (qualifier != null) {
 					return annotation;
 				}

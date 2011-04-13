@@ -16,6 +16,7 @@
 
 package org.greatage.ioc.scope;
 
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 
 /**
@@ -32,7 +33,7 @@ public interface ScopeManager {
 	 * @param scope scope name
 	 * @return scope instance correspondent to specified scope name or null if doesn't exist
 	 */
-	Scope getScope(String scope);
+	Scope getScope(Class<? extends Annotation> scope);
 
 	Collection<Scope> getScopes();
 }
