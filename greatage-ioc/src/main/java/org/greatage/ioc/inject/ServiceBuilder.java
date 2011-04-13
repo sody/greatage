@@ -19,6 +19,7 @@ import java.util.List;
  * @since 1.1
  */
 public class ServiceBuilder<T> implements ObjectBuilder<T> {
+	private final Logger logger;
 	private final ServiceDefinition<T> service;
 	private final List<ServiceContributor<T>> contributors;
 	private final List<ServiceDecorator<T>> decorators;
@@ -27,11 +28,13 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	private final ServiceResources<T> resources;
 	private final Scope scope;
 
-	public ServiceBuilder(final ServiceDefinition<T> service,
+	public ServiceBuilder(final Logger logger,
+						  final ServiceDefinition<T> service,
 						  final List<ServiceContributor<T>> contributors,
 						  final List<ServiceDecorator<T>> decorators,
 						  final ServiceResources<T> resources,
 						  final Scope scope) {
+		this.logger = logger;
 		this.service = service;
 		this.contributors = contributors;
 		this.decorators = decorators;
@@ -48,10 +51,8 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 
 	public List<Interceptor> getInterceptors() {
 		final List<Interceptor> interceptors = CollectionUtils.newList();
-		final Logger logger = resources.getResource(Logger.class);
 		for (ServiceDecorator<T> decorator : decorators) {
 			logger.debug("Decoration service (%s) from (%s)", marker, decorator);
-
 			decorator.decorate(resources);
 		}
 		return interceptors;
@@ -71,11 +72,8 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 		}
 
 		public T build() {
-			final ServiceResources<T> buildResources = new BuildResources<T>(resources, contributors);
-
-			final Logger logger = resources.getResource(Logger.class);
+			final ServiceResources<T> buildResources = new BuildResources<T>(logger, resources, contributors);
 			logger.debug("Building service (%s) from (%s)", marker, service);
-
 			return service.build(buildResources);
 		}
 	}

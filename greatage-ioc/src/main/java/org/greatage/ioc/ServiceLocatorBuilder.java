@@ -20,6 +20,7 @@ import org.greatage.ioc.inject.DefaultInjector;
 import org.greatage.ioc.inject.InjectionProvider;
 import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.inject.LoggerInjectionProvider;
+import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.logging.LoggerSource;
 import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JdkProxyFactory;
@@ -136,8 +137,8 @@ public class ServiceLocatorBuilder {
 			}
 		}
 
-		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
 		final LoggerSource fakeLoggerSource = new Slf4jLoggerSource();
+		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
 
 		final Scope scope = new GlobalScope();
 		final ScopeManager fakeScopeManager = new ScopeManagerImpl(CollectionUtils.<Scope, Scope>newList(scope));
@@ -157,10 +158,11 @@ public class ServiceLocatorBuilder {
 	private DefaultInjector createInjector(final LoggerSource loggerSource,
 										   final ProxyFactory proxyFactory,
 										   final ScopeManager scopeManager) {
+		final Logger logger = loggerSource.getLogger(Injector.class);
 		final LoggerInjectionProvider loggerProvider = new LoggerInjectionProvider(loggerSource);
 		final InternalInjectionProvider internalProvider = new InternalInjectionProvider();
 		final List<InjectionProvider> providers = CollectionUtils.newList(loggerProvider, internalProvider);
-		return new DefaultInjector(providers, proxyFactory, scopeManager);
+		return new DefaultInjector(providers, logger, proxyFactory, scopeManager);
 	}
 
 	private <T> T getService(final Class<T> serviceClass) {

@@ -21,6 +21,7 @@ import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceDecorator;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeManager;
@@ -38,17 +39,21 @@ import java.util.List;
  */
 public class DefaultInjector implements Injector {
 	private final List<InjectionProvider> providers;
+	private final Logger logger;
 	private final ProxyFactory proxyFactory;
 	private final ScopeManager scopeManager;
 
 	public DefaultInjector(final List<InjectionProvider> providers,
+						   final Logger logger,
 						   final ProxyFactory proxyFactory,
 						   final ScopeManager scopeManager) {
 		assert providers != null;
+		assert logger != null;
 		assert proxyFactory != null;
 		assert scopeManager != null;
 
 		this.providers = providers;
+		this.logger = logger;
 		this.proxyFactory = proxyFactory;
 		this.scopeManager = scopeManager;
 	}
@@ -63,7 +68,7 @@ public class DefaultInjector implements Injector {
 		final List<ServiceDecorator<T>> orderedDecorators = OrderingUtils.order(decorators);
 
 		final ServiceBuilder<T> builder =
-				new ServiceBuilder<T>(service, orderedContributors, orderedDecorators, resources, scope);
+				new ServiceBuilder<T>(logger, service, orderedContributors, orderedDecorators, resources, scope);
 		return service.isEager() ? builder.build() : proxyFactory.createProxy(builder);
 	}
 

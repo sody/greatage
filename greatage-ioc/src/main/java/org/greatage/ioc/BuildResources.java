@@ -32,8 +32,9 @@ import java.util.Map;
  * @since 1.1
  */
 public class BuildResources<T> implements ServiceResources<T> {
-	private final List<ServiceContributor<T>> contributors;
+	private final Logger logger;
 	private final ServiceResources<T> resources;
+	private final List<ServiceContributor<T>> contributors;
 
 	private final Locker locker = new Locker();
 
@@ -41,10 +42,13 @@ public class BuildResources<T> implements ServiceResources<T> {
 	 * Creates new instance of service resources proxy for build phase with defined service resources delegate and list of service
 	 * contributors.
 	 *
-	 * @param resources	 service resources
+	 * @param resources	service resources
 	 * @param contributors service contributors
 	 */
-	public BuildResources(final ServiceResources<T> resources, final List<ServiceContributor<T>> contributors) {
+	public BuildResources(final Logger logger,
+						  final ServiceResources<T> resources,
+						  final List<ServiceContributor<T>> contributors) {
+		this.logger = logger;
 		this.resources = resources;
 		this.contributors = contributors;
 	}
@@ -113,10 +117,8 @@ public class BuildResources<T> implements ServiceResources<T> {
 	 */
 	private void configure(final Object configuration) {
 		final ServiceResources<T> configurationResources = new ConfigurationResources<T>(resources, configuration);
-		final Logger logger = configurationResources.getResource(Logger.class);
 		for (ServiceContributor<T> contributor : contributors) {
-			logger.debug("Configuring service (%s) from (%s)", configurationResources.getMarker(), contributor);
-
+			logger.debug("Configuring service (%s) from (%s)", resources.getMarker(), contributor);
 			contributor.contribute(configurationResources);
 		}
 	}
