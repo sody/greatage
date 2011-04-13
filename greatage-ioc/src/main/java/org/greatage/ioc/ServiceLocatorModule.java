@@ -17,11 +17,7 @@ public class ServiceLocatorModule implements Module, ServiceContributor<ServiceL
 	private final Marker<ServiceLocator> marker = Marker.get(ServiceLocator.class);
 	private final List<Module> modules = CollectionUtils.newList();
 
-	private final Logger logger;
-
-	ServiceLocatorModule(final Logger logger) {
-		this.logger = logger;
-
+	ServiceLocatorModule() {
 		addModule(this);
 		addModule(IOCModule.class);
 	}
@@ -40,7 +36,7 @@ public class ServiceLocatorModule implements Module, ServiceContributor<ServiceL
 			addModules(dependency.value());
 		}
 		//noinspection unchecked
-		addModule(new ModuleImpl(logger, moduleClass));
+		addModule(new ModuleImpl(moduleClass));
 	}
 
 	void addModules(final Class... moduleClasses) {

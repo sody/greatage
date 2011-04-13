@@ -18,8 +18,8 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Order;
-import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
+import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -43,19 +43,16 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	private final String orderId;
 	private final List<String> orderConstraints;
 
-	private final Logger logger;
-
 	/**
 	 * Creates new instance of service contribution definition with defined module class and method used for service configuration.
 	 * Configuration method must have void return type and be annotated with {@link Contribute} annotation.
 	 *
-	 * @param logger		  system logger
+	 *
 	 * @param moduleClass	 module class
 	 * @param configureMethod module method used for service configuration
 	 * @throws ApplicationException if configure method doesn't correspond to requirements
 	 */
-	ServiceContributorImpl(final Logger logger, final Class<?> moduleClass, final Method configureMethod) {
-		this.logger = logger;
+	ServiceContributorImpl(final Class<?> moduleClass, final Method configureMethod) {
 		this.moduleClass = moduleClass;
 		this.configureMethod = configureMethod;
 
@@ -98,8 +95,6 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	 * {@inheritDoc} It configures service by invoking configured module method.
 	 */
 	public void contribute(final ServiceResources<T> resources) {
-		logger.info("Configuring service (%s) from module (%s, %s)", resources.getMarker(), moduleClass, configureMethod);
-
 		try {
 			final Object moduleInstance =
 					Modifier.isStatic(configureMethod.getModifiers()) ? null : resources.getResource(moduleClass);
@@ -108,5 +103,13 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't configure service (%s)", resources.getMarker()), e);
 		}
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("module", moduleClass.getName());
+		builder.append("method", configureMethod.getName());
+		return builder.toString();
 	}
 }

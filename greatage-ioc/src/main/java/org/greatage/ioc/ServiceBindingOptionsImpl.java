@@ -92,13 +92,12 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	/**
 	 * Creates new instance of configured service definition.
 	 *
-	 * @param logger system logger
 	 * @return new instance of configured service definition, not null
 	 */
-	public ServiceDefinition<T> createService(final Logger logger) {
+	public ServiceDefinition<T> createService() {
 		final Marker<T> marker = annotation != null ?
 				Marker.get(serviceClass, annotation) :
 				InternalUtils.generateMarker(serviceClass, implementationClass.getAnnotations());
-		return new ServiceDefinitionImpl<T>(logger, marker, implementationClass, serviceScope, override, eager);
+		return new ServiceDefinitionImpl<T>(marker, implementationClass, serviceScope, override, eager);
 	}
 }

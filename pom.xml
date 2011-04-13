@@ -473,7 +473,7 @@
 
 		<!--front dependencies-->
 		<servlet.api.version>2.5</servlet.api.version>
-		<tapestry.version>5.2.4</tapestry.version>
+		<tapestry.version>5.2.5</tapestry.version>
 	</properties>
 
 	<profiles>

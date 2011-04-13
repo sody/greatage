@@ -16,6 +16,7 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.logging.Logger;
 import org.greatage.util.Locker;
 
 import java.lang.annotation.Annotation;
@@ -112,7 +113,10 @@ public class BuildResources<T> implements ServiceResources<T> {
 	 */
 	private void configure(final Object configuration) {
 		final ServiceResources<T> configurationResources = new ConfigurationResources<T>(resources, configuration);
+		final Logger logger = configurationResources.getResource(Logger.class);
 		for (ServiceContributor<T> contributor : contributors) {
+			logger.debug("Configuring service (%s) from (%s)", configurationResources.getMarker(), contributor);
+
 			contributor.contribute(configurationResources);
 		}
 	}

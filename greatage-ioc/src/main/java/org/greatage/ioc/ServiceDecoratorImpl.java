@@ -17,9 +17,9 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Order;
-import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.CollectionUtils;
+import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -43,20 +43,16 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	private final String orderId;
 	private final List<String> orderConstraints;
 
-	private final Logger logger;
-
 	/**
 	 * Creates new instance of service interceptor definition with defined module class and method used for service interception.
 	 * Interception method must have {@link org.greatage.ioc.proxy.Interceptor} return type and be annotated with {@link
 	 * org.greatage.ioc.annotations.Decorate} annotation. For interceptors ordering it may also be annotated with {@link Order}
 	 * annotation.
 	 *
-	 * @param logger		 system logger
 	 * @param moduleClass	module class
 	 * @param decorateMethod module method used for service interception
 	 */
-	ServiceDecoratorImpl(final Logger logger, final Class<?> moduleClass, final Method decorateMethod) {
-		this.logger = logger;
+	ServiceDecoratorImpl(final Class<?> moduleClass, final Method decorateMethod) {
 		this.moduleClass = moduleClass;
 		this.decorateMethod = decorateMethod;
 
@@ -99,8 +95,6 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	 * {@inheritDoc} It intercepts service by invoking configured module method.
 	 */
 	public Interceptor decorate(final ServiceResources<T> resources) {
-		logger.info("Decoration service (%s) from module (%s, %s)", resources.getMarker(), moduleClass, decorateMethod);
-
 		try {
 			final Object moduleInstance =
 					Modifier.isStatic(decorateMethod.getModifiers()) ? null : resources.getResource(moduleClass);
@@ -109,5 +103,13 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't decorate service (%s)", resources.getMarker()), e);
 		}
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("module", moduleClass.getName());
+		builder.append("method", decorateMethod.getName());
+		return builder.toString();
 	}
 }

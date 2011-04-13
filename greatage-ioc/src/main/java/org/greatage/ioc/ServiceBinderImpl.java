@@ -57,13 +57,12 @@ public class ServiceBinderImpl implements ServiceBinder {
 	/**
 	 * Creates list of configured automatically built service definitions.
 	 *
-	 * @param logger system logger
 	 * @return list of configured automatically built service definitions or empty list
 	 */
-	public List<ServiceDefinition<?>> createServices(final Logger logger) {
+	public List<ServiceDefinition<?>> createServices() {
 		final List<ServiceDefinition<?>> result = CollectionUtils.newList();
 		for (ServiceBindingOptionsImpl options : services) {
-			result.add(options.createService(logger));
+			result.add(options.createService());
 		}
 		return result;
 	}

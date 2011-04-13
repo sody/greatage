@@ -19,8 +19,9 @@ package org.greatage.ioc;
 import org.greatage.ioc.inject.DefaultInjector;
 import org.greatage.ioc.inject.InjectionProvider;
 import org.greatage.ioc.inject.Injector;
-import org.greatage.ioc.logging.Logger;
-import org.greatage.ioc.logging.Slf4jLogger;
+import org.greatage.ioc.inject.LoggerInjectionProvider;
+import org.greatage.ioc.logging.LoggerSource;
+import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JdkProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.scope.GlobalScope;
@@ -29,7 +30,6 @@ import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.ioc.scope.ScopeManagerImpl;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
-import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -43,18 +43,13 @@ import java.util.Map;
  * @since 1.1
  */
 public class ServiceLocatorBuilder {
-	private final ServiceLocatorModule rootModule;
+	private final ServiceLocatorModule rootModule = new ServiceLocatorModule();
 	private final Locker locker = new Locker();
 
 	private Injector injector;
 	private final Collection<Module> modules = CollectionUtils.newList();
-	private final Map<Marker, ServiceDefinition> services = CollectionUtils.newMap();
-	private final Map<Marker, Object> cache = CollectionUtils.newMap();
-
-	public static ServiceLocator createServiceLocator(final Logger logger, final Module... modules) {
-		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder(logger).addModules(modules);
-		return builder.build();
-	}
+	private final Map<Marker<?>, ServiceDefinition<?>> services = CollectionUtils.newMap();
+	private final Map<Class<?>, Object> cache = CollectionUtils.newMap();
 
 	public static ServiceLocator createServiceLocator(final Module... modules) {
 		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder().addModules(modules);
@@ -71,34 +66,6 @@ public class ServiceLocatorBuilder {
 	public static ServiceLocator createServiceLocator(final Class... moduleClasses) {
 		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder().addModules(moduleClasses);
 		return builder.build();
-	}
-
-	/**
-	 * Creates new service locator instance for specified module classes + IOCModule with defined system logger.
-	 *
-	 * @param logger		system logger
-	 * @param moduleClasses module classes
-	 * @return new service locator instance
-	 */
-	public static ServiceLocator createServiceLocator(final Logger logger, final Class... moduleClasses) {
-		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder(logger).addModules(moduleClasses);
-		return builder.build();
-	}
-
-	/**
-	 * Creates new service locator builder with defined {@link IOCModule} core module. It will use console logger for system logs.
-	 */
-	public ServiceLocatorBuilder() {
-		this(new Slf4jLogger(LoggerFactory.getLogger(ServiceLocator.class)));
-	}
-
-	/**
-	 * Creates new service locator builder with defined {@link IOCModule} core module and system logger.
-	 *
-	 * @param logger system logger
-	 */
-	public ServiceLocatorBuilder(final Logger logger) {
-		rootModule = new ServiceLocatorModule(logger);
 	}
 
 	/**
@@ -170,28 +137,37 @@ public class ServiceLocatorBuilder {
 		}
 
 		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
+		final LoggerSource fakeLoggerSource = new Slf4jLoggerSource();
+
 		final Scope scope = new GlobalScope();
 		final ScopeManager fakeScopeManager = new ScopeManagerImpl(CollectionUtils.<Scope, Scope>newList(scope));
-		cache.put(Marker.get(Scope.class), scope);
+		cache.put(Scope.class, scope);
 
-		injector = new DefaultInjector(
-				CollectionUtils.<InjectionProvider, InjectionProvider>newList(new InternalInjectionProvider()),
-				fakeProxyFactory, fakeScopeManager);
+		injector = createInjector(fakeLoggerSource, fakeProxyFactory, fakeScopeManager);
 
 		final ProxyFactory proxyFactory = getService(ProxyFactory.class);
+		final LoggerSource loggerSource = getService(LoggerSource.class);
 		final ScopeManager scopeManager = getService(ScopeManager.class);
 
-		injector = new DefaultInjector(
-				CollectionUtils.<InjectionProvider, InjectionProvider>newList(new InternalInjectionProvider()),
-				proxyFactory, scopeManager);
+		injector = createInjector(loggerSource, proxyFactory, scopeManager);
 
 		return getService(ServiceLocator.class);
 	}
 
+	private DefaultInjector createInjector(final LoggerSource loggerSource,
+										   final ProxyFactory proxyFactory,
+										   final ScopeManager scopeManager) {
+		final LoggerInjectionProvider loggerProvider = new LoggerInjectionProvider(loggerSource);
+		final InternalInjectionProvider internalProvider = new InternalInjectionProvider();
+		final List<InjectionProvider> providers = CollectionUtils.newList(loggerProvider, internalProvider);
+		return new DefaultInjector(providers, proxyFactory, scopeManager);
+	}
+
 	private <T> T getService(final Class<T> serviceClass) {
-		final Marker<T> marker = Marker.get(serviceClass);
-		if (!cache.containsKey(marker)) {
-			final ServiceDefinition<T> service = services.get(marker);
+		if (!cache.containsKey(serviceClass)) {
+			final Marker<T> marker = Marker.get(serviceClass);
+			@SuppressWarnings("unchecked")
+			final ServiceDefinition<T> service = (ServiceDefinition<T>) services.get(marker);
 			final List<ServiceContributor<T>> contributors = CollectionUtils.newList();
 			final List<ServiceDecorator<T>> decorators = CollectionUtils.newList();
 			for (Module module : modules) {
@@ -200,9 +176,9 @@ public class ServiceLocatorBuilder {
 			}
 
 			final T serviceInstance = injector.createService(service, contributors, decorators);
-			cache.put(marker, serviceInstance);
+			cache.put(serviceClass, serviceInstance);
 		}
-		return marker.getServiceClass().cast(cache.get(marker));
+		return serviceClass.cast(cache.get(serviceClass));
 	}
 
 	class InternalInjectionProvider implements InjectionProvider {
