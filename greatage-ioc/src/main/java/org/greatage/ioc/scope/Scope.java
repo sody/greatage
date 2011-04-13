@@ -19,6 +19,8 @@ package org.greatage.ioc.scope;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.proxy.ObjectBuilder;
 
+import java.lang.annotation.Annotation;
+
 /**
  * This interface represents service scope object that is used to obtain service instances according to their scope.
  *
@@ -27,13 +29,13 @@ import org.greatage.ioc.proxy.ObjectBuilder;
  */
 public interface Scope {
 
-	String getName();
+	Class<? extends Annotation> getKey();
 
 	/**
 	 * Gets service by its resource. If service is missed in this scope new instance will be built via specified builder.
 	 *
 	 * @param marker service resources that identifies the service
-	 * @param <S>       type of service
+	 * @param <S>    type of service
 	 * @return service instance bound to this scope
 	 */
 	<S> S get(Marker<S> marker);

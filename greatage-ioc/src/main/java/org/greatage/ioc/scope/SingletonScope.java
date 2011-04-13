@@ -14,20 +14,33 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc.annotations;
+package org.greatage.ioc.scope;
 
-import java.lang.annotation.*;
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.annotations.Singleton;
+import org.greatage.util.CollectionUtils;
+
+import java.util.Map;
 
 /**
- * This annotation marks methods inside the IoC module as service build points that will build service instances with
- * specified unique id, scope and override option. Such methods can get as arguments other services, collection, list
- * and map for unordered, ordered and mapped configurations respectively.
+ * This class represents {@link Scope} implementation that is used for services that have the same state for whole application.
+ * Default scope identifier is {@link Singleton}.
  *
  * @author Ivan Khalopik
  * @since 1.1
  */
-@Target(ElementType.ANNOTATION_TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface MarkerAnnotation {
+public class SingletonScope extends AbstractScope {
+	private final Map<Marker, Object> services = CollectionUtils.newConcurrentMap();
+
+	public SingletonScope() {
+		super(Singleton.class);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected Map<Marker, Object> getScopeServices() {
+		return services;
+	}
 }

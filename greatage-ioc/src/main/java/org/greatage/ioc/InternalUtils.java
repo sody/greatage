@@ -16,8 +16,9 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.MarkerAnnotation;
-import org.greatage.ioc.annotations.Service;
+import org.greatage.ioc.annotations.Qualifier;
+import org.greatage.ioc.annotations.Scope;
+import org.greatage.ioc.annotations.Singleton;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -31,23 +32,30 @@ import java.lang.reflect.Method;
  */
 public class InternalUtils {
 
-	@SuppressWarnings("unchecked")
-	public static <T> Marker<T> generateMarker(final Annotation... annotations) {
-		return (Marker<T>) generateMarker(Object.class, annotations);
+	public static <T> T findInArray(final Class<T> elementClass, final Object... elements) {
+		if (elements != null) {
+			for (Object element : elements) {
+				if (elementClass.isInstance(element)) {
+					return elementClass.cast(element);
+				}
+			}
+		}
+		return null;
 	}
 
-	public static <T> Marker<T> generateMarker(final Class<T> defaultServiceClass, final Annotation... annotations) {
-		final Annotation marker = findMarker(annotations);
-		final Service service = findAnnotation(Service.class, annotations);
-		if (service == null) {
+	public static Class<? extends Annotation> findScope(final Annotation... annotations) {
+		final Annotation scope = findAnnotation(Scope.class, annotations);
+		return scope != null ? scope.annotationType() : Singleton.class;
+	}
+
+	public static <T> Marker<T> generateMarker(final Class<T> serviceClass, final Annotation... annotations) {
+		final Annotation qualifier = findAnnotation(Qualifier.class, annotations);
+		if (void.class.equals(serviceClass)) {
 			//noinspection unchecked
-			return new Marker<T>(defaultServiceClass, marker);
+			return (Marker<T>) Marker.get(Object.class, qualifier);
 		}
 
-		final Class serviceClass = !void.class.equals(service.value()) ? service.value() : defaultServiceClass;
-
-		//noinspection unchecked
-		return new Marker<T>(serviceClass, marker);
+		return Marker.get(serviceClass, qualifier);
 	}
 
 	/**
@@ -93,22 +101,12 @@ public class InternalUtils {
 		return parameters;
 	}
 
-	public static <A extends Annotation> A findAnnotation(final Class<A> annotationClass, final Annotation... annotations) {
+	private static Annotation findAnnotation(final Class<? extends Annotation> annotationClass,
+											 final Annotation... annotations) {
 		if (annotations != null) {
 			for (Annotation annotation : annotations) {
-				if (annotationClass.isInstance(annotation)) {
-					return annotationClass.cast(annotation);
-				}
-			}
-		}
-		return null;
-	}
-
-	public static Annotation findMarker(final Annotation... annotations) {
-		if (annotations != null) {
-			for (Annotation annotation : annotations) {
-				final MarkerAnnotation marker = findAnnotation(MarkerAnnotation.class, annotation.annotationType().getAnnotations());
-				if (marker != null) {
+				final Annotation qualifier = findInArray(annotationClass, annotation.annotationType().getAnnotations());
+				if (qualifier != null) {
 					return annotation;
 				}
 			}

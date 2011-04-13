@@ -19,6 +19,7 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.util.DescriptionBuilder;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
@@ -35,7 +36,7 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	private final Method buildMethod;
 
 	private final Marker<T> marker;
-	private final String scope;
+	private final Class<? extends Annotation> scope;
 	private final boolean override;
 	private final boolean eager;
 
@@ -51,9 +52,10 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 		this.buildMethod = buildMethod;
 
 		final Build build = buildMethod.getAnnotation(Build.class);
-		scope = build.scope();
 		override = build.override();
 		eager = build.eager();
+
+		scope = InternalUtils.findScope(buildMethod.getAnnotations());
 
 		//noinspection unchecked
 		marker = (Marker<T>) InternalUtils.generateMarker(buildMethod.getReturnType(), buildMethod.getAnnotations());
@@ -80,7 +82,7 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getScope() {
+	public Class<? extends Annotation> getScope() {
 		return scope;
 	}
 
@@ -93,8 +95,7 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 					resources.getResource(moduleClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, buildMethod);
 			return marker.getServiceClass().cast(buildMethod.invoke(moduleInstance, parameters));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create service (%s)", marker), e);
 		}
 	}

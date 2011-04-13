@@ -17,14 +17,14 @@
 package org.greatage.ioc.scope;
 
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.proxy.ProxyFactory;
+import org.greatage.ioc.annotations.*;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Map;
 
 /**
  * This class represents {@link Scope} implementation that is used for services that have the same state inside one application
- * thread. Default scope identifier is {@link ScopeConstants#THREAD}.
+ * thread. Default scope identifier is {@link Threaded}.
  *
  * @author Ivan Khalopik
  * @since 1.1
@@ -38,7 +38,7 @@ public class ThreadScope extends AbstractScope {
 	};
 
 	public ThreadScope() {
-		super(ScopeConstants.THREAD);
+		super(Threaded.class);
 	}
 
 	/**

@@ -16,6 +16,7 @@
 
 package org.greatage.ioc;
 
+import org.greatage.ioc.annotations.Decorate;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.CollectionUtils;
@@ -60,7 +61,9 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 			throw new IllegalStateException("Decoration method should return value of Interceptor type");
 		}
 
-		marker = InternalUtils.generateMarker(decorateMethod.getAnnotations());
+		final Decorate decorate = decorateMethod.getAnnotation(Decorate.class);
+		//noinspection unchecked
+		marker = InternalUtils.generateMarker(decorate.value(), decorateMethod.getAnnotations());
 
 		final Order order = decorateMethod.getAnnotation(Order.class);
 		if (order != null) {

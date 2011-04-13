@@ -20,7 +20,6 @@ import org.greatage.ioc.access.ClassAccessSource;
 import org.greatage.ioc.access.ClassAccessSourceImpl;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Service;
 import org.greatage.ioc.coerce.BooleanToStringCoercion;
 import org.greatage.ioc.coerce.Coercion;
 import org.greatage.ioc.coerce.CoercionProvider;
@@ -100,16 +99,14 @@ public class IOCModule {
 	 *
 	 * @param configuration scope manager mapped configuration
 	 */
-	@Contribute
-	@Service(ScopeManager.class)
+	@Contribute(ScopeManager.class)
 	public static void contributeScopeManager(final Configuration<Scope> configuration, final Scope defaultScope) {
 		configuration.add(defaultScope);
 		configuration.addInstance(PrototypeScope.class);
 		configuration.addInstance(ThreadScope.class);
 	}
 
-	@Contribute
-	@Service(Injector.class)
+	@Contribute(Injector.class)
 	public static void contributeInjector(final OrderedConfiguration<InjectionProvider> configuration) {
 		configuration.addInstance(DefaultInjectionProvider.class, "Default");
 		configuration.addInstance(SymbolInjectionProvider.class, "Symbol", "before:Default");
@@ -122,8 +119,7 @@ public class IOCModule {
 	 * @param configuration  symbol source ordered configuration
 	 * @param symbolProvider configured application symbol provider
 	 */
-	@Contribute
-	@Service(SymbolSource.class)
+	@Contribute(SymbolSource.class)
 	public static void contributeSymbolSource(final OrderedConfiguration<SymbolProvider> configuration,
 											  final SymbolProvider symbolProvider) {
 		configuration.add(symbolProvider, "Application");
@@ -136,8 +132,7 @@ public class IOCModule {
 	 * @param configuration	type coercer configuration
 	 * @param coercionProvider default coercion provider service
 	 */
-	@Contribute
-	@Service(TypeCoercer.class)
+	@Contribute(TypeCoercer.class)
 	public static void contributeTypeCoercer(final Configuration<CoercionProvider> configuration,
 											 final CoercionProvider coercionProvider) {
 		configuration.add(coercionProvider);
@@ -149,8 +144,7 @@ public class IOCModule {
 	 *
 	 * @param configuration default coercion provider configuration
 	 */
-	@Contribute
-	@Service(CoercionProvider.class)
+	@Contribute(CoercionProvider.class)
 	public static void contributeCoercionProvider(final Configuration<Coercion> configuration) {
 		configuration.addInstance(BooleanToStringCoercion.class);
 		configuration.addInstance(NumberToStringCoercion.class);

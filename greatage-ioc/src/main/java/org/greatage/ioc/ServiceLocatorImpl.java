@@ -20,6 +20,7 @@ import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.Set;
  */
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();
-	private final Map<Marker<?>, String> scopes = CollectionUtils.newConcurrentMap();
+	private final Map<Marker<?>, Class<? extends Annotation>> scopes = CollectionUtils.newConcurrentMap();
 	private final Logger logger;
 
 	/**
@@ -146,8 +147,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		final String format = "%" + maxLength + "s : [%s]\n";
 		for (Marker<?> marker : services.keySet()) {
 			final String name = marker.getServiceClass().getSimpleName();
-			final String scope = scopes.get(marker);
-			statistics.append(String.format(format, name, scope));
+			final Class<? extends Annotation> scope = scopes.get(marker);
+			statistics.append(String.format(format, name, scope.getSimpleName()));
 		}
 		logger.info(statistics.toString());
 	}

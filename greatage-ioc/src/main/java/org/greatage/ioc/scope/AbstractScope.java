@@ -21,6 +21,7 @@ import org.greatage.ioc.Marker;
 import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
@@ -33,19 +34,19 @@ import java.util.Map;
 public abstract class AbstractScope implements Scope {
 	private final Map<Marker, ObjectBuilder> serviceBuilders = CollectionUtils.newConcurrentMap();
 
-	private final String name;
+	private final Class<? extends Annotation> key;
 
-	protected AbstractScope(final String name) {
-		this.name = name;
+	protected AbstractScope(final Class<? extends Annotation> key) {
+		this.key = key;
 	}
 
-	public String getName() {
-		return name;
+	public Class<? extends Annotation> getKey() {
+		return key;
 	}
 
 	public <S> S get(final Marker<S> marker) {
 		if (!serviceBuilders.containsKey(marker)) {
-			throw new ApplicationException(String.format("Cannot find service (%s) in %s scope", marker, name));
+			throw new ApplicationException(String.format("Cannot find service (%s) in %s scope", marker, key.getSimpleName()));
 		}
 
 		if (!containsService(marker)) {

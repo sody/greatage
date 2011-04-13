@@ -18,8 +18,7 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.AnnotationFactory;
 import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.logging.Logger;
-import org.greatage.ioc.scope.ScopeConstants;
+import org.greatage.ioc.annotations.Singleton;
 
 import java.lang.annotation.Annotation;
 
@@ -35,7 +34,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private final Class<T> serviceClass;
 	private final Class<? extends T> implementationClass;
 
-	private String serviceScope;
+	private Class<? extends Annotation> serviceScope;
 	private Annotation annotation;
 	private boolean override;
 	private boolean eager;
@@ -49,14 +48,14 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	ServiceBindingOptionsImpl(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;
-		this.serviceScope = ScopeConstants.GLOBAL;
+		this.serviceScope = Singleton.class;
 		this.override = false;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public ServiceBindingOptions withScope(final String scope) {
+	public ServiceBindingOptions withScope(final Class<? extends Annotation> scope) {
 		serviceScope = scope;
 		return this;
 	}

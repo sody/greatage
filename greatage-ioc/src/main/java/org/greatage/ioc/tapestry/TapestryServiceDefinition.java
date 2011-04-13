@@ -19,10 +19,10 @@ package org.greatage.ioc.tapestry;
 import org.apache.tapestry5.ioc.Registry;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceResources;
-import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.inject.Injector;
+import org.greatage.ioc.annotations.Prototype;
 import org.greatage.ioc.ServiceDefinition;
-import org.greatage.ioc.scope.ScopeConstants;
+
+import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
@@ -51,8 +51,8 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 		return false;
 	}
 
-	public String getScope() {
-		return ScopeConstants.PROTOTYPE;
+	public Class<? extends Annotation> getScope() {
+		return Prototype.class;
 	}
 
 	public T build(final ServiceResources<T> resources) {

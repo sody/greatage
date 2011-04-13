@@ -19,8 +19,6 @@ package com.example.app0;
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.scope.ScopeConstants;
 
 /**
  * @author Ivan Khalopik
@@ -34,7 +32,7 @@ public class MockBindModule {
 		binder.bind(MockTalkService.class, MockTalkServiceImpl.class).named("service2");
 	}
 
-	@Build(scope = ScopeConstants.THREAD)
+	@Build
 	public MockMessageService buildMessageService() {
 		return new MockMessageServiceImpl("hello");
 	}

@@ -34,4 +34,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Decorate {
+
+	Class value() default void.class;
 }

@@ -19,6 +19,7 @@ package org.greatage.ioc.scope;
 import org.greatage.ioc.ApplicationException;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import java.util.Map;
  * @since 1.1
  */
 public class ScopeManagerImpl implements ScopeManager {
-	private final Map<String, Scope> scopes = CollectionUtils.newMap();
+	private final Map<Class<? extends Annotation>, Scope> scopes = CollectionUtils.newMap();
 
 	/**
 	 * Creates new instance of scope manager with defined mapped configuration of scopes.
@@ -40,14 +41,11 @@ public class ScopeManagerImpl implements ScopeManager {
 		assert scopes != null;
 
 		for (Scope scope : scopes) {
-			this.scopes.put(scope.getName(), scope);
+			this.scopes.put(scope.getKey(), scope);
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Scope getScope(final String scope) {
+	public Scope getScope(final Class<? extends Annotation> scope) {
 		if (!scopes.containsKey(scope)) {
 			throw new ApplicationException(String.format("Cannot find scope with name '%s'", scope));
 		}

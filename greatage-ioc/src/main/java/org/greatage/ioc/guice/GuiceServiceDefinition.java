@@ -20,7 +20,7 @@ import com.google.inject.Key;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
-import org.greatage.ioc.scope.ScopeConstants;
+import org.greatage.ioc.annotations.Prototype;
 
 import java.lang.annotation.Annotation;
 
@@ -52,8 +52,8 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		return false;
 	}
 
-	public String getScope() {
-		return ScopeConstants.PROTOTYPE;
+	public Class<? extends Annotation> getScope() {
+		return Prototype.class;
 	}
 
 	public T build(final ServiceResources<T> resources) {

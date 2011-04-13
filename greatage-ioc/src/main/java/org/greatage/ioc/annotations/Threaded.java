@@ -1,6 +1,4 @@
-package org.greatage.ioc;
-
-import org.greatage.ioc.annotations.Qualifier;
+package org.greatage.ioc.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -12,9 +10,9 @@ import java.lang.annotation.Target;
  * @author Ivan Khalopik
  * @since 1.1
  */
-@Target( { ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Qualifier
-public @interface MockMarker {
+@Scope
+public @interface Threaded {
 }

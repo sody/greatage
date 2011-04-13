@@ -1,11 +1,8 @@
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Named;
 import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.annotations.Service;
 import org.greatage.ioc.mock.MockIOCInterface;
-import org.greatage.ioc.mock.MockIOCInterfaceEx;
 import org.greatage.ioc.mock.MockIOCInterfaceImpl1;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -23,92 +20,41 @@ public class TestGenerateMarker extends Assert {
 	public Object[][] testGenerateMarkerData() {
 		return new Object[][] {
 				{
-						MockIOCInterface.class,
+						void.class,
+						null,
+						Marker.get(Object.class)
+				},
+				{
+						void.class,
 						new Annotation[] { named("test") },
-						marker(MockIOCInterface.class, named("test"))
-				},
-				{
-						MockIOCInterface.class,
-						new Annotation[] { service(MockIOCInterfaceEx.class), named("test") },
-						marker(MockIOCInterfaceEx.class, named("test"))
-				},
-				{
-						MockIOCInterface.class,
-						new Annotation[] { contribute(), service(MockIOCInterfaceEx.class), named("test") },
-						marker(MockIOCInterfaceEx.class, named("test"))
-				},
-
-
-				{
-						MockIOCInterface.class,
-						null,
-						marker(MockIOCInterface.class, null)
-				},
-				{
-						MockIOCInterfaceImpl1.class,
-						null,
-						marker(MockIOCInterfaceImpl1.class, null)
-				},
-				{
-						MockIOCInterface.class,
-						new Annotation[] { },
-						marker(MockIOCInterface.class, null)
-				},
-				{
-						MockIOCInterfaceImpl1.class,
-						new Annotation[] { },
-						marker(MockIOCInterfaceImpl1.class, null)
-				},
-				{
-						MockIOCInterface.class,
-						new Annotation[] { service(void.class) },
-						marker(MockIOCInterface.class, null)
-				},
-				{
-						MockIOCInterfaceImpl1.class,
-						new Annotation[] { service(void.class) },
-						marker(MockIOCInterfaceImpl1.class, null)
-				},
-				{
-						MockIOCInterface.class,
-						new Annotation[] { service(MockIOCInterfaceEx.class) },
-						marker(MockIOCInterfaceEx.class, null)
-				},
-				{
-						MockIOCInterfaceEx.class,
-						new Annotation[] { service(MockIOCInterface.class) },
-						marker(MockIOCInterface.class, null)
-				},
-				{
-						MockIOCInterfaceImpl1.class,
-						new Annotation[] { service(MockIOCInterfaceEx.class) },
-						marker(MockIOCInterfaceEx.class, null)
-				},
-				{
-						null,
-						new Annotation[] { service(MockIOCInterface.class) },
-						marker(MockIOCInterface.class, null)
-				},
-				{
-						null,
-						new Annotation[] { service(MockIOCInterfaceImpl1.class) },
-						marker(MockIOCInterfaceImpl1.class, null)
+						Marker.get(Object.class, named("test"))
 				},
 
 				{
 						MockIOCInterface.class,
 						new Annotation[] { named("test") },
-						marker(MockIOCInterface.class, named("test"))
+						Marker.get(MockIOCInterface.class, named("test"))
+				},
+
+				{
+						MockIOCInterface.class,
+						null,
+						Marker.get(MockIOCInterface.class)
+				},
+				{
+						MockIOCInterfaceImpl1.class,
+						null,
+						Marker.get(MockIOCInterfaceImpl1.class)
 				},
 				{
 						MockIOCInterface.class,
-						new Annotation[] { service(MockIOCInterfaceEx.class), named("test") },
-						marker(MockIOCInterfaceEx.class, named("test"))
+						new Annotation[] { },
+						Marker.get(MockIOCInterface.class)
 				},
 				{
-						MockIOCInterface.class,
-						new Annotation[] { contribute(), service(MockIOCInterfaceEx.class), named("test") },
-						marker(MockIOCInterfaceEx.class, named("test"))
+						MockIOCInterfaceImpl1.class,
+						new Annotation[] { },
+						Marker.get(MockIOCInterfaceImpl1.class)
 				},
 		};
 	}
@@ -118,11 +64,7 @@ public class TestGenerateMarker extends Assert {
 		return new Object[][] {
 				{
 						null,
-						new Annotation[] { service(void.class) },
-				},
-				{
-						void.class,
-						new Annotation[] { service(void.class) },
+						null,
 				},
 		};
 	}
@@ -145,31 +87,7 @@ public class TestGenerateMarker extends Assert {
 		InternalUtils.generateMarker(serviceClass, annotations);
 	}
 
-	private <T> Marker<T> marker(final Class<T> serviceClass, final Annotation annotation) {
-		return new Marker<T>(serviceClass, annotation);
-	}
-
-	private Service service(final Class serviceClass) {
-		return new Service() {
-			public Class value() {
-				return serviceClass;
-			}
-
-			public Class<? extends Annotation> annotationType() {
-				return Service.class;
-			}
-		};
-	}
-
 	private Named named(final String name) {
 		return new NamedImpl(name);
-	}
-
-	private Contribute contribute() {
-		return new Contribute() {
-			public Class<? extends Annotation> annotationType() {
-				return Contribute.class;
-			}
-		};
 	}
 }

@@ -23,13 +23,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * This annotation marks class fields and method parameters inside the IoC container as injected services with specified
- * unique id or service interface.
+ * This annotation marks class fields and method parameters inside the IoC container as injected services with specified unique id
+ * or service interface.
  *
  * @author Ivan Khalopik
  * @since 1.1
  */
-@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Inject {

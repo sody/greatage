@@ -16,25 +16,18 @@
 
 package org.greatage.ioc.annotations;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
- * This annotation marks methods inside the IoC module as service contribute points that contributes to service
- * configuration with specified service id or service interface. Such methods can get as arguments other services and
- * also {@link org.greatage.ioc.Configuration}, {@link org.greatage.ioc.OrderedConfiguration} and {@link
- * org.greatage.ioc.MappedConfiguration} for unordered, ordered and mapped service configuration respectively.
+ * This annotation marks methods inside the IoC module as service build points that will build service instances with
+ * specified unique id, scope and override option. Such methods can get as arguments other services, collection, list
+ * and map for unordered, ordered and mapped configurations respectively.
  *
  * @author Ivan Khalopik
  * @since 1.1
  */
-@Target(ElementType.METHOD)
+@Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Contribute {
-
-	Class value() default void.class;
+public @interface Qualifier {
 }
