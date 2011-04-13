@@ -22,11 +22,10 @@ public class LoggerInjectionProvider implements InjectionProvider {
 	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
 		// if resource type is Logger trying to retrieve service specific logger using LoggerSource service
 		if (Logger.class.equals(resourceClass)) {
-			//TODO: maybe it need to use target class instead of service class?
+			//TODO: add annotation injection for adding logger of class differ than actual service class?
 			final Logger logger = loggerSource.getLogger(marker.getServiceClass());
 			return resourceClass.cast(logger);
 		}
-
 		return null;
 	}
 }
