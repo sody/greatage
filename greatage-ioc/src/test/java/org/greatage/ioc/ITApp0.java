@@ -19,6 +19,9 @@ package org.greatage.ioc;
 import com.example.app0.MockBindModule;
 import com.example.app0.MockConfigureModule;
 import com.example.app0.MockTalkService;
+import org.greatage.ioc.annotations.Dependency;
+import org.greatage.ioc.annotations.Named;
+import org.greatage.ioc.annotations.Service;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -30,6 +33,10 @@ public class ITApp0 extends Assert {
 
 	@Test
 	public void testServiceConfigurator() {
+    @Dependency(String.class) final class c { }
+		final Dependency annotation = c.class.getAnnotation(Dependency.class);
+		System . out . println ( annotation ); ;
+
 		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockConfigureModule.class);
 		final MockTalkService service = locator.getService(MockTalkService.class);
 		assertNotNull(service);

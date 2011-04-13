@@ -17,6 +17,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.inject.Injector;
+import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;
@@ -34,6 +35,7 @@ import java.util.Set;
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();
 	private final Map<Marker<?>, String> scopes = CollectionUtils.newConcurrentMap();
+	private final Logger logger;
 
 	/**
 	 * Creates new instance of service locator with defined modules.
@@ -41,7 +43,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @param modules modules
 	 * @param injector injector
 	 */
-	public ServiceLocatorImpl(final Collection<Module> modules, final Injector injector) {
+	public ServiceLocatorImpl(final Collection<Module> modules, final Logger logger, final Injector injector) {
+		this.logger = logger;
 		//creating and overriding service definitions
 		//TODO: implement this using set
 		final Map<Marker<?>, ServiceDefinition<?>> internalServices = CollectionUtils.newMap();
@@ -142,6 +145,6 @@ public class ServiceLocatorImpl implements ServiceLocator {
 			final String scope = scopes.get(marker);
 			statistics.append(String.format(format, name, scope));
 		}
-//		logger.info(statistics.toString());
+		logger.info(statistics.toString());
 	}
 }
