@@ -32,10 +32,12 @@ import java.lang.annotation.Target;
  * @author Ivan Khalopik
  * @since 1.1
  */
-@Target(ElementType.METHOD)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Build {
+
+	Class value() default void.class;
 
 	/**
 	 * This property defines if service definition will be overridden or not.

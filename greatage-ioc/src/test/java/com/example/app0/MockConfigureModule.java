@@ -19,7 +19,6 @@ package com.example.app0;
 import org.greatage.ioc.OrderedConfiguration;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Service;
 
 import java.util.List;
 
@@ -39,8 +38,7 @@ public class MockConfigureModule {
 		return new MockTalkServiceImpl(messageService);
 	}
 
-	@Contribute
-	@Service(MockMessageService.class)
+	@Contribute(MockMessageService.class)
 	public void contributeMessageService(final OrderedConfiguration<String> configuration) {
 		configuration.add("!!!", "end");
 		configuration.add("hello", "hello");

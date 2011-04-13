@@ -20,7 +20,6 @@ import org.greatage.ioc.OrderedConfiguration;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Named;
-import org.greatage.ioc.annotations.Service;
 
 import java.util.List;
 
@@ -36,8 +35,7 @@ public class MockGreatAgeModule1 {
 		return new MockMessageServiceImpl(messages);
 	}
 
-	@Contribute
-	@Service(MockMessageService.class)
+	@Contribute(MockMessageService.class)
 	@Named("GreatAgeMessageService")
 	public void contributeGreatAgeMessageService(final OrderedConfiguration<String> configuration) {
 		configuration.add("Great", "great");

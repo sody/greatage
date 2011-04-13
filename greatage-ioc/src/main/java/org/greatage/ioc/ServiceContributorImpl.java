@@ -47,7 +47,6 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	 * Creates new instance of service contribution definition with defined module class and method used for service configuration.
 	 * Configuration method must have void return type and be annotated with {@link Contribute} annotation.
 	 *
-	 *
 	 * @param moduleClass	 module class
 	 * @param configureMethod module method used for service configuration
 	 * @throws ApplicationException if configure method doesn't correspond to requirements
@@ -60,7 +59,9 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 			throw new IllegalStateException("Configuration method can not return any value");
 		}
 
-		marker = InternalUtils.generateMarker(configureMethod.getAnnotations());
+		final Contribute contribute = configureMethod.getAnnotation(Contribute.class);
+		//noinspection unchecked
+		marker = InternalUtils.generateMarker(contribute.value(), configureMethod.getAnnotations());
 
 		final Order order = configureMethod.getAnnotation(Order.class);
 		if (order != null) {
@@ -100,7 +101,8 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 					Modifier.isStatic(configureMethod.getModifiers()) ? null : resources.getResource(moduleClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, configureMethod);
 			configureMethod.invoke(moduleInstance, parameters);
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new ApplicationException(String.format("Can't configure service (%s)", resources.getMarker()), e);
 		}
 	}

@@ -1,6 +1,6 @@
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.MarkerAnnotation;
+import org.greatage.ioc.annotations.Qualifier;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -15,6 +15,6 @@ import java.lang.annotation.Target;
 @Target( { ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@MarkerAnnotation
+@Qualifier
 public @interface MockMarker {
 }

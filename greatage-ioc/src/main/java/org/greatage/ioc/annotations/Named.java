@@ -10,10 +10,10 @@ import java.lang.annotation.Target;
  * @author Ivan Khalopik
  * @since 1.1
  */
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
+@Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@MarkerAnnotation
+@Qualifier
 public @interface Named {
 
 	String value();

@@ -35,4 +35,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Contribute {
+
+	Class value() default void.class;
 }
