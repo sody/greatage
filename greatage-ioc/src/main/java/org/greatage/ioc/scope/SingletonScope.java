@@ -29,10 +29,10 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class GlobalScope extends AbstractScope {
+public class SingletonScope extends AbstractScope {
 	private final Map<Marker, Object> services = CollectionUtils.newConcurrentMap();
 
-	public GlobalScope() {
+	public SingletonScope() {
 		super(ScopeConstants.GLOBAL);
 	}
 
