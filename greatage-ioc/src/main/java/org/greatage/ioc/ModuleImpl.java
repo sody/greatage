@@ -50,7 +50,7 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
-		super(logger, moduleClass, ScopeConstants.GLOBAL, false, false);
+		super(logger, Marker.get(moduleClass), moduleClass, ScopeConstants.GLOBAL, false, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {

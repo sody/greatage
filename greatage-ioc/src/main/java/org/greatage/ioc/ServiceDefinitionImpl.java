@@ -38,57 +38,18 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 
 	private final Logger logger;
 
-	/**
-	 * Creates new instance of service definition with defined service identifier, service class, scope and override option.
-	 *
-	 * @param logger	   system logger
-	 * @param serviceClass service class
-	 * @param scope		service scope
-	 * @param override	 option that determines is service overrides its default definition
-	 */
 	ServiceDefinitionImpl(final Logger logger,
-						  final Class<T> serviceClass,
-						  final String scope,
-						  final boolean override,
-						  final boolean eager) {
-		this(logger, serviceClass, serviceClass, scope, override, eager);
-	}
-
-	/**
-	 * Creates new instance of service definition with defined service identifier, service class, service implementation class, scope
-	 * and override option.
-	 *
-	 * @param logger			  system logger
-	 * @param serviceClass		service class
-	 * @param implementationClass service implementation class
-	 * @param scope			   service scope
-	 * @param override			option that determines is service overrides its default definition
-	 */
-	ServiceDefinitionImpl(final Logger logger,
-						  final Class<T> serviceClass,
+						  final Marker<T> marker,
 						  final Class<? extends T> implementationClass,
-						  final String scope,
-						  final boolean override,
-						  final boolean eager) {
-		this(logger, serviceClass, implementationClass, null, scope, override, eager);
-	}
-
-	ServiceDefinitionImpl(final Logger logger,
-						  final Class<T> serviceClass,
-						  final Class<? extends T> implementationClass,
-						  final Annotation annotation,
 						  final String scope,
 						  final boolean override,
 						  final boolean eager) {
 		this.logger = logger;
+		this.marker = marker;
+		this.implementationClass = implementationClass;
 		this.scope = scope;
 		this.override = override;
 		this.eager = eager;
-		this.implementationClass = implementationClass;
-
-		marker = annotation != null ?
-				Marker.get(serviceClass, annotation) :
-				InternalUtils.generateMarker(serviceClass, implementationClass.getAnnotations());
 	}
 
 	public Marker<T> getMarker() {
