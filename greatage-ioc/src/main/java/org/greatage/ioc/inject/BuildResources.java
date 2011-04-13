@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc;
+package org.greatage.ioc.inject;
 
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceContributor;
+import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.util.Locker;
 

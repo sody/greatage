@@ -1,6 +1,5 @@
 package org.greatage.ioc.inject;
 
-import org.greatage.ioc.BuildResources;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceDecorator;

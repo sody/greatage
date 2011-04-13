@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc;
+package org.greatage.ioc.inject;
 
+import org.greatage.ioc.Configuration;
+import org.greatage.ioc.ServiceResources;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;

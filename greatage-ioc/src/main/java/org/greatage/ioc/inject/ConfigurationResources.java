@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc;
+package org.greatage.ioc.inject;
+
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceResources;
 
 import java.lang.annotation.Annotation;
 
