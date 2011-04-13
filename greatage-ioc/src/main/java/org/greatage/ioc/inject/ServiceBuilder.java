@@ -6,6 +6,7 @@ import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceDecorator;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.ioc.scope.Scope;
@@ -68,6 +69,10 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 
 		public T build() {
 			final ServiceResources<T> buildResources = new BuildResources<T>(resources, contributors);
+
+			final Logger logger = buildResources.getResource(Logger.class);
+			logger.debug("Building service (%s) from (%s)", marker, service);
+
 			return service.build(buildResources);
 		}
 	}

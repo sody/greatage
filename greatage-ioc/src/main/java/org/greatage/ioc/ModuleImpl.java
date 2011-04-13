@@ -50,11 +50,11 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Logger logger, final Class<T> moduleClass) {
-		super(logger, Marker.get(moduleClass), moduleClass, ScopeConstants.GLOBAL, false, false);
+		super(Marker.get(moduleClass), moduleClass, ScopeConstants.GLOBAL, false, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {
-				services.add(new ServiceDefinitionFactory(logger, moduleClass, method));
+				services.add(new ServiceDefinitionFactory(moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
 				contributors.add(new ServiceContributorImpl(logger, moduleClass, method));
 			} else if (method.isAnnotationPresent(Decorate.class)) {
@@ -63,7 +63,7 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
 					method.invoke(null, binder);
-					services.addAll(binder.createServices(logger));
+					services.addAll(binder.createServices());
 				} catch (Exception e) {
 					throw new ApplicationException("Exception in bind method", e);
 				}

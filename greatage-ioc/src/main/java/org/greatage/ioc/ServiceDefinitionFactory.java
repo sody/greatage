@@ -17,7 +17,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.logging.Logger;
+import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -39,18 +39,14 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	private final boolean override;
 	private final boolean eager;
 
-	private final Logger logger;
-
 	/**
 	 * Creates new instance of service definition with defined module class and build method, service class. Build method must have
 	 * return equal to service type and be annotated with {@link Build} annotation.
 	 *
-	 * @param logger		system logger
 	 * @param factoryClass  module class
 	 * @param factoryMethod build method
 	 */
-	ServiceDefinitionFactory(final Logger logger, final Class<?> factoryClass, final Method factoryMethod) {
-		this.logger = logger;
+	ServiceDefinitionFactory(final Class<?> factoryClass, final Method factoryMethod) {
 		this.factoryClass = factoryClass;
 		this.factoryMethod = factoryMethod;
 
@@ -92,8 +88,6 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	 * {@inheritDoc} It builds service instance by invoking configured module method.
 	 */
 	public T build(final ServiceResources<T> resources) {
-		logger.info("Building service (%s) from module (%s, %s)", marker, factoryClass, factoryMethod);
-
 		try {
 			final Object moduleInstance =
 					Modifier.isStatic(factoryMethod.getModifiers()) ? null : resources.getResource(factoryClass);
@@ -102,5 +96,13 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create service (%s)", marker), e);
 		}
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("module", factoryClass);
+		builder.append("method", factoryMethod);
+		return builder.toString();
 	}
 }

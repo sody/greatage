@@ -17,8 +17,8 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.logging.Logger;
+import org.greatage.util.DescriptionBuilder;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
 /**
@@ -36,15 +36,11 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	private final boolean override;
 	private final boolean eager;
 
-	private final Logger logger;
-
-	ServiceDefinitionImpl(final Logger logger,
-						  final Marker<T> marker,
+	ServiceDefinitionImpl(final Marker<T> marker,
 						  final Class<? extends T> implementationClass,
 						  final String scope,
 						  final boolean override,
 						  final boolean eager) {
-		this.logger = logger;
 		this.marker = marker;
 		this.implementationClass = implementationClass;
 		this.scope = scope;
@@ -78,15 +74,19 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	 * {@inheritDoc} It automatically builds service instance by invoking service implementation constructor.
 	 */
 	public T build(final ServiceResources<T> resources) {
-		logger.info("Building service (%s) from (%s)", resources.getMarker(), implementationClass);
-
 		try {
 			final Constructor constructor = implementationClass.getConstructors()[0];
 			final Object[] parameters = InternalUtils.calculateParameters(resources, constructor);
 			return implementationClass.cast(constructor.newInstance(parameters));
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create service (%s)", resources.getMarker()), e);
 		}
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append("service", implementationClass);
+		return builder.toString();
 	}
 }
