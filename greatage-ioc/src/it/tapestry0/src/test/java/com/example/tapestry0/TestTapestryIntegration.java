@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc;
+package com.example.tapestry0;
 
-import com.example.guice0.MockGreatAgeModule1;
-import com.example.guice0.MockGreatAgeModule2;
-import com.example.guice0.MockGuiceModule1;
-import com.example.guice0.MockGuiceModule2;
-import com.example.guice0.MockMessageService;
-import com.google.inject.Guice;
-import com.google.inject.Injector;
-import com.google.inject.Key;
-import com.google.inject.name.Names;
-import org.greatage.ioc.guice.GreatAgeIntegration;
-import org.greatage.ioc.guice.GuiceIntegration;
+import com.example.tapestry0.MockGreatAgeModule1;
+import com.example.tapestry0.MockGreatAgeModule2;
+import com.example.tapestry0.MockMessageService;
+import com.example.tapestry0.MockTapestryModule1;
+import com.example.tapestry0.MockTapestryModule2;
+import org.apache.tapestry5.ioc.Registry;
+import org.apache.tapestry5.ioc.RegistryBuilder;
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceLocator;
+import org.greatage.ioc.ServiceLocatorBuilder;
+import org.greatage.ioc.tapestry.GreatAgeIntegration;
+import org.greatage.ioc.tapestry.TapestryIntegration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -34,13 +35,13 @@ import org.testng.annotations.Test;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ITGuiceIntegration0 extends Assert {
+public class TestTapestryIntegration extends Assert {
 
 	@Test
 	public void testGreatAgeSide() {
 		final ServiceLocator locator = new ServiceLocatorBuilder()
 				.addModules(MockGreatAgeModule1.class, MockGreatAgeModule2.class)
-				.addModule(new GuiceIntegration(new MockGuiceModule1()))
+				.addModule(new TapestryIntegration(MockTapestryModule1.class))
 				.build();
 		assertNotNull(locator);
 
@@ -50,7 +51,7 @@ public class ITGuiceIntegration0 extends Assert {
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class, "GuiceMessageService");
+		marker = Marker.get(MockMessageService.class, "TapestryMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
@@ -64,27 +65,25 @@ public class ITGuiceIntegration0 extends Assert {
 	}
 
 	@Test
-	public void testGuiceSide() {
-		final Injector injector = Guice.createInjector(new MockGuiceModule1(), new MockGuiceModule2(),
-				new GreatAgeIntegration(MockGreatAgeModule1.class));
-		assertNotNull(injector);
+	public void testTapestrySide() {
+		final Registry registry = RegistryBuilder.buildAndStartupRegistry(
+				new GreatAgeIntegration(MockGreatAgeModule1.class),
+				MockTapestryModule1.class, MockTapestryModule2.class);
+		assertNotNull(registry);
 
-		Key<MockMessageService> key = Key.get(MockMessageService.class, Names.named("GreatAgeMessageService"));
-		MockMessageService messageService = injector.getInstance(key);
+		MockMessageService messageService = registry.getService("GreatAgeMessageService", MockMessageService.class);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		key = Key.get(MockMessageService.class, Names.named("GuiceMessageService"));
-		messageService = injector.getInstance(key);
+		messageService = registry.getService("TapestryMessageService", MockMessageService.class);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		key = Key.get(MockMessageService.class, Names.named("GuiceMessageServiceDelegate"));
-		messageService = injector.getInstance(key);
+		messageService = registry.getService("TapestryMessageServiceDelegate", MockMessageService.class);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
-		assertTrue(messageService.generateMessage().startsWith("Invocation from guice:"));
+		assertTrue(messageService.generateMessage().startsWith("Invocation from tapestry:"));
 	}
 }

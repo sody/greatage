@@ -1,12 +1,16 @@
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.AnnotationFactory;
 import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.mock.MockIOCInterface;
-import org.greatage.ioc.mock.MockIOCInterfaceEx;
+import org.greatage.ioc.annotations.Qualifier;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * @author Ivan Khalopik
@@ -18,53 +22,49 @@ public class TestMarker extends Assert {
 	public Object[][] testAssignableFromData() {
 		return new Object[][] {
 				{ Marker.get(Object.class), Marker.get(Object.class), true },
-				{ Marker.get(Object.class), Marker.get(MockIOCInterface.class), true },
-				{ Marker.get(MockIOCInterface.class), Marker.get(Object.class), false },
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterfaceEx.class), true },
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterfaceEx.class), true },
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterface.class), true },
+				{ Marker.get(Object.class), Marker.get(MockInterface.class), true },
+				{ Marker.get(MockInterface.class), Marker.get(Object.class), false },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterfaceEx.class), true },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterfaceEx.class), true },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterface.class), true },
 
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterface.class, mockMarker()), true },
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterface.class, MockMarker.class), true },
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterface.class, "test"), true },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterface.class, mockMarker()), true },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterface.class, MockMarker.class), true },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterface.class, "test"), true },
 
-				{ Marker.get(MockIOCInterface.class, mockMarker()), Marker.get(MockIOCInterface.class), false },
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterface.class), false },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class), false },
+				{ Marker.get(MockInterface.class, mockMarker()), Marker.get(MockInterface.class), false },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterface.class), false },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class), false },
 
-				{ Marker.get(MockIOCInterface.class, mockMarker()), Marker.get(MockIOCInterface.class, "test"), false },
-				{ Marker.get(MockIOCInterface.class, mockMarker()), Marker.get(MockIOCInterface.class, MockMarker.class), true },
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterface.class, "test"), false },
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterface.class, mockMarker()), true },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class, MockMarker.class), false },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class, mockMarker()), false },
+				{ Marker.get(MockInterface.class, mockMarker()), Marker.get(MockInterface.class, "test"), false },
+				{ Marker.get(MockInterface.class, mockMarker()), Marker.get(MockInterface.class, MockMarker.class), true },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterface.class, "test"), false },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterface.class, mockMarker()), true },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class, MockMarker.class), false },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class, mockMarker()), false },
 		};
 	}
 
 	@DataProvider
 	public Object[][] equalsData() {
 		return new Object[][] {
-				{ Marker.get(MockIOCInterface.class), null, false },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterface.class), true },
+				{ Marker.get(MockInterface.class), Marker.get(MockInterfaceEx.class), false },
 
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterface.class), true },
-				{ Marker.get(MockIOCInterface.class), Marker.get(MockIOCInterfaceEx.class), false },
+				{ Marker.get(MockInterface.class, mockMarker()), Marker.get(MockInterface.class, mockMarker()), true },
+				{ Marker.get(MockInterface.class, mockMarker()), Marker.get(MockInterfaceEx.class, mockMarker()), false },
+				{ Marker.get(MockInterface.class, mockMarker()), Marker.get(MockInterface.class), false },
 
-				{ Marker.get(MockIOCInterface.class, mockMarker()), Marker.get(MockIOCInterface.class, mockMarker()), true },
-				{ Marker.get(MockIOCInterface.class, mockMarker()), Marker.get(MockIOCInterfaceEx.class, mockMarker()), false },
-				{ Marker.get(MockIOCInterface.class, mockMarker()), Marker.get(MockIOCInterface.class), false },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterface.class, MockMarker.class), true },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterface.class, mockMarker()), true },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterfaceEx.class, MockMarker.class), false },
+				{ Marker.get(MockInterface.class, MockMarker.class), Marker.get(MockInterface.class), false },
 
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterface.class, MockMarker.class),
-						true },
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterface.class, mockMarker()), true },
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterfaceEx.class, MockMarker.class),
-						false },
-				{ Marker.get(MockIOCInterface.class, MockMarker.class), Marker.get(MockIOCInterface.class), false },
-
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class, "test"), true },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class, new NamedImpl("test")), true },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class, "test2"), false },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterfaceEx.class, "test"), false },
-				{ Marker.get(MockIOCInterface.class, "test"), Marker.get(MockIOCInterface.class), false },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class, "test"), true },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class, new NamedImpl("test")), true },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class, "test2"), false },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterfaceEx.class, "test"), false },
+				{ Marker.get(MockInterface.class, "test"), Marker.get(MockInterface.class), false },
 		};
 	}
 
@@ -76,14 +76,32 @@ public class TestMarker extends Assert {
 
 	@Test(dataProvider = "equalsData")
 	public void testEquals(final Marker first, final Marker second, final boolean expected) {
-		final boolean actual = first.equals(second);
+		boolean actual = first.equals(second);
 		assertEquals(actual, expected);
-		if (expected) {
-			assertEquals(first.hashCode(), second.hashCode());
-		}
+		actual = second.equals(first);
+		assertEquals(actual, expected);
 	}
 
 	private MockMarker mockMarker() {
-		return AnnotationFactory.create(MockMarker.class);
+		return MockBean.class.getAnnotation(MockMarker.class);
+	}
+
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@Documented
+	@Qualifier
+	static @interface MockMarker {
+	}
+
+	@MockMarker
+	static class MockBean {
+	}
+
+	static interface MockInterface {
+		String say(final String message);
+	}
+
+	static interface MockInterfaceEx extends MockInterface {
+		String say();
 	}
 }

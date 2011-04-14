@@ -1,9 +1,6 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Named;
-import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.mock.MockIOCInterface;
-import org.greatage.ioc.mock.MockIOCInterfaceImpl1;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -19,53 +16,22 @@ public class TestGenerateMarker extends Assert {
 	@DataProvider
 	public Object[][] testGenerateMarkerData() {
 		return new Object[][] {
-				{
-						void.class,
-						null,
-						Marker.get(Object.class)
-				},
-				{
-						void.class,
-						new Annotation[] { named("test") },
-						Marker.get(Object.class, named("test"))
-				},
+				{ void.class, null, Marker.get(Object.class) },
+				{ void.class, MockBean.class.getAnnotations(), Marker.get(Object.class,"test") },
 
-				{
-						MockIOCInterface.class,
-						new Annotation[] { named("test") },
-						Marker.get(MockIOCInterface.class, named("test"))
-				},
+				{ MockInterface.class, MockBean.class.getAnnotations(), Marker.get(MockInterface.class, "test") },
 
-				{
-						MockIOCInterface.class,
-						null,
-						Marker.get(MockIOCInterface.class)
-				},
-				{
-						MockIOCInterfaceImpl1.class,
-						null,
-						Marker.get(MockIOCInterfaceImpl1.class)
-				},
-				{
-						MockIOCInterface.class,
-						new Annotation[] { },
-						Marker.get(MockIOCInterface.class)
-				},
-				{
-						MockIOCInterfaceImpl1.class,
-						new Annotation[] { },
-						Marker.get(MockIOCInterfaceImpl1.class)
-				},
+				{ MockInterface.class, null, Marker.get(MockInterface.class) },
+				{ MockClass.class, null, Marker.get(MockClass.class) },
+				{ MockInterface.class, new Annotation[] { }, Marker.get(MockInterface.class) },
+				{ MockClass.class, new Annotation[] { }, Marker.get(MockClass.class) },
 		};
 	}
 
 	@DataProvider
 	public Object[][] testGenerateMarkerWrongData() {
 		return new Object[][] {
-				{
-						null,
-						null,
-				},
+				{ null, null, },
 		};
 	}
 
@@ -87,7 +53,17 @@ public class TestGenerateMarker extends Assert {
 		InternalUtils.generateMarker(serviceClass, annotations);
 	}
 
-	private Named named(final String name) {
-		return new NamedImpl(name);
+	static interface MockInterface {
+		String say(final String message);
+	}
+
+	static class MockClass implements MockInterface {
+		public String say(final String message) {
+			return message;
+		}
+	}
+
+	@Named("test")
+	static class MockBean {
 	}
 }

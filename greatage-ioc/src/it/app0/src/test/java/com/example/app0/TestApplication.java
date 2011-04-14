@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc;
+package com.example.app0;
 
 import com.example.app0.MockBindModule;
 import com.example.app0.MockConfigureModule;
 import com.example.app0.MockTalkService;
+import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceLocator;
+import org.greatage.ioc.ServiceLocatorBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +29,7 @@ import org.testng.annotations.Test;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ITApp0 extends Assert {
+public class TestApplication extends Assert {
 
 	@Test
 	public void testServiceConfigurator() {
