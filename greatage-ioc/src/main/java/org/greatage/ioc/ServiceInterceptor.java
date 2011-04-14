@@ -16,13 +16,12 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.Ordered;
 
 /**
  * This class represents service interceptor definition that distributively configures service method advices. By
- * default it is configured by module decorate methods annotated with {@link org.greatage.ioc.annotations.Decorate}
+ * default it is configured by module decorate methods annotated with {@link org.greatage.ioc.annotations.Intercept}
  * class.
  *
  * @param <T> service type
@@ -31,7 +30,7 @@ import org.greatage.util.Ordered;
  * @see org.greatage.ioc.proxy.Interceptor
  * @since 1.1
  */
-public interface ServiceDecorator<T> extends Ordered {
+public interface ServiceInterceptor<T> extends Ordered {
 
 	Marker<T> getMarker();
 

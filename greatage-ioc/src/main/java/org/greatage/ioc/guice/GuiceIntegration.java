@@ -23,7 +23,7 @@ import org.greatage.ioc.Marker;
 import org.greatage.ioc.Module;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceContributor;
-import org.greatage.ioc.ServiceDecorator;
+import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;
@@ -56,7 +56,7 @@ public class GuiceIntegration implements Module {
 		return CollectionUtils.newList();
 	}
 
-	public <T> List<ServiceDecorator<T>> getDecorators(final Marker<T> marker) {
+	public <T> List<ServiceInterceptor<T>> getInterceptors(final Marker<T> marker) {
 		return CollectionUtils.newList();
 	}
 }

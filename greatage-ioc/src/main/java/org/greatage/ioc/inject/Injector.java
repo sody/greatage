@@ -16,11 +16,9 @@
 
 package org.greatage.ioc.inject;
 
-import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceContributor;
-import org.greatage.ioc.ServiceDecorator;
+import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceDefinition;
-import org.greatage.ioc.ServiceResources;
 
 import java.util.List;
 
@@ -44,5 +42,5 @@ public interface Injector {
 	 */
 	<T> T createService(ServiceDefinition<T> service,
 						List<ServiceContributor<T>> contributors,
-						List<ServiceDecorator<T>> decorators);
+						List<ServiceInterceptor<T>> interceptors);
 }

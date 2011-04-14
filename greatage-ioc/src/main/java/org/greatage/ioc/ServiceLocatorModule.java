@@ -1,7 +1,6 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Dependency;
-import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -83,7 +82,7 @@ public class ServiceLocatorModule implements Module, ServiceContributor<ServiceL
 		return contributors;
 	}
 
-	public <T> List<ServiceDecorator<T>> getDecorators(final Marker<T> marker) {
+	public <T> List<ServiceInterceptor<T>> getInterceptors(final Marker<T> marker) {
 		return Collections.emptyList();
 	}
 }

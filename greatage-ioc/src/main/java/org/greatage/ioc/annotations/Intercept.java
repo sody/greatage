@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Decorate {
+public @interface Intercept {
 
 	Class value() default void.class;
 }

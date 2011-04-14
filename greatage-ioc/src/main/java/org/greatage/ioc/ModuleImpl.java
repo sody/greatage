@@ -19,7 +19,7 @@ package org.greatage.ioc;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Decorate;
+import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.annotations.Singleton;
 import org.greatage.util.CollectionUtils;
 
@@ -38,11 +38,11 @@ import java.util.List;
 public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	private final List<ServiceDefinition<?>> services = CollectionUtils.newList();
 	private final List<ServiceContributor<?>> contributors = CollectionUtils.newList();
-	private final List<ServiceDecorator<?>> decorators = CollectionUtils.newList();
+	private final List<ServiceInterceptor<?>> interceptors = CollectionUtils.newList();
 
 	/**
 	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
-	 * Build}, {@link Contribute}, {@link org.greatage.ioc.annotations.Decorate} and {@link Bind} annotations and creates
+	 * Build}, {@link Contribute}, {@link org.greatage.ioc.annotations.Intercept} and {@link Bind} annotations and creates
 	 * for them service, contribute, decorate, decorate and bind definitions respectively.
 	 *
 	 * @param moduleClass module class
@@ -55,8 +55,8 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 				services.add(new ServiceDefinitionFactory(moduleClass, method));
 			} else if (method.isAnnotationPresent(Contribute.class)) {
 				contributors.add(new ServiceContributorImpl(moduleClass, method));
-			} else if (method.isAnnotationPresent(Decorate.class)) {
-				decorators.add(new ServiceDecoratorImpl(moduleClass, method));
+			} else if (method.isAnnotationPresent(Intercept.class)) {
+				interceptors.add(new ServiceInterceptorImpl(moduleClass, method));
 			} else if (method.isAnnotationPresent(Bind.class)) {
 				final ServiceBinderImpl binder = new ServiceBinderImpl();
 				try {
@@ -93,12 +93,12 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> List<ServiceDecorator<T>> getDecorators(final Marker<T> marker) {
-		final List<ServiceDecorator<T>> result = CollectionUtils.newList();
-		for (ServiceDecorator<?> decorator : decorators) {
-			if (decorator.getMarker().isAssignableFrom(marker)) {
+	public <T> List<ServiceInterceptor<T>> getInterceptors(final Marker<T> marker) {
+		final List<ServiceInterceptor<T>> result = CollectionUtils.newList();
+		for (ServiceInterceptor<?> interceptor : interceptors) {
+			if (interceptor.getMarker().isAssignableFrom(marker)) {
 				//noinspection unchecked
-				result.add((ServiceDecorator<T>) decorator);
+				result.add((ServiceInterceptor<T>) interceptor);
 			}
 		}
 		return result;

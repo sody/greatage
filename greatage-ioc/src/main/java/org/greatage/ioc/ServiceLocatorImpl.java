@@ -123,13 +123,13 @@ public class ServiceLocatorImpl implements ServiceLocator {
 								final Collection<Module> modules) {
 		final Marker<T> marker = service.getMarker();
 		final List<ServiceContributor<T>> contributors = CollectionUtils.newList();
-		final List<ServiceDecorator<T>> decorators = CollectionUtils.newList();
+		final List<ServiceInterceptor<T>> interceptors = CollectionUtils.newList();
 		for (Module module : modules) {
 			contributors.addAll(module.getContributors(marker));
-			decorators.addAll(module.getDecorators(marker));
+			interceptors.addAll(module.getInterceptors(marker));
 		}
 
-		final T serviceInstance = injector.createService(service, contributors, decorators);
+		final T serviceInstance = injector.createService(service, contributors, interceptors);
 		services.put(marker, serviceInstance);
 		scopes.put(marker, service.getScope());
 	}

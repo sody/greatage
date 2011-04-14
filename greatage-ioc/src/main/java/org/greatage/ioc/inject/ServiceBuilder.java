@@ -2,7 +2,7 @@ package org.greatage.ioc.inject;
 
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceContributor;
-import org.greatage.ioc.ServiceDecorator;
+import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.logging.Logger;
@@ -21,7 +21,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	private final Logger logger;
 	private final ServiceDefinition<T> service;
 	private final List<ServiceContributor<T>> contributors;
-	private final List<ServiceDecorator<T>> decorators;
+	private final List<ServiceInterceptor<T>> interceptors;
 
 	private final Marker<T> marker;
 	private final ServiceResources<T> resources;
@@ -30,13 +30,13 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	public ServiceBuilder(final Logger logger,
 						  final ServiceDefinition<T> service,
 						  final List<ServiceContributor<T>> contributors,
-						  final List<ServiceDecorator<T>> decorators,
+						  final List<ServiceInterceptor<T>> interceptors,
 						  final ServiceResources<T> resources,
 						  final Scope scope) {
 		this.logger = logger;
 		this.service = service;
 		this.contributors = contributors;
-		this.decorators = decorators;
+		this.interceptors = interceptors;
 		this.resources = resources;
 		this.scope = scope;
 
@@ -50,9 +50,9 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 
 	public List<Interceptor> getInterceptors() {
 		final List<Interceptor> interceptors = CollectionUtils.newList();
-		for (ServiceDecorator<T> decorator : decorators) {
-			logger.debug("Decoration service (%s) from (%s)", marker, decorator);
-			decorator.decorate(resources);
+		for (ServiceInterceptor<T> interceptor : this.interceptors) {
+			logger.debug("Interception service (%s) from (%s)", marker, interceptor);
+			interceptor.decorate(resources);
 		}
 		return interceptors;
 	}

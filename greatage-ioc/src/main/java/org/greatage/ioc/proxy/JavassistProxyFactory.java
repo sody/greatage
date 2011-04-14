@@ -85,8 +85,8 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 			if (Modifier.isPublic(modifiers) && !Modifier.isFinal(modifiers)) {
 				final String methodName = method.getName();
 				final String methodBody = String.format(
-						"{ %s realMethod = %s.getDelegate().getClass().getMethod(\"%s\", $sig); return ($r) %s.invoke(realMethod, $args); }",
-						Method.class.getName(), HANDLER_FIELD, methodName, HANDLER_FIELD);
+						"{ %s realMethod = %s.class.getMethod(\"%s\", $sig); return ($r) %s.invoke(realMethod, $args); }",
+						Method.class.getName(), proxyClass.getName(), methodName, HANDLER_FIELD);
 				classBuilder.addMethod(methodName, Modifier.PUBLIC, method.getReturnType(),
 						method.getParameterTypes(), method.getExceptionTypes(), methodBody);
 			}

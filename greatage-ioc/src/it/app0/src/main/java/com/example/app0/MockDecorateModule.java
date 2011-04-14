@@ -17,7 +17,7 @@
 package com.example.app0;
 
 import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Decorate;
+import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
@@ -44,7 +44,7 @@ public class MockDecorateModule {
 		return new MockTalkServiceDelegate(service, "[", "]");
 	}
 
-	@Decorate(MockTalkService.class)
+	@Intercept(MockTalkService.class)
 	@Order("first")
 	public Interceptor interceptTalkService() {
 		return new Interceptor() {
@@ -58,7 +58,7 @@ public class MockDecorateModule {
 		};
 	}
 
-	@Decorate(MockTalkService.class)
+	@Intercept(MockTalkService.class)
 	@Order(value = "second", constraints = "after:first")
 	public Interceptor interceptTalkService2() {
 		return new Interceptor() {

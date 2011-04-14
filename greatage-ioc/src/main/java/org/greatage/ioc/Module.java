@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @see ServiceDefinition
  * @see ServiceContributor
- * @see ServiceDecorator
+ * @see ServiceInterceptor
  * @since 1.1
  */
 public interface Module {
@@ -56,5 +56,5 @@ public interface Module {
 	 * @param <T>     type of service
 	 * @return ordered list of all service interceptor definitions for specified service or empty list
 	 */
-	<T> List<ServiceDecorator<T>> getDecorators(Marker<T> marker);
+	<T> List<ServiceInterceptor<T>> getInterceptors(Marker<T> marker);
 }

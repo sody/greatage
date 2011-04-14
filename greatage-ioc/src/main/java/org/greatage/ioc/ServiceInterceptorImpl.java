@@ -16,7 +16,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.Decorate;
+import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.annotations.Order;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.CollectionUtils;
@@ -35,9 +35,9 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
+public class ServiceInterceptorImpl<T> implements ServiceInterceptor<T> {
 	private final Class<?> moduleClass;
-	private final Method decorateMethod;
+	private final Method interceptMethod;
 
 	private final Marker<T> marker;
 
@@ -47,25 +47,25 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	/**
 	 * Creates new instance of service interceptor definition with defined module class and method used for service interception.
 	 * Interception method must have {@link org.greatage.ioc.proxy.Interceptor} return type and be annotated with {@link
-	 * org.greatage.ioc.annotations.Decorate} annotation. For interceptors ordering it may also be annotated with {@link Order}
+	 * org.greatage.ioc.annotations.Intercept} annotation. For interceptors ordering it may also be annotated with {@link Order}
 	 * annotation.
 	 *
 	 * @param moduleClass	module class
-	 * @param decorateMethod module method used for service interception
+	 * @param interceptMethod module method used for service interception
 	 */
-	ServiceDecoratorImpl(final Class<?> moduleClass, final Method decorateMethod) {
+	ServiceInterceptorImpl(final Class<?> moduleClass, final Method interceptMethod) {
 		this.moduleClass = moduleClass;
-		this.decorateMethod = decorateMethod;
+		this.interceptMethod = interceptMethod;
 
-		if (!decorateMethod.getReturnType().equals(Interceptor.class)) {
+		if (!interceptMethod.getReturnType().equals(Interceptor.class)) {
 			throw new IllegalStateException("Decoration method should return value of Interceptor type");
 		}
 
-		final Decorate decorate = decorateMethod.getAnnotation(Decorate.class);
+		final Intercept intercept = interceptMethod.getAnnotation(Intercept.class);
 		//noinspection unchecked
-		marker = InternalUtils.generateMarker(decorate.value(), decorateMethod.getAnnotations());
+		marker = InternalUtils.generateMarker(intercept.value(), interceptMethod.getAnnotations());
 
-		final Order order = decorateMethod.getAnnotation(Order.class);
+		final Order order = interceptMethod.getAnnotation(Order.class);
 		if (order != null) {
 			orderId = order.value();
 			orderConstraints = Arrays.asList(order.constraints());
@@ -100,9 +100,9 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	public Interceptor decorate(final ServiceResources<T> resources) {
 		try {
 			final Object moduleInstance =
-					Modifier.isStatic(decorateMethod.getModifiers()) ? null : resources.getResource(moduleClass);
-			final Object[] parameters = InternalUtils.calculateParameters(resources, decorateMethod);
-			return (Interceptor) decorateMethod.invoke(moduleInstance, parameters);
+					Modifier.isStatic(interceptMethod.getModifiers()) ? null : resources.getResource(moduleClass);
+			final Object[] parameters = InternalUtils.calculateParameters(resources, interceptMethod);
+			return (Interceptor) interceptMethod.invoke(moduleInstance, parameters);
 		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't decorate service (%s)", resources.getMarker()), e);
 		}
@@ -112,7 +112,7 @@ public class ServiceDecoratorImpl<T> implements ServiceDecorator<T> {
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
 		builder.append("module", moduleClass.getName());
-		builder.append("method", decorateMethod.getName());
+		builder.append("method", interceptMethod.getName());
 		return builder.toString();
 	}
 }
