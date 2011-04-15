@@ -19,8 +19,6 @@ package org.greatage.ioc.proxy;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
-import java.util.List;
-
 /**
  * @author Ivan Khalopik
  * @since 1.1
@@ -28,16 +26,16 @@ import java.util.List;
 public class MockObjectBuilder<T> implements ObjectBuilder<T> {
 	private final Class<T> interfaceClass;
 	private final Class<? extends T> implementationClass;
-	private final List<Interceptor> interceptors;
+	private final Interceptor interceptor;
 	private final Object[] constructionParameters;
 
 	public MockObjectBuilder(final Class<T> interfaceClass,
 							 final Class<? extends T> implementationClass,
-							 final List<Interceptor> interceptors,
+							 final Interceptor interceptor,
 							 final Object... constructionParameters) {
 		this.interfaceClass = interfaceClass;
 		this.implementationClass = implementationClass;
-		this.interceptors = interceptors;
+		this.interceptor = interceptor;
 		this.constructionParameters = constructionParameters;
 	}
 
@@ -45,8 +43,8 @@ public class MockObjectBuilder<T> implements ObjectBuilder<T> {
 		return interfaceClass;
 	}
 
-	public List<Interceptor> getInterceptors() {
-		return interceptors;
+	public Interceptor getInterceptor() {
+		return interceptor;
 	}
 
 	public T build() {

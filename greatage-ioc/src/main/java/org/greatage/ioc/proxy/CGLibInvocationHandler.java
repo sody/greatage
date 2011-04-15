@@ -18,8 +18,6 @@ package org.greatage.ioc.proxy;
 
 import net.sf.cglib.proxy.InvocationHandler;
 
-import java.lang.reflect.Method;
-
 /**
  * This class represents implementation of invocation handler for CGLib proxy objects.
  *
@@ -27,7 +25,7 @@ import java.lang.reflect.Method;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> implements InvocationHandler {
+public class CGLibInvocationHandler<T> extends DefaultInvocationHandler<T> implements InvocationHandler {
 
 	/**
 	 * Creates new instance of invocation handler for CGLib proxy objects.
@@ -36,12 +34,5 @@ public class CGLibInvocationHandler<T> extends AbstractInvocationHandler<T> impl
 	 */
 	CGLibInvocationHandler(final ObjectBuilder<T> builder) {
 		super(builder);
-	}
-
-	/**
-	 * {@inheritDoc} Delegates all method invocations to delegate instance.
-	 */
-	public Object invoke(final Object obj, final Method method, final Object[] args) throws Throwable {
-		return getInvocation(method).proceed(args);
 	}
 }

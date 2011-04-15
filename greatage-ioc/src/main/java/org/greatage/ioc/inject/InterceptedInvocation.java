@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.greatage.ioc.proxy;
+package org.greatage.ioc.inject;
+
+import org.greatage.ioc.proxy.Interceptor;
+import org.greatage.ioc.proxy.Invocation;
 
 import java.lang.reflect.Method;
 
 /**
- * This class represents {@link Invocation} proxy implementation that adds method advices logic to invocation delegate.
+ * This class represents {@link org.greatage.ioc.proxy.Invocation} proxy implementation that adds method advices logic to invocation delegate.
  *
  * @author Ivan Khalopik
  * @since 1.1

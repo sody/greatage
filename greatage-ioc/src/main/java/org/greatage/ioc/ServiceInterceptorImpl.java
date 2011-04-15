@@ -18,7 +18,6 @@ package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.annotations.Order;
-import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 
@@ -50,15 +49,15 @@ public class ServiceInterceptorImpl<T> implements ServiceInterceptor<T> {
 	 * org.greatage.ioc.annotations.Intercept} annotation. For interceptors ordering it may also be annotated with {@link Order}
 	 * annotation.
 	 *
-	 * @param moduleClass	module class
+	 * @param moduleClass	 module class
 	 * @param interceptMethod module method used for service interception
 	 */
 	ServiceInterceptorImpl(final Class<?> moduleClass, final Method interceptMethod) {
 		this.moduleClass = moduleClass;
 		this.interceptMethod = interceptMethod;
 
-		if (!interceptMethod.getReturnType().equals(Interceptor.class)) {
-			throw new IllegalStateException("Decoration method should return value of Interceptor type");
+		if (!interceptMethod.getReturnType().equals(void.class)) {
+			throw new IllegalStateException("Configuration method can not return any value");
 		}
 
 		final Intercept intercept = interceptMethod.getAnnotation(Intercept.class);
@@ -97,14 +96,15 @@ public class ServiceInterceptorImpl<T> implements ServiceInterceptor<T> {
 	/**
 	 * {@inheritDoc} It intercepts service by invoking configured module method.
 	 */
-	public Interceptor decorate(final ServiceResources<T> resources) {
+	public void intercept(final ServiceResources<T> resources) {
 		try {
 			final Object moduleInstance =
 					Modifier.isStatic(interceptMethod.getModifiers()) ? null : resources.getResource(moduleClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, interceptMethod);
-			return (Interceptor) interceptMethod.invoke(moduleInstance, parameters);
-		} catch (Exception e) {
-			throw new ApplicationException(String.format("Can't decorate service (%s)", resources.getMarker()), e);
+			interceptMethod.invoke(moduleInstance, parameters);
+		}
+		catch (Exception e) {
+			throw new ApplicationException(String.format("Can't intercept service (%s)", resources.getMarker()), e);
 		}
 	}
 

@@ -24,8 +24,6 @@ package org.greatage.ioc.proxy;
  */
 public interface Interceptor {
 
-	boolean supports(Invocation invocation);
-
 	/**
 	 * Advices method invocation. It can override method or add some additional functionality to method.
 	 *

@@ -31,7 +31,7 @@ import java.util.Collection;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ConfigurationImpl<T, V> extends AbstractConfiguration<T, V, Collection<V>> implements Configuration<V> {
+public class ConfigurationImpl<T, V> extends AbstractConfiguration<T, Collection<V>> implements Configuration<V> {
 	private final Collection<V> configuration = CollectionUtils.newSet();
 
 	/**

@@ -16,8 +16,6 @@
 
 package org.greatage.ioc.proxy;
 
-import java.util.List;
-
 /**
  * This interface represents proxy generation data.
  *
@@ -34,7 +32,7 @@ public interface ObjectBuilder<T> {
 	 */
 	Class<T> getObjectClass();
 
-	List<Interceptor> getInterceptors();
+	Interceptor getInterceptor();
 
 	/**
 	 * Builds real object. It is used for lazy creation of real object under the proxy.

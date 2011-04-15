@@ -32,7 +32,7 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class MappedConfigurationImpl<T, K, V> extends AbstractConfiguration<T, V, Map<K, V>>
+public class MappedConfigurationImpl<T, K, V> extends AbstractConfiguration<T, Map<K, V>>
 		implements MappedConfiguration<K, V> {
 	private final Map<K, V> configuration = CollectionUtils.newMap();
 

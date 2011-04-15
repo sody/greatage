@@ -2,14 +2,13 @@ package org.greatage.ioc.inject;
 
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceContributor;
-import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceDefinition;
+import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.ioc.scope.Scope;
-import org.greatage.util.CollectionUtils;
 
 import java.util.List;
 
@@ -27,7 +26,9 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	private final ServiceResources<T> resources;
 	private final Scope scope;
 
-	public ServiceBuilder(final Logger logger,
+	private Interceptor interceptor;
+
+	ServiceBuilder(final Logger logger,
 						  final ServiceDefinition<T> service,
 						  final List<ServiceContributor<T>> contributors,
 						  final List<ServiceInterceptor<T>> interceptors,
@@ -48,13 +49,8 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 		return marker.getServiceClass();
 	}
 
-	public List<Interceptor> getInterceptors() {
-		final List<Interceptor> interceptors = CollectionUtils.newList();
-		for (ServiceInterceptor<T> interceptor : this.interceptors) {
-			logger.debug("Interception service (%s) from (%s)", marker, interceptor);
-			interceptor.decorate(resources);
-		}
-		return interceptors;
+	public Interceptor getInterceptor() {
+		return interceptor;
 	}
 
 	public T build() {
@@ -66,11 +62,19 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 			return ServiceBuilder.this.getObjectClass();
 		}
 
-		public List<Interceptor> getInterceptors() {
-			return ServiceBuilder.this.getInterceptors();
+		public Interceptor getInterceptor() {
+			return ServiceBuilder.this.getInterceptor();
 		}
 
 		public T build() {
+			final ServiceAdviceImpl<T> serviceAdvice = new ServiceAdviceImpl<T>(resources);
+			final ServiceResources<T> extraResources = new ExtraResources<T>(resources, serviceAdvice);
+			for (ServiceInterceptor<T> interceptor : interceptors) {
+				logger.debug("Interception service (%s) from (%s)", marker, interceptor);
+				interceptor.intercept(extraResources);
+			}
+			interceptor = serviceAdvice.build();
+
 			final ServiceResources<T> buildResources = new BuildResources<T>(logger, resources, contributors);
 			logger.debug("Building service (%s) from (%s)", marker, service);
 			return service.build(buildResources);

@@ -23,16 +23,15 @@ import org.greatage.ioc.ServiceResources;
 import java.lang.reflect.Constructor;
 
 /**
- * This class represents abstract implementation of all types of service configuration. Adds auto build functionality
- * for configuration items instantiation.
+ * This class represents abstract implementation of all types of service configuration. Adds auto build functionality for
+ * configuration items instantiation.
  *
  * @param <T> service type
- * @param <V> type of configuration items
  * @param <C> configuration resulting type
  * @author Ivan Khalopik
  * @since 1.1
  */
-public abstract class AbstractConfiguration<T, V, C> {
+public abstract class AbstractConfiguration<T, C> {
 	private final ServiceResources<T> resources;
 
 	/**
@@ -50,19 +49,19 @@ public abstract class AbstractConfiguration<T, V, C> {
 	 * @param valueClass service configuration item class
 	 * @return automatically built new instance of service configuration item
 	 */
-	protected V newInstance(final Class<? extends V> valueClass) {
+	protected <V> V newInstance(final Class<? extends V> valueClass) {
 		try {
 			final Constructor constructor = valueClass.getConstructors()[0];
 			final Object[] parameters = InternalUtils.calculateParameters(resources, constructor);
 			return valueClass.cast(constructor.newInstance(parameters));
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create object of class '%s'", valueClass), e);
 		}
 	}
 
 	/**
-	 * Builds resulting service configuration. Used for calculating configuration instance for service construction
-	 * method.
+	 * Builds resulting service configuration. Used for calculating configuration instance for service construction method.
 	 *
 	 * @return resulting service configuration
 	 */

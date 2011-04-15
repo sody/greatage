@@ -16,13 +16,11 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.util.Ordered;
 
 /**
- * This class represents service interceptor definition that distributively configures service method advices. By
- * default it is configured by module decorate methods annotated with {@link org.greatage.ioc.annotations.Intercept}
- * class.
+ * This class represents service interceptor definition that distributively configures service method advices. By default it is
+ * configured by module intercept methods annotated with {@link org.greatage.ioc.annotations.Intercept} class.
  *
  * @param <T> service type
  * @author Ivan Khalopik
@@ -41,5 +39,5 @@ public interface ServiceInterceptor<T> extends Ordered {
 	 * @return service method invoke
 	 * @throws ApplicationException if error occurs while creating method interceptor
 	 */
-	Interceptor decorate(ServiceResources<T> resources);
+	void intercept(ServiceResources<T> resources);
 }

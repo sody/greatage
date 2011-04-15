@@ -34,7 +34,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class OrderedConfigurationImpl<T, V> extends AbstractConfiguration<T, V, List<V>>
+public class OrderedConfigurationImpl<T, V> extends AbstractConfiguration<T, List<V>>
 		implements OrderedConfiguration<V> {
 	private final List<OrderedItem> configuration = CollectionUtils.newList();
 

@@ -43,7 +43,7 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	/**
 	 * Creates new instance of module definition for specified module class. It seeks for methods annotated with {@link
 	 * Build}, {@link Contribute}, {@link org.greatage.ioc.annotations.Intercept} and {@link Bind} annotations and creates
-	 * for them service, contribute, decorate, decorate and bind definitions respectively.
+	 * for them service, contribute, intercept, intercept and bind definitions respectively.
 	 *
 	 * @param moduleClass module class
 	 */

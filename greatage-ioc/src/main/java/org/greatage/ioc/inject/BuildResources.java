@@ -119,10 +119,10 @@ public class BuildResources<T> implements ServiceResources<T> {
 	 * @param configuration correspondent service configuration instance
 	 */
 	private void configure(final Object configuration) {
-		final ServiceResources<T> configurationResources = new ConfigurationResources<T>(resources, configuration);
+		final ServiceResources<T> extraResources = new ExtraResources<T>(resources, configuration);
 		for (ServiceContributor<T> contributor : contributors) {
 			logger.debug("Configuring service (%s) from (%s)", resources.getMarker(), contributor);
-			contributor.contribute(configurationResources);
+			contributor.contribute(extraResources);
 		}
 	}
 }

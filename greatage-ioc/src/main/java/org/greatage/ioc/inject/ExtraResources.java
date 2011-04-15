@@ -28,7 +28,7 @@ import java.lang.annotation.Annotation;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class ConfigurationResources<T> implements ServiceResources<T> {
+public class ExtraResources<T> implements ServiceResources<T> {
 	private final ServiceResources<T> resources;
 	private final Object configuration;
 
@@ -38,7 +38,7 @@ public class ConfigurationResources<T> implements ServiceResources<T> {
 	 *
 	 * @param configuration service configuration
 	 */
-	ConfigurationResources(final ServiceResources<T> resources, final Object configuration) {
+	ExtraResources(final ServiceResources<T> resources, final Object configuration) {
 		this.resources = resources;
 		this.configuration = configuration;
 	}

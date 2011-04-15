@@ -11,10 +11,6 @@ public class MockInterceptor implements Interceptor {
 		this.message = message;
 	}
 
-	public boolean supports(final Invocation invocation) {
-		return true;
-	}
-
 	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 		return message + invocation.proceed(parameters);
 	}

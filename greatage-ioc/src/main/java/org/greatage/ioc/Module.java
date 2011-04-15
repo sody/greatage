@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * This class represents module definition that is used to build {@link org.greatage.ioc.ServiceLocator}. By default it
- * is configured by simple class with all needed methods that represent service build, configure, decorate and invoke
+ * is configured by simple class with all needed methods that represent service build, configure, intercept and invoke
  * points. It is also may be annotated by {@link org.greatage.ioc.annotations.Dependency} class to define children
  * modules.
  *

@@ -16,7 +16,6 @@
 
 package org.greatage.ioc.proxy;
 
-import org.greatage.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -37,7 +36,7 @@ public class TestProxyFactory extends Assert {
 				{
 						new MockObjectBuilder<MockIOCInterface>(
 								MockIOCInterface.class, MockIOCInterfaceImpl1.class,
-								CollectionUtils.<Interceptor>newList(), "test1"
+								null, "test1"
 						),
 						"test", "test1"
 				},
@@ -59,20 +58,9 @@ public class TestProxyFactory extends Assert {
 				{
 						new MockObjectBuilder<MockIOCInterface>(
 								MockIOCInterface.class, MockIOCInterfaceImpl3.class,
-								CollectionUtils.<Interceptor, MockInterceptor>newList(new MockInterceptor("invoke:"))
+								new MockInterceptor("invoke:")
 						),
 						"invoke:test", "invoke:" + MockIOCInterfaceImpl3.MESSAGE
-				},
-				{
-						new MockObjectBuilder<MockIOCInterface>(
-								MockIOCInterface.class, MockIOCInterfaceImpl4.class,
-								CollectionUtils.<Interceptor, MockInterceptor>newList(
-										new MockInterceptor("advice1:"),
-										new MockInterceptor("advice2:")
-								),
-								new MockIOCInterfaceImpl3()
-						),
-						"advice2:advice1:test", "advice2:advice1:" + MockIOCInterfaceImpl3.MESSAGE
 				},
 		};
 	}
@@ -82,7 +70,7 @@ public class TestProxyFactory extends Assert {
 		return new Object[][] {
 				{
 						new MockObjectBuilder<MockIOCInterfaceImpl2>(
-								MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class ,
+								MockIOCInterfaceImpl2.class, MockIOCInterfaceImpl2.class,
 								null
 						),
 						"test", null
@@ -98,19 +86,9 @@ public class TestProxyFactory extends Assert {
 				{
 						new MockObjectBuilder<MockIOCInterfaceImpl3>(
 								MockIOCInterfaceImpl3.class, MockIOCInterfaceImpl3.class,
-								CollectionUtils.<Interceptor, MockInterceptor>newList(new MockInterceptor("invoke:"))
+								new MockInterceptor("invoke:")
 						),
 						"invoke:test", "invoke:" + MockIOCInterfaceImpl3.MESSAGE
-				},
-				{
-						new MockObjectBuilder<MockIOCInterfaceImpl3>(
-								MockIOCInterfaceImpl3.class, MockIOCInterfaceImpl3.class,
-								CollectionUtils.<Interceptor, MockInterceptor>newList(
-										new MockInterceptor("advice1:"),
-										new MockInterceptor("advice2:")
-								)
-						),
-						"advice2:advice1:test", "advice2:advice1:" + MockIOCInterfaceImpl3.MESSAGE
 				},
 		};
 	}

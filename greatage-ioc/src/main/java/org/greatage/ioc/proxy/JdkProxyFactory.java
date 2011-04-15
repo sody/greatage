@@ -38,7 +38,7 @@ public class JdkProxyFactory extends AbstractProxyFactory {
 
 		final Object proxyInstance = Proxy.newProxyInstance(classLoader,
 				new Class<?>[] { builder.getObjectClass() },
-				new JdkInvocationHandler<T>(builder));
+				new DefaultInvocationHandler<T>(builder));
 		return builder.getObjectClass().cast(proxyInstance);
 	}
 
