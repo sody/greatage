@@ -17,14 +17,10 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Order;
-import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * This class represents default implementation of service contribution definition that distributively configures services. It is
@@ -39,9 +35,6 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	private final Method configureMethod;
 
 	private final Marker<T> marker;
-
-	private final String orderId;
-	private final List<String> orderConstraints;
 
 	/**
 	 * Creates new instance of service contribution definition with defined module class and method used for service configuration.
@@ -62,34 +55,10 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 		final Contribute contribute = configureMethod.getAnnotation(Contribute.class);
 		//noinspection unchecked
 		marker = InternalUtils.generateMarker(contribute.value(), configureMethod.getAnnotations());
-
-		final Order order = configureMethod.getAnnotation(Order.class);
-		if (order != null) {
-			orderId = order.value();
-			orderConstraints = Arrays.asList(order.constraints());
-		}
-		else {
-			orderId = "";
-			orderConstraints = CollectionUtils.newList();
-		}
 	}
 
 	public Marker<T> getMarker() {
 		return marker;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getOrderId() {
-		return orderId;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public List<String> getOrderConstraints() {
-		return orderConstraints;
 	}
 
 	/**
@@ -101,8 +70,7 @@ public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 					Modifier.isStatic(configureMethod.getModifiers()) ? null : resources.getResource(moduleClass);
 			final Object[] parameters = InternalUtils.calculateParameters(resources, configureMethod);
 			configureMethod.invoke(moduleInstance, parameters);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't configure service (%s)", resources.getMarker()), e);
 		}
 	}

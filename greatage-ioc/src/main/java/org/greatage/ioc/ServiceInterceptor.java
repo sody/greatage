@@ -16,8 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.util.Ordered;
-
 /**
  * This class represents service interceptor definition that distributively configures service method advices. By default it is
  * configured by module intercept methods annotated with {@link org.greatage.ioc.annotations.Intercept} class.
@@ -28,7 +26,7 @@ import org.greatage.util.Ordered;
  * @see org.greatage.ioc.proxy.Interceptor
  * @since 1.1
  */
-public interface ServiceInterceptor<T> extends Ordered {
+public interface ServiceInterceptor<T> {
 
 	Marker<T> getMarker();
 

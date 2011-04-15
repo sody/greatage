@@ -59,4 +59,21 @@ public class InvocationImpl implements Invocation {
 	public Object proceed(final Object... parameters) throws Throwable {
 		return method.invoke(target, parameters);
 	}
+
+	@Override
+	public int hashCode() {
+		return method.hashCode();
+	}
+
+	@Override
+	public boolean equals(final Object object) {
+		if (object == this) {
+			return true;
+		}
+		if (!(object instanceof Invocation)) {
+			return false;
+		}
+		final Invocation invocation = (Invocation) object;
+		return method.equals(invocation.getMethod());
+	}
 }

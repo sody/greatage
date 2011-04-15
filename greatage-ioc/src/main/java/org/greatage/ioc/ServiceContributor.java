@@ -16,8 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.util.Ordered;
-
 /**
  * This class represents service contribution definition that distributively configures services. By default it is configured by
  * module contribute methods annotated with {@link org.greatage.ioc.annotations.Contribute} class.
@@ -26,7 +24,7 @@ import org.greatage.util.Ordered;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public interface ServiceContributor<T> extends Ordered {
+public interface ServiceContributor<T> {
 
 	Marker<T> getMarker();
 

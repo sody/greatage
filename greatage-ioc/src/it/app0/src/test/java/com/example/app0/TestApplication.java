@@ -16,9 +16,6 @@
 
 package com.example.app0;
 
-import com.example.app0.MockBindModule;
-import com.example.app0.MockConfigureModule;
-import com.example.app0.MockTalkService;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
@@ -54,16 +51,16 @@ public class TestApplication extends Assert {
 		assertEquals(service.say(), "hello");
 	}
 
-//	@Test
-//	public void testServiceInterceptor() {
-//		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockDecorateModule.class);
-//
-//		MockTalkService service = locator.getService("talkService1", MockTalkService.class);
-//		assertNotNull(service);
-//		assertEquals(service.say(), "hello");
-//
-//		service = locator.getService("talkService2", MockTalkService.class);
-//		assertNotNull(service);
-//		assertEquals(service.say(), "deprecated2:deprecated1:[hello]");
-//	}
+	@Test
+	public void testServiceInterceptor() {
+		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockInterceptModule.class);
+
+		MockTalkService service = locator.getService(Marker.get(MockTalkService.class, "talkService1"));
+		assertNotNull(service);
+		assertEquals(service.say(), "hello");
+
+		service = locator.getService(Marker.get(MockTalkService.class, "talkService2"));
+		assertNotNull(service);
+		assertEquals(service.say(), "deprecated2:deprecated1:[hello]");
+	}
 }

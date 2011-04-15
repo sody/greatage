@@ -18,14 +18,13 @@ package org.greatage.ioc.inject;
 
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceContributor;
-import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceDefinition;
+import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeManager;
-import org.greatage.util.OrderingUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -64,11 +63,8 @@ public class DefaultInjector implements Injector {
 
 		final DefaultServiceResources<T> resources = new DefaultServiceResources<T>(service.getMarker());
 		final Scope scope = scopeManager.getScope(service.getScope());
-		final List<ServiceContributor<T>> orderedContributors = OrderingUtils.order(contributors);
-		final List<ServiceInterceptor<T>> orderedInterceptors = OrderingUtils.order(interceptors);
 
-		final ServiceBuilder<T> builder =
-				new ServiceBuilder<T>(logger, service, orderedContributors, orderedInterceptors, resources, scope);
+		final ServiceBuilder<T> builder = new ServiceBuilder<T>(logger, service, contributors, interceptors, resources, scope);
 		return service.isEager() ? builder.build() : proxyFactory.createProxy(builder);
 	}
 

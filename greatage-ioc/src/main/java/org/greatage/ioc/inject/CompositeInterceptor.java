@@ -29,7 +29,7 @@ public class CompositeInterceptor implements Interceptor {
 			Invocation interceptedInvocation = invocation;
 			for (InterceptorHolder holder : interceptors) {
 				if (holder.supports(invocation)) {
-					interceptedInvocation = new InterceptedInvocation(invocation, holder.getInterceptor());
+					interceptedInvocation = new InterceptedInvocation(interceptedInvocation, holder.getInterceptor());
 				}
 			}
 			invocations.put(invocation, interceptedInvocation);

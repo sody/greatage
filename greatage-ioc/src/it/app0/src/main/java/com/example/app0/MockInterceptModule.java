@@ -16,9 +16,10 @@
 
 package com.example.app0;
 
+import org.greatage.ioc.ServiceAdvice;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Intercept;
-import org.greatage.ioc.annotations.Order;
+import org.greatage.ioc.annotations.Named;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
 
@@ -26,7 +27,7 @@ import org.greatage.ioc.proxy.Invocation;
  * @author Ivan Khalopik
  * @since 1.1
  */
-public class MockDecorateModule {
+public class MockInterceptModule {
 
 	@Build
 	public MockMessageService buildMessageService() {
@@ -34,41 +35,35 @@ public class MockDecorateModule {
 	}
 
 	@Build
+	@Named("talkService1")
 	public MockTalkService buildTalkService(final MockMessageService messageService) {
 		return new MockTalkServiceImpl(messageService);
 	}
 
 	@Build
+	@Named("talkService2")
 	public MockTalkService buildTalkService2(final MockMessageService messageService) {
 		final MockTalkServiceImpl service = new MockTalkServiceImpl(messageService);
 		return new MockTalkServiceDelegate(service, "[", "]");
 	}
 
 	@Intercept(MockTalkService.class)
-	@Order("first")
-	public Interceptor interceptTalkService() {
-		return new Interceptor() {
-			public boolean supports(final Invocation invocation) {
-				return invocation.getMethod().isAnnotationPresent(Deprecated.class);
-			}
-
+	@Named("talkService2")
+	public void interceptTalkService(final ServiceAdvice advice) {
+		advice.add(new Interceptor() {
 			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 				return "deprecated1:" + invocation.proceed(parameters);
 			}
-		};
+		}, "first");
 	}
 
 	@Intercept(MockTalkService.class)
-	@Order(value = "second", constraints = "after:first")
-	public Interceptor interceptTalkService2() {
-		return new Interceptor() {
-			public boolean supports(final Invocation invocation) {
-				return invocation.getMethod().isAnnotationPresent(Deprecated.class);
-			}
-
+	@Named("talkService2")
+	public void interceptTalkService2(final ServiceAdvice advice) {
+		advice.add(new Interceptor() {
 			public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
 				return "deprecated2:" + invocation.proceed(parameters);
 			}
-		};
+		}, "second", "after:first");
 	}
 }
