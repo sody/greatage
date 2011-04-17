@@ -16,11 +16,6 @@
 
 package com.example.tapestry0;
 
-import com.example.tapestry0.MockGreatAgeModule1;
-import com.example.tapestry0.MockGreatAgeModule2;
-import com.example.tapestry0.MockMessageService;
-import com.example.tapestry0.MockTapestryModule1;
-import com.example.tapestry0.MockTapestryModule2;
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.greatage.ioc.Marker;

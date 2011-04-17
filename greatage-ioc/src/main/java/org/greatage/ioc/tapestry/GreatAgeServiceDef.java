@@ -22,7 +22,9 @@ import org.apache.tapestry5.ioc.ServiceBuilderResources;
 import org.apache.tapestry5.ioc.def.ServiceDef;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
+import org.greatage.ioc.annotations.Named;
 
+import java.lang.annotation.Annotation;
 import java.util.Collections;
 import java.util.Set;
 
@@ -33,10 +35,26 @@ import java.util.Set;
 public class GreatAgeServiceDef implements ServiceDef {
 	private final ServiceLocator locator;
 	private final Marker<?> marker;
+	private final String serviceId;
 
 	GreatAgeServiceDef(final ServiceLocator locator, Marker<?> marker) {
 		this.locator = locator;
 		this.marker = marker;
+
+		serviceId = calculateServiceId(marker);
+	}
+
+	private String calculateServiceId(final Marker<?> marker) {
+		final StringBuilder builder = new StringBuilder(marker.getServiceClass().getName());
+		final Annotation annotation = marker.getAnnotation();
+		if (annotation != null) {
+			if (annotation instanceof Named) {
+				return ((Named) annotation).value();
+			}
+			builder.append("@");
+			builder.append(annotation.annotationType().getSimpleName());
+		}
+		return builder.toString();
 	}
 
 	public ObjectCreator createServiceCreator(final ServiceBuilderResources resources) {
@@ -48,8 +66,7 @@ public class GreatAgeServiceDef implements ServiceDef {
 	}
 
 	public String getServiceId() {
-		//TODO: make it work
-		return marker.toString();
+		return serviceId;
 	}
 
 	public Set<Class> getMarkers() {
