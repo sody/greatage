@@ -503,11 +503,11 @@
 		<profile>
 			<id>debug</id>
 			<properties>
+				<invoker.skip>true</invoker.skip>
 				<maven.test.skip>true</maven.test.skip>
 				<maven.javadoc.skip>true</maven.javadoc.skip>
 				<dependency.locations.enabled>false</dependency.locations.enabled>
 			</properties>
 		</profile>
-		<profile></profile>
 	</profiles>
 </project>
