@@ -2,10 +2,12 @@ package org.greatage.ioc.inject;
 
 import org.greatage.ioc.InvocationFilter;
 import org.greatage.ioc.ServiceAdviceOptions;
+import org.greatage.ioc.annotations.AnnotationFactory;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
 import org.greatage.util.Ordered;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +27,7 @@ public class ServiceAdviceOptionsImpl implements ServiceAdviceOptions, Ordered {
 	private final String orderId;
 	private final List<String> orderConstraints;
 
-	private InvocationFilter filter = DEFAULT_FILTER;
+	private Annotation annotation;
 
 	ServiceAdviceOptionsImpl(final Interceptor interceptor, final String orderId, final String... orderConstraints) {
 		this.interceptor = interceptor;
@@ -41,7 +43,17 @@ public class ServiceAdviceOptionsImpl implements ServiceAdviceOptions, Ordered {
 		return orderConstraints;
 	}
 
+	public ServiceAdviceOptions annotatedWith(final Annotation annotation) {
+		this.annotation = annotation;
+		return this;
+	}
+
+	public ServiceAdviceOptions annotatedWith(final Class<? extends Annotation> annotationClass) {
+		this.annotation = AnnotationFactory.create(annotationClass);
+		return this;
+	}
+
 	public InterceptorHolder build() {
-		return new InterceptorHolder(interceptor, filter);
+		return new InterceptorHolder(interceptor, annotation);
 	}
 }

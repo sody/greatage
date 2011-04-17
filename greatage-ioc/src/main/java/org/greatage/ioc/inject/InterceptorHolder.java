@@ -4,22 +4,27 @@ import org.greatage.ioc.InvocationFilter;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
 
+import java.lang.annotation.Annotation;
+
 /**
  * @author Ivan Khalopik
  * @since 8.0
  */
 public class InterceptorHolder implements InvocationFilter {
 	private final Interceptor interceptor;
-	private final InvocationFilter filter;
+	private final Annotation annotation;
 
-	InterceptorHolder(final Interceptor interceptor,
-					  final InvocationFilter filter) {
+	public InterceptorHolder(final Interceptor interceptor, final Annotation annotation) {
 		this.interceptor = interceptor;
-		this.filter = filter;
+		this.annotation = annotation;
 	}
 
 	public boolean supports(final Invocation invocation) {
-		return filter.supports(invocation);
+		if (annotation != null) {
+			final Annotation methodAnnotation = invocation.getMethod().getAnnotation(annotation.annotationType());
+			return annotation.equals(methodAnnotation);
+		}
+		return true;
 	}
 
 	public Interceptor getInterceptor() {
