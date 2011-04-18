@@ -26,6 +26,7 @@
 			<item name="Introduction" href="index.html"/>
 			<item ref="project-summary"/>
 			<item ref="dependencies"/>
+			<item name="Release Notes" ref="changes-report"/>
 		</menu>
 
 		<menu name="Project Reports">

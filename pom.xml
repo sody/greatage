@@ -41,6 +41,11 @@
 		</license>
 	</licenses>
 
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/sody/greatage/issues/</url>
+	</issueManagement>
+
 	<scm>
 		<url>https://github.com/sody/greatage</url>
 		<developerConnection>scm:git:ssh://git@github.com/sody/greatage.git</developerConnection>
@@ -163,6 +168,16 @@
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-changes-plugin</artifactId>
+					<version>2.4</version>
+					<configuration>
+						<xmlPath>src/site/changes.xml</xmlPath>
+						<announcementFile>CHANGES</announcementFile>
+						<outputDirectory>${project.build.outputDirectory}/META-INF</outputDirectory>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.1</version>
 					<configuration>
@@ -245,11 +260,10 @@
 							<report>license</report>
 							<report>project-team</report>
 							<report>scm</report>
-							<!--<report>issue-tracking</report>-->
+							<report>issue-tracking</report>
 							<!--<report>cim</report>-->
 							<report>plugin-management</report>
 							<report>dependency-management</report>
-							<report>dependency-convergence</report>
 						</reports>
 					</reportSet>
 				</reportSets>
@@ -304,6 +318,17 @@
 					<links>
 						<link>http://java.sun.com/j2se/1.5.0/docs/api/</link>
 					</links>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<xmlPath>src/site/changes.xml</xmlPath>
+					<issueLinkTemplatePerSystem>
+						<GitHub>%URL%/%ISSUE%</GitHub>
+					</issueLinkTemplatePerSystem>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -506,6 +531,7 @@
 				<invoker.skip>true</invoker.skip>
 				<maven.test.skip>true</maven.test.skip>
 				<maven.javadoc.skip>true</maven.javadoc.skip>
+				<generateReports>false</generateReports>
 				<dependency.locations.enabled>false</dependency.locations.enabled>
 			</properties>
 		</profile>

@@ -1,0 +1,16 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+	<body>
+		<release date="UNRELEASED" version="1.1">
+			<action dev="sody" type="add" issue="22" date="2011-04-13">
+				Make some refactoring in IoC annotations, analyze the most common use.
+			</action>
+		</release>
+		<release date="2010-03-04" version="1.0">
+			<action dev="sody" type="bug" issue="20" date="2011-04-13">
+				Make some refactoring in IoC annotations, analyze the most common use.
+			</action>
+		</release>
+	</body>
+</document>
