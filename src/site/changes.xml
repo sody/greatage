@@ -7,27 +7,27 @@
 
 	<body>
 		<release version="1.1" date="UNRELEASED">
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added Maven module.
 			</action>
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added shared checkstyle configuration.
 			</action>
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added Security module.
 			</action>
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added IoC module.
 			</action>
 		</release>
 		<release version="1.0" date="2010-03-04">
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added Tapestry module.
 			</action>
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added Domain module.
 			</action>
-			<action dev="sody">
+			<action dev="sody" type="add">
 				Added Common module.
 			</action>
 		</release>
