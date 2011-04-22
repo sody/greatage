@@ -1,0 +1,36 @@
+<document xmlns="http://maven.apache.org/changes/1.0.0"
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
+	<body>
+		<release version="1.1" date="UNRELEASED">
+			<action dev="sody" type="add">
+				Added composite key helper for using inside cache implementation. It combines multiple values
+				to form a single composite key.
+			</action>
+			<action dev="sody" type="add">
+				Added utility for toString method output generation that is useful for debugging.
+			</action>
+			<action dev="sody" type="add">
+				Added locker utilities that is used for locking builder objects.
+			</action>
+			<action dev="sody" type="add">
+				Added OrderingUtils that add ordering functionality of objects that realizes Ordered interface.
+			</action>
+			<action dev="sody" type="add">
+				Added javassist utilities that simplify work related to class enhancements.
+			</action>
+			<action dev="sody" type="add">
+				Added encode utilities that is used for data encoding using standard crypt algorithms.
+			</action>
+		</release>
+		<release version="1.0" date="2010-03-04">
+			<action dev="sody" type="add">
+				Added hibernate utilities and custom user types for enums.
+			</action>
+			<action dev="sody" type="add">
+				Added base utilities that simplifies work with core java. They includes CollectionUtils,
+				StringUtils, ReflectionUtils, I18nUtils.
+			</action>
+		</release>
+	</body>
+</document>

@@ -6,14 +6,29 @@
 	</properties>
 
 	<body>
-		<release date="UNRELEASED" version="1.1">
-			<action dev="sody" type="add" issue="22" date="2011-04-13">
-				Make some refactoring in IoC annotations, analyze the most common use.
+		<release version="1.1" date="UNRELEASED">
+			<action dev="sody">
+				Added Maven module.
+			</action>
+			<action dev="sody">
+				Added shared checkstyle configuration.
+			</action>
+			<action dev="sody">
+				Added Security module.
+			</action>
+			<action dev="sody">
+				Added IoC module.
 			</action>
 		</release>
-		<release date="2010-03-04" version="1.0">
-			<action dev="sody" type="fix" issue="20" date="2011-04-13">
-				Make some refactoring in IoC annotations, analyze the most common use.
+		<release version="1.0" date="2010-03-04">
+			<action dev="sody">
+				Added Tapestry module.
+			</action>
+			<action dev="sody">
+				Added Domain module.
+			</action>
+			<action dev="sody">
+				Added Common module.
 			</action>
 		</release>
 	</body>
