@@ -16,7 +16,9 @@
 
 package org.greatage.ioc.guice;
 
+import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.google.inject.name.Named;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
@@ -29,12 +31,12 @@ import java.lang.annotation.Annotation;
  * @since 1.1
  */
 public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
-	private final com.google.inject.Injector injector;
+	private final Injector injector;
 	private final Key<T> key;
 	private final Marker<T> marker;
 
 	@SuppressWarnings("unchecked")
-	GuiceServiceDefinition(final com.google.inject.Injector injector, final Key<T> key) {
+	GuiceServiceDefinition(final Injector injector, final Key<T> key) {
 		this.injector = injector;
 		this.key = key;
 		marker = obtainMarker(key);
@@ -49,7 +51,7 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 	}
 
 	public boolean isEager() {
-		return false;
+		return true;
 	}
 
 	public Class<? extends Annotation> getScope() {
@@ -64,6 +66,9 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		@SuppressWarnings("unchecked")
 		final Class<T> serviceClass = (Class<T>) key.getTypeLiteral().getType();
 		final Annotation annotation = key.getAnnotation();
+		if (annotation instanceof Named) {
+			return Marker.get(serviceClass, ((Named) annotation).value());
+		}
 		return Marker.get(serviceClass, annotation);
 	}
 }
