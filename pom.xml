@@ -169,7 +169,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-changes-plugin</artifactId>
-					<version>2.5-SNAPSHOT</version>
+					<version>2.4</version>
 					<configuration>
 						<xmlPath>src/site/changes.xml</xmlPath>
 						<announcementFile>CHANGES</announcementFile>
@@ -330,7 +330,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-changes-plugin</artifactId>
-				<version>2.5-SNAPSHOT</version>
+				<version>2.4</version>
 				<configuration>
 					<aggregated>true</aggregated>
 					<xmlPath>src/site/changes.xml</xmlPath>
