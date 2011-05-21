@@ -17,7 +17,7 @@
 package org.greatage.ioc.resource;
 
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.I18nUtils;
+import org.greatage.util.LocaleUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -35,7 +35,8 @@ public class TestMessagesSource extends Assert {
 
 	@BeforeClass
 	public void setupMessagesSource() {
-		final ClasspathResourceLocator resourceLocator = new ClasspathResourceLocator();
+		final ResourceProvider resourceProvider = new ClasspathResourceProvider();
+		final ResourceLocatorImpl resourceLocator = new ResourceLocatorImpl(CollectionUtils.newList(resourceProvider));
 		messagesSource = new MessagesSourceImpl(resourceLocator);
 	}
 
@@ -43,7 +44,7 @@ public class TestMessagesSource extends Assert {
 	public Object[][] getMessagesData() {
 		return new Object[][]{
 				{TestMessagesSource.class, null, CollectionUtils.newMap("test", "Test", "class", "Class")},
-				{TestMessagesSource.class, I18nUtils.ROOT_LOCALE, CollectionUtils.newMap("test", "Test", "class", "Class")},
+				{TestMessagesSource.class, LocaleUtils.ROOT_LOCALE, CollectionUtils.newMap("test", "Test", "class", "Class")},
 				{TestMessagesSource.class, Locale.ENGLISH, CollectionUtils.newMap("test", "Test", "class", "Class")},
 				{TestMessagesSource.class, new Locale("ru"), CollectionUtils.newMap("test", "Тест", "class", "Класс")},
 				{TestMessagesSource.class, new Locale("ru", "RU", "xxx"), CollectionUtils.newMap("test", "Тест", "class", "Класс")},

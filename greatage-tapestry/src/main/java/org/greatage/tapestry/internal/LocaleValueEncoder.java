@@ -17,7 +17,7 @@
 package org.greatage.tapestry.internal;
 
 import org.apache.tapestry5.ValueEncoder;
-import org.greatage.util.I18nUtils;
+import org.greatage.util.LocaleUtils;
 
 import java.util.Locale;
 
@@ -32,7 +32,7 @@ public class LocaleValueEncoder implements ValueEncoder<Locale> {
 	}
 
 	public Locale toValue(final String clientValue) {
-		return I18nUtils.getLocale(clientValue);
+		return LocaleUtils.parseLocale(clientValue);
 	}
 
 }

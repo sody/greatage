@@ -20,6 +20,7 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -145,5 +146,23 @@ public class TestOrderingUtils extends Assert {
 	@Test(dataProvider = "orderWrongData", expectedExceptions = IllegalArgumentException.class)
 	public void testOrderWrong(final List<Ordered> items) {
 		OrderingUtils.order(items);
+	}
+
+	public static class MockOrderedObject implements Ordered {
+		private final String orderId;
+		private final List<String> orderConstraints;
+
+		public MockOrderedObject(final String orderId, final String... orderConstraints) {
+			this.orderId = orderId;
+			this.orderConstraints = Arrays.asList(orderConstraints);
+		}
+
+		public String getOrderId() {
+			return orderId;
+		}
+
+		public List<String> getOrderConstraints() {
+			return orderConstraints;
+		}
 	}
 }

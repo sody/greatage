@@ -27,13 +27,13 @@ import java.util.Locale;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestI18nUtils extends Assert {
+public class TestLocaleUtils extends Assert {
 
 	@DataProvider
 	public Object[][] getLocaleData() {
 		return new Object[][]{
 				{null, null},
-				{"", I18nUtils.ROOT_LOCALE},
+				{"", LocaleUtils.ROOT_LOCALE},
 				{"en", Locale.ENGLISH},
 				{"en_US", Locale.US},
 				{"en_GB", Locale.UK},
@@ -44,27 +44,27 @@ public class TestI18nUtils extends Assert {
 
 	@Test(dataProvider = "getLocaleData")
 	public void testGetLocale(String locale, Locale expected) {
-		final Locale actual = I18nUtils.getLocale(locale);
+		final Locale actual = LocaleUtils.parseLocale(locale);
 		assertEquals(actual, expected);
 	}
 
 	@DataProvider
 	public Object[][] getCandidateLocalesData() {
 		return new Object[][]{
-				{null, CollectionUtils.newList(I18nUtils.ROOT_LOCALE)},
-				{I18nUtils.ROOT_LOCALE, CollectionUtils.newList(I18nUtils.ROOT_LOCALE)},
-				{Locale.ENGLISH, CollectionUtils.newList(Locale.ENGLISH, I18nUtils.ROOT_LOCALE)},
-				{Locale.US, CollectionUtils.newList(Locale.US, Locale.ENGLISH, I18nUtils.ROOT_LOCALE)},
+				{null, CollectionUtils.newList(LocaleUtils.ROOT_LOCALE)},
+				{LocaleUtils.ROOT_LOCALE, CollectionUtils.newList(LocaleUtils.ROOT_LOCALE)},
+				{Locale.ENGLISH, CollectionUtils.newList(Locale.ENGLISH, LocaleUtils.ROOT_LOCALE)},
+				{Locale.US, CollectionUtils.newList(Locale.US, Locale.ENGLISH, LocaleUtils.ROOT_LOCALE)},
 				{
 						new Locale("en", "US", "xxx"), CollectionUtils
-						.newList(new Locale("en", "US", "xxx"), Locale.US, Locale.ENGLISH, I18nUtils.ROOT_LOCALE)
+						.newList(new Locale("en", "US", "xxx"), Locale.US, Locale.ENGLISH, LocaleUtils.ROOT_LOCALE)
 				},
 		};
 	}
 
 	@Test(dataProvider = "getCandidateLocalesData")
 	public void testGetCandidateLocales(Locale locale, List<Locale> expected) {
-		final List<Locale> actual = I18nUtils.getCandidateLocales(locale);
+		final List<Locale> actual = LocaleUtils.getCandidateLocales(locale);
 		assertEquals(actual, expected);
 	}
 }

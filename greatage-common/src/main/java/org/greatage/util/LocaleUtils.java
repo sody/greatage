@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class I18nUtils {
+public abstract class LocaleUtils {
 	/**
 	 * Root locale fix fo java 1.5
 	 */
@@ -40,7 +40,7 @@ public abstract class I18nUtils {
 	 * @param value string value to convert
 	 * @return converted from string locale or null if can not be converted
 	 */
-	public static Locale getLocale(final String value) {
+	public static Locale parseLocale(final String value) {
 		if (value != null) {
 			final StringTokenizer tokens = new StringTokenizer(value, LOCALE_SEPARATOR);
 			final String language = tokens.hasMoreTokens() ? tokens.nextToken() : "";

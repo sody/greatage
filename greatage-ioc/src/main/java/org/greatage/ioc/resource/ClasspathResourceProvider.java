@@ -14,29 +14,21 @@
  * limitations under the License.
  */
 
-package org.greatage.util;
-
-import java.util.Arrays;
-import java.util.List;
+package org.greatage.ioc.resource;
 
 /**
+ * This class represents {@link ResourceProvider} implementation that works with classpath resources.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class MockOrderedObject implements Ordered {
-	private final String orderId;
-	private final List<String> orderConstraints;
+public class ClasspathResourceProvider implements ResourceProvider {
+	public static final String ID = "classpath";
 
-	public MockOrderedObject(final String orderId, final String... orderConstraints) {
-		this.orderId = orderId;
-		this.orderConstraints = Arrays.asList(orderConstraints);
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public List<String> getOrderConstraints() {
-		return orderConstraints;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource getResource(final String path) {
+		return ClasspathResource.root().createResource(path);
 	}
 }

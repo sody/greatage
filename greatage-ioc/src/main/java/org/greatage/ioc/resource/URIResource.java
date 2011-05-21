@@ -16,50 +16,59 @@
 
 package org.greatage.ioc.resource;
 
+import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
 
 /**
- * This class represents {@link Resource} implementation that is based on application classpath.
+ * This class represents {@link Resource} implementation that is based on URI.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ClasspathResource extends AbstractResource {
-	private static final ClasspathResource ROOT = new ClasspathResource(null, "", null, null);
+public class URIResource extends AbstractResource {
+	private static final URIResource FILE_ROOT = new URIResource(null, "file://", null, null);
+	private static final URIResource HTTP_ROOT = new URIResource(null, "http://", null, null);
 
-	public static ClasspathResource root() {
-		return ROOT;
+	public static URIResource file() {
+		return FILE_ROOT;
+	}
+
+	public static URIResource http() {
+		return HTTP_ROOT;
 	}
 
 	/**
-	 * Creates new instance of classpath resource with defined location, parent resource, name and locale.
+	 * Creates new instance of URI resource with defined location, parent resource, name and locale.
 	 *
 	 * @param location resource location, can be <code>null</code>
 	 * @param name	 resource name, not <code>null</code>
 	 * @param type,	can be <code>null</code>
 	 * @param locale   resource locale, can be <code>null</code>
 	 */
-	public ClasspathResource(final String location, final String name, final String type, final Locale locale) {
+	public URIResource(final String location, final String name, final String type, final Locale locale) {
 		super(location, name, type, locale);
 	}
 
 	/**
-	 * {@inheritDoc} Obtains URL using class loader.
+	 * {@inheritDoc}
 	 */
 	@Override
 	protected URL toURL() {
-		final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		return classLoader != null ?
-				classLoader.getResource(getPath()) :
-				ClassLoader.getSystemResource(getPath());
+		try {
+			final URI uri = new URI(getPath());
+			return uri.toURL();
+		} catch (Exception ex) {
+			//todo: log warning
+		}
+		return null;
 	}
 
 	/**
-	 * {@inheritDoc} Always creates classpath resources.
+	 * {@inheritDoc}
 	 */
 	@Override
-	protected Resource createResource(final String path, final String name, final String type, final Locale locale) {
-		return new ClasspathResource(path, name, type, locale);
+	protected Resource createResource(final String location, final String name, final String type, final Locale locale) {
+		return new URIResource(location, name, type, locale);
 	}
 }

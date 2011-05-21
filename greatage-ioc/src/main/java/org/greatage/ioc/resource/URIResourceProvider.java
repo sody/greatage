@@ -17,17 +17,18 @@
 package org.greatage.ioc.resource;
 
 /**
- * This class represents {@link ResourceLocator} implementation that works with classpath resources.
+ * This class represents {@link ResourceProvider} implementation that works with URI resources.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
-public class ClasspathResourceLocator extends AbstractResourceLocator {
+public class URIResourceProvider implements ResourceProvider {
+	public static final String ID = "uri";
 
 	/**
-	 * Creates new instance of classpath resource locator with defined root classpath resource.
+	 * {@inheritDoc}
 	 */
-	public ClasspathResourceLocator() {
-		super(new ClasspathResource(Thread.currentThread().getContextClassLoader(), null, "", null));
+	public Resource getResource(final String path) {
+		return URIResource.file().createResource(path);
 	}
 }
