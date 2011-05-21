@@ -17,17 +17,19 @@
 package org.greatage.ioc.resource;
 
 /**
- * This class represents {@link ResourceLocator} implementation that works with classpath resources.
+ * This interface provides configuration point for {@link ResourceLocator} that provides resource search functionality
+ * in specific application scope.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
-public class ClasspathResourceLocator extends AbstractResourceLocator {
+public interface ResourceProvider {
 
 	/**
-	 * Creates new instance of classpath resource locator with defined root classpath resource.
+	 * Obtains a resource by its path.
+	 *
+	 * @param path resource path, not <code>null</code>
+	 * @return resource instance or <code>null</code> if not found
 	 */
-	public ClasspathResourceLocator() {
-		super(new ClasspathResource(Thread.currentThread().getContextClassLoader(), null, "", null));
-	}
+	Resource getResource(String path);
 }

@@ -24,58 +24,92 @@ import java.util.Locale;
  * This interface represents application hierarchical localized resource that can be represented as input stream.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface Resource {
 
 	/**
+	 * Gets absolute resource path inside the application resource system. It is calculated as
+	 * <code>location/name_locale.type</code>.
+	 *
+	 * @return absolute resource path, not <code>null</code>
+	 */
+	String getPath();
+
+	/**
+	 * Gets absolute resource location inside the application resource system.
+	 *
+	 * @return absolute resource location, can be <code>null</code>
+	 */
+	String getLocation();
+
+	/**
 	 * Gets resource name.
 	 *
-	 * @return resource name
+	 * @return resource name, not <code>null</code>
 	 */
 	String getName();
 
 	/**
-	 * Gets parent resource.
+	 * Gets resource type.
 	 *
-	 * @return instance of parent resource or null if it is in the root
+	 * @return resource type, can be <code>null</code>
 	 */
-	Resource getParent();
+	String getType();
 
 	/**
 	 * Gets resource locale for localized resources.
 	 *
-	 * @return resource locale or null for non localized resources
+	 * @return resource locale or <code>null</code> for non localized resources
 	 */
 	Locale getLocale();
 
 	/**
 	 * Checks if this resource exists.
 	 *
-	 * @return true if resource exists, false otherwise
+	 * @return <code>true</code> if resource exists, <code>false</code> otherwise
 	 */
 	boolean exists();
 
 	/**
-	 * Gets a child resource of this resource by specified relative path.
+	 * Gets parent resource.
 	 *
-	 * @param path relative path to child resource
-	 * @return child resource instance, not null
+	 * @return instance of parent resource or <code>null</code> if it is in the root
 	 */
-	Resource getChild(String path);
+	Resource getParent();
 
 	/**
-	 * Gets the same resource in specified locale.
+	 * Gets a child resource of this resource by specified relative path.
 	 *
-	 * @param locale resource locale
-	 * @return the same resource in specified locale or null if not exists
+	 * @param relativePath relative path to child resource, not <code>null</code>
+	 * @return child resource instance, not <code>null</code>
+	 */
+	Resource getChild(String relativePath);
+
+	/**
+	 * Gets the same resource in specified locale. If specified locale is <code>null</code> it will return non
+	 * localized resource. If resource in specified locale doesn't exist it will try to find resource in other
+	 * candidate locales, e.g. if resource doesn't exist in <code>en_US</code> locale it will try to find it with
+	 * <code>en</code> locale and then without locale.
+	 *
+	 * @param locale resource locale, can be <code>null</code>
+	 * @return the same resource in specified locale or <code>null</code> if not exists
 	 */
 	Resource inLocale(Locale locale);
 
 	/**
-	 * Opens resource as an input stream.
+	 * Gets the same resource with specified type. If specified type is <code>null</code> it will return resource
+	 * without type.
 	 *
-	 * @return resource input stream representation or null if not exists
+	 * @param type resource type, can be <code>null</code>
+	 * @return the same resource with specified type, <code>null</code>
+	 */
+	Resource withType(String type);
+
+	/**
+	 * Tries to open resource as an input stream and throw {@link IOException} if error occurs during resource opening.
+	 *
+	 * @return resource input stream representation or <code>null</code> if resource doesn't exist
 	 * @throws IOException if error occurs during resource opening
 	 */
 	InputStream open() throws IOException;

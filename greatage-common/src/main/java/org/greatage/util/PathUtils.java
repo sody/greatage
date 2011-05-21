@@ -17,6 +17,7 @@
 package org.greatage.util;
 
 import java.io.File;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,13 +27,47 @@ import java.util.regex.Pattern;
  * @since 1.0
  */
 public abstract class PathUtils {
-	private static final Pattern ANT_TEXT_PATTERN = Pattern.compile("\\?|\\*");
+	public static final String PATH_SEPARATOR = "/";
+	public static final String TYPE_SEPARATOR = ".";
+	public static final String LOCALE_SEPARATOR = "_";
 
-	private static final String PATH_SEPARATOR = "/";
+	private static final Pattern ANT_TEXT_PATTERN = Pattern.compile("\\?|\\*");
 
 	private static final String ANT_ANY_PATH_MARKER = "**";
 	private static final String ANT_ANY_STRING_MARKER = "*";
 	private static final String ANT_ANY_CHARACTER_MARKER = "?";
+
+	/**
+	 * Calculates resource path from given absolute location, resource name, type and locale using formula
+	 * <code>location/name_locale.type</code>.
+	 *
+	 * @param location absolute resource location, can be <code>null</code>
+	 * @param name	 resource name, not <code>null</code>
+	 * @param type	 resource type, can be <code>null</code>
+	 * @param locale   resource locale, can be <code>null</code>
+	 * @return calculated full resource path, not <code>null</code>
+	 */
+	public static String calculatePath(final String location, final String name, final String type, final Locale locale) {
+		final StringBuilder builder = new StringBuilder();
+
+		if (!StringUtils.isEmpty(location)) {
+			builder.append(location);
+			if (!location.endsWith(PATH_SEPARATOR)) {
+				builder.append(PATH_SEPARATOR);
+			}
+		}
+
+		builder.append(name);
+
+		if (locale != null && !StringUtils.isEmpty(locale.toString())) {
+			builder.append(LOCALE_SEPARATOR).append(locale);
+		}
+
+		if (!StringUtils.isEmpty(type)) {
+			builder.append(TYPE_SEPARATOR).append(type);
+		}
+		return builder.toString();
+	}
 
 	/**
 	 * Looks up for all resources under given path which must be matched against include and exclude patterns. If there

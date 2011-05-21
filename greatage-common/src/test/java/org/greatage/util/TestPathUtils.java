@@ -130,10 +130,10 @@ public class TestPathUtils extends Assert {
 				{"some/**/some/*.*", "some/folder/some/file.ext", true},
 				{"some/**/some/*.*", "some/folder/some/file", false},
 				{"some/**/some/*.*", "/some/folder/some/file.ext", false},
-				{"some/**/some/*.*", "/some/folder/other/folder/some/file.ext", true},
-				{"some/**/some/*.*", "/some/folder/other/folder/some/file", false},
-				{"some/**/some/*.*", "/some/folder/some/other/folder/some/file.ext", true},
-				{"some/**/some/*.*", "/some/folder/some/other/folder/some/file", false},
+				{"some/**/some/*.*", "some/folder/other/folder/some/file.ext", true},
+				{"some/**/some/*.*", "some/folder/other/folder/some/file", false},
+				{"some/**/some/*.*", "some/folder/some/other/folder/some/file.ext", true},
+				{"some/**/some/*.*", "some/folder/some/other/folder/some/file", false},
 		};
 	}
 

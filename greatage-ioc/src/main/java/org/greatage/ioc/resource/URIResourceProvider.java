@@ -14,25 +14,21 @@
  * limitations under the License.
  */
 
-package org.greatage.tapestry.internal;
-
-import org.apache.tapestry5.ValueEncoder;
-import org.greatage.util.LocaleUtils;
-
-import java.util.Locale;
+package org.greatage.ioc.resource;
 
 /**
+ * This class represents {@link ResourceProvider} implementation that works with URI resources.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class LocaleValueEncoder implements ValueEncoder<Locale> {
+public class URIResourceProvider implements ResourceProvider {
+	public static final String ID = "uri";
 
-	public String toClient(final Locale value) {
-		return value != null ? value.toString() : null;
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource getResource(final String path) {
+		return URIResource.file().createResource(path);
 	}
-
-	public Locale toValue(final String clientValue) {
-		return LocaleUtils.parseLocale(clientValue);
-	}
-
 }

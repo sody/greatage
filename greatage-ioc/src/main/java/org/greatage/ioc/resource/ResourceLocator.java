@@ -16,19 +16,43 @@
 
 package org.greatage.ioc.resource;
 
+import java.util.Set;
+
 /**
- * This interface represents utility producing resources by path.
+ * This interface represents service for working with application hierarchical resources. It also provides
+ * functionality of resource filtering.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ResourceLocator {
 
 	/**
-	 * Obtains a resource by its path.
+	 * Searches application resource by its location.
 	 *
-	 * @param path resource path
-	 * @return resource instance
+	 * @param path resource location, not <code>null</code>
+	 * @return resource instance or <code>null</code> if not found
 	 */
 	Resource getResource(String path);
+
+	/**
+	 * Searches for application resources in defined location with specified include filter. If include patterns is
+	 * empty, resources will not be filtered.
+	 *
+	 * @param path	 resource location, not <code>null</code>
+	 * @param includes include patterns
+	 * @return set of found resource or empty set if not found
+	 */
+	Set<Resource> findResources(String path, String... includes);
+
+	/**
+	 * Searches for application resources in defined location with specified include and exclude filters. If include
+	 * or exclude patterns is empty they will be ignored.
+	 *
+	 * @param path	 resource location, not <code>null</code>
+	 * @param includes include patterns, can be <code>null</code>
+	 * @param excludes exclude patterns, can be <code>null</code>
+	 * @return set of found resource or empty set if not found
+	 */
+	Set<Resource> findResources(String path, Set<String> includes, Set<String> excludes);
 }
