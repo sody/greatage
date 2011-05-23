@@ -17,14 +17,13 @@
 package org.greatage.ioc.resource;
 
 import org.greatage.util.CollectionUtils;
-import org.greatage.util.PathUtils;
 
 import java.util.List;
 import java.util.Set;
 
 /**
- * This class represents abstract {@link ResourceLocator} implementation that uses configured root resource for
- * retrieving other resources.
+ * This class represents abstract {@link ResourceLocator} implementation that uses configured root resource for retrieving other
+ * resources.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -34,8 +33,8 @@ public class ResourceLocatorImpl implements ResourceLocator {
 	private final List<ResourceProvider> resourceProviders;
 
 	/**
-	 * Creates new instance of resource locator with defined resource providers ordered configuration that will be
-	 * used for retrieving resources.
+	 * Creates new instance of resource locator with defined resource providers ordered configuration that will be used for
+	 * retrieving resources.
 	 *
 	 * @param resourceProviders ordered configuration of resourcer providers
 	 */
@@ -47,6 +46,8 @@ public class ResourceLocatorImpl implements ResourceLocator {
 	 * {@inheritDoc}
 	 */
 	public Resource getResource(final String path) {
+		assert path != null : "Resource path cannot be null";
+
 		for (ResourceProvider provider : resourceProviders) {
 			final Resource resource = provider.getResource(path);
 			if (resource != null) {
@@ -60,29 +61,15 @@ public class ResourceLocatorImpl implements ResourceLocator {
 	 * {@inheritDoc}
 	 */
 	public Set<Resource> findResources(final String path, final String... includes) {
-		final Set<String> includeSet = CollectionUtils.newSet(includes);
-		return findResources(path, includeSet, null);
+		final Resource baseResource = getResource(path);
+		return baseResource != null ? baseResource.children(includes) : CollectionUtils.<Resource>newSet();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public Set<Resource> findResources(final String path, final Set<String> includes, final Set<String> excludes) {
-		final Set<Resource> resources = CollectionUtils.newSet();
-
-		final Resource parent = getResource(path);
-		if (parent != null && parent.exists() && parent instanceof AbstractResource) {
-			final String file = ((AbstractResource) parent).toURL().getFile();
-			if (file != null) {
-				final Set<String> resourceNames = PathUtils.findResources(file, includes, excludes);
-				for (String resourceName : resourceNames) {
-					final Resource resource = parent.getChild(resourceName);
-					if (resource != null && resource.exists()) {
-						resources.add(resource);
-					}
-				}
-			}
-		}
-		return resources;
+		final Resource baseResource = getResource(path);
+		return baseResource != null ? baseResource.children(includes, excludes) : CollectionUtils.<Resource>newSet();
 	}
 }

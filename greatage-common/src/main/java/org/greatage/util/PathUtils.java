@@ -23,6 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * This interface represents utility methods for working with resource paths.
+ *
  * @author Ivan Khalopik
  * @since 1.0
  */
@@ -309,5 +311,4 @@ public abstract class PathUtils {
 		}
 		return resources;
 	}
-
 }

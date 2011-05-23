@@ -16,6 +16,7 @@
 
 package org.greatage.ioc.resource;
 
+import org.greatage.util.CollectionUtils;
 import org.greatage.util.LocaleUtils;
 import org.greatage.util.PathUtils;
 import org.greatage.util.StringUtils;
@@ -26,13 +27,14 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * This class represents abstract {@link Resource} implementation that implements all base resource logic. All
  * {@link Resource} implementation should be subclasses from it to be completely processed with {@link ResourceLocator}
- * servide.
+ * service.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -110,24 +112,6 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Resource getParent() {
-		return location != null ? createResource(location) : null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Resource getChild(final String relativePath) {
-		if (StringUtils.isEmpty(relativePath)) {
-			return this;
-		}
-		final String suggestedPath = path + PathUtils.PATH_SEPARATOR + relativePath;
-		return createResource(suggestedPath);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public Resource inLocale(final Locale newLocale) {
 		final List<Locale> locales = LocaleUtils.getCandidateLocales(newLocale);
 		for (Locale candidate : locales) {
@@ -150,6 +134,53 @@ public abstract class AbstractResource implements Resource {
 			return this;
 		}
 		return createResource(location, name, newType, locale);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource parent() {
+		return location != null ? createResource(location) : null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource child(final String relativePath) {
+		if (StringUtils.isEmpty(relativePath)) {
+			return this;
+		}
+		final String suggestedPath = path + PathUtils.PATH_SEPARATOR + relativePath;
+		return createResource(suggestedPath);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<Resource> children(final String... includes) {
+		final Set<String> includeSet = CollectionUtils.newSet(includes);
+		return children(includeSet, null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<Resource> children(final Set<String> includes, final Set<String> excludes) {
+		final Set<Resource> children = CollectionUtils.newSet();
+
+		if (exists()) {
+			final String file = toURL().getFile();
+			if (file != null) {
+				final Set<String> resourceNames = PathUtils.findResources(file, includes, excludes);
+				for (String resourceName : resourceNames) {
+					final Resource resource = child(resourceName);
+					if (resource != null && resource.exists()) {
+						children.add(resource);
+					}
+				}
+			}
+		}
+		return children;
 	}
 
 	/**

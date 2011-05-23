@@ -19,6 +19,7 @@ package org.greatage.ioc.resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * This interface represents application hierarchical localized resource that can be represented as input stream.
@@ -72,21 +73,6 @@ public interface Resource {
 	boolean exists();
 
 	/**
-	 * Gets parent resource.
-	 *
-	 * @return instance of parent resource or <code>null</code> if it is in the root
-	 */
-	Resource getParent();
-
-	/**
-	 * Gets a child resource of this resource by specified relative path.
-	 *
-	 * @param relativePath relative path to child resource, not <code>null</code>
-	 * @return child resource instance, not <code>null</code>
-	 */
-	Resource getChild(String relativePath);
-
-	/**
 	 * Gets the same resource in specified locale. If specified locale is <code>null</code> it will return non
 	 * localized resource. If resource in specified locale doesn't exist it will try to find resource in other
 	 * candidate locales, e.g. if resource doesn't exist in <code>en_US</code> locale it will try to find it with
@@ -105,6 +91,39 @@ public interface Resource {
 	 * @return the same resource with specified type, <code>null</code>
 	 */
 	Resource withType(String type);
+
+	/**
+	 * Gets parent resource.
+	 *
+	 * @return instance of parent resource or <code>null</code> if it is in the root
+	 */
+	Resource parent();
+
+	/**
+	 * Gets a child resource of this resource by specified relative path.
+	 *
+	 * @param relativePath relative path to child resource, not <code>null</code>
+	 * @return child resource instance, not <code>null</code>
+	 */
+	Resource child(String relativePath);
+
+	/**
+	 * Searches for child resources with specified include filter. If include patterns is empty, resources will not be filtered.
+	 *
+	 * @param includes include patterns
+	 * @return set of found resource or empty set if not found
+	 */
+	Set<Resource> children(String... includes);
+
+	/**
+	 * Searches for child resources with specified include and exclude filters. If include or exclude patterns is empty they
+	 * will be ignored.
+	 *
+	 * @param includes include patterns, can be <code>null</code>
+	 * @param excludes exclude patterns, can be <code>null</code>
+	 * @return set of found resource or empty set if not found
+	 */
+	Set<Resource> children(Set<String> includes, Set<String> excludes);
 
 	/**
 	 * Tries to open resource as an input stream and throw {@link IOException} if error occurs during resource opening.
