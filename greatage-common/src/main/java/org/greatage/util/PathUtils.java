@@ -16,9 +16,7 @@
 
 package org.greatage.util;
 
-import java.io.File;
 import java.util.Locale;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,9 +42,9 @@ public abstract class PathUtils {
 	 * <code>location/name_locale.type</code>.
 	 *
 	 * @param location absolute resource location, can be <code>null</code>
-	 * @param name	 resource name, not <code>null</code>
-	 * @param type	 resource type, can be <code>null</code>
-	 * @param locale   resource locale, can be <code>null</code>
+	 * @param name resource name, not <code>null</code>
+	 * @param type resource type, can be <code>null</code>
+	 * @param locale resource locale, can be <code>null</code>
 	 * @return calculated full resource path, not <code>null</code>
 	 */
 	public static String calculatePath(final String location, final String name, final String type, final Locale locale) {
@@ -72,29 +70,7 @@ public abstract class PathUtils {
 	}
 
 	/**
-	 * Looks up for all resources under given path which must be matched against include and exclude patterns. If there
-	 * are no patterns specified, all resources found under that path will be returned.
-	 *
-	 * @param path	 path where to search child resources
-	 * @param includes set of include patterns, can be <code>null</code>
-	 * @param excludes set of exclude patterns, can be <code>null</code>
-	 * @return a set of all found resources which match include and exclude patterns or empty set if nothing found
-	 */
-	public static Set<String> findResources(final String path, final Set<String> includes, final Set<String> excludes) {
-		final String normalizedPath = normalizePath(path);
-		final File baseDir = new File(normalizedPath);
-		if (baseDir.exists() && baseDir.isDirectory()) {
-			final Set<String> realIncludes = includes != null ? includes : CollectionUtils.<String>newSet();
-			final Set<String> realExcludes = excludes != null ? excludes : CollectionUtils.<String>newSet();
-
-			return findResourcesInDirectory(baseDir, "", realIncludes, realExcludes);
-		}
-		return CollectionUtils.newSet();
-	}
-
-	/**
-	 * Normalizes given path by replacing file-dependent path separators like <code>'\'</code> with standard
-	 * <code>'/'</code>.
+	 * Normalizes given path by replacing file-dependent path separators like <code>'\'</code> with standard <code>'/'</code>.
 	 *
 	 * @param path path which must be normalized, not <code>null</code>
 	 * @return normalized path, not <code>null</code>
@@ -104,37 +80,10 @@ public abstract class PathUtils {
 	}
 
 	/**
-	 * Tests whether a given path matches include and exclude patterns. Include and exclude patterns may contain some
-	 * special characters:
-	 * <br/> '**' means any path
-	 * <br/> '*' means zero or more characters
-	 * <br/> '?' means one and only one character
+	 * Tests whether a given path matches against ant-style pattern. The pattern may contain some special characters: <br/> '**'
+	 * means any path <br/> '*' means zero or more characters <br/> '?' means one and only one character.
 	 *
-	 * @param path	 path which must be matched against the patterns, not <code>null</code>
-	 * @param includes set of include patterns, not <code>null</code>
-	 * @param excludes set of exclude patterns, not <code>null</code>
-	 * @return <code>true</code> if path matches against include and exclude patterns, <code>false</code> otherwise
-	 */
-	public static boolean matchAntPath(final String path, final Set<String> includes, final Set<String> excludes) {
-		return (includes.isEmpty() || matchAntPath(path, includes)) && !matchAntPath(path, excludes);
-	}
-
-	private static boolean matchAntPath(final String path, final Set<String> includes) {
-		for (String include : includes) {
-			if (PathUtils.matchAntPath(path, include)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Tests whether a given path matches against ant-style pattern. The pattern may contain some special characters:
-	 * <br/> '**' means any path
-	 * <br/> '*' means zero or more characters
-	 * <br/> '?' means one and only one character
-	 *
-	 * @param path	path which must be matched against the pattern, not <code>null</code>
+	 * @param path path which must be matched against the pattern, not <code>null</code>
 	 * @param pattern ant-style pattern to match against, not <code>null</code>
 	 * @return <code>true</code> if path matches against the pattern, <code>false</code> otherwise
 	 */
@@ -244,11 +193,10 @@ public abstract class PathUtils {
 	}
 
 	/**
-	 * Tests whether a given string matches against a pattern. The pattern may contain two special characters:
-	 * <br/> '*' means zero or more characters
-	 * <br/> '?' means one and only one character
+	 * Tests whether a given string matches against a pattern. The pattern may contain two special characters: <br/> '*' means zero
+	 * or more characters <br/> '?' means one and only one character
 	 *
-	 * @param text	string which must be matched against the pattern, not <code>null</code>
+	 * @param text string which must be matched against the pattern, not <code>null</code>
 	 * @param pattern pattern to match against, not <code>null</code>
 	 * @return <code>true</code> if the string matches against the pattern, <code>false</code> otherwise
 	 */
@@ -273,9 +221,9 @@ public abstract class PathUtils {
 	/**
 	 * Quotes text in regexp pattern from specified start to end positions.
 	 *
-	 * @param text  text to be quoted
+	 * @param text text to be quoted
 	 * @param start start position
-	 * @param end   end position
+	 * @param end end position
 	 * @return regexp pattern with quoted text or empty string
 	 */
 	private static String quote(final String text, final int start, final int end) {
@@ -283,32 +231,5 @@ public abstract class PathUtils {
 			return "";
 		}
 		return Pattern.quote(text.substring(start, end));
-	}
-
-	/**
-	 * Looks up for all resources under given directory which must be matched against include and exclude patterns.
-	 * Specified relative path will be added to resulting resource names.
-	 *
-	 * @param directory	directory where to search child resources, should exist and be directory, not <code>null</code>
-	 * @param relativePath relative path that will be added to resulting resource names, not <code>null</code>
-	 * @param includes	 set of include patterns, not <code>null</code>
-	 * @param excludes	 set of exclude patterns, not <code>null</code>
-	 * @return a set of all found resources which match include and exclude patterns or empty set if nothing found
-	 */
-	private static Set<String> findResourcesInDirectory(final File directory,
-														final String relativePath,
-														final Set<String> includes,
-														final Set<String> excludes) {
-		final Set<String> resources = CollectionUtils.newSet();
-		for (String fileName : directory.list()) {
-			final File child = new File(directory, fileName);
-			final String filePath = relativePath + fileName;
-			if (child.isDirectory()) {
-				resources.addAll(findResourcesInDirectory(child, filePath + PATH_SEPARATOR, includes, excludes));
-			} else if (matchAntPath(filePath, includes, excludes)) {
-				resources.add(filePath);
-			}
-		}
-		return resources;
 	}
 }
