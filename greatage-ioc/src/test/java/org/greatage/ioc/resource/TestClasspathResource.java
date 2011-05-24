@@ -6,6 +6,7 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * @author Ivan Khalopik
@@ -38,9 +39,9 @@ public class TestClasspathResource extends Assert {
 	@DataProvider
 	public Object[][] childWrongData() {
 		return new Object[][] {
-				{ "", "/META-INF"},
-				{ "", null},
-				{ "/", "/"},
+				{ "", "/META-INF" },
+				{ "", null },
+				{ "/", "/" },
 		};
 	}
 
@@ -115,5 +116,23 @@ public class TestClasspathResource extends Assert {
 		assertEquals(resource.getName(), expectedName);
 		assertEquals(resource.getType(), expectedType);
 		assertEquals(resource.getLocale(), expectedLocale);
+	}
+
+	@Test
+	public void testChildren() {
+		// some resources were not resolved
+		Resource resource = ClasspathResource.get("META-INF/services");
+		Set<Resource> children = resource.children("com.example.*");
+		assertEquals(children.size(), 5);
+
+		// the best situation, all resources were resolved
+		resource = ClasspathResource.get("META-INF/");
+		children = resource.children("services/com.example.*");
+		assertEquals(children.size(), 5);
+
+		resource = ClasspathResource.root();
+		children = resource.children("META-INF/services/com.example.*");
+		//todo: shit happens, maybe to resolve resources by different class loaders?
+		assertEquals(children.size(), 2);
 	}
 }
