@@ -29,6 +29,6 @@ public class ClasspathResourceProvider implements ResourceProvider {
 	 * {@inheritDoc}
 	 */
 	public Resource getResource(final String path) {
-		return ClasspathResource.root().createResource(path);
+		return ClasspathResource.get(path);
 	}
 }

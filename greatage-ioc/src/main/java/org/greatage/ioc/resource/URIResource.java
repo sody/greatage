@@ -27,26 +27,40 @@ import java.util.Locale;
  * @since 1.0
  */
 public class URIResource extends AbstractResource {
-	private static final URIResource FILE_ROOT = new URIResource(null, "file://", null, null);
-	private static final URIResource HTTP_ROOT = new URIResource(null, "http://", null, null);
+	public static final String ID = "uri";
 
-	public static URIResource file() {
-		return FILE_ROOT;
+	private static final URIResource ROOT = new URIResource(null, "uri://", null, null);
+	private static final String FILE_URI = "file://";
+
+	/**
+	 * Creates new resource by specified absolute URI. This is helper method for simplified URI resource creation.
+	 *
+	 * @param uri absolute uri, not <code>null</code>
+	 * @return new instance of URI resource, not <code>null</code>
+	 */
+	public static Resource get(final String uri) {
+		return ROOT.create(uri);
 	}
 
-	public static URIResource http() {
-		return HTTP_ROOT;
+	/**
+	 * Obtains filesystem resource. This is helper method for simplified filesystem resource resolution.
+	 *
+	 * @param file absolute file path, not <code>null</code>
+	 * @return new instance of filesystem resource, not <code>null</code>
+	 */
+	public static Resource file(final String file) {
+		return get(FILE_URI + file);
 	}
 
 	/**
 	 * Creates new instance of URI resource with defined location, parent resource, name and locale.
 	 *
 	 * @param location resource location, can be <code>null</code>
-	 * @param name	 resource name, not <code>null</code>
-	 * @param type,	can be <code>null</code>
-	 * @param locale   resource locale, can be <code>null</code>
+	 * @param name resource name, not <code>null</code>
+	 * @param type resource type, can be <code>null</code>
+	 * @param locale resource locale, can be <code>null</code>
 	 */
-	public URIResource(final String location, final String name, final String type, final Locale locale) {
+	private URIResource(final String location, final String name, final String type, final Locale locale) {
 		super(location, name, type, locale);
 	}
 

@@ -29,6 +29,6 @@ public class URIResourceProvider implements ResourceProvider {
 	 * {@inheritDoc}
 	 */
 	public Resource getResource(final String path) {
-		return URIResource.file().createResource(path);
+		return URIResource.get(path);
 	}
 }

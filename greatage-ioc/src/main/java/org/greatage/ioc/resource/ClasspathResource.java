@@ -16,8 +16,13 @@
 
 package org.greatage.ioc.resource;
 
+import org.greatage.util.CollectionUtils;
+
+import java.io.IOException;
 import java.net.URL;
+import java.util.Enumeration;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * This class represents {@link Resource} implementation that is based on application classpath.
@@ -26,9 +31,27 @@ import java.util.Locale;
  * @since 1.0
  */
 public class ClasspathResource extends AbstractResource {
+	public static final String ID = "classpath";
+
 	private static final ClasspathResource ROOT = new ClasspathResource(null, "", null, null);
 
-	public static ClasspathResource root() {
+	/**
+	 * Creates new classpath resource by specified absolute path. This is helper method for simplified classpath resource
+	 * creation.
+	 *
+	 * @param absolutePath classpath absolute path, not <code>null</code>
+	 * @return new instance of classpath resource, not <code>null</code>
+	 */
+	public static Resource get(final String absolutePath) {
+		return ROOT.create(absolutePath);
+	}
+
+	/**
+	 * Obtains root classpath resource. This is helper method for simplified root classpath resource resolution.
+	 *
+	 * @return new instance of classpath root resource, not <code>null</code>
+	 */
+	public static Resource root() {
 		return ROOT;
 	}
 
@@ -36,11 +59,11 @@ public class ClasspathResource extends AbstractResource {
 	 * Creates new instance of classpath resource with defined location, parent resource, name and locale.
 	 *
 	 * @param location resource location, can be <code>null</code>
-	 * @param name	 resource name, not <code>null</code>
-	 * @param type,	can be <code>null</code>
-	 * @param locale   resource locale, can be <code>null</code>
+	 * @param name resource name, not <code>null</code>
+	 * @param type resource type, can be <code>null</code>
+	 * @param locale resource locale, can be <code>null</code>
 	 */
-	public ClasspathResource(final String location, final String name, final String type, final Locale locale) {
+	private ClasspathResource(final String location, final String name, final String type, final Locale locale) {
 		super(location, name, type, locale);
 	}
 
@@ -49,10 +72,25 @@ public class ClasspathResource extends AbstractResource {
 	 */
 	@Override
 	protected URL toURL() {
-		final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		return classLoader != null ?
-				classLoader.getResource(getPath()) :
-				ClassLoader.getSystemResource(getPath());
+		return getClassLoader().getResource(getPath());
+	}
+
+	/**
+	 * {@inheritDoc} Obtains children for every such resource under classpath.
+	 */
+	@Override
+	public Set<Resource> children(final Set<String> includes, final Set<String> excludes) {
+		final Set<Resource> children = CollectionUtils.newSet();
+		try {
+			final Enumeration<URL> urls = getClassLoader().getResources(getPath());
+			while (urls.hasMoreElements()) {
+				final URL url = urls.nextElement();
+				addFiles(children, url.toExternalForm(), includes, excludes);
+			}
+		} catch (IOException e) {
+			//todo: log warning
+		}
+		return children;
 	}
 
 	/**
@@ -61,5 +99,22 @@ public class ClasspathResource extends AbstractResource {
 	@Override
 	protected Resource createResource(final String path, final String name, final String type, final Locale locale) {
 		return new ClasspathResource(path, name, type, locale);
+	}
+
+	/**
+	 * Gets current class loader, Firstly for this class, then for thread and then system class loader.
+	 *
+	 * @return actual class  loader, not <code>null</code>
+	 */
+	private ClassLoader getClassLoader() {
+		final ClassLoader classLoader = getClass().getClassLoader();
+		if (classLoader != null) {
+			return classLoader;
+		}
+		final ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		if (contextClassLoader != null) {
+			return contextClassLoader;
+		}
+		return ClassLoader.getSystemClassLoader();
 	}
 }

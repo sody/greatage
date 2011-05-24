@@ -93,6 +93,14 @@ public interface Resource {
 	Resource withType(String type);
 
 	/**
+	 * Parses given absolute path to parent location, resource name, type, locale and creates new resource of needed implementation.
+	 *
+	 * @param absolutePath absolute resource path, not <code>null</code>
+	 * @return new resource instance for specified absolute path, not <code>null</code>
+	 */
+	Resource create(String absolutePath);
+
+	/**
 	 * Gets parent resource.
 	 *
 	 * @return instance of parent resource or <code>null</code> if it is in the root

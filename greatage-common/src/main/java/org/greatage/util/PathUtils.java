@@ -50,7 +50,7 @@ public abstract class PathUtils {
 	public static String calculatePath(final String location, final String name, final String type, final Locale locale) {
 		final StringBuilder builder = new StringBuilder();
 
-		if (!StringUtils.isEmpty(location)) {
+		if (location != null) {
 			builder.append(location);
 			if (!location.endsWith(PATH_SEPARATOR)) {
 				builder.append(PATH_SEPARATOR);
