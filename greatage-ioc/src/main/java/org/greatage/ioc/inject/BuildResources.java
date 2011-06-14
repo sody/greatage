@@ -19,8 +19,9 @@ package org.greatage.ioc.inject;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceResources;
-import org.greatage.ioc.logging.Logger;
 import org.greatage.util.Locker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -35,7 +36,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class BuildResources<T> implements ServiceResources<T> {
-	private final Logger logger;
+	private final Logger logger = LoggerFactory.getLogger(BuildResources.class);
 	private final ServiceResources<T> resources;
 	private final List<ServiceContributor<T>> contributors;
 
@@ -48,10 +49,8 @@ public class BuildResources<T> implements ServiceResources<T> {
 	 * @param resources	service resources
 	 * @param contributors service contributors
 	 */
-	public BuildResources(final Logger logger,
-						  final ServiceResources<T> resources,
+	public BuildResources(final ServiceResources<T> resources,
 						  final List<ServiceContributor<T>> contributors) {
-		this.logger = logger;
 		this.resources = resources;
 		this.contributors = contributors;
 	}

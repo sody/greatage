@@ -22,8 +22,6 @@ import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.coerce.*;
 import org.greatage.ioc.inject.*;
-import org.greatage.ioc.logging.LoggerSource;
-import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JavassistProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.resource.*;
@@ -32,7 +30,7 @@ import org.greatage.ioc.symbol.*;
 
 /**
  * This class represents base module for Great Age IoC container that configures all needed core services. This are {@link
- * ProxyFactory}, {@link LoggerSource}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link
+ * ProxyFactory}, {@link ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link
  * ResourceLocator}, {@link MessagesSource}, {@link ClassAccessSource}.
  *
  * @author Ivan Khalopik
@@ -41,7 +39,7 @@ import org.greatage.ioc.symbol.*;
 public class IOCModule {
 
 	/**
-	 * Binds all needed core services with their default implementations. This are {@link ProxyFactory}, {@link LoggerSource}, {@link
+	 * Binds all needed core services with their default implementations. This are {@link ProxyFactory}, {@link
 	 * ScopeManager}, {@link SymbolSource}, {@link SymbolProvider}, {@link ResourceLocator}, {@link MessagesSource}, {@link
 	 * ClassAccessSource}.
 	 *
@@ -51,7 +49,6 @@ public class IOCModule {
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class).eager();
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class).eager();
-		binder.bind(LoggerSource.class, Slf4jLoggerSource.class).eager();
 
 		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
 		binder.bind(Injector.class, DefaultInjector.class);

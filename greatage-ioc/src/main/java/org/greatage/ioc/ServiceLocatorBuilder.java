@@ -20,9 +20,6 @@ import org.greatage.ioc.inject.DefaultInjector;
 import org.greatage.ioc.inject.InjectionProvider;
 import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.inject.LoggerInjectionProvider;
-import org.greatage.ioc.logging.Logger;
-import org.greatage.ioc.logging.LoggerSource;
-import org.greatage.ioc.logging.Slf4jLoggerSource;
 import org.greatage.ioc.proxy.JdkProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
 import org.greatage.ioc.scope.SingletonScope;
@@ -137,32 +134,28 @@ public class ServiceLocatorBuilder {
 			}
 		}
 
-		final LoggerSource fakeLoggerSource = new Slf4jLoggerSource();
 		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
 
 		final Scope scope = new SingletonScope();
 		final ScopeManager fakeScopeManager = new ScopeManagerImpl(CollectionUtils.<Scope, Scope>newList(scope));
 		cache.put(Scope.class, scope);
 
-		injector = createInjector(fakeLoggerSource, fakeProxyFactory, fakeScopeManager);
+		injector = createInjector(fakeProxyFactory, fakeScopeManager);
 
 		final ProxyFactory proxyFactory = getService(ProxyFactory.class);
-		final LoggerSource loggerSource = getService(LoggerSource.class);
 		final ScopeManager scopeManager = getService(ScopeManager.class);
 
-		injector = createInjector(loggerSource, proxyFactory, scopeManager);
+		injector = createInjector(proxyFactory, scopeManager);
 
 		return getService(ServiceLocator.class);
 	}
 
-	private DefaultInjector createInjector(final LoggerSource loggerSource,
-										   final ProxyFactory proxyFactory,
+	private DefaultInjector createInjector(final ProxyFactory proxyFactory,
 										   final ScopeManager scopeManager) {
-		final Logger logger = loggerSource.getLogger(Injector.class);
-		final LoggerInjectionProvider loggerProvider = new LoggerInjectionProvider(loggerSource);
+		final LoggerInjectionProvider loggerProvider = new LoggerInjectionProvider();
 		final InternalInjectionProvider internalProvider = new InternalInjectionProvider();
 		final List<InjectionProvider> providers = CollectionUtils.newList(loggerProvider, internalProvider);
-		return new DefaultInjector(providers, logger, proxyFactory, scopeManager);
+		return new DefaultInjector(providers, proxyFactory, scopeManager);
 	}
 
 	private <T> T getService(final Class<T> serviceClass) {

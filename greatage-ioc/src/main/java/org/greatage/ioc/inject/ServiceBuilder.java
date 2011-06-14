@@ -5,10 +5,11 @@ import org.greatage.ioc.ServiceContributor;
 import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceInterceptor;
 import org.greatage.ioc.ServiceResources;
-import org.greatage.ioc.logging.Logger;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.ObjectBuilder;
 import org.greatage.ioc.scope.Scope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -17,7 +18,8 @@ import java.util.List;
  * @since 1.0
  */
 public class ServiceBuilder<T> implements ObjectBuilder<T> {
-	private final Logger logger;
+	private final Logger logger = LoggerFactory.getLogger(ServiceBuilder.class);
+
 	private final ServiceDefinition<T> service;
 	private final List<ServiceContributor<T>> contributors;
 	private final List<ServiceInterceptor<T>> interceptors;
@@ -28,13 +30,11 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 
 	private Interceptor interceptor;
 
-	ServiceBuilder(final Logger logger,
-						  final ServiceDefinition<T> service,
+	ServiceBuilder(final ServiceDefinition<T> service,
 						  final List<ServiceContributor<T>> contributors,
 						  final List<ServiceInterceptor<T>> interceptors,
 						  final ServiceResources<T> resources,
 						  final Scope scope) {
-		this.logger = logger;
 		this.service = service;
 		this.contributors = contributors;
 		this.interceptors = interceptors;
@@ -75,7 +75,7 @@ public class ServiceBuilder<T> implements ObjectBuilder<T> {
 			}
 			interceptor = serviceAdvice.build();
 
-			final ServiceResources<T> buildResources = new BuildResources<T>(logger, resources, contributors);
+			final ServiceResources<T> buildResources = new BuildResources<T>(resources, contributors);
 			logger.debug("Building service (%s) from (%s)", marker, service);
 			return service.build(buildResources);
 		}

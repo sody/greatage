@@ -16,7 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
 
 import java.util.List;

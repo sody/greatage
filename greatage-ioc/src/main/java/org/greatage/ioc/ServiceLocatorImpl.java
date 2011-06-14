@@ -17,8 +17,8 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.inject.Injector;
-import org.greatage.ioc.logging.Logger;
 import org.greatage.util.CollectionUtils;
+import org.slf4j.Logger;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
