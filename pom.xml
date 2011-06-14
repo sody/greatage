@@ -332,7 +332,6 @@
 				<artifactId>maven-changes-plugin</artifactId>
 				<version>2.4</version>
 				<configuration>
-					<aggregated>true</aggregated>
 					<xmlPath>src/site/changes.xml</xmlPath>
 					<issueLinkTemplatePerSystem>
 						<GitHub>%URL%/%ISSUE%</GitHub>

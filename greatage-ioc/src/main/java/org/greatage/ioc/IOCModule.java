@@ -129,7 +129,7 @@ public class IOCModule {
 
 	@Contribute(ResourceLocator.class)
 	public static void contributeResourceLocator(final OrderedConfiguration<ResourceProvider> configuration) {
-		configuration.addInstance(ClasspathResourceProvider.class, ClasspathResourceProvider.ID);
-		configuration.addInstance(URIResourceProvider.class, URIResourceProvider.ID);
+		configuration.add(ClasspathResource.root(), ClasspathResource.ID);
+		configuration.add(URIResource.root(), URIResource.ID);
 	}
 }

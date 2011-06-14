@@ -16,9 +16,11 @@
 
 package org.greatage.ioc.resource;
 
+import java.util.Locale;
+
 /**
- * This interface provides configuration point for {@link ResourceLocator} that provides resource search functionality
- * in specific application scope.
+ * This interface represents resource retrieval strategy. It provides functionality for resource retrieval by absolute path or by
+ * its location, name, type and locale. It is used as configuration for {@link ResourceLocator} service.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -26,10 +28,21 @@ package org.greatage.ioc.resource;
 public interface ResourceProvider {
 
 	/**
-	 * Obtains a resource by its path.
+	 * Parses given absolute path to parent location, resource name, type, locale and creates new resource of needed implementation.
 	 *
-	 * @param path resource path, not <code>null</code>
-	 * @return resource instance or <code>null</code> if not found
+	 * @param absolutePath absolute resource path, not {@code null}
+	 * @return new resource instance for specified absolute path, not {@code null}
 	 */
-	Resource getResource(String path);
+	Resource getResource(String absolutePath);
+
+	/**
+	 * Creates new resource instance of needed implementation with defined location, name, type and locale.
+	 *
+	 * @param location resource location, can be {@code null}
+	 * @param name resource name, not {@code null}
+	 * @param type resource type, can be {@code null}
+	 * @param locale resource locale, can be {@code null}
+	 * @return new resource instance of needed implementation, not {@code null}
+	 */
+	Resource getResource(String location, String name, String type, Locale locale);
 }

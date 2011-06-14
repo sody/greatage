@@ -14,7 +14,7 @@ public class TestPathSearcher extends Assert {
 	@DataProvider
 	public Object[][] findData() {
 		final Set<String> SET_CONFIGS = CollectionUtils.newSet("config/**/*.xml", "config/**/*.properties");
-		final Set<String> SET_XML = CollectionUtils.newSet("**/*.xml");
+		final Set<String> SET_XML = CollectionUtils.newSet("config/**/*.xml", "path/**/*.xml");
 		final Set<String> SET_SPI = CollectionUtils.newSet("META-INF/services/*");
 
 		final String classPathRoot0 = ClassLoader.getSystemResource("").getFile();
@@ -37,24 +37,24 @@ public class TestPathSearcher extends Assert {
 		final String zipPath3 = zipPath2.substring(0, zipPath2.length() - 1);
 
 		return new Object[][] {
-				{ classPathRoot0, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml", "testng.xml" } },
+				{ classPathRoot0, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml" } },
 				{ classPathRoot0, SET_CONFIGS, null, new String[] { "config/9.properties", "config/subconfig/10.xml" } },
-				{ classPathRoot0, SET_XML, SET_CONFIGS, new String[] { "path/3.xml", "testng.xml" } },
+				{ classPathRoot0, SET_XML, SET_CONFIGS, new String[] { "path/3.xml"} },
 				{ classPathRoot0, SET_CONFIGS, SET_XML, new String[] { "config/9.properties" } },
 
-				{ classPathRoot1, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml", "testng.xml" } },
+				{ classPathRoot1, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml" } },
 				{ classPathRoot1, SET_CONFIGS, null, new String[] { "config/9.properties", "config/subconfig/10.xml" } },
-				{ classPathRoot1, SET_XML, SET_CONFIGS, new String[] { "path/3.xml", "testng.xml" } },
+				{ classPathRoot1, SET_XML, SET_CONFIGS, new String[] { "path/3.xml" } },
 				{ classPathRoot1, SET_CONFIGS, SET_XML, new String[] { "config/9.properties" } },
 
-				{ classPathRoot2, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml", "testng.xml" } },
+				{ classPathRoot2, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml" } },
 				{ classPathRoot2, SET_CONFIGS, null, new String[] { "config/9.properties", "config/subconfig/10.xml" } },
-				{ classPathRoot2, SET_XML, SET_CONFIGS, new String[] { "path/3.xml", "testng.xml" } },
+				{ classPathRoot2, SET_XML, SET_CONFIGS, new String[] { "path/3.xml" } },
 				{ classPathRoot2, SET_CONFIGS, SET_XML, new String[] { "config/9.properties" } },
 
-				{ classPathRoot3, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml", "testng.xml" } },
+				{ classPathRoot3, SET_XML, null, new String[] { "config/subconfig/10.xml", "path/3.xml" } },
 				{ classPathRoot3, SET_CONFIGS, null, new String[] { "config/9.properties", "config/subconfig/10.xml" } },
-				{ classPathRoot3, SET_XML, SET_CONFIGS, new String[] { "path/3.xml", "testng.xml" } },
+				{ classPathRoot3, SET_XML, SET_CONFIGS, new String[] { "path/3.xml" } },
 				{ classPathRoot3, SET_CONFIGS, SET_XML, new String[] { "config/9.properties" } },
 
 				{ jarPath0, null, null, new String[] { "com.example.Service", "com.example.AnotherService" } },

@@ -13,35 +13,52 @@ import java.util.Set;
  * @since 1.0
  */
 public class TestClasspathResource extends Assert {
-	private static final Locale FINLAND = new Locale("fi");
-	private static final Locale FINLAND_1 = new Locale("fi", "FI");
+	private static final Locale ROOT = new Locale("");
+	private static final Locale RUSSIAN = new Locale("ru");
+	private static final Locale RUSSIAN_1 = new Locale("ru", "RU");
 
 	@DataProvider
 	public Object[][] childData() {
 		return new Object[][] {
-				{ "", "", "" },
-				{ "", "META-INF", "META-INF" },
-				{ "", "META-INF/", "META-INF" },
-				{ "", "META-INF//", "META-INF" },
-				{ "", "META-INF///", "META-INF" },
-				{ "", "META-INF/services/", "META-INF/services" },
-				{ "", "META-INF/services/some_file.txt", "META-INF/services/some_file.txt" },
+				{"", "", ""},
+				{"", null, ""},
+				{"", "META-INF", "META-INF"},
+				{"", "/META-INF", "META-INF"},
+				{"", "META-INF/", "META-INF"},
+				{"", "META-INF//", "META-INF"},
+				{"", "META-INF///", "META-INF"},
+				{"", "META-INF/services/", "META-INF/services"},
+				{"", "/META-INF/services/", "META-INF/services"},
+				{"", "META-INF/services/some_file.txt", "META-INF/services/some_file.txt"},
 
-				{ "/", "", "/" },
-				{ "/", "META-INF", "/META-INF" },
-				{ "/", "META-INF/services/", "/META-INF/services" },
-				{ "/", "META-INF/services//", "/META-INF/services" },
-				{ "/", "META-INF/services///", "/META-INF/services" },
-				{ "/", "META-INF/services/some_file.txt", "/META-INF/services/some_file.txt" },
-		};
-	}
+				{"/", "", ""},
+				{"/", null, ""},
+				{"/", "META-INF", "META-INF"},
+				{"/", "/META-INF", "META-INF"},
+				{"/", "META-INF/services/", "META-INF/services"},
+				{"/", "META-INF////services//", "META-INF/services"},
+				{"/", "META-INF/services///", "META-INF/services"},
+				{"/", "/META-INF/services///", "META-INF/services"},
+				{"/", "META-INF/services/some_file.txt", "META-INF/services/some_file.txt"},
 
-	@DataProvider
-	public Object[][] childWrongData() {
-		return new Object[][] {
-				{ "", "/META-INF" },
-				{ "", null },
-				{ "/", "/" },
+				{"META-INF", "", "META-INF"},
+				{"META-INF", null, "META-INF"},
+				{"META-INF", "services/", "META-INF/services"},
+				{"META-INF", "/services/", "META-INF/services"},
+				{"META-INF", "services//", "META-INF/services"},
+				{"META-INF", "services///", "META-INF/services"},
+				{"META-INF", "services//some_file.txt", "META-INF/services/some_file.txt"},
+
+				{"/META-INF", "", "META-INF"},
+				{"/META-INF", "services/", "META-INF/services"},
+				{"/META-INF", "services//", "META-INF/services"},
+				{"/META-INF", "services///", "META-INF/services"},
+				{"/META-INF", "services//some_file.txt", "META-INF/services/some_file.txt"},
+
+				{"META-INF/services/", "", "META-INF/services"},
+				{"META-INF/services/", null, "META-INF/services"},
+				{"META-INF/services//", "some_file.txt", "META-INF/services/some_file.txt"},
+				{"META-INF/services//", "/some_file.txt", "META-INF/services/some_file.txt"},
 		};
 	}
 
@@ -52,63 +69,58 @@ public class TestClasspathResource extends Assert {
 		assertEquals(actual, expected);
 	}
 
-	@Test(dataProvider = "childWrongData", expectedExceptions = AssertionError.class)
-	public void testChildWrong(final String parent, final String child) {
-		ClasspathResource.get(parent).child(child);
-	}
-
 	@DataProvider
-	public Object[][] createData() {
+	public Object[][] getResourceData() {
 		return new Object[][] {
 				//resource, path, location, name, type, locale
-				{ "", "", null, "", null, null },
-				{ "/", "/", null, "/", null, null },
+				{"", "", null, "", null, ROOT},
+				{"/", "", null, "", null, ROOT},
 
-				{ "META-INF", "META-INF", null, "META-INF", null, null },
-				{ "META-INF/", "META-INF", null, "META-INF", null, null },
-				{ "/META-INF", "/META-INF", "/", "META-INF", null, null },
-				{ "/META-INF/", "/META-INF", "/", "META-INF", null, null },
+				{"META-INF", "META-INF", null, "META-INF", null, ROOT},
+				{"META-INF/", "META-INF", null, "META-INF", null, ROOT},
+				{"/META-INF", "META-INF", null, "META-INF", null, ROOT},
+				{"/META-INF/", "META-INF", null, "META-INF", null, ROOT},
 
-				{ "META-INF/properties", "META-INF/properties", "META-INF", "properties", null, null },
-				{ "META-INF/properties/", "META-INF/properties", "META-INF", "properties", null, null },
-				{ "/META-INF/properties", "/META-INF/properties", "/META-INF", "properties", null, null },
-				{ "/META-INF/properties/", "/META-INF/properties", "/META-INF", "properties", null, null },
+				{"META-INF/properties", "META-INF/properties", "META-INF", "properties", null, ROOT},
+				{"META-INF/properties/", "META-INF/properties", "META-INF", "properties", null, ROOT},
+				{"/META-INF/properties", "META-INF/properties", "META-INF", "properties", null, ROOT},
+				{"/META-INF/properties/", "META-INF/properties", "META-INF", "properties", null, ROOT},
 
 				{
 						"META-INF/properties/file.properties", "META-INF/properties/file.properties",
-						"META-INF/properties", "file", "properties", null
+						"META-INF/properties", "file", "properties", ROOT
 				},
 				{
-						"/META-INF/properties/file.properties", "/META-INF/properties/file.properties",
-						"/META-INF/properties", "file", "properties", null
+						"/META-INF/properties/file.properties", "META-INF/properties/file.properties",
+						"META-INF/properties", "file", "properties", ROOT
 				},
 
-				{ "some-file", "some-file", null, "some-file", null, null },
-				{ "some-file.ext", "some-file.ext", null, "some-file", "ext", null },
-				{ "some-file.new.extension", "some-file.new.extension", null, "some-file.new", "extension", null },
-				{ "some-file.", "some-file", null, "some-file", null, null },
+				{"some-file", "some-file", null, "some-file", null, ROOT},
+				{"some-file.ext", "some-file.ext", null, "some-file", "ext", ROOT},
+				{"some-file.new.extension", "some-file.new.extension", null, "some-file.new", "extension", ROOT},
+				{"some-file.", "some-file", null, "some-file", null, ROOT},
 
-				{ "some-file_fi.ext", "some-file_fi.ext", null, "some-file", "ext", FINLAND },
-				{ "some-file_fi_fi.ext", "some-file_fi_fi.ext", null, "some-file_fi", "ext", FINLAND },
-				{ "some-file_fi_FI.ext", "some-file_fi_FI.ext", null, "some-file", "ext", FINLAND_1 },
+				{"some-file_ru.ext", "some-file_ru.ext", null, "some-file", "ext", RUSSIAN},
+				{"some-file_ru_ru.ext", "some-file_ru_ru.ext", null, "some-file_ru", "ext", RUSSIAN},
+				{"some-file_ru_RU.ext", "some-file_ru_RU.ext", null, "some-file", "ext", RUSSIAN_1},
 
-				{ "some-file_.ext", "some-file_.ext", null, "some-file_", "ext", null },
-				{ "some-file_f.ext", "some-file_f.ext", null, "some-file_f", "ext", null },
-				{ "some-file_fis.ext", "some-file_fis.ext", null, "some-file_fis", "ext", null },
-				{ "some-file_fi_.ext", "some-file_fi_.ext", null, "some-file_fi_", "ext", null },
-				{ "some-file_fi_F.ext", "some-file_fi_F.ext", null, "some-file_fi_F", "ext", null },
-				{ "some-file_fi_FIS.ext", "some-file_fi_FIS.ext", null, "some-file_fi_FIS", "ext", null },
-				{ "some-file_fi_FI_var.ext", "some-file_fi_FI_var.ext", null, "some-file_fi_FI_var", "ext", null },
+				{"some-file_.ext", "some-file_.ext", null, "some-file_", "ext", ROOT},
+				{"some-file_r.ext", "some-file_r.ext", null, "some-file_r", "ext", ROOT},
+				{"some-file_rus.ext", "some-file_rus.ext", null, "some-file_rus", "ext", ROOT},
+				{"some-file_ru_.ext", "some-file_ru_.ext", null, "some-file_ru_", "ext", ROOT},
+				{"some-file_ru_R.ext", "some-file_ru_R.ext", null, "some-file_ru_R", "ext", ROOT},
+				{"some-file_ru_RUS.ext", "some-file_ru_RUS.ext", null, "some-file_ru_RUS", "ext", ROOT},
+				{"some-file_ru_RU_var.ext", "some-file_ru_RU_var.ext", null, "some-file_ru_RU_var", "ext", ROOT},
 		};
 	}
 
-	@Test(dataProvider = "createData")
-	public void testCreate(final String path,
-						   final String expectedPath,
-						   final String expectedLocation,
-						   final String expectedName,
-						   final String expectedType,
-						   final Locale expectedLocale) throws IOException {
+	@Test(dataProvider = "getResourceData")
+	public void testGetResource(final String path,
+								final String expectedPath,
+								final String expectedLocation,
+								final String expectedName,
+								final String expectedType,
+								final Locale expectedLocale) throws IOException {
 		final Resource resource = ClasspathResource.get(path);
 		assertNotNull(resource);
 		assertEquals(resource.getPath(), expectedPath);
@@ -118,21 +130,23 @@ public class TestClasspathResource extends Assert {
 		assertEquals(resource.getLocale(), expectedLocale);
 	}
 
-	@Test
-	public void testChildren() {
-		// some resources were not resolved
-		Resource resource = ClasspathResource.get("META-INF/services");
-		Set<Resource> children = resource.children("com.example.*");
-		assertEquals(children.size(), 5);
+	@DataProvider
+	public Object[][] childrenData() {
+		return new Object[][] {
+				{"META-INF/services", "com.example.*", 5},
+				{"META-INF/services/", "com.example.*", 5},
+				{"META-INF", "services/com.example.*", 5},
+				{"META-INF/", "**/com.example.*", 5},
+				//todo: classloader doesn't resolve resources inside jars for path ""
+				{"", "**/com.example.*", 2},
+				{"", "META-INF/services/com.example.*", 2},
+		};
+	}
 
-		// the best situation, all resources were resolved
-		resource = ClasspathResource.get("META-INF/");
-		children = resource.children("services/com.example.*");
-		assertEquals(children.size(), 5);
-
-		resource = ClasspathResource.root();
-		children = resource.children("META-INF/services/com.example.*");
-		//todo: shit happens, maybe to resolve resources by different class loaders?
-		assertEquals(children.size(), 2);
+	@Test(dataProvider = "childrenData")
+	public void testChildren(final String path, final String include, final int expectedSize) {
+		final Resource resource = ClasspathResource.get(path);
+		Set<Resource> children = resource.children(include);
+		assertEquals(children.size(), expectedSize);
 	}
 }

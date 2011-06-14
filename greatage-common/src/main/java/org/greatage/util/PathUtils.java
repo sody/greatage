@@ -31,6 +31,9 @@ public abstract class PathUtils {
 	public static final String TYPE_SEPARATOR = ".";
 	public static final String LOCALE_SEPARATOR = "_";
 
+	private static final Pattern BACK_SLASH_PATTERN = Pattern.compile("\\\\");
+	private static final Pattern DOUBLE_SLASH_PATTERN = Pattern.compile("([^:/]/)/+");
+	private static final Pattern END_SLASH_PATTERN = Pattern.compile("([^:/])/$");
 	private static final Pattern ANT_TEXT_PATTERN = Pattern.compile("\\?|\\*");
 
 	private static final String ANT_ANY_PATH_MARKER = "**";
@@ -38,14 +41,14 @@ public abstract class PathUtils {
 	private static final String ANT_ANY_CHARACTER_MARKER = "?";
 
 	/**
-	 * Calculates resource path from given absolute location, resource name, type and locale using formula
-	 * <code>location/name_locale.type</code>.
+	 * Calculates resource path from given absolute location, resource name, type and locale using formula {@code
+	 * location/name_locale.type}.
 	 *
-	 * @param location absolute resource location, can be <code>null</code>
-	 * @param name resource name, not <code>null</code>
-	 * @param type resource type, can be <code>null</code>
-	 * @param locale resource locale, can be <code>null</code>
-	 * @return calculated full resource path, not <code>null</code>
+	 * @param location absolute resource location, can be {@code null}
+	 * @param name resource name, not {@code null}
+	 * @param type resource type, can be {@code null}
+	 * @param locale resource locale, can be {@code null}
+	 * @return calculated full resource path, not {@code null}
 	 */
 	public static String calculatePath(final String location, final String name, final String type, final Locale locale) {
 		final StringBuilder builder = new StringBuilder();
@@ -70,22 +73,28 @@ public abstract class PathUtils {
 	}
 
 	/**
-	 * Normalizes given path by replacing file-dependent path separators like <code>'\'</code> with standard <code>'/'</code>.
+	 * Normalizes given path by replacing file-dependent path separators like {@code '\'} with standard {@code '/'}. It also removes
+	 * double slashes and ending slash.
 	 *
-	 * @param path path which must be normalized, not <code>null</code>
-	 * @return normalized path, not <code>null</code>
+	 * @param path path which must be normalized, not {@code null}
+	 * @return normalized path, not {@code null}
 	 */
 	public static String normalizePath(final String path) {
-		return path.replaceAll("\\\\", PATH_SEPARATOR);
+		if (path == null) {
+			return null;
+		}
+		String normalizedPath = BACK_SLASH_PATTERN.matcher(path).replaceAll(PATH_SEPARATOR);
+		normalizedPath = DOUBLE_SLASH_PATTERN.matcher(normalizedPath).replaceAll("$1");
+		return END_SLASH_PATTERN.matcher(normalizedPath).replaceAll("$1");
 	}
 
 	/**
-	 * Tests whether a given path matches against ant-style pattern. The pattern may contain some special characters: <br/> '**'
-	 * means any path <br/> '*' means zero or more characters <br/> '?' means one and only one character.
+	 * Tests whether a given path matches against ant-style pattern. The pattern may contain some special characters: <br/> {@code
+	 * '**'} means any path <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and only one character.
 	 *
-	 * @param path path which must be matched against the pattern, not <code>null</code>
-	 * @param pattern ant-style pattern to match against, not <code>null</code>
-	 * @return <code>true</code> if path matches against the pattern, <code>false</code> otherwise
+	 * @param path path which must be matched against the pattern, not {@code null}
+	 * @param pattern ant-style pattern to match against, not {@code null}
+	 * @return {@code true} if path matches against the pattern, {@code false} otherwise
 	 */
 	public static boolean matchAntPath(final String path, final String pattern) {
 		// When path starts with a /, pattern also has to start with a / and vice versa
@@ -193,12 +202,12 @@ public abstract class PathUtils {
 	}
 
 	/**
-	 * Tests whether a given string matches against a pattern. The pattern may contain two special characters: <br/> '*' means zero
-	 * or more characters <br/> '?' means one and only one character
+	 * Tests whether a given string matches against a pattern. The pattern may contain two special characters: <br/> {@code '*'}
+	 * means zero or more characters <br/> {@code '?'} means one and only one character
 	 *
-	 * @param text string which must be matched against the pattern, not <code>null</code>
-	 * @param pattern pattern to match against, not <code>null</code>
-	 * @return <code>true</code> if the string matches against the pattern, <code>false</code> otherwise
+	 * @param text string which must be matched against the pattern, not {@code null}
+	 * @param pattern pattern to match against, not {@code null}
+	 * @return {@code true} if the string matches against the pattern, {@code false} otherwise
 	 */
 	public static boolean matchAntPattern(final String text, final String pattern) {
 		final StringBuilder patternBuilder = new StringBuilder();

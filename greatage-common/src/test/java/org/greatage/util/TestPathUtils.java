@@ -147,6 +147,13 @@ public class TestPathUtils extends Assert {
 				{"file://C:\\some\\folder\\some\\file.ext", "file://C:/some/folder/some/file.ext"},
 				{"file://C:\\some\\folder/some/file.ext", "file://C:/some/folder/some/file.ext"},
 				{"file:\\\\C:\\some\\folder\\some\\file.ext", "file://C:/some/folder/some/file.ext"},
+
+				{"file://C:\\some\\folder\\some\\\\file.ext", "file://C:/some/folder/some/file.ext"},
+				{"file://C:/some//folder/some////file.ext", "file://C:/some/folder/some/file.ext"},
+				{"/root/path//file.ext", "/root/path/file.ext"},
+				{"file:///root/path//file.ext", "file:///root/path/file.ext"},
+				{"file:///", "file:///"},
+				{"/", "/"},
 		};
 	}
 

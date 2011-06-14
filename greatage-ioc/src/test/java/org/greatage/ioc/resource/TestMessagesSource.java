@@ -35,7 +35,7 @@ public class TestMessagesSource extends Assert {
 
 	@BeforeClass
 	public void setupMessagesSource() {
-		final ResourceProvider resourceProvider = new ClasspathResourceProvider();
+		final ResourceProvider resourceProvider = ClasspathResource.root();
 		final ResourceLocatorImpl resourceLocator = new ResourceLocatorImpl(CollectionUtils.newList(resourceProvider));
 		messagesSource = new MessagesSourceImpl(resourceLocator);
 	}

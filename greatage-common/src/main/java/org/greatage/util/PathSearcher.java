@@ -14,10 +14,10 @@ import java.util.zip.ZipFile;
 
 /**
  * This class represents utility for search resources under specified path with applying ant include and exclude patterns. Path
- * can point to path inside zip file. Some examples of path: <br/><code>file:/C:/some/location</code>
- * <br/><code>file:/C:/some/location/some_file.ext</code> <br/><code>C:/some/location/</code>
- * <br/><code>zip:file:/C:/some/location/zipFile.zip!/some/folder</code> <br/><code>jar:file:/C:/some/location/jarFile.jar!/some/folder/some_file.ext</code>
- * <br/><code>jar:file:/C:/some/location/jarFile.jar!/</code>
+ * can point to path inside zip file. Some examples of path: <br/>{@code file:/C:/some/location} <br/>{@code
+ * file:/C:/some/location/some_file.ext} <br/>{@code C:/some/location/} <br/>{@code zip:file:/C:/some/location/zipFile.zip!/some/folder}
+ * <br/>{@code jar:file:/C:/some/location/jarFile.jar!/some/folder/some_file.ext} <br/>{@code
+ * jar:file:/C:/some/location/jarFile.jar!/}
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -36,8 +36,8 @@ public class PathSearcher {
 	 * Creates new instance of path searcher utility that will execute search under specified path. The path can point to path inside
 	 * zip file.
 	 *
-	 * @param path path where to search child resources, not <code>null</code>
-	 * @return path searcher utility instance, not <code>null</code>
+	 * @param path path where to search child resources, not {@code null}
+	 * @return path searcher utility instance, not {@code null}
 	 */
 	public static PathSearcher create(final String path) {
 		return new PathSearcher(path);
@@ -47,15 +47,15 @@ public class PathSearcher {
 	 * Creates new path searcher instance that will execute search under specified path. This constructor is private, use {@link
 	 * #create(String)} static method instead.
 	 *
-	 * @param path path where to search child resources, not <code>null</code>
+	 * @param path path where to search child resources, not {@code null}
 	 */
 	private PathSearcher(final String path) {
 		this.path = path;
 	}
 
 	/**
-	 * Adds include patterns to search configuration. The pattern may contain some special characters: <br/> '**' means any path
-	 * <br/> '*' means zero or more characters <br/> '?' means one and only one character
+	 * Adds include patterns to search configuration. The pattern may contain some special characters: <br/> {@code '**'} means any
+	 * path <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and only one character
 	 *
 	 * @param patterns include patterns
 	 * @return this path searcher instance
@@ -66,8 +66,8 @@ public class PathSearcher {
 	}
 
 	/**
-	 * Adds include patterns to search configuration. The pattern may contain some special characters: <br/> '**' means any path
-	 * <br/> '*' means zero or more characters <br/> '?' means one and only one character
+	 * Adds include patterns to search configuration. The pattern may contain some special characters: <br/> {@code '**'} means any
+	 * path <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and only one character
 	 *
 	 * @param patterns collection of include patterns
 	 * @return this path searcher instance
@@ -80,8 +80,8 @@ public class PathSearcher {
 	}
 
 	/**
-	 * Adds exclude patterns to search configuration. The pattern may contain some special characters: <br/> '**' means any path
-	 * <br/> '*' means zero or more characters <br/> '?' means one and only one character
+	 * Adds exclude patterns to search configuration. The pattern may contain some special characters: <br/> {@code '**'} means any
+	 * path <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and only one character
 	 *
 	 * @param patterns exclude patterns
 	 * @return this path searcher instance
@@ -92,8 +92,8 @@ public class PathSearcher {
 	}
 
 	/**
-	 * Adds exclude patterns to search configuration. The pattern may contain some special characters: <br/> '**' means any path
-	 * <br/> '*' means zero or more characters <br/> '?' means one and only one character
+	 * Adds exclude patterns to search configuration. The pattern may contain some special characters: <br/> {@code '**'} means any
+	 * path <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and only one character
 	 *
 	 * @param patterns collection of exclude patterns
 	 * @return this path searcher instance
@@ -143,8 +143,8 @@ public class PathSearcher {
 	 * Looks up for all resources under given path which must be matched against include and exclude patterns. Specified relative
 	 * path will be added to resulting resource names. If given path is file, it will be added to resulting resources.
 	 *
-	 * @param path directory or file where to search child resources, should exist, not <code>null</code>
-	 * @param relativePath relative path that will be added to resulting resource names, not <code>null</code>
+	 * @param path directory or file where to search child resources, should exist, not {@code null}
+	 * @param relativePath relative path that will be added to resulting resource names, not {@code null}
 	 */
 	private void findResourcesInPath(final File path, final String relativePath) {
 		if (path.isDirectory()) {
@@ -164,8 +164,8 @@ public class PathSearcher {
 	 * Looks up for all resources under given zip file with inner path which must be matched against include and exclude patterns .
 	 * If given path is file, it will be added to resulting resources.
 	 *
-	 * @param file file file where to search child resources, should exist, not <code>null</code>
-	 * @param relativePath directory or file where to search child resources, not <code>null</code>
+	 * @param file file file where to search child resources, should exist, not {@code null}
+	 * @param relativePath directory or file where to search child resources, not {@code null}
 	 * @throws IOException if error occurs while reading zip file
 	 */
 	private void findResourcesInZip(final File file, final String relativePath) throws IOException {
@@ -198,22 +198,23 @@ public class PathSearcher {
 
 	/**
 	 * Tests whether a given path matches include and exclude patterns. Include and exclude patterns may contain some special
-	 * characters: <br/> '**' means any path <br/> '*' means zero or more characters <br/> '?' means one and only one character
+	 * characters: <br/> {@code '**'} means any path <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and
+	 * only one character
 	 *
-	 * @param path path which must be matched against the patterns, not <code>null</code>
-	 * @return <code>true</code> if path matches against include and exclude patterns, <code>false</code> otherwise
+	 * @param path path which must be matched against the patterns, not {@code null}
+	 * @return {@code true} if path matches against include and exclude patterns, {@code false} otherwise
 	 */
 	private boolean matchAntPath(final String path) {
 		return (includes.isEmpty() || matchAntPath(path, includes)) && !matchAntPath(path, excludes);
 	}
 
 	/**
-	 * Tests whether a given path matches filters. Filters may contain some special characters: <br/> '**' means any path <br/> '*'
-	 * means zero or more characters <br/> '?' means one and only one character
+	 * Tests whether a given path matches filters. Filters may contain some special characters: <br/> {@code '**'} means any path
+	 * <br/> {@code '*'} means zero or more characters <br/> {@code '?'} means one and only one character
 	 *
-	 * @param path path which must be matched against the patterns, not <code>null</code>
-	 * @param filters path filters, not <code>null</code>
-	 * @return <code>true</code> if path matches against include and exclude patterns, <code>false</code> otherwise
+	 * @param path path which must be matched against the patterns, not {@code null}
+	 * @param filters path filters, not {@code null}
+	 * @return {@code true} if path matches against include and exclude patterns, {@code false} otherwise
 	 */
 	private boolean matchAntPath(final String path, final Set<String> filters) {
 		for (String filter : filters) {

@@ -16,17 +16,26 @@
 
 package org.greatage.ioc.resource;
 
+import org.greatage.util.CollectionUtils;
+import org.greatage.util.PathSearcher;
+
 import java.net.URI;
 import java.net.URL;
 import java.util.Locale;
+import java.util.Set;
 
 /**
- * This class represents {@link Resource} implementation that is based on URI.
+ * This class represents {@link Resource} implementation that is based on URI. It also can be used as {@link ResourceProvider}
+ * implementation.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
 public class URIResource extends AbstractResource {
+
+	/**
+	 * Resource provider identifier used inside configuration processes.
+	 */
 	public static final String ID = "uri";
 
 	private static final URIResource ROOT = new URIResource(null, "uri://", null, null);
@@ -35,30 +44,40 @@ public class URIResource extends AbstractResource {
 	/**
 	 * Creates new resource by specified absolute URI. This is helper method for simplified URI resource creation.
 	 *
-	 * @param uri absolute uri, not <code>null</code>
-	 * @return new instance of URI resource, not <code>null</code>
+	 * @param uri absolute uri, not {@code null}
+	 * @return new instance of URI resource, not {@code null}
 	 */
 	public static Resource get(final String uri) {
-		return ROOT.create(uri);
+		return ROOT.getResource(uri);
 	}
 
 	/**
 	 * Obtains filesystem resource. This is helper method for simplified filesystem resource resolution.
 	 *
-	 * @param file absolute file path, not <code>null</code>
-	 * @return new instance of filesystem resource, not <code>null</code>
+	 * @param file absolute file path, not {@code null}
+	 * @return new instance of filesystem resource, not {@code null}
 	 */
 	public static Resource file(final String file) {
 		return get(FILE_URI + file);
 	}
 
 	/**
+	 * Obtains root URI resource. This is helper method for simplified root URI resource resolution. Can be used only as {@link
+	 * ResourceProvider} service.
+	 *
+	 * @return new instance of URI root resource, not {@code null}
+	 */
+	public static URIResource root() {
+		return ROOT;
+	}
+
+	/**
 	 * Creates new instance of URI resource with defined location, parent resource, name and locale.
 	 *
-	 * @param location resource location, can be <code>null</code>
-	 * @param name resource name, not <code>null</code>
-	 * @param type resource type, can be <code>null</code>
-	 * @param locale resource locale, can be <code>null</code>
+	 * @param location resource location, can be {@code null}
+	 * @param name resource name, not {@code null}
+	 * @param type resource type, can be {@code null}
+	 * @param locale resource locale, can be {@code null}
 	 */
 	private URIResource(final String location, final String name, final String type, final Locale locale) {
 		super(location, name, type, locale);
@@ -82,7 +101,33 @@ public class URIResource extends AbstractResource {
 	 * {@inheritDoc}
 	 */
 	@Override
-	protected Resource createResource(final String location, final String name, final String type, final Locale locale) {
+	protected Resource create(final String location, final String name, final String type, final Locale locale) {
 		return new URIResource(location, name, type, locale);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<Resource> children(final Set<String> includes, final Set<String> excludes) {
+		final Set<Resource> children = CollectionUtils.newSet();
+		if (exists()) {
+			final URL url = toURL();
+			if (url != null) {
+				// find in absolute path
+				final Set<String> resourceNames = PathSearcher.create(url.toExternalForm())
+						.include(includes)
+						.exclude(excludes)
+						.search();
+
+				// add all children
+				for (String resourceName : resourceNames) {
+					final Resource resource = child(resourceName);
+					if (resource != null && resource.exists()) {
+						children.add(resource);
+					}
+				}
+			}
+		}
+		return children;
 	}
 }

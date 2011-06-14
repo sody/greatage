@@ -30,8 +30,8 @@ public interface ResourceLocator {
 	/**
 	 * Searches application resource by its location.
 	 *
-	 * @param path resource location, not <code>null</code>
-	 * @return resource instance or <code>null</code> if not found
+	 * @param path resource location, not {@code null}
+	 * @return resource instance or {@code null} if not found
 	 */
 	Resource getResource(String path);
 
@@ -39,7 +39,7 @@ public interface ResourceLocator {
 	 * Searches for application resources in defined location with specified include filter. If include patterns is
 	 * empty, resources will not be filtered.
 	 *
-	 * @param path	 resource location, not <code>null</code>
+	 * @param path	 resource location, not {@code null}
 	 * @param includes include patterns
 	 * @return set of found resource or empty set if not found
 	 */
@@ -49,9 +49,9 @@ public interface ResourceLocator {
 	 * Searches for application resources in defined location with specified include and exclude filters. If include
 	 * or exclude patterns is empty they will be ignored.
 	 *
-	 * @param path	 resource location, not <code>null</code>
-	 * @param includes include patterns, can be <code>null</code>
-	 * @param excludes exclude patterns, can be <code>null</code>
+	 * @param path	 resource location, not {@code null}
+	 * @param includes include patterns, can be {@code null}
+	 * @param excludes exclude patterns, can be {@code null}
 	 * @return set of found resource or empty set if not found
 	 */
 	Set<Resource> findResources(String path, Set<String> includes, Set<String> excludes);

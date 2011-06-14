@@ -18,7 +18,6 @@ package org.greatage.ioc.resource;
 
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.LocaleUtils;
-import org.greatage.util.PathSearcher;
 import org.greatage.util.PathUtils;
 import org.greatage.util.StringUtils;
 
@@ -39,7 +38,7 @@ import java.util.regex.Pattern;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AbstractResource implements Resource {
+public abstract class AbstractResource implements Resource, ResourceProvider {
 	private static final Pattern LOCALE_PATTERN = Pattern.compile("^(.*)_([a-z]{2}(_[A-Z]{2})?)$");
 
 	private final String location;
@@ -53,14 +52,12 @@ public abstract class AbstractResource implements Resource {
 	 * Creates new instance of resource with defined location, name, type and locale. It also will calculate resource path using
 	 * {@link PathUtils} utility.
 	 *
-	 * @param location resource location, can be <code>null</code>
-	 * @param name resource name, not <code>null</code>
-	 * @param type resource type, can be <code>null</code>
-	 * @param locale resource locale, can be <code>null</code>
+	 * @param location resource location, can be {@code null}
+	 * @param name resource name, not {@code null}
+	 * @param type resource type, can be {@code null}
+	 * @param locale resource locale, can be {@code null}
 	 */
 	protected AbstractResource(final String location, final String name, final String type, final Locale locale) {
-		assert name != null : "Resource name should not be null";
-
 		this.location = location;
 		this.name = name;
 		this.type = type;
@@ -115,12 +112,61 @@ public abstract class AbstractResource implements Resource {
 	 * {@inheritDoc}
 	 */
 	public Resource inLocale(final Locale newLocale) {
-		final List<Locale> locales = LocaleUtils.getCandidateLocales(newLocale);
-		for (Locale candidate : locales) {
+		if ((newLocale == null && locale == null) || (newLocale != null && newLocale.equals(locale))) {
+			return this;
+		}
+		return getResource(location, name, type, newLocale);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource withType(final String newType) {
+		if ((newType == null && type == null) || (newType != null && newType.equals(type))) {
+			return this;
+		}
+		return getResource(location, name, newType, locale);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource parent() {
+		return location != null ? getResource(location) : null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource child(final String relativePath) {
+		if (StringUtils.isEmpty(relativePath)) {
+			return this;
+		}
+		final String suggestedPath = StringUtils.isEmpty(path) ? relativePath :
+				path.equals(PathUtils.PATH_SEPARATOR) ?
+						path + relativePath :
+						path + PathUtils.PATH_SEPARATOR + relativePath;
+		return getResource(suggestedPath);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Set<Resource> children(final String... includes) {
+		final Set<String> includeSet = CollectionUtils.newSet(includes);
+		return children(includeSet, null);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource candidate() {
+		final List<Locale> candidates = LocaleUtils.getCandidateLocales(locale);
+		for (Locale candidate : candidates) {
 			if (candidate.equals(locale) && exists()) {
 				return this;
 			}
-			final Resource resource = createResource(location, name, type, candidate);
+			final Resource resource = create(location, name, type, candidate);
 			if (resource.exists()) {
 				return resource;
 			}
@@ -131,31 +177,20 @@ public abstract class AbstractResource implements Resource {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Resource withType(final String newType) {
-		if ((newType == null && type == null) || (newType != null && newType.equals(type))) {
-			return this;
+	public InputStream open() throws IOException {
+		final URL url = toURL();
+		if (url == null) {
+			return null;
 		}
-		return createResource(location, name, newType, locale);
+		return new BufferedInputStream(url.openStream());
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Resource parent() {
-		return location != null ? create(location) : null;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Resource create(final String absolutePath) {
-		// process root path
-		if (absolutePath.equals(PathUtils.PATH_SEPARATOR)) {
-			return createResource(null, absolutePath, null, null);
-		}
-
-		// cut ending slash
-		String resourceName = absolutePath.replaceAll("/+$", "");
+	public Resource getResource(final String absolutePath) {
+		// normalize path
+		String resourceName = PathUtils.normalizePath(absolutePath);
 
 		// calculate location
 		final int slashIndex = resourceName.lastIndexOf(PathUtils.PATH_SEPARATOR);
@@ -188,103 +223,36 @@ public abstract class AbstractResource implements Resource {
 		}
 
 		// create new resource
-		return createResource(suggestedLocation, resourceName, suggestedType, suggestedLocale);
+		return getResource(suggestedLocation, resourceName, suggestedType, suggestedLocale);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Resource child(final String relativePath) {
-		assert relativePath != null : "Path should not be null";
-		assert !relativePath.startsWith(PathUtils.PATH_SEPARATOR) : "Path should be relative";
-
-		if (StringUtils.isEmpty(relativePath)) {
-			return this;
-		}
-		final String suggestedPath = StringUtils.isEmpty(path) ? relativePath :
-				path.equals(PathUtils.PATH_SEPARATOR) ?
-						path + relativePath :
-						path + PathUtils.PATH_SEPARATOR + relativePath;
-		return create(suggestedPath);
+	public Resource getResource(final String location, final String name, final String type, final Locale locale) {
+		final String realLocation = PathUtils.normalizePath(location);
+		final Locale realLocale = locale != null ? locale : LocaleUtils.ROOT_LOCALE;
+		return create(realLocation, name, type, realLocale);
 	}
 
 	/**
-	 * {@inheritDoc}
-	 */
-	public Set<Resource> children(final String... includes) {
-		final Set<String> includeSet = CollectionUtils.newSet(includes);
-		return children(includeSet, null);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Set<Resource> children(final Set<String> includes, final Set<String> excludes) {
-		final Set<Resource> children = CollectionUtils.newSet();
-
-		if (exists()) {
-			final URL url = toURL();
-			if (url != null) {
-				addFiles(children, url.toExternalForm(), includes, excludes);
-			}
-		}
-		return children;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public InputStream open() throws IOException {
-		final URL url = toURL();
-		if (url == null) {
-			return null;
-		}
-		return new BufferedInputStream(url.openStream());
-	}
-
-	protected void addFiles(final Set<Resource> resources,
-							final String absolutePath,
-							final Set<String> includes,
-							final Set<String> excludes) {
-		final Set<String> resourceNames = PathSearcher.create(absolutePath).include(includes).exclude(excludes).search();
-
-		final StringBuilder pathBuilder = new StringBuilder();
-		if (!StringUtils.isEmpty(absolutePath)) {
-			pathBuilder.append(absolutePath);
-			if (!absolutePath.endsWith(PathUtils.PATH_SEPARATOR)) {
-				pathBuilder.append(PathUtils.PATH_SEPARATOR);
-			}
-		}
-
-		final String prefix = pathBuilder.toString();
-		for (String resourceName : resourceNames) {
-			final Resource resource = URIResource.get(prefix + resourceName);
-			if (resource != null && resource.exists()) {
-				resources.add(resource);
-			}
-		}
-	}
-
-	/**
-	 * Gets URL representation of resource. Will be <code>null</code> if resource doesn't exist.
+	 * Gets URL representation of resource. Will be {@code null} if resource doesn't exist.
 	 *
-	 * @return resource to URL representation or <code>null</code> if not exists
+	 * @return resource to URL representation or {@code null} if not exists
 	 */
 	protected abstract URL toURL();
 
 	/**
-	 * Creates new resource instance of needed implementation with defined location, name, type and locale.
+	 * Creates new resource instance of needed implementation with defined location, name, type and locale. It doesn't execute any
+	 * checks.
 	 *
-	 * @param location resource location, can be <code>null</code>
-	 * @param name resource name, not <code>null</code>
-	 * @param type resource type, can be <code>null</code>
-	 * @param locale resource locale, can be <code>null</code>
-	 * @return new resource instance of needed implementation
+	 * @param location resource location, can be {@code null}
+	 * @param name resource name, not {@code null}
+	 * @param type resource type, can be {@code null}
+	 * @param locale resource locale, not {@code null}
+	 * @return new resource instance of needed implementation, not {@code null}
 	 */
-	protected abstract Resource createResource(final String location,
-											   final String name,
-											   final String type,
-											   final Locale locale);
+	protected abstract Resource create(String location, String name, String type, Locale locale);
 
 	/**
 	 * {@inheritDoc}

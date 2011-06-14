@@ -58,7 +58,7 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 	 * @throws RuntimeException	  when error occurs while reading properties file
 	 */
 	public Messages getMessages(final String name, final Locale locale) {
-		final Resource resource = resourceLocator.getResource(name + ".properties").inLocale(locale);
+		final Resource resource = resourceLocator.getResource(name + ".properties").inLocale(locale).candidate();
 		if (resource != null) {
 			final Map<String, String> properties = readProperties(resource);
 			return new MessagesImpl(locale, properties);
