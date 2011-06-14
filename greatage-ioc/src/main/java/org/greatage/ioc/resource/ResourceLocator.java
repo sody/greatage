@@ -16,6 +16,7 @@
 
 package org.greatage.ioc.resource;
 
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -28,12 +29,23 @@ import java.util.Set;
 public interface ResourceLocator {
 
 	/**
-	 * Searches application resource by its location.
+	 * Searches application resource by its path.
 	 *
-	 * @param path resource location, not {@code null}
+	 * @param path resource path, not {@code null}
 	 * @return resource instance or {@code null} if not found
 	 */
 	Resource getResource(String path);
+
+	/**
+	 * Searches application resource by its location, name, type and locale.
+	 *
+	 * @param location resource location, can be {@code null}
+	 * @param name resource name, not {@code null}
+	 * @param type resource type, can be {@code null}
+	 * @param locale resource locale, can be {@code null}
+	 * @return new resource instance of needed implementation, not {@code null}
+	 */
+	Resource getResource(String location, String name, String type, Locale locale);
 
 	/**
 	 * Searches for application resources in defined location with specified include filter. If include patterns is

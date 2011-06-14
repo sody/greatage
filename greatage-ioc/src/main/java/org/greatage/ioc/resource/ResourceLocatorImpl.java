@@ -19,6 +19,7 @@ package org.greatage.ioc.resource;
 import org.greatage.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -36,7 +37,7 @@ public class ResourceLocatorImpl implements ResourceLocator {
 	 * Creates new instance of resource locator with defined resource providers ordered configuration that will be used for
 	 * retrieving resources.
 	 *
-	 * @param resourceProviders ordered configuration of resourcer providers
+	 * @param resourceProviders ordered configuration of resource providers
 	 */
 	public ResourceLocatorImpl(final List<ResourceProvider> resourceProviders) {
 		this.resourceProviders = resourceProviders;
@@ -50,7 +51,22 @@ public class ResourceLocatorImpl implements ResourceLocator {
 
 		for (ResourceProvider provider : resourceProviders) {
 			final Resource resource = provider.getResource(path);
-			if (resource != null) {
+			if (resource != null && resource.exists()) {
+				return resource;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Resource getResource(final String location, final String name, final String type, final Locale locale) {
+		assert name != null : "Resource name cannot be null";
+
+		for (ResourceProvider provider : resourceProviders) {
+			final Resource resource = provider.getResource(location, name, type, locale);
+			if (resource != null && resource.exists()) {
 				return resource;
 			}
 		}
