@@ -22,7 +22,7 @@ import org.greatage.util.DescriptionBuilder;
  * This class represents logger implementation through slf4j logging API.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class Slf4jLogger implements Logger {
 	private final org.slf4j.Logger delegate;

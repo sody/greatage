@@ -26,7 +26,7 @@ import java.lang.annotation.Annotation;
  * additional resource.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ExtraResources<T> implements ServiceResources<T> {
 	private final ServiceResources<T> resources;

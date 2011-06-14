@@ -24,7 +24,7 @@ package org.greatage.ioc;
  * @param <V> type of configuration items
  * @author Ivan Khalopik
  * @see org.greatage.util.OrderingUtils
- * @since 1.1
+ * @since 1.0
  */
 public interface OrderedConfiguration<V> {
 

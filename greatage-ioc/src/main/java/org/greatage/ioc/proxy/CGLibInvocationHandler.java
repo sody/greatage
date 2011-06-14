@@ -23,7 +23,7 @@ import net.sf.cglib.proxy.InvocationHandler;
  *
  * @param <T> object type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class CGLibInvocationHandler<T> extends DefaultInvocationHandler<T> implements InvocationHandler {
 

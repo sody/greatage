@@ -37,7 +37,7 @@ import java.util.Set;
  *
  * @param <T> bean type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ClassAccessImpl<T> implements ClassAccess<T> {
 	private final Map<String, PropertyAccess<T>> properties = CollectionUtils.newMap();

@@ -20,7 +20,7 @@ package org.greatage.ioc.coerce;
  * This interface represents type coercer service that converts source values to specified target class.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface TypeCoercer {
 

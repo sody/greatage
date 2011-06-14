@@ -20,7 +20,7 @@ package org.greatage.ioc.coerce;
  * This class represents {@link Coercion} implementation that converts values from boolean to string.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class BooleanToStringCoercion extends AbstractCoercion<Boolean, String> {
 

@@ -26,7 +26,7 @@ import java.lang.annotation.Annotation;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ServiceDefinition<T> {
 

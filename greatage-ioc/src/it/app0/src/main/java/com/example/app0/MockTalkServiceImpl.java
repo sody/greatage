@@ -18,7 +18,7 @@ package com.example.app0;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockTalkServiceImpl implements MockTalkService {
 	private final MockMessageService messageService;

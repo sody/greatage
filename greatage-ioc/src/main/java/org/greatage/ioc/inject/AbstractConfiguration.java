@@ -29,7 +29,7 @@ import java.lang.reflect.Constructor;
  * @param <T> service type
  * @param <C> configuration resulting type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public abstract class AbstractConfiguration<T, C> {
 	private final ServiceResources<T> resources;

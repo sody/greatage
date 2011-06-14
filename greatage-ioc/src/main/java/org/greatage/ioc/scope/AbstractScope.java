@@ -29,7 +29,7 @@ import java.util.Map;
  * found creates new instance using specified service builder.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public abstract class AbstractScope implements Scope {
 	private final Map<Marker, ObjectBuilder> serviceBuilders = CollectionUtils.newConcurrentMap();

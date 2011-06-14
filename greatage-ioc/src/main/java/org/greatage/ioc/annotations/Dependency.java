@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * This annotation marks module class inside the IoC container as definition for child modules.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

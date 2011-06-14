@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * @author Ivan Khalopik
- * @since 8.0
+ * @since 1.0
  */
 public class CompositeInterceptor implements Interceptor {
 	private final Map<Invocation, Invocation> invocations = CollectionUtils.newMap();

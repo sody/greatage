@@ -21,7 +21,7 @@ package org.greatage.ioc.proxy;
  *
  * @param <T> type of class that will be created by {@link #build()} method
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ObjectBuilder<T> {
 

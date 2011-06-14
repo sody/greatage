@@ -16,7 +16,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.AnnotationFactory;
+import org.greatage.util.AnnotationFactory;
 import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.util.DescriptionBuilder;
 
@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class Marker<T> {
 	private final Class<T> serviceClass;

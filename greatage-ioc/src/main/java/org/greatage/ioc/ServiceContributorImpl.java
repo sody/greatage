@@ -28,7 +28,7 @@ import java.lang.reflect.Modifier;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceContributorImpl<T> implements ServiceContributor<T> {
 	private final Class<?> moduleClass;

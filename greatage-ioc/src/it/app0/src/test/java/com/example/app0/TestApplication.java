@@ -24,7 +24,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class TestApplication extends Assert {
 

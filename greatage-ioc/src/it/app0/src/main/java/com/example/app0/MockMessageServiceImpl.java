@@ -22,7 +22,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockMessageServiceImpl implements MockMessageService {
 	private final List<String> messages;

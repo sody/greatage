@@ -27,7 +27,7 @@ import java.util.List;
  * decorated. It also provides access to other services.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface Injector {
 

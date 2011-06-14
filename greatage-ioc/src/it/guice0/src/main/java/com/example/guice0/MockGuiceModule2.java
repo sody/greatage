@@ -24,7 +24,7 @@ import com.google.inject.name.Named;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockGuiceModule2 extends AbstractModule {
 

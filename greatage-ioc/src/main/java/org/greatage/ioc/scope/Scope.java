@@ -25,7 +25,7 @@ import java.lang.annotation.Annotation;
  * This interface represents service scope object that is used to obtain service instances according to their scope.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface Scope {
 

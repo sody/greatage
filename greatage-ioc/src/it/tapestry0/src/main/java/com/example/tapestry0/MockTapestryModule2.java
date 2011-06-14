@@ -20,7 +20,7 @@ import org.apache.tapestry5.ioc.annotations.InjectService;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockTapestryModule2 {
 

@@ -22,7 +22,7 @@ import org.greatage.ioc.ApplicationException;
  * This class represents exception that is thrown by property access helpers.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class PropertyAccessException extends ApplicationException {
 

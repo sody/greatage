@@ -25,7 +25,7 @@ import org.greatage.util.DescriptionBuilder;
  * @param <K> type of cache keys
  * @param <V> type of cache items
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class OSCache<K, V> implements Cache<K, V> {
 	private static final int DEFAULT_REFRESH_PERIOD = 10000;

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class TestTypeCoercer extends Assert {
 	private TypeCoercer typeCoercer;

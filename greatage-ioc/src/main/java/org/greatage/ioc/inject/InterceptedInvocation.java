@@ -25,7 +25,7 @@ import java.lang.reflect.Method;
  * This class represents {@link org.greatage.ioc.proxy.Invocation} proxy implementation that adds method advices logic to invocation delegate.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class InterceptedInvocation implements Invocation {
 	private final Invocation delegate;

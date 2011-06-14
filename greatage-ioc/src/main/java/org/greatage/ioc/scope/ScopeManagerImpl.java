@@ -27,7 +27,7 @@ import java.util.Map;
  * This class represents default {@link ScopeManager} implementation that obtains scope instances by their name.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ScopeManagerImpl implements ScopeManager {
 	private final Map<Class<? extends Annotation>, Scope> scopes = CollectionUtils.newMap();

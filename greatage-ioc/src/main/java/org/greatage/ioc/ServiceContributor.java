@@ -22,7 +22,7 @@ package org.greatage.ioc;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ServiceContributor<T> {
 

@@ -25,7 +25,7 @@ import java.util.Map;
  *
  * @param <E> enum type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class StringToEnumCoercion<E extends Enum<E>> extends AbstractCoercion<String, E> {
 	private final Map<String, E> stringToEnum = CollectionUtils.newMap();

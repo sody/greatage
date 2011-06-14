@@ -22,7 +22,7 @@ import net.sf.cglib.proxy.Enhancer;
  * This class represents proxy factory implementation using CGLib library.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class CGLibProxyFactory extends AbstractProxyFactory {
 

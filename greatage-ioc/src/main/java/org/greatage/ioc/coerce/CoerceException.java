@@ -23,7 +23,7 @@ import org.greatage.ioc.ApplicationException;
  * value.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class CoerceException extends ApplicationException {
 

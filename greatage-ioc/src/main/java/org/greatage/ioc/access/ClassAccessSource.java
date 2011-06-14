@@ -20,7 +20,7 @@ package org.greatage.ioc.access;
  * This interface represents service that simplifies bean's property resolving mechanism.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ClassAccessSource {
 

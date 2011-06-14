@@ -23,7 +23,7 @@ package org.greatage.ioc.access;
  *
  * @param <T> bean type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface PropertyAccess<T> {
 

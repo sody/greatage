@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  * ordered and mapped configurations respectively.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 @Target( { ElementType.TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)

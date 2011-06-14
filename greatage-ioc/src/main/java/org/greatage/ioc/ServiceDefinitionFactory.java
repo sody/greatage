@@ -29,7 +29,7 @@ import java.lang.reflect.Modifier;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 	private final Class<?> moduleClass;

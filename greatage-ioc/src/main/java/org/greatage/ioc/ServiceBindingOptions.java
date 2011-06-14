@@ -23,7 +23,7 @@ import java.lang.annotation.Annotation;
  * unique id, service scope and is it overrides the existing service.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ServiceBindingOptions {
 

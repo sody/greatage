@@ -23,7 +23,7 @@ package org.greatage.ioc.coerce;
  * @param <S> source type
  * @param <T> target type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public abstract class AbstractCoercion<S, T> implements Coercion<S, T> {
 	private final Class<S> sourceClass;

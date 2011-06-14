@@ -25,7 +25,7 @@ import java.util.Map;
  * coercions.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class StringToEnumCoercionProvider implements CoercionProvider {
 	private final Map<Class, Coercion> coercionsByTargetClass = CollectionUtils.newConcurrentMap();

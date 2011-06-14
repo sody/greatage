@@ -21,7 +21,7 @@ import org.greatage.util.ReflectionUtils;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockObjectBuilder<T> implements ObjectBuilder<T> {
 	private final Class<T> interfaceClass;

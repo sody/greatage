@@ -1,4 +1,4 @@
-package org.greatage.ioc.annotations;
+package org.greatage.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.IncompleteAnnotationException;
@@ -8,7 +8,7 @@ import java.lang.reflect.Proxy;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class AnnotationFactory<A extends Annotation> implements InvocationHandler {
 	private final Class<A> annotationClass;

@@ -21,7 +21,7 @@ package org.greatage.ioc;
  * Great Age IoC container. All application specific exceptions must be extended from this class.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ApplicationException extends RuntimeException {
 

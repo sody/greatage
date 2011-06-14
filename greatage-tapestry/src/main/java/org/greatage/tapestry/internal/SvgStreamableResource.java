@@ -23,7 +23,7 @@ import java.io.InputStream;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class SvgStreamableResource implements StreamableResource {
 	private final StreamableResource delegate;

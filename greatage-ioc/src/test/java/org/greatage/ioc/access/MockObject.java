@@ -18,7 +18,7 @@ package org.greatage.ioc.access;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockObject {
 	private final String message;

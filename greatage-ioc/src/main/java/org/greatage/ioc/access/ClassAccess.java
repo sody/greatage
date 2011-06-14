@@ -26,7 +26,7 @@ import java.util.Set;
  * @author Ivan Khalopik
  * @see ClassAccessSource
  * @see PropertyAccess
- * @since 1.1
+ * @since 1.0
  */
 public interface ClassAccess<T> {
 

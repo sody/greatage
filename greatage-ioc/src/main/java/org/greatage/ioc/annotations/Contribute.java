@@ -29,7 +29,7 @@ import java.lang.annotation.Target;
  * org.greatage.ioc.MappedConfiguration} for unordered, ordered and mapped service configuration respectively.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

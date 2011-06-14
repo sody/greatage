@@ -4,7 +4,7 @@ import org.greatage.ioc.proxy.Interceptor;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ServiceAdvice {
 

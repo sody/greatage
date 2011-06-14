@@ -25,7 +25,7 @@ import java.util.Locale;
  * creation by class name.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public abstract class AbstractMessagesSource implements MessagesSource {
 

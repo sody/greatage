@@ -23,7 +23,7 @@ package org.greatage.ioc;
  * @param <K> type of configuration keys
  * @param <V> type of configuration values
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface MappedConfiguration<K, V> {
 

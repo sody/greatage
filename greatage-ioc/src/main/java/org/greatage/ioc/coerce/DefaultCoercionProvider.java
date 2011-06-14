@@ -22,7 +22,7 @@ import java.util.Collection;
  * This class represents {@link CoercionProvider} that can be configured with multiply {@link Coercion} instances.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class DefaultCoercionProvider implements CoercionProvider {
 	private final Collection<Coercion> coercions;

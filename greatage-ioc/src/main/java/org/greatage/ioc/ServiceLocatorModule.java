@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceLocatorModule implements Module, ServiceContributor<ServiceLocator> {
 	private final Marker<ServiceLocator> marker = Marker.get(ServiceLocator.class);

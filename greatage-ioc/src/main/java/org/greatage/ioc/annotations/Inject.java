@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * or service interface.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 @Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)

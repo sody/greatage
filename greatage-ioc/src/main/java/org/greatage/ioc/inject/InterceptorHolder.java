@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
- * @since 8.0
+ * @since 1.0
  */
 public class InterceptorHolder implements InvocationFilter {
 	private final Interceptor interceptor;

@@ -20,7 +20,7 @@ package org.greatage.ioc.logging;
  * This interface represents utility producing Loggers for various logging APIs by their class or name.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface LoggerSource {
 

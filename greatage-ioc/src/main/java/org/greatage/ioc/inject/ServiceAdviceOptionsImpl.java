@@ -2,7 +2,7 @@ package org.greatage.ioc.inject;
 
 import org.greatage.ioc.InvocationFilter;
 import org.greatage.ioc.ServiceAdviceOptions;
-import org.greatage.ioc.annotations.AnnotationFactory;
+import org.greatage.util.AnnotationFactory;
 import org.greatage.ioc.proxy.Interceptor;
 import org.greatage.ioc.proxy.Invocation;
 import org.greatage.util.Ordered;
@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
- * @since 8.0
+ * @since 1.0
  */
 public class ServiceAdviceOptionsImpl implements ServiceAdviceOptions, Ordered {
 	private static final InvocationFilter DEFAULT_FILTER = new InvocationFilter() {

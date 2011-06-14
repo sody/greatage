@@ -22,7 +22,7 @@ import java.util.Map;
  * This class represents configurable {@link SymbolProvider} implementation that gets symbols from configured map.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class DefaultSymbolProvider implements SymbolProvider {
 	private final Map<String, String> symbols;

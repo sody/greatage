@@ -24,7 +24,7 @@ import java.lang.reflect.Proxy;
  * This class represents proxy factory implementation using JDK.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class JdkProxyFactory extends AbstractProxyFactory {
 

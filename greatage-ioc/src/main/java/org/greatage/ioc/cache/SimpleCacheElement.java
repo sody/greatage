@@ -23,7 +23,7 @@ import org.greatage.util.DescriptionBuilder;
  *
  * @param <V> type of cache items
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class SimpleCacheElement<V> {
 	private final V value;

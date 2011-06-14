@@ -2,7 +2,7 @@ package org.greatage.ioc.proxy;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockInterceptor implements Interceptor {
 	private final String message;

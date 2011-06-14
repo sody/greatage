@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
- * @since 8.0
+ * @since 1.0
  */
 public class ServiceAdviceImpl<T> extends AbstractConfiguration<T, Interceptor> implements ServiceAdvice {
 	private final List<ServiceAdviceOptionsImpl> advices = CollectionUtils.newList();

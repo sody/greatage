@@ -20,7 +20,7 @@ package org.greatage.ioc.resource;
  * This class represents localized strings mapped by keys for particular locale.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface Messages {
 

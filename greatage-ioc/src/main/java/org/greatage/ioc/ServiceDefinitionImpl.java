@@ -27,7 +27,7 @@ import java.lang.reflect.Constructor;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	private final Marker<T> marker;

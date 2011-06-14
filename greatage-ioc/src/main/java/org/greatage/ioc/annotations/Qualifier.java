@@ -24,7 +24,7 @@ import java.lang.annotation.*;
  * and map for unordered, ordered and mapped configurations respectively.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 @Target(ElementType.ANNOTATION_TYPE)
 @Retention(RetentionPolicy.RUNTIME)

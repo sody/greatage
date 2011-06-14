@@ -32,7 +32,7 @@ import java.util.Map;
  * as additional resource. This resources are calculated with service contributors during configure phase.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class BuildResources<T> implements ServiceResources<T> {
 	private final Logger logger;

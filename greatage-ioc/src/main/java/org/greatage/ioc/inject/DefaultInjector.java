@@ -34,7 +34,7 @@ import java.util.List;
  * other services, symbols or specific service logger instance.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class DefaultInjector implements Injector {
 	private final List<InjectionProvider> providers;

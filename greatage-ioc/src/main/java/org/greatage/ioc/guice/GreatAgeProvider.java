@@ -22,7 +22,7 @@ import org.greatage.ioc.ServiceLocator;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class GreatAgeProvider<T> implements Provider<T> {
 	private final ServiceLocator locator;

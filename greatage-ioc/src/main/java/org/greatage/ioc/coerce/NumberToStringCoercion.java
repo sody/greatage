@@ -20,7 +20,7 @@ package org.greatage.ioc.coerce;
  * This class represents {@link Coercion} implementation that converts values from number to string.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class NumberToStringCoercion extends AbstractCoercion<Number, String> {
 

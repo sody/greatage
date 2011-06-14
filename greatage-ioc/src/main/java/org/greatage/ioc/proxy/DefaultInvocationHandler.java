@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @param <T> delegate type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class DefaultInvocationHandler<T> implements InvocationHandler {
 	private final ObjectBuilder<T> builder;

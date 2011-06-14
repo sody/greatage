@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * This class represents proxy factory implementation using javassist library.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class JavassistProxyFactory extends AbstractProxyFactory {
 	private static final AtomicLong UID_GENERATOR = new AtomicLong(System.currentTimeMillis());

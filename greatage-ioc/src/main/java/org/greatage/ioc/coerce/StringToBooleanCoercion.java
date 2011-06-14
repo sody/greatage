@@ -20,7 +20,7 @@ package org.greatage.ioc.coerce;
  * This class represents {@link Coercion} implementation that converts values from string to boolean.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class StringToBooleanCoercion extends AbstractCoercion<String, Boolean> {
 	private static final String VALUE_TRUE = "true";

@@ -22,7 +22,7 @@ package org.greatage.ioc.cache;
  * @param <K>   type of cache keys
  * @param <V>   type of cache items
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface Cache<K, V> {
 

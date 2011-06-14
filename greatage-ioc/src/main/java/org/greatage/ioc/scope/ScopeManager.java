@@ -23,7 +23,7 @@ import java.util.Collection;
  * This interface represents utility service that obtains scope instances by their name.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ScopeManager {
 

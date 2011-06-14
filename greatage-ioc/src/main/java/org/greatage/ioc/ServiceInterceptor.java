@@ -24,7 +24,7 @@ package org.greatage.ioc;
  * @author Ivan Khalopik
  * @see org.greatage.ioc.proxy.ProxyFactory
  * @see org.greatage.ioc.proxy.Interceptor
- * @since 1.1
+ * @since 1.0
  */
 public interface ServiceInterceptor<T> {
 

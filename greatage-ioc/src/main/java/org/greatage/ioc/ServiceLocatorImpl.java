@@ -31,7 +31,7 @@ import java.util.Set;
  * container.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();

@@ -18,7 +18,7 @@ package org.greatage.ioc.proxy;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockIOCInterfaceImpl3 implements MockIOCInterface {
 	public static final String MESSAGE = "mock-message";

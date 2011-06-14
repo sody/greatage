@@ -28,7 +28,7 @@ import java.io.IOException;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ThreadCleanupFilter implements RequestFilter {
 	private Scope threadScope;

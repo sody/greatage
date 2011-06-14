@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class GreatAgeServiceDef implements ServiceDef {
 	private final ServiceLocator locator;

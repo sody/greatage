@@ -33,7 +33,7 @@ import java.util.Set;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class TapestryIntegration implements Module {
 	private final Set<ServiceDefinition<?>> services = CollectionUtils.newSet();

@@ -26,7 +26,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 	private final Registry registry;

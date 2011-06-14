@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
  * This class represents internal utility methods for calculating service dependencies.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class InternalUtils {
 

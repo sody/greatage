@@ -27,7 +27,7 @@ import java.util.Map;
  * thread. Default scope identifier is {@link Threaded}.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ThreadScope extends AbstractScope {
 	private final ThreadLocal<Map<Marker, Object>> services = new ThreadLocal<Map<Marker, Object>>() {

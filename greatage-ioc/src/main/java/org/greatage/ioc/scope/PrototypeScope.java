@@ -27,7 +27,7 @@ import java.util.Map;
  * points where it is accessed. Default scope identifier is {@link org.greatage.ioc.annotations.Prototype}.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class PrototypeScope extends AbstractScope {
 

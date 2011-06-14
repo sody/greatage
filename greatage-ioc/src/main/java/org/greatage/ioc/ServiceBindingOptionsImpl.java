@@ -16,7 +16,7 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.AnnotationFactory;
+import org.greatage.util.AnnotationFactory;
 import org.greatage.ioc.annotations.NamedImpl;
 import org.greatage.ioc.annotations.Singleton;
 
@@ -28,7 +28,7 @@ import java.lang.annotation.Annotation;
  *
  * @param <T> service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	private final Class<T> serviceClass;

@@ -41,7 +41,7 @@ import java.util.Map;
  * This class represents utility that simplifies {@link ServiceLocator} building process.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceLocatorBuilder {
 	private final ServiceLocatorModule rootModule = new ServiceLocatorModule();

@@ -20,7 +20,7 @@ package org.greatage.ioc.logging;
  * This interface represents enhanced slf4j logger that provides simplified access to all log operations.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface Logger {
 

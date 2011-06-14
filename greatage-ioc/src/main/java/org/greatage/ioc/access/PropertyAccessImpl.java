@@ -27,7 +27,7 @@ import java.lang.reflect.Method;
  *
  * @param <T> bean type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class PropertyAccessImpl<T> implements PropertyAccess<T> {
 	private final ClassAccess<T> classAccess;

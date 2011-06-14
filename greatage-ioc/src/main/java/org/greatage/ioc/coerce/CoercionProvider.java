@@ -21,7 +21,7 @@ package org.greatage.ioc.coerce;
  * supported source and target coercion classes.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface CoercionProvider {
 

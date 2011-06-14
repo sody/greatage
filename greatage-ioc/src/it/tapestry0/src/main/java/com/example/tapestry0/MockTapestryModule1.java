@@ -18,7 +18,7 @@ package com.example.tapestry0;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class MockTapestryModule1 {
 

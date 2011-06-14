@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @param <T> module service type
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	private final List<ServiceDefinition<?>> services = CollectionUtils.newList();

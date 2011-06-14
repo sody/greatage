@@ -28,7 +28,7 @@ import java.util.Map;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class TestMessagesSource extends Assert {
 	private MessagesSource messagesSource;

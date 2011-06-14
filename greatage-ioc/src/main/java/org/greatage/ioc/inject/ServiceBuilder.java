@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ServiceBuilder<T> implements ObjectBuilder<T> {
 	private final Logger logger;

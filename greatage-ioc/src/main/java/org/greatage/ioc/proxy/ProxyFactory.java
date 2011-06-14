@@ -21,7 +21,7 @@ package org.greatage.ioc.proxy;
  * only as needed with all configured method advices.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public interface ProxyFactory {
 

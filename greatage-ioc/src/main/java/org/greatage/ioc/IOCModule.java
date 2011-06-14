@@ -36,7 +36,7 @@ import org.greatage.ioc.symbol.*;
  * ResourceLocator}, {@link MessagesSource}, {@link ClassAccessSource}.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class IOCModule {
 

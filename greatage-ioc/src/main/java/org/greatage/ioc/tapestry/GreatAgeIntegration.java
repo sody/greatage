@@ -31,7 +31,7 @@ import java.util.Set;
 
 /**
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class GreatAgeIntegration implements ModuleDef {
 	private final Map<String, ServiceDef> services = CollectionFactory.newMap();

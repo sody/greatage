@@ -32,7 +32,7 @@ import java.util.List;
  * @param <T> service type
  * @param <V> type of configuration items
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class OrderedConfigurationImpl<T, V> extends AbstractConfiguration<T, List<V>>
 		implements OrderedConfiguration<V> {

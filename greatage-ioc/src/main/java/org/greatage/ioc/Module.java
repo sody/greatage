@@ -29,7 +29,7 @@ import java.util.List;
  * @see ServiceDefinition
  * @see ServiceContributor
  * @see ServiceInterceptor
- * @since 1.1
+ * @since 1.0
  */
 public interface Module {
 

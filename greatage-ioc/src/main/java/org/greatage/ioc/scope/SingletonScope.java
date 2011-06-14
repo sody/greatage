@@ -27,7 +27,7 @@ import java.util.Map;
  * Default scope identifier is {@link Singleton}.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class SingletonScope extends AbstractScope {
 	private final Map<Marker, Object> services = CollectionUtils.newConcurrentMap();

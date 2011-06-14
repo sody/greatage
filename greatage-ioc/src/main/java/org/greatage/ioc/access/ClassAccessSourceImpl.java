@@ -25,7 +25,7 @@ import java.util.Map;
  * class and builds missing.
  *
  * @author Ivan Khalopik
- * @since 1.1
+ * @since 1.0
  */
 public class ClassAccessSourceImpl implements ClassAccessSource {
 	private final Map<Class, ClassAccess> accesses = CollectionUtils.newConcurrentMap();
