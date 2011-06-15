@@ -17,9 +17,9 @@ public class TestGenerateMarker extends Assert {
 	public Object[][] testGenerateMarkerData() {
 		return new Object[][] {
 				{ void.class, null, Marker.get(Object.class) },
-				{ void.class, MockBean.class.getAnnotations(), Marker.get(Object.class,"test") },
+				{ void.class, MockBean.class.getAnnotations(), Marker.get(Object.class).withName("test") },
 
-				{ MockInterface.class, MockBean.class.getAnnotations(), Marker.get(MockInterface.class, "test") },
+				{ MockInterface.class, MockBean.class.getAnnotations(), Marker.get(MockInterface.class).withName("test") },
 
 				{ MockInterface.class, null, Marker.get(MockInterface.class) },
 				{ MockClass.class, null, Marker.get(MockClass.class) },
@@ -43,7 +43,7 @@ public class TestGenerateMarker extends Assert {
 		assertNotNull(actual);
 
 		assertEquals(actual.getServiceClass(), expected.getServiceClass());
-		assertEquals(actual.getAnnotation(), expected.getAnnotation());
+		assertEquals(actual.getQualifier(), expected.getQualifier());
 		assertEquals(actual, expected);
 	}
 

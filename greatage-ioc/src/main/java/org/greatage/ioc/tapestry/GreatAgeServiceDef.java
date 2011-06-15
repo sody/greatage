@@ -46,7 +46,7 @@ public class GreatAgeServiceDef implements ServiceDef {
 
 	private String calculateServiceId(final Marker<?> marker) {
 		final StringBuilder builder = new StringBuilder(marker.getServiceClass().getName());
-		final Annotation annotation = marker.getAnnotation();
+		final Annotation annotation = marker.getQualifier();
 		if (annotation != null) {
 			if (annotation instanceof Named) {
 				return ((Named) annotation).value();

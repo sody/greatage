@@ -16,8 +16,8 @@
 
 package org.greatage.ioc;
 
-import org.greatage.util.AnnotationFactory;
 import org.greatage.ioc.annotations.NamedImpl;
+import org.greatage.util.AnnotationFactory;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.annotation.Annotation;
@@ -28,42 +28,69 @@ import java.lang.annotation.Annotation;
  */
 public class Marker<T> {
 	private final Class<T> serviceClass;
-	private final Annotation annotation;
 
-	private final int hashCode;
+	private Class<? extends Annotation> scope;
+	private Annotation qualifier;
 
-	Marker(final Class<T> serviceClass, final Annotation annotation) {
+	private Marker(final Class<T> serviceClass) {
+		this(serviceClass, null, null);
+	}
+
+	private Marker(final Class<T> serviceClass, final Class<? extends Annotation> scope, final Annotation qualifier) {
 		if (serviceClass == null || serviceClass.equals(void.class)) {
 			throw new IllegalArgumentException("Service class should not be null");
 		}
 
 		this.serviceClass = serviceClass;
-		this.annotation = annotation;
+		this.scope = scope;
+		this.qualifier = qualifier;
+	}
 
-		this.hashCode = 31 * serviceClass.hashCode() + (annotation != null ? annotation.hashCode() : 0);
+	public Marker<T> inScope(final Class<? extends Annotation> scope) {
+		this.scope = scope;
+		return this;
+	}
+
+	public Marker<T> withQualifier(final Annotation qualifier) {
+		this.qualifier = qualifier;
+		return this;
+	}
+
+	public Marker<T> withQualifier(final Class<? extends Annotation> qualifierClass) {
+		return withQualifier(AnnotationFactory.create(qualifierClass));
+	}
+
+	public Marker<T> withName(final String name) {
+		return withQualifier(new NamedImpl(name));
 	}
 
 	public Class<T> getServiceClass() {
 		return serviceClass;
 	}
 
-	public Annotation getAnnotation() {
-		return annotation;
+	public Class<? extends Annotation> getScope() {
+		return scope;
+	}
+
+	public Annotation getQualifier() {
+		return qualifier;
 	}
 
 	public boolean isAssignableFrom(final Marker<?> marker) {
 		if (!serviceClass.isAssignableFrom(marker.getServiceClass())) {
 			return false;
 		}
-		else if (annotation != null && !annotation.equals(marker.getAnnotation())) {
+		else if (qualifier != null && !qualifier.equals(marker.getQualifier())) {
 			return false;
 		}
+		//todo: check scope also?
 		return true;
 	}
 
 	@Override
 	public int hashCode() {
-		return hashCode;
+		//todo: check scope also?
+		return 31 * serviceClass.hashCode() + (qualifier != null ? qualifier.hashCode() : 0);
 	}
 
 	@SuppressWarnings("SimplifiableIfStatement")
@@ -77,36 +104,29 @@ public class Marker<T> {
 		}
 		final Marker<?> marker = (Marker<?>) object;
 		if (serviceClass.equals(marker.getServiceClass())) {
-			if (annotation == null && marker.getAnnotation() == null) {
+			if (qualifier == null && marker.getQualifier() == null) {
 				return true;
 			}
-			return annotation != null && annotation.equals(marker.getAnnotation());
+			return qualifier != null && qualifier.equals(marker.getQualifier());
 		}
+		//todo: check scope also?
 		return false;
 	}
 
 	public static <T> Marker<T> get(final Class<T> serviceClass) {
-		return new Marker<T>(serviceClass, null);
-	}
-
-	public static <T> Marker<T> get(final Class<T> serviceClass, final Annotation annotation) {
-		return new Marker<T>(serviceClass, annotation);
-	}
-
-	public static <T> Marker<T> get(final Class<T> serviceClass, final Class<? extends Annotation> annotationClass) {
-		final Annotation annotation = AnnotationFactory.create(annotationClass);
-		return new Marker<T>(serviceClass, annotation);
-	}
-
-	public static <T> Marker<T> get(final Class<T> serviceClass, final String name) {
-		return new Marker<T>(serviceClass, new NamedImpl(name));
+		return new Marker<T>(serviceClass);
 	}
 
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
 		builder.append("service", serviceClass.getSimpleName());
-		builder.append("annotation", annotation);
+		if (scope != null) {
+			builder.append("scope", scope.getSimpleName());
+		}
+		if (qualifier != null) {
+			builder.append("qualifier", qualifier);
+		}
 		return builder.toString();
 	}
 }

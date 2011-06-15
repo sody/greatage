@@ -42,11 +42,11 @@ public class TestApplication extends Assert {
 	public void testServiceBinder() {
 		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockBindModule.class);
 
-		MockTalkService service = locator.getService(Marker.get(MockTalkService.class, "service1"));
+		MockTalkService service = locator.getService(Marker.get(MockTalkService.class).withName("service1"));
 		assertNotNull(service);
 		assertEquals(service.say(), "hello");
 
-		service = locator.getService(Marker.get(MockTalkService.class, "service2"));
+		service = locator.getService(Marker.get(MockTalkService.class).withName("service2"));
 		assertNotNull(service);
 		assertEquals(service.say(), "hello");
 	}
@@ -55,11 +55,11 @@ public class TestApplication extends Assert {
 	public void testServiceInterceptor() {
 		final ServiceLocator locator = ServiceLocatorBuilder.createServiceLocator(MockInterceptModule.class);
 
-		MockTalkService service = locator.getService(Marker.get(MockTalkService.class, "talkService1"));
+		MockTalkService service = locator.getService(Marker.get(MockTalkService.class).withName("talkService1"));
 		assertNotNull(service);
 		assertEquals(service.say(), "hello");
 
-		service = locator.getService(Marker.get(MockTalkService.class, "talkService2"));
+		service = locator.getService(Marker.get(MockTalkService.class).withName("talkService2"));
 		assertNotNull(service);
 		assertEquals(service.say(), "deprecated2:deprecated1:[hello]");
 	}

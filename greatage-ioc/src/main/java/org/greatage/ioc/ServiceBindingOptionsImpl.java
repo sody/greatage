@@ -95,7 +95,7 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 */
 	public ServiceDefinition<T> createService() {
 		final Marker<T> marker = annotation != null ?
-				Marker.get(serviceClass, annotation) :
+				Marker.get(serviceClass).withQualifier(annotation) :
 				InternalUtils.generateMarker(serviceClass, implementationClass.getAnnotations());
 		return new ServiceDefinitionImpl<T>(marker, implementationClass, serviceScope, override, eager);
 	}

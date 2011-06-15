@@ -36,7 +36,7 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 	TapestryServiceDefinition(final Registry registry, final String serviceId, final Class<T> serviceClass) {
 		this.registry = registry;
 		this.serviceId = serviceId;
-		marker = Marker.get(serviceClass, serviceId);
+		marker = Marker.get(serviceClass).withName(serviceId);
 	}
 
 	public Marker<T> getMarker() {

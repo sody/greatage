@@ -17,6 +17,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Build;
+import org.greatage.ioc.annotations.Singleton;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.annotation.Annotation;
@@ -55,10 +56,10 @@ public class ServiceDefinitionFactory<T> implements ServiceDefinition<T> {
 		override = build.override();
 		eager = build.eager();
 
-		scope = InternalUtils.findScope(buildMethod.getAnnotations());
-
 		//noinspection unchecked
 		marker = (Marker<T>) InternalUtils.generateMarker(buildMethod.getReturnType(), buildMethod.getAnnotations());
+
+		scope = marker.getScope() != null ? marker.getScope() : Singleton.class;
 	}
 
 	/**

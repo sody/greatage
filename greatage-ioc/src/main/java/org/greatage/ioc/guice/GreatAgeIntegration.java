@@ -48,8 +48,8 @@ public class GreatAgeIntegration implements Module {
 	public void configure(final Binder binder) {
 		for (Marker<?> marker : locator.getMarkers()) {
 			final AnnotatedBindingBuilder builder = binder.bind(marker.getServiceClass());
-			if (marker.getAnnotation() != null && marker.getAnnotation().annotationType().equals(Named.class)) {
-				builder.annotatedWith(Names.named(((Named) marker.getAnnotation()).value()));
+			if (marker.getQualifier() != null && marker.getQualifier().annotationType().equals(Named.class)) {
+				builder.annotatedWith(Names.named(((Named) marker.getQualifier()).value()));
 			}
 			builder.toProvider(new GreatAgeProvider(locator, marker));
 		}

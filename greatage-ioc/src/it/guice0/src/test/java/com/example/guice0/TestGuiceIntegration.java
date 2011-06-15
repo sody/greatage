@@ -47,19 +47,19 @@ public class TestGuiceIntegration extends Assert {
 				.build();
 		assertNotNull(locator);
 
-		Marker<MockMessageService> marker = Marker.get(MockMessageService.class, "GreatAgeMessageService");
+		Marker<MockMessageService> marker = Marker.get(MockMessageService.class).withName("GreatAgeMessageService");
 		MockMessageService messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class, "GuiceMessageService");
+		marker = Marker.get(MockMessageService.class).withName("GuiceMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class, "GreatAgeMessageServiceDelegate");
+		marker = Marker.get(MockMessageService.class).withName("GreatAgeMessageServiceDelegate");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
