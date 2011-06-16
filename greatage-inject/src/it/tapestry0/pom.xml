@@ -26,12 +26,8 @@
 	</parent>
 
 	<groupId>org.greatage</groupId>
-	<artifactId>greatage-tapestry</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<artifactId>greatage-inject-tapestry0</artifactId>
 	<packaging>jar</packaging>
-
-	<name>GreatAge Tapestry Library</name>
-	<description>GreatAge Tapestry Library</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -47,57 +43,7 @@
 				<directory>src/test/resources</directory>
 			</testResource>
 		</testResources>
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<archive>
-						<manifestEntries>
-							<Tapestry-Module-Classes>org.greatage.tapestry.services.CommonModule</Tapestry-Module-Classes>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-		</plugins>
 	</build>
-
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-project-info-reports-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<id>default</id>
-						<reports>
-							<report>summary</report>
-							<report>dependencies</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>versions-maven-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<id>empty</id>
-					</reportSet>
-				</reportSets>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<reportSets>
-					<reportSet>
-						<id>empty</id>
-					</reportSet>
-				</reportSets>
-			</plugin>
-		</plugins>
-	</reporting>
 
 	<dependencies>
 		<dependency>
@@ -108,19 +54,6 @@
 		<dependency>
 			<groupId>org.greatage</groupId>
 			<artifactId>greatage-inject</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.greatage</groupId>
-			<artifactId>greatage-security</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.greatage</groupId>
-			<artifactId>greatage-domain</artifactId>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -129,19 +62,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.tapestry</groupId>
 			<artifactId>tapestry-ioc</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tapestry</groupId>
-			<artifactId>tapestry-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -151,10 +78,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.tapestry</groupId>
-			<artifactId>tapestry-test</artifactId>
-			<scope>provided</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 </project>

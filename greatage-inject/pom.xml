@@ -26,12 +26,11 @@
 	</parent>
 
 	<groupId>org.greatage</groupId>
-	<artifactId>greatage-tapestry</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<artifactId>greatage-inject</artifactId>
 	<packaging>jar</packaging>
 
-	<name>GreatAge Tapestry Library</name>
-	<description>GreatAge Tapestry Library</description>
+	<name>GreatAge IoC Container</name>
+	<description>GreatAge IoC Container</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -51,13 +50,26 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
+				<artifactId>maven-changes-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>announcement-generate</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>announcement-generate</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
 				<configuration>
-					<archive>
-						<manifestEntries>
-							<Tapestry-Module-Classes>org.greatage.tapestry.services.CommonModule</Tapestry-Module-Classes>
-						</manifestEntries>
-					</archive>
+					<additionalClasspathElements>
+						<additionalClasspathElement>${basedir}/src/test/resources/test0.jar</additionalClasspathElement>
+						<additionalClasspathElement>${basedir}/src/test/resources/test1.zip</additionalClasspathElement>
+					</additionalClasspathElements>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -106,42 +118,55 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.greatage</groupId>
-			<artifactId>greatage-inject</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.greatage</groupId>
-			<artifactId>greatage-security</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.greatage</groupId>
-			<artifactId>greatage-domain</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
 			<groupId>org.javassist</groupId>
 			<artifactId>javassist</artifactId>
 		</dependency>
 
 		<dependency>
+			<groupId>cglib</groupId>
+			<artifactId>cglib</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jsr107cache</groupId>
+			<artifactId>jsr107cache</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>opensymphony</groupId>
+			<artifactId>oscache</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.tapestry</groupId>
 			<artifactId>tapestry-ioc</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.tapestry</groupId>
-			<artifactId>tapestry-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
+			<optional>true</optional>
 		</dependency>
 
 		<dependency>
@@ -151,10 +176,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.apache.tapestry</groupId>
-			<artifactId>tapestry-test</artifactId>
-			<scope>provided</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 </project>

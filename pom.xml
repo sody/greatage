@@ -68,7 +68,7 @@
 	<modules>
 		<module>greatage-maven</module>
 		<module>greatage-common</module>
-		<module>greatage-ioc</module>
+		<module>greatage-inject</module>
 		<module>greatage-security</module>
 		<module>greatage-domain</module>
 		<module>greatage-tapestry</module>
@@ -359,7 +359,7 @@
 
 			<dependency>
 				<groupId>org.greatage</groupId>
-				<artifactId>greatage-ioc</artifactId>
+				<artifactId>greatage-inject</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 

@@ -93,7 +93,7 @@
 
 		<dependency>
 			<groupId>org.greatage</groupId>
-			<artifactId>greatage-ioc</artifactId>
+			<artifactId>greatage-inject</artifactId>
 		</dependency>
 
 		<dependency>
