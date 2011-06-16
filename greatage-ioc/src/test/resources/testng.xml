@@ -24,7 +24,7 @@
 		</groups>
 
 		<packages>
-			<package name="org.greatage.ioc.*"/>
+			<package name="org.greatage.inject.*"/>
 		</packages>
 	</test>
 </suite>

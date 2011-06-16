@@ -23,12 +23,12 @@ import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.ResourceFactory;
-import org.greatage.ioc.ServiceBinder;
-import org.greatage.ioc.annotations.Bind;
-import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Dependency;
-import org.greatage.ioc.services.Resource;
-import org.greatage.ioc.services.ResourceLocator;
+import org.greatage.inject.ServiceBinder;
+import org.greatage.inject.annotations.Bind;
+import org.greatage.inject.annotations.Build;
+import org.greatage.inject.annotations.Dependency;
+import org.greatage.inject.services.Resource;
+import org.greatage.inject.services.ResourceLocator;
 import org.greatage.security.AccessControlManager;
 import org.greatage.security.SecurityModule;
 

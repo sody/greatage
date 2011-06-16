@@ -18,7 +18,7 @@ package org.greatage.tapestry.internal;
 
 import org.apache.tapestry5.TapestryFilter;
 import org.apache.tapestry5.ioc.def.ModuleDef;
-import org.greatage.ioc.tapestry.GreatAgeIntegration;
+import org.greatage.inject.tapestry.GreatAgeIntegration;
 
 import javax.servlet.ServletContext;
 

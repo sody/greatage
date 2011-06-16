@@ -16,8 +16,8 @@
 
 package com.example.tapestry0;
 
-import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Named;
+import org.greatage.inject.annotations.Build;
+import org.greatage.inject.annotations.Named;
 
 /**
  * @author Ivan Khalopik

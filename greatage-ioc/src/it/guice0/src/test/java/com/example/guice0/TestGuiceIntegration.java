@@ -20,11 +20,11 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Names;
-import org.greatage.ioc.Marker;
-import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.internal.ServiceLocatorBuilder;
-import org.greatage.ioc.guice.GreatAgeIntegration;
-import org.greatage.ioc.guice.GuiceIntegration;
+import org.greatage.inject.Marker;
+import org.greatage.inject.ServiceLocator;
+import org.greatage.inject.internal.ServiceLocatorBuilder;
+import org.greatage.inject.guice.GreatAgeIntegration;
+import org.greatage.inject.guice.GuiceIntegration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -43,19 +43,19 @@ public class TestGuiceIntegration extends Assert {
 		assertNotNull(locator);
 
 		Marker<MockMessageService> marker =
-				org.greatage.ioc.Key.get(MockMessageService.class).named("GreatAgeMessageService");
+				org.greatage.inject.Key.get(MockMessageService.class).named("GreatAgeMessageService");
 		MockMessageService messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = org.greatage.ioc.Key.get(MockMessageService.class).named("GuiceMessageService");
+		marker = org.greatage.inject.Key.get(MockMessageService.class).named("GuiceMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = org.greatage.ioc.Key.get(MockMessageService.class).named("GreatAgeMessageServiceDelegate");
+		marker = org.greatage.inject.Key.get(MockMessageService.class).named("GreatAgeMessageServiceDelegate");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());

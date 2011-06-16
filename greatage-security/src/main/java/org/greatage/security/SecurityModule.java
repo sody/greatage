@@ -16,8 +16,8 @@
 
 package org.greatage.security;
 
-import org.greatage.ioc.ServiceBinder;
-import org.greatage.ioc.annotations.Bind;
+import org.greatage.inject.ServiceBinder;
+import org.greatage.inject.annotations.Bind;
 
 /**
  * @author Ivan Khalopik

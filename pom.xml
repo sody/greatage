@@ -382,7 +382,7 @@
 				<version>${testng.version}</version>
 			</dependency>
 
-			<!--ioc dependencies-->
+			<!--inject dependencies-->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
@@ -512,7 +512,7 @@
 		<!--common dependencies-->
 		<testng.version>5.14.10</testng.version>
 
-		<!--ioc dependencies-->
+		<!--inject dependencies-->
 		<log4j.version>1.2.16</log4j.version>
 		<slf4j.version>1.6.1</slf4j.version>
 

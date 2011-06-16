@@ -16,10 +16,10 @@
 
 package com.example.guice0;
 
-import org.greatage.ioc.OrderedConfiguration;
-import org.greatage.ioc.annotations.Build;
-import org.greatage.ioc.annotations.Contribute;
-import org.greatage.ioc.annotations.Named;
+import org.greatage.inject.OrderedConfiguration;
+import org.greatage.inject.annotations.Build;
+import org.greatage.inject.annotations.Contribute;
+import org.greatage.inject.annotations.Named;
 
 import java.util.List;
 

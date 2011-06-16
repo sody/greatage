@@ -16,8 +16,8 @@
 
 package org.greatage.security;
 
-import org.greatage.ioc.Interceptor;
-import org.greatage.ioc.Invocation;
+import org.greatage.inject.Interceptor;
+import org.greatage.inject.Invocation;
 import org.greatage.security.annotations.Allow;
 import org.greatage.security.annotations.Deny;
 import org.greatage.security.annotations.Operation;

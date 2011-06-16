@@ -16,9 +16,9 @@
 
 package com.example.app0;
 
-import org.greatage.ioc.Key;
-import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.internal.ServiceLocatorBuilder;
+import org.greatage.inject.Key;
+import org.greatage.inject.ServiceLocator;
+import org.greatage.inject.internal.ServiceLocatorBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

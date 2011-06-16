@@ -20,9 +20,9 @@ import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
-import org.greatage.ioc.annotations.Threaded;
-import org.greatage.ioc.services.Scope;
-import org.greatage.ioc.services.ScopeManager;
+import org.greatage.inject.annotations.Threaded;
+import org.greatage.inject.services.Scope;
+import org.greatage.inject.services.ScopeManager;
 
 import java.io.IOException;
 

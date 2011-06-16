@@ -16,9 +16,9 @@
 
 package com.example.app0;
 
-import org.greatage.ioc.ServiceBinder;
-import org.greatage.ioc.annotations.Bind;
-import org.greatage.ioc.annotations.Build;
+import org.greatage.inject.ServiceBinder;
+import org.greatage.inject.annotations.Bind;
+import org.greatage.inject.annotations.Build;
 
 /**
  * @author Ivan Khalopik

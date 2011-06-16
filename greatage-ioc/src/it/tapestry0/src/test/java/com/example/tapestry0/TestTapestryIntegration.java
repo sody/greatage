@@ -18,12 +18,12 @@ package com.example.tapestry0;
 
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
-import org.greatage.ioc.Key;
-import org.greatage.ioc.Marker;
-import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.internal.ServiceLocatorBuilder;
-import org.greatage.ioc.tapestry.GreatAgeIntegration;
-import org.greatage.ioc.tapestry.TapestryIntegration;
+import org.greatage.inject.Key;
+import org.greatage.inject.Marker;
+import org.greatage.inject.ServiceLocator;
+import org.greatage.inject.internal.ServiceLocatorBuilder;
+import org.greatage.inject.tapestry.GreatAgeIntegration;
+import org.greatage.inject.tapestry.TapestryIntegration;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
