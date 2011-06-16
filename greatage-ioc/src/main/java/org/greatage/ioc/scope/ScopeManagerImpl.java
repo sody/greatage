@@ -17,6 +17,7 @@
 package org.greatage.ioc.scope;
 
 import org.greatage.ioc.ApplicationException;
+import org.greatage.ioc.annotations.Singleton;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -46,11 +47,12 @@ public class ScopeManagerImpl implements ScopeManager {
 	}
 
 	public Scope getScope(final Class<? extends Annotation> scope) {
-		if (!scopes.containsKey(scope)) {
-			throw new ApplicationException(String.format("Cannot find scope with name '%s'", scope));
+		final Class<? extends Annotation> realScope = scope != null ? scope : Singleton.class;
+		if (!scopes.containsKey(realScope)) {
+			throw new ApplicationException(String.format("Cannot find scope '%s'", realScope.getSimpleName()));
 		}
 
-		return scopes.get(scope);
+		return scopes.get(realScope);
 	}
 
 	public Collection<Scope> getScopes() {

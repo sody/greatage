@@ -21,51 +21,51 @@ public class TestMarker extends Assert {
 
 	@DataProvider
 	public Object[][] testAssignableFromData() {
-		return new Object[][] {
-				{ marker(Object.class), marker(Object.class), true },
-				{ marker(Object.class), marker(MockInterface.class), true },
-				{ marker(MockInterface.class), marker(Object.class), false },
-				{ marker(MockInterface.class), marker(MockInterfaceEx.class), true },
-				{ marker(MockInterface.class), marker(MockInterfaceEx.class), true },
-				{ marker(MockInterface.class), marker(MockInterface.class), true },
+		return new Object[][]{
+				{marker(Object.class), marker(Object.class), true},
+				{marker(Object.class), marker(MockInterface.class), true},
+				{marker(MockInterface.class), marker(Object.class), false},
+				{marker(MockInterface.class), marker(MockInterfaceEx.class), true},
+				{marker(MockInterface.class), marker(MockInterfaceEx.class), true},
+				{marker(MockInterface.class), marker(MockInterface.class), true},
 
-				{ marker(MockInterface.class), marker(MockInterface.class, mockQualifier()), true },
-				{ marker(MockInterface.class), marker(MockInterface.class, MockMarker.class), true },
-				{ marker(MockInterface.class), marker(MockInterface.class, "test"), true },
+				{marker(MockInterface.class), marker(MockInterface.class, mockQualifier()), true},
+				{marker(MockInterface.class), marker(MockInterface.class, MockMarker.class), true},
+				{marker(MockInterface.class), marker(MockInterface.class, "test"), true},
 
-				{ marker(MockInterface.class, mockQualifier()), marker(MockInterface.class), false },
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterface.class), false },
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class), false },
+				{marker(MockInterface.class, mockQualifier()), marker(MockInterface.class), false},
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterface.class), false},
+				{marker(MockInterface.class, "test"), marker(MockInterface.class), false},
 
-				{ marker(MockInterface.class, mockQualifier()), marker(MockInterface.class, "test"), false },
-				{ marker(MockInterface.class, mockQualifier()), marker(MockInterface.class, MockMarker.class), true },
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, "test"), false },
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, mockQualifier()), true },
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class, MockMarker.class), false },
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class, mockQualifier()), false },
+				{marker(MockInterface.class, mockQualifier()), marker(MockInterface.class, "test"), false},
+				{marker(MockInterface.class, mockQualifier()), marker(MockInterface.class, MockMarker.class), true},
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, "test"), false},
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, mockQualifier()), true},
+				{marker(MockInterface.class, "test"), marker(MockInterface.class, MockMarker.class), false},
+				{marker(MockInterface.class, "test"), marker(MockInterface.class, mockQualifier()), false},
 		};
 	}
 
 	@DataProvider
 	public Object[][] equalsData() {
-		return new Object[][] {
-				{ marker(MockInterface.class), marker(MockInterface.class), true },
-				{ marker(MockInterface.class), marker(MockInterfaceEx.class), false },
+		return new Object[][]{
+				{marker(MockInterface.class), marker(MockInterface.class), true},
+				{marker(MockInterface.class), marker(MockInterfaceEx.class), false},
 
-				{ marker(MockInterface.class, mockQualifier()), marker(MockInterface.class, mockQualifier()), true },
-				{ marker(MockInterface.class, mockQualifier()), marker(MockInterfaceEx.class, mockQualifier()), false },
-				{ marker(MockInterface.class, mockQualifier()), marker(MockInterface.class), false },
+				{marker(MockInterface.class, mockQualifier()), marker(MockInterface.class, mockQualifier()), true},
+				{marker(MockInterface.class, mockQualifier()), marker(MockInterfaceEx.class, mockQualifier()), false},
+				{marker(MockInterface.class, mockQualifier()), marker(MockInterface.class), false},
 
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, MockMarker.class), true },
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, mockQualifier()), true },
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterfaceEx.class, MockMarker.class), false },
-				{ marker(MockInterface.class, MockMarker.class), marker(MockInterface.class), false },
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, MockMarker.class), true},
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterface.class, mockQualifier()), true},
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterfaceEx.class, MockMarker.class), false},
+				{marker(MockInterface.class, MockMarker.class), marker(MockInterface.class), false},
 
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class, "test"), true },
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class, new NamedImpl("test")), true },
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class, "test2"), false },
-				{ marker(MockInterface.class, "test"), marker(MockInterfaceEx.class, "test"), false },
-				{ marker(MockInterface.class, "test"), marker(MockInterface.class), false },
+				{marker(MockInterface.class, "test"), marker(MockInterface.class, "test"), true},
+				{marker(MockInterface.class, "test"), marker(MockInterface.class, new NamedImpl("test")), true},
+				{marker(MockInterface.class, "test"), marker(MockInterface.class, "test2"), false},
+				{marker(MockInterface.class, "test"), marker(MockInterfaceEx.class, "test"), false},
+				{marker(MockInterface.class, "test"), marker(MockInterface.class), false},
 		};
 	}
 
@@ -84,19 +84,19 @@ public class TestMarker extends Assert {
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass) {
-		return Marker.get(serviceClass);
+		return Key.get(serviceClass);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final Annotation qualifier) {
-		return Marker.get(serviceClass).withQualifier(qualifier);
+		return Key.get(serviceClass).withQualifier(qualifier);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final Class<? extends Annotation> qualifierClass) {
-		return Marker.get(serviceClass).withQualifier(qualifierClass);
+		return Key.get(serviceClass).withQualifier(qualifierClass);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final String name) {
-		return Marker.get(serviceClass).withName(name);
+		return Key.get(serviceClass).withName(name);
 	}
 
 	private MockMarker mockQualifier() {

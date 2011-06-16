@@ -22,10 +22,10 @@ import org.greatage.ioc.inject.Injector;
 import org.greatage.ioc.inject.LoggerInjectionProvider;
 import org.greatage.ioc.proxy.JdkProxyFactory;
 import org.greatage.ioc.proxy.ProxyFactory;
-import org.greatage.ioc.scope.SingletonScope;
 import org.greatage.ioc.scope.Scope;
 import org.greatage.ioc.scope.ScopeManager;
 import org.greatage.ioc.scope.ScopeManagerImpl;
+import org.greatage.ioc.scope.SingletonScope;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
 
@@ -55,8 +55,8 @@ public class ServiceLocatorBuilder {
 	}
 
 	/**
-	 * Creates new service locator instance for specified module classes + IOCModule. It will use console logger for all system
-	 * logs.
+	 * Creates new service locator instance for specified module classes + IOCModule. It will use console logger for all
+	 * system logs.
 	 *
 	 * @param moduleClasses module classes
 	 * @return new service locator instance
@@ -160,7 +160,7 @@ public class ServiceLocatorBuilder {
 
 	private <T> T getService(final Class<T> serviceClass) {
 		if (!cache.containsKey(serviceClass)) {
-			final Marker<T> marker = Marker.get(serviceClass);
+			final Marker<T> marker = Key.get(serviceClass);
 			@SuppressWarnings("unchecked")
 			final ServiceDefinition<T> service = (ServiceDefinition<T>) services.get(marker);
 			final List<ServiceContributor<T>> contributors = CollectionUtils.newList();

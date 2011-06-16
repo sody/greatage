@@ -15,23 +15,23 @@ public class TestGenerateMarker extends Assert {
 
 	@DataProvider
 	public Object[][] testGenerateMarkerData() {
-		return new Object[][] {
-				{ void.class, null, Marker.get(Object.class) },
-				{ void.class, MockBean.class.getAnnotations(), Marker.get(Object.class).withName("test") },
+		return new Object[][]{
+				{void.class, null, Key.get(Object.class)},
+				{void.class, MockBean.class.getAnnotations(), Key.get(Object.class).withName("test")},
 
-				{ MockInterface.class, MockBean.class.getAnnotations(), Marker.get(MockInterface.class).withName("test") },
+				{MockInterface.class, MockBean.class.getAnnotations(), Key.get(MockInterface.class).withName("test")},
 
-				{ MockInterface.class, null, Marker.get(MockInterface.class) },
-				{ MockClass.class, null, Marker.get(MockClass.class) },
-				{ MockInterface.class, new Annotation[] { }, Marker.get(MockInterface.class) },
-				{ MockClass.class, new Annotation[] { }, Marker.get(MockClass.class) },
+				{MockInterface.class, null, Key.get(MockInterface.class)},
+				{MockClass.class, null, Key.get(MockClass.class)},
+				{MockInterface.class, new Annotation[]{}, Key.get(MockInterface.class)},
+				{MockClass.class, new Annotation[]{}, Key.get(MockClass.class)},
 		};
 	}
 
 	@DataProvider
 	public Object[][] testGenerateMarkerWrongData() {
-		return new Object[][] {
-				{ null, null, },
+		return new Object[][]{
+				{null, null,},
 		};
 	}
 

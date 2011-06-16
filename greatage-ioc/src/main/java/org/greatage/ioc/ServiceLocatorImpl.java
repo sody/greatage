@@ -20,7 +20,6 @@ import org.greatage.ioc.inject.Injector;
 import org.greatage.util.CollectionUtils;
 import org.slf4j.Logger;
 
-import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +34,6 @@ import java.util.Set;
  */
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();
-	private final Map<Marker<?>, Class<? extends Annotation>> scopes = CollectionUtils.newConcurrentMap();
 	private final Logger logger;
 
 	/**
@@ -81,7 +79,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @throws ApplicationException if service not found
 	 */
 	public <T> T getService(final Class<T> serviceClass) {
-		return getService(Marker.get(serviceClass));
+		return getService(Key.get(serviceClass));
 	}
 
 	/**
@@ -92,7 +90,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	public <T> T getService(final Marker<T> marker) {
 		final Set<T> services = findServices(marker);
 		if (services.size() > 1) {
-			throw new ApplicationException(String.format("Can't find service (%s). More than one service available", marker));
+			throw new ApplicationException(
+					String.format("Can't find service (%s). More than one service available", marker));
 		}
 		if (services.size() < 1) {
 			throw new ApplicationException(String.format("Can't find service (%s)", marker));
@@ -104,7 +103,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * {@inheritDoc}
 	 */
 	public <T> Set<T> findServices(final Class<T> serviceClass) {
-		return findServices(Marker.get(serviceClass));
+		return findServices(Key.get(serviceClass));
 	}
 
 	public <T> Set<T> findServices(final Marker<T> marker) {
@@ -131,7 +130,6 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 		final T serviceInstance = injector.createService(service, contributors, interceptors);
 		services.put(marker, serviceInstance);
-		scopes.put(marker, service.getScope());
 	}
 
 	private void logStatistics() {
@@ -147,8 +145,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 		final String format = "%" + maxLength + "s : [%s]\n";
 		for (Marker<?> marker : services.keySet()) {
 			final String name = marker.getServiceClass().getSimpleName();
-			final Class<? extends Annotation> scope = scopes.get(marker);
-			statistics.append(String.format(format, name, scope.getSimpleName()));
+			final String scope = marker.getScope() != null ? marker.getScope().getSimpleName() : "Default";
+			statistics.append(String.format(format, name, scope));
 		}
 		logger.info(statistics.toString());
 	}

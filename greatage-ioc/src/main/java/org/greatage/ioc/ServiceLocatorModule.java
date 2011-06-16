@@ -13,7 +13,7 @@ import java.util.List;
  * @since 1.0
  */
 public class ServiceLocatorModule implements Module, ServiceContributor<ServiceLocator> {
-	private final Marker<ServiceLocator> marker = Marker.get(ServiceLocator.class);
+	private final Marker<ServiceLocator> marker = Key.get(ServiceLocator.class);
 	private final List<Module> modules = CollectionUtils.newList();
 
 	ServiceLocatorModule() {
@@ -59,14 +59,6 @@ public class ServiceLocatorModule implements Module, ServiceContributor<ServiceL
 		for (Module module : modules) {
 			configuration.add(module);
 		}
-	}
-
-	public String getOrderId() {
-		return "";
-	}
-
-	public List<String> getOrderConstraints() {
-		return CollectionUtils.newList();
 	}
 
 	public Collection<ServiceDefinition<?>> getDefinitions() {

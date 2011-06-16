@@ -43,7 +43,7 @@ public class InternalUtils {
 	}
 
 	public static <T> Marker<T> generateMarker(final Class<T> serviceClass, final Annotation... annotations) {
-		final Marker marker = Marker.get(void.class.equals(serviceClass) ? Object.class : serviceClass);
+		final Key marker = Key.get(void.class.equals(serviceClass) ? Object.class : serviceClass);
 
 		final Annotation qualifier = findAnnotation(Qualifier.class, annotations);
 		marker.withQualifier(qualifier);
@@ -60,9 +60,9 @@ public class InternalUtils {
 	/**
 	 * Calculates service dependencies according to specified build constructor.
 	 *
-	 * @param resources service resources
+	 * @param resources   service resources
 	 * @param constructor service build constructor
-	 * @param <T> service type
+	 * @param <T>         service type
 	 * @return array of calculated service dependencies
 	 */
 	public static <T> Object[] calculateParameters(final ServiceResources<T> resources, final Constructor constructor) {
@@ -73,8 +73,8 @@ public class InternalUtils {
 	 * Calculates service dependencies according to specified build method.
 	 *
 	 * @param resources service resources
-	 * @param method service build method
-	 * @param <T> service type
+	 * @param method	service build method
+	 * @param <T>       service type
 	 * @return array of calculated service dependencies
 	 */
 	public static <T> Object[] calculateParameters(final ServiceResources<T> resources, final Method method) {
@@ -84,10 +84,10 @@ public class InternalUtils {
 	/**
 	 * Calculates service dependencies according to specified dependency types and annotations.
 	 *
-	 * @param resources service resources
-	 * @param types dependency types
+	 * @param resources   service resources
+	 * @param types	   dependency types
 	 * @param annotations dependency annotations
-	 * @param <T> service type
+	 * @param <T>         service type
 	 * @return array of calculated service dependencies
 	 */
 	private static <T> Object[] calculateInjections(final ServiceResources<T> resources,

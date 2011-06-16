@@ -20,7 +20,6 @@ import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Intercept;
-import org.greatage.ioc.annotations.Singleton;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;
@@ -48,7 +47,7 @@ public class ModuleImpl<T> extends ServiceDefinitionImpl<T> implements Module {
 	 * @param moduleClass module class
 	 */
 	ModuleImpl(final Class<T> moduleClass) {
-		super(Marker.get(moduleClass), moduleClass, Singleton.class, false, false);
+		super(Key.get(moduleClass), moduleClass, false, false);
 		services.add(this);
 		for (Method method : moduleClass.getMethods()) {
 			if (method.isAnnotationPresent(Build.class)) {

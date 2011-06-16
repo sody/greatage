@@ -16,15 +16,14 @@
 
 package org.greatage.ioc;
 
-import org.greatage.util.AnnotationFactory;
 import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.ioc.annotations.Singleton;
+import org.greatage.util.AnnotationFactory;
 
 import java.lang.annotation.Annotation;
 
 /**
- * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id, service
- * scope and is it overrides the existing service.
+ * This class represents default {@link ServiceBindingOptions} implementation that is used to define service unique id,
+ * service scope and is it overrides the existing service.
  *
  * @param <T> service type
  * @author Ivan Khalopik
@@ -48,7 +47,6 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	ServiceBindingOptionsImpl(final Class<T> serviceClass, final Class<? extends T> implementationClass) {
 		this.serviceClass = serviceClass;
 		this.implementationClass = implementationClass;
-		this.serviceScope = Singleton.class;
 		this.override = false;
 	}
 
@@ -94,9 +92,13 @@ public class ServiceBindingOptionsImpl<T> implements ServiceBindingOptions {
 	 * @return new instance of configured service definition, not null
 	 */
 	public ServiceDefinition<T> createService() {
-		final Marker<T> marker = annotation != null ?
-				Marker.get(serviceClass).withQualifier(annotation) :
-				InternalUtils.generateMarker(serviceClass, implementationClass.getAnnotations());
-		return new ServiceDefinitionImpl<T>(marker, implementationClass, serviceScope, override, eager);
+		final Key<T> key = Key.get(InternalUtils.generateMarker(serviceClass, implementationClass.getAnnotations()));
+		if (annotation != null) {
+			key.withQualifier(annotation);
+		}
+		if (serviceScope != null) {
+			key.inScope(serviceScope);
+		}
+		return new ServiceDefinitionImpl<T>(key, implementationClass, override, eager);
 	}
 }

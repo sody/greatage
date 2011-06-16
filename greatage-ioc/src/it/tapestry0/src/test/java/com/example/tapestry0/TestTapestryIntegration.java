@@ -18,6 +18,7 @@ package com.example.tapestry0;
 
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
+import org.greatage.ioc.Key;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.ServiceLocatorBuilder;
@@ -40,19 +41,19 @@ public class TestTapestryIntegration extends Assert {
 				.build();
 		assertNotNull(locator);
 
-		Marker<MockMessageService> marker = Marker.get(MockMessageService.class).withName("GreatAgeMessageService");
+		Marker<MockMessageService> marker = Key.get(MockMessageService.class).withName("GreatAgeMessageService");
 		MockMessageService messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class).withName("TapestryMessageService");
+		marker = Key.get(MockMessageService.class).withName("TapestryMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class).withName("GreatAgeMessageServiceDelegate");
+		marker = Key.get(MockMessageService.class).withName("GreatAgeMessageServiceDelegate");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());

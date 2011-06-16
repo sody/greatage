@@ -18,12 +18,11 @@ package org.greatage.ioc;
 
 import org.greatage.util.DescriptionBuilder;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 
 /**
- * This class represent default implementation service definition that automatically instantiates service. It is based on building
- * service by invoking service implementation constructor.
+ * This class represent default implementation service definition that automatically instantiates service. It is based
+ * on building service by invoking service implementation constructor.
  *
  * @param <T> service type
  * @author Ivan Khalopik
@@ -32,18 +31,15 @@ import java.lang.reflect.Constructor;
 public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 	private final Marker<T> marker;
 	private final Class<? extends T> implementationClass;
-	private final Class<? extends Annotation> scope;
 	private final boolean override;
 	private final boolean eager;
 
 	ServiceDefinitionImpl(final Marker<T> marker,
 						  final Class<? extends T> implementationClass,
-						  final Class<? extends Annotation> scope,
 						  final boolean override,
 						  final boolean eager) {
 		this.marker = marker;
 		this.implementationClass = implementationClass;
-		this.scope = scope;
 		this.override = override;
 		this.eager = eager;
 	}
@@ -61,13 +57,6 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 
 	public boolean isEager() {
 		return eager;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Class<? extends Annotation> getScope() {
-		return scope;
 	}
 
 	/**

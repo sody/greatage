@@ -29,8 +29,8 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 /**
- * This class represents default {@link Injector} implementation that is used for retrieving default service resources such as
- * other services, symbols or specific service logger instance.
+ * This class represents default {@link Injector} implementation that is used for retrieving default service resources
+ * such as other services, symbols or specific service logger instance.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -56,8 +56,9 @@ public class DefaultInjector implements Injector {
 							   final List<ServiceContributor<T>> contributors,
 							   final List<ServiceInterceptor<T>> interceptors) {
 
-		final DefaultServiceResources<T> resources = new DefaultServiceResources<T>(service.getMarker());
-		final Scope scope = scopeManager.getScope(service.getScope());
+		final Marker<T> marker = service.getMarker();
+		final DefaultServiceResources<T> resources = new DefaultServiceResources<T>(marker);
+		final Scope scope = scopeManager.getScope(marker.getScope());
 
 		final ServiceBuilder<T> builder = new ServiceBuilder<T>(service, contributors, interceptors, resources, scope);
 		return service.isEager() ? builder.build() : proxyFactory.createProxy(builder);

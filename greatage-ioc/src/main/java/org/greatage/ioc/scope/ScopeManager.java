@@ -33,7 +33,7 @@ public interface ScopeManager {
 	 * @param scope scope name
 	 * @return scope instance correspondent to specified scope name or null if doesn't exist
 	 */
-	Scope getScope(Class<? extends Annotation> scope);
+	Scope getScope(Class<? extends Annotation> scope); //todo: get by marker?
 
 	Collection<Scope> getScopes();
 }

@@ -18,7 +18,6 @@ package org.greatage.ioc.scope;
 
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.annotations.Prototype;
-import org.greatage.ioc.proxy.ProxyFactory;
 
 import java.util.Map;
 

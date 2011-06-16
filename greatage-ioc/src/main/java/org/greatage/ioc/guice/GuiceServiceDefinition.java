@@ -54,10 +54,6 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		return true;
 	}
 
-	public Class<? extends Annotation> getScope() {
-		return Prototype.class;
-	}
-
 	public T build(final ServiceResources<T> resources) {
 		return injector.getInstance(key);
 	}
@@ -67,8 +63,12 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		final Class<T> serviceClass = (Class<T>) key.getTypeLiteral().getType();
 		final Annotation annotation = key.getAnnotation();
 		if (annotation instanceof Named) {
-			return Marker.get(serviceClass).withName(((Named) annotation).value());
+			return org.greatage.ioc.Key.get(serviceClass)
+					.withName(((Named) annotation).value())
+					.inScope(Prototype.class);
 		}
-		return Marker.get(serviceClass).withQualifier(annotation);
+		return org.greatage.ioc.Key.get(serviceClass)
+				.withQualifier(annotation)
+				.inScope(Prototype.class);
 	}
 }

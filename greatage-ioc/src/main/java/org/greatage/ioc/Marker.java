@@ -16,117 +16,19 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.annotations.NamedImpl;
-import org.greatage.util.AnnotationFactory;
-import org.greatage.util.DescriptionBuilder;
-
 import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class Marker<T> {
-	private final Class<T> serviceClass;
+public interface Marker<T> {
 
-	private Class<? extends Annotation> scope;
-	private Annotation qualifier;
+	Class<T> getServiceClass();
 
-	private Marker(final Class<T> serviceClass) {
-		this(serviceClass, null, null);
-	}
+	Class<? extends Annotation> getScope();
 
-	private Marker(final Class<T> serviceClass, final Class<? extends Annotation> scope, final Annotation qualifier) {
-		if (serviceClass == null || serviceClass.equals(void.class)) {
-			throw new IllegalArgumentException("Service class should not be null");
-		}
+	Annotation getQualifier();
 
-		this.serviceClass = serviceClass;
-		this.scope = scope;
-		this.qualifier = qualifier;
-	}
-
-	public Marker<T> inScope(final Class<? extends Annotation> scope) {
-		this.scope = scope;
-		return this;
-	}
-
-	public Marker<T> withQualifier(final Annotation qualifier) {
-		this.qualifier = qualifier;
-		return this;
-	}
-
-	public Marker<T> withQualifier(final Class<? extends Annotation> qualifierClass) {
-		return withQualifier(AnnotationFactory.create(qualifierClass));
-	}
-
-	public Marker<T> withName(final String name) {
-		return withQualifier(new NamedImpl(name));
-	}
-
-	public Class<T> getServiceClass() {
-		return serviceClass;
-	}
-
-	public Class<? extends Annotation> getScope() {
-		return scope;
-	}
-
-	public Annotation getQualifier() {
-		return qualifier;
-	}
-
-	public boolean isAssignableFrom(final Marker<?> marker) {
-		if (!serviceClass.isAssignableFrom(marker.getServiceClass())) {
-			return false;
-		}
-		else if (qualifier != null && !qualifier.equals(marker.getQualifier())) {
-			return false;
-		}
-		//todo: check scope also?
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		//todo: check scope also?
-		return 31 * serviceClass.hashCode() + (qualifier != null ? qualifier.hashCode() : 0);
-	}
-
-	@SuppressWarnings("SimplifiableIfStatement")
-	@Override
-	public boolean equals(final Object object) {
-		if (object == this) {
-			return true;
-		}
-		if (!(object instanceof Marker)) {
-			return false;
-		}
-		final Marker<?> marker = (Marker<?>) object;
-		if (serviceClass.equals(marker.getServiceClass())) {
-			if (qualifier == null && marker.getQualifier() == null) {
-				return true;
-			}
-			return qualifier != null && qualifier.equals(marker.getQualifier());
-		}
-		//todo: check scope also?
-		return false;
-	}
-
-	public static <T> Marker<T> get(final Class<T> serviceClass) {
-		return new Marker<T>(serviceClass);
-	}
-
-	@Override
-	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("service", serviceClass.getSimpleName());
-		if (scope != null) {
-			builder.append("scope", scope.getSimpleName());
-		}
-		if (qualifier != null) {
-			builder.append("qualifier", qualifier);
-		}
-		return builder.toString();
-	}
+	boolean isAssignableFrom(final Marker<?> marker);
 }

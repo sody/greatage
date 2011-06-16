@@ -16,10 +16,6 @@
 
 package org.greatage.ioc;
 
-import org.greatage.ioc.inject.Injector;
-
-import java.lang.annotation.Annotation;
-
 /**
  * This class represents service definition that instantiates service. By default it is configured by module build
  * methods annotated with {@link org.greatage.ioc.annotations.Build} class.
@@ -40,14 +36,6 @@ public interface ServiceDefinition<T> {
 	boolean isOverride();
 
 	boolean isEager();
-
-	/**
-	 * Gets service scope. {@link org.greatage.ioc.scope.ScopeManager} service must be configured to understand this value
-	 * of scope.
-	 *
-	 * @return service scope, not null
-	 */
-	Class<? extends Annotation> getScope();
 
 	/**
 	 * Builds service instance using configured service resource. They are configured by {@link ServiceContributor}

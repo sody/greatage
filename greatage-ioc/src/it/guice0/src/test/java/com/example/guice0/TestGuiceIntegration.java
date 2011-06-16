@@ -16,11 +16,6 @@
 
 package com.example.guice0;
 
-import com.example.guice0.MockGreatAgeModule1;
-import com.example.guice0.MockGreatAgeModule2;
-import com.example.guice0.MockGuiceModule1;
-import com.example.guice0.MockGuiceModule2;
-import com.example.guice0.MockMessageService;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
@@ -47,19 +42,20 @@ public class TestGuiceIntegration extends Assert {
 				.build();
 		assertNotNull(locator);
 
-		Marker<MockMessageService> marker = Marker.get(MockMessageService.class).withName("GreatAgeMessageService");
+		Marker<MockMessageService> marker =
+				org.greatage.ioc.Key.get(MockMessageService.class).withName("GreatAgeMessageService");
 		MockMessageService messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class).withName("GuiceMessageService");
+		marker = org.greatage.ioc.Key.get(MockMessageService.class).withName("GuiceMessageService");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());
 		assertNotNull(messageService.generateMessage());
 
-		marker = Marker.get(MockMessageService.class).withName("GreatAgeMessageServiceDelegate");
+		marker = org.greatage.ioc.Key.get(MockMessageService.class).withName("GreatAgeMessageServiceDelegate");
 		messageService = locator.getService(marker);
 		assertNotNull(messageService);
 		assertNotNull(messageService.generateMessage());

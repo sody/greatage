@@ -17,12 +17,11 @@
 package org.greatage.ioc.tapestry;
 
 import org.apache.tapestry5.ioc.Registry;
+import org.greatage.ioc.Key;
 import org.greatage.ioc.Marker;
+import org.greatage.ioc.ServiceDefinition;
 import org.greatage.ioc.ServiceResources;
 import org.greatage.ioc.annotations.Prototype;
-import org.greatage.ioc.ServiceDefinition;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @author Ivan Khalopik
@@ -36,7 +35,7 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 	TapestryServiceDefinition(final Registry registry, final String serviceId, final Class<T> serviceClass) {
 		this.registry = registry;
 		this.serviceId = serviceId;
-		marker = Marker.get(serviceClass).withName(serviceId);
+		marker = Key.get(serviceClass).withName(serviceId).inScope(Prototype.class);
 	}
 
 	public Marker<T> getMarker() {
@@ -49,10 +48,6 @@ public class TapestryServiceDefinition<T> implements ServiceDefinition<T> {
 
 	public boolean isEager() {
 		return false;
-	}
-
-	public Class<? extends Annotation> getScope() {
-		return Prototype.class;
 	}
 
 	public T build(final ServiceResources<T> resources) {
