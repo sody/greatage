@@ -21,10 +21,10 @@ import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.services.ServiceActivity;
 import org.apache.tapestry5.ioc.services.ServiceActivityScoreboard;
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.internal.Module;
-import org.greatage.ioc.internal.ServiceDefinition;
-import org.greatage.ioc.internal.ServiceContributor;
-import org.greatage.ioc.internal.ServiceInterceptor;
+import org.greatage.ioc.services.Module;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceInterceptor;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;

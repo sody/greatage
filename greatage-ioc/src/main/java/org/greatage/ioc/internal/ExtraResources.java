@@ -17,6 +17,7 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Marker;
+import org.greatage.ioc.services.ServiceResources;
 
 import java.lang.annotation.Annotation;
 

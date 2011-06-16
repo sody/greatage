@@ -17,6 +17,7 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Configuration;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;

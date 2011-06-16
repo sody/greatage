@@ -17,6 +17,8 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Marker;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.util.Locker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

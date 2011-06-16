@@ -20,8 +20,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.internal.ServiceDefinition;
-import org.greatage.ioc.internal.ServiceResources;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.ioc.annotations.Prototype;
 
 import java.lang.annotation.Annotation;

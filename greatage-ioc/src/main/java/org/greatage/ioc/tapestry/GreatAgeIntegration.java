@@ -24,7 +24,7 @@ import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.internal.ServiceLocatorBuilder;
-import org.greatage.ioc.internal.Module;
+import org.greatage.ioc.services.Module;
 
 import java.util.Collections;
 import java.util.Map;

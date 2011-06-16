@@ -2,8 +2,9 @@ package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.annotations.Symbol;
-import org.greatage.ioc.coerce.TypeCoercer;
-import org.greatage.ioc.symbol.SymbolSource;
+import org.greatage.ioc.services.TypeCoercer;
+import org.greatage.ioc.services.InjectionProvider;
+import org.greatage.ioc.services.SymbolSource;
 
 import java.lang.annotation.Annotation;
 

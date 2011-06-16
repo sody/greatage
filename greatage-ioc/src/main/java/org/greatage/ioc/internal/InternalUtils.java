@@ -20,6 +20,7 @@ import org.greatage.ioc.Key;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.annotations.Qualifier;
 import org.greatage.ioc.annotations.Scope;
+import org.greatage.ioc.services.ServiceResources;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

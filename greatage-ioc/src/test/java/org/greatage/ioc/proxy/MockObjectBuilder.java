@@ -16,6 +16,8 @@
 
 package org.greatage.ioc.proxy;
 
+import org.greatage.ioc.Interceptor;
+import org.greatage.ioc.services.ObjectBuilder;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 

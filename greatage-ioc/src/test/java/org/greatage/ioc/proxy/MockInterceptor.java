@@ -1,5 +1,8 @@
 package org.greatage.ioc.proxy;
 
+import org.greatage.ioc.Interceptor;
+import org.greatage.ioc.Invocation;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0

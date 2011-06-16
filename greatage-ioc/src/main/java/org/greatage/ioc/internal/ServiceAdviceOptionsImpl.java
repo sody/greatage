@@ -1,10 +1,10 @@
 package org.greatage.ioc.internal;
 
+import org.greatage.ioc.Interceptor;
+import org.greatage.ioc.Invocation;
 import org.greatage.ioc.InvocationFilter;
 import org.greatage.ioc.ServiceAdviceOptions;
 import org.greatage.util.AnnotationFactory;
-import org.greatage.ioc.proxy.Interceptor;
-import org.greatage.ioc.proxy.Invocation;
 import org.greatage.util.Ordered;
 
 import java.lang.annotation.Annotation;

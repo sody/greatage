@@ -1,8 +1,9 @@
 package org.greatage.ioc.internal;
 
+import org.greatage.ioc.Interceptor;
 import org.greatage.ioc.ServiceAdvice;
 import org.greatage.ioc.ServiceAdviceOptions;
-import org.greatage.ioc.proxy.Interceptor;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.OrderingUtils;
 

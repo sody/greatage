@@ -36,7 +36,7 @@ public class GreatAgeIntegration implements Module {
 		this(ServiceLocatorBuilder.createServiceLocator(moduleClasses));
 	}
 
-	public GreatAgeIntegration(final org.greatage.ioc.internal.Module... modules) {
+	public GreatAgeIntegration(final org.greatage.ioc.services.Module... modules) {
 		this(ServiceLocatorBuilder.createServiceLocator(modules));
 	}
 

@@ -18,6 +18,7 @@ package org.greatage.ioc.internal;
 
 import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.ServiceBindingOptions;
+import org.greatage.ioc.services.ServiceDefinition;
 import org.greatage.util.CollectionUtils;
 
 import java.util.List;

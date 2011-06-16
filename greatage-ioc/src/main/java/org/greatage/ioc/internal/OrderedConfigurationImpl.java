@@ -17,6 +17,7 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.OrderedConfiguration;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Ordered;
 import org.greatage.util.OrderingUtils;

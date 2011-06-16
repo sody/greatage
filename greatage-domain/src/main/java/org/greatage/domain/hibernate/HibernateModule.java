@@ -31,8 +31,8 @@ import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Named;
 import org.greatage.ioc.annotations.Symbol;
 import org.greatage.ioc.annotations.Threaded;
-import org.greatage.ioc.resource.ResourceLocator;
-import org.greatage.ioc.symbol.SymbolProvider;
+import org.greatage.ioc.services.ResourceLocator;
+import org.greatage.ioc.services.SymbolProvider;
 import org.hibernate.SessionFactory;
 
 import java.io.IOException;

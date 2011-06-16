@@ -23,6 +23,10 @@ import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Contribute;
 import org.greatage.ioc.annotations.Intercept;
+import org.greatage.ioc.services.Module;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceInterceptor;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.reflect.Method;

@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 
 /**
  * This annotation marks class fields and method parameters inside the IoC container as injected symbols with specified
- * expression provided by {@link org.greatage.ioc.symbol.SymbolSource}.
+ * expression provided by {@link org.greatage.ioc.services.SymbolSource}.
  *
  * @author Ivan Khalopik
  * @since 1.0

@@ -16,8 +16,8 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.ioc.resource.Resource;
-import org.greatage.ioc.resource.ResourceLocator;
+import org.greatage.ioc.services.Resource;
+import org.greatage.ioc.services.ResourceLocator;
 import org.hibernate.cfg.Configuration;
 
 import java.io.IOException;

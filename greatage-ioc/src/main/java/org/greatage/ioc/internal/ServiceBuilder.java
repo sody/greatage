@@ -1,9 +1,13 @@
 package org.greatage.ioc.internal;
 
+import org.greatage.ioc.Interceptor;
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.proxy.Interceptor;
-import org.greatage.ioc.proxy.ObjectBuilder;
-import org.greatage.ioc.scope.Scope;
+import org.greatage.ioc.services.ObjectBuilder;
+import org.greatage.ioc.services.Scope;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceInterceptor;
+import org.greatage.ioc.services.ServiceResources;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

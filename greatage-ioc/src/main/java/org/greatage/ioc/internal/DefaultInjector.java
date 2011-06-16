@@ -17,9 +17,15 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.proxy.ProxyFactory;
-import org.greatage.ioc.scope.Scope;
-import org.greatage.ioc.scope.ScopeManager;
+import org.greatage.ioc.services.ProxyFactory;
+import org.greatage.ioc.services.Scope;
+import org.greatage.ioc.services.ScopeManager;
+import org.greatage.ioc.services.InjectionProvider;
+import org.greatage.ioc.services.Injector;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceInterceptor;
+import org.greatage.ioc.services.ServiceResources;
 
 import java.lang.annotation.Annotation;
 import java.util.List;

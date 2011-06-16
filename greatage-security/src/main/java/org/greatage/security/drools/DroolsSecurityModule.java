@@ -27,8 +27,8 @@ import org.greatage.ioc.ServiceBinder;
 import org.greatage.ioc.annotations.Bind;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Dependency;
-import org.greatage.ioc.resource.Resource;
-import org.greatage.ioc.resource.ResourceLocator;
+import org.greatage.ioc.services.Resource;
+import org.greatage.ioc.services.ResourceLocator;
 import org.greatage.security.AccessControlManager;
 import org.greatage.security.SecurityModule;
 

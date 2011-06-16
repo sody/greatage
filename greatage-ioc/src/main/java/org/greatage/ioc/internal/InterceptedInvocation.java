@@ -16,13 +16,13 @@
 
 package org.greatage.ioc.internal;
 
-import org.greatage.ioc.proxy.Interceptor;
-import org.greatage.ioc.proxy.Invocation;
+import org.greatage.ioc.Interceptor;
+import org.greatage.ioc.Invocation;
 
 import java.lang.reflect.Method;
 
 /**
- * This class represents {@link org.greatage.ioc.proxy.Invocation} proxy implementation that adds method advices logic to invocation delegate.
+ * This class represents {@link org.greatage.ioc.Invocation} proxy implementation that adds method advices logic to invocation delegate.
  *
  * @author Ivan Khalopik
  * @since 1.0

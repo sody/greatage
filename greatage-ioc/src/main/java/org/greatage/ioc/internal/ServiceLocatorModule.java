@@ -6,6 +6,11 @@ import org.greatage.ioc.Key;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
 import org.greatage.ioc.annotations.Dependency;
+import org.greatage.ioc.services.Module;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceInterceptor;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Arrays;

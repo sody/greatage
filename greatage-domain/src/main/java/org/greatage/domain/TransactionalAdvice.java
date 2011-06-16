@@ -17,8 +17,8 @@
 package org.greatage.domain;
 
 import org.greatage.domain.annotations.Transactional;
-import org.greatage.ioc.proxy.Interceptor;
-import org.greatage.ioc.proxy.Invocation;
+import org.greatage.ioc.Interceptor;
+import org.greatage.ioc.Invocation;
 
 /**
  * @author Ivan Khalopik

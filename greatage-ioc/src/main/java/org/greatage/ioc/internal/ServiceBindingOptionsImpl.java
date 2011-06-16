@@ -19,6 +19,7 @@ package org.greatage.ioc.internal;
 import org.greatage.ioc.Key;
 import org.greatage.ioc.ServiceBindingOptions;
 import org.greatage.ioc.annotations.NamedImpl;
+import org.greatage.ioc.services.ServiceDefinition;
 import org.greatage.util.AnnotationFactory;
 
 import java.lang.annotation.Annotation;

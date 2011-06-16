@@ -1,6 +1,7 @@
 package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Marker;
+import org.greatage.ioc.services.InjectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

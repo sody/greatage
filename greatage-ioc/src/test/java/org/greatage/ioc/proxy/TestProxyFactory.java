@@ -16,6 +16,11 @@
 
 package org.greatage.ioc.proxy;
 
+import org.greatage.ioc.internal.proxy.CGLibProxyFactory;
+import org.greatage.ioc.internal.proxy.JavassistProxyFactory;
+import org.greatage.ioc.internal.proxy.JdkProxyFactory;
+import org.greatage.ioc.services.ObjectBuilder;
+import org.greatage.ioc.services.ProxyFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;

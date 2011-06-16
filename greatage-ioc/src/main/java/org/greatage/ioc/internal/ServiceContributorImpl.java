@@ -19,6 +19,8 @@ package org.greatage.ioc.internal;
 import org.greatage.ioc.ApplicationException;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.annotations.Contribute;
+import org.greatage.ioc.services.ServiceContributor;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.Method;

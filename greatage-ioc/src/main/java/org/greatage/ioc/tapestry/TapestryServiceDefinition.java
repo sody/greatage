@@ -19,8 +19,8 @@ package org.greatage.ioc.tapestry;
 import org.apache.tapestry5.ioc.Registry;
 import org.greatage.ioc.Key;
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.internal.ServiceDefinition;
-import org.greatage.ioc.internal.ServiceResources;
+import org.greatage.ioc.services.ServiceDefinition;
+import org.greatage.ioc.services.ServiceResources;
 import org.greatage.ioc.annotations.Prototype;
 
 /**

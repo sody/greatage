@@ -21,8 +21,8 @@ import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.Response;
 import org.greatage.ioc.annotations.Threaded;
-import org.greatage.ioc.scope.Scope;
-import org.greatage.ioc.scope.ScopeManager;
+import org.greatage.ioc.services.Scope;
+import org.greatage.ioc.services.ScopeManager;
 
 import java.io.IOException;
 

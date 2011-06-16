@@ -2,6 +2,7 @@ package org.greatage.ioc.internal;
 
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
+import org.greatage.ioc.services.InjectionProvider;
 
 import java.lang.annotation.Annotation;
 

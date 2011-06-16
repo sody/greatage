@@ -16,12 +16,12 @@
 
 package com.example.app0;
 
+import org.greatage.ioc.Interceptor;
+import org.greatage.ioc.Invocation;
 import org.greatage.ioc.ServiceAdvice;
 import org.greatage.ioc.annotations.Build;
 import org.greatage.ioc.annotations.Intercept;
 import org.greatage.ioc.annotations.Named;
-import org.greatage.ioc.proxy.Interceptor;
-import org.greatage.ioc.proxy.Invocation;
 
 /**
  * @author Ivan Khalopik
