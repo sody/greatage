@@ -64,4 +64,25 @@ public class TestClassAccessSource extends Assert {
 		final Object actual = access.get(instance);
 		assertEquals(actual, expected);
 	}
+
+	static class MockObject {
+		private final String message;
+		private int type = 10;
+
+		public MockObject(final String message) {
+			this.message = message;
+		}
+
+		public String getMessage() {
+			return message;
+		}
+
+		public int getType() {
+			return type;
+		}
+
+		public void setType(final int type) {
+			this.type = type;
+		}
+	}
 }

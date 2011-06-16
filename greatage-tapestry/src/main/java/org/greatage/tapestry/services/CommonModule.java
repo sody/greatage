@@ -17,7 +17,6 @@
 package org.greatage.tapestry.services;
 
 import org.apache.tapestry5.internal.services.GenericValueEncoderFactory;
-import org.apache.tapestry5.internal.services.ResourceCache;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
@@ -92,9 +91,5 @@ public class CommonModule {
 
 	private void addEditBlock(Configuration<BeanBlockContribution> configuration, String dataType, String blockId) {
 		configuration.add(new BeanBlockContribution(dataType, "common/EditBlocks", blockId, true));
-	}
-
-	public ResourceCache decorateResourceCache(final ResourceCache resourceCache) {
-		return new SvgResourceCache(resourceCache);
 	}
 }

@@ -49,7 +49,7 @@ public class HibernateModule {
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(HibernateConfiguration.class, HibernateAnnotationConfiguration.class)
 				.named("HibernateAnnotationConfiguration");
-		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class).named("HibernateAnnotationConfiguration");
+		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class).named("HibernatePropertyConfiguration");
 		binder.bind(HibernateExecutor.class, HibernateExecutorImpl.class).withScope(Threaded.class);
 		binder.bind(EntityFilterProcessor.class, CompositeFilterProcessor.class);
 	}
