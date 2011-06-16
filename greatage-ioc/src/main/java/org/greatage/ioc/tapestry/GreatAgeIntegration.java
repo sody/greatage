@@ -23,7 +23,8 @@ import org.apache.tapestry5.ioc.def.ServiceDef;
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.ServiceLocatorBuilder;
+import org.greatage.ioc.internal.ServiceLocatorBuilder;
+import org.greatage.ioc.internal.Module;
 
 import java.util.Collections;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class GreatAgeIntegration implements ModuleDef {
 		this(ServiceLocatorBuilder.createServiceLocator(moduleClasses));
 	}
 
-	public GreatAgeIntegration(final org.greatage.ioc.Module... modules) {
+	public GreatAgeIntegration(final Module... modules) {
 		this(ServiceLocatorBuilder.createServiceLocator(modules));
 	}
 

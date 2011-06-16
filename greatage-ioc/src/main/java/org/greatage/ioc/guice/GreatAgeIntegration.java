@@ -22,7 +22,7 @@ import com.google.inject.binder.AnnotatedBindingBuilder;
 import com.google.inject.name.Names;
 import org.greatage.ioc.Marker;
 import org.greatage.ioc.ServiceLocator;
-import org.greatage.ioc.ServiceLocatorBuilder;
+import org.greatage.ioc.internal.ServiceLocatorBuilder;
 import org.greatage.ioc.annotations.Named;
 
 /**
@@ -36,7 +36,7 @@ public class GreatAgeIntegration implements Module {
 		this(ServiceLocatorBuilder.createServiceLocator(moduleClasses));
 	}
 
-	public GreatAgeIntegration(final org.greatage.ioc.Module... modules) {
+	public GreatAgeIntegration(final org.greatage.ioc.internal.Module... modules) {
 		this(ServiceLocatorBuilder.createServiceLocator(modules));
 	}
 

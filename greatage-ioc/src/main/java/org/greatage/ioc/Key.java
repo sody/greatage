@@ -46,22 +46,22 @@ public class Key<T> implements Marker<T> {
 		this.qualifier = qualifier;
 	}
 
-	public Key<T> inScope(final Class<? extends Annotation> scope) {
+	public Key<T> scoped(final Class<? extends Annotation> scope) {
 		this.scope = scope;
 		return this;
 	}
 
-	public Key<T> withQualifier(final Annotation qualifier) {
+	public Key<T> qualified(final Annotation qualifier) {
 		this.qualifier = qualifier;
 		return this;
 	}
 
-	public Key<T> withQualifier(final Class<? extends Annotation> qualifierClass) {
-		return withQualifier(AnnotationFactory.create(qualifierClass));
+	public Key<T> qualified(final Class<? extends Annotation> qualifierClass) {
+		return qualified(AnnotationFactory.create(qualifierClass));
 	}
 
-	public Key<T> withName(final String name) {
-		return withQualifier(new NamedImpl(name));
+	public Key<T> named(final String name) {
+		return qualified(new NamedImpl(name));
 	}
 
 	public Class<T> getServiceClass() {

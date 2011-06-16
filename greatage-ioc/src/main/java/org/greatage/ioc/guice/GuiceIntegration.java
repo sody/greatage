@@ -20,10 +20,10 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.Module;
-import org.greatage.ioc.ServiceDefinition;
-import org.greatage.ioc.ServiceContributor;
-import org.greatage.ioc.ServiceInterceptor;
+import org.greatage.ioc.internal.Module;
+import org.greatage.ioc.internal.ServiceDefinition;
+import org.greatage.ioc.internal.ServiceContributor;
+import org.greatage.ioc.internal.ServiceInterceptor;
 import org.greatage.util.CollectionUtils;
 
 import java.util.Collection;

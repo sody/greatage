@@ -1,6 +1,7 @@
 package org.greatage.ioc;
 
 import org.greatage.ioc.annotations.Named;
+import org.greatage.ioc.internal.InternalUtils;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -17,9 +18,9 @@ public class TestGenerateMarker extends Assert {
 	public Object[][] testGenerateMarkerData() {
 		return new Object[][]{
 				{void.class, null, Key.get(Object.class)},
-				{void.class, MockBean.class.getAnnotations(), Key.get(Object.class).withName("test")},
+				{void.class, MockBean.class.getAnnotations(), Key.get(Object.class).named("test")},
 
-				{MockInterface.class, MockBean.class.getAnnotations(), Key.get(MockInterface.class).withName("test")},
+				{MockInterface.class, MockBean.class.getAnnotations(), Key.get(MockInterface.class).named("test")},
 
 				{MockInterface.class, null, Key.get(MockInterface.class)},
 				{MockClass.class, null, Key.get(MockClass.class)},

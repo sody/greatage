@@ -88,15 +88,15 @@ public class TestMarker extends Assert {
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final Annotation qualifier) {
-		return Key.get(serviceClass).withQualifier(qualifier);
+		return Key.get(serviceClass).qualified(qualifier);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final Class<? extends Annotation> qualifierClass) {
-		return Key.get(serviceClass).withQualifier(qualifierClass);
+		return Key.get(serviceClass).qualified(qualifierClass);
 	}
 
 	private <T> Marker<T> marker(final Class<T> serviceClass, final String name) {
-		return Key.get(serviceClass).withName(name);
+		return Key.get(serviceClass).named(name);
 	}
 
 	private MockMarker mockQualifier() {

@@ -20,8 +20,8 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.name.Named;
 import org.greatage.ioc.Marker;
-import org.greatage.ioc.ServiceDefinition;
-import org.greatage.ioc.ServiceResources;
+import org.greatage.ioc.internal.ServiceDefinition;
+import org.greatage.ioc.internal.ServiceResources;
 import org.greatage.ioc.annotations.Prototype;
 
 import java.lang.annotation.Annotation;
@@ -64,11 +64,11 @@ public class GuiceServiceDefinition<T> implements ServiceDefinition<T> {
 		final Annotation annotation = key.getAnnotation();
 		if (annotation instanceof Named) {
 			return org.greatage.ioc.Key.get(serviceClass)
-					.withName(((Named) annotation).value())
-					.inScope(Prototype.class);
+					.named(((Named) annotation).value())
+					.scoped(Prototype.class);
 		}
 		return org.greatage.ioc.Key.get(serviceClass)
-				.withQualifier(annotation)
-				.inScope(Prototype.class);
+				.qualified(annotation)
+				.scoped(Prototype.class);
 	}
 }
