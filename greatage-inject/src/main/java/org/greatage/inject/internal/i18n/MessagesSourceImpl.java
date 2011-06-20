@@ -58,16 +58,15 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 	 * {@inheritDoc} It uses {@link org.greatage.inject.services.ResourceLocator} service to locate message bundles, reads
 	 * them in UTF-8 encoding and creates {@link MessagesImpl} instance as result.
 	 *
-	 * @throws IllegalStateException if message bundle is not found
-	 * @throws RuntimeException	  when error occurs while reading properties file
+	 * @throws ApplicationException	  when error occurs while reading properties file
 	 */
 	public Messages getMessages(final String name, final Locale locale) {
 		final Resource resource = resourceLocator.getResource(name + ".properties").inLocale(locale).candidate();
 		if (resource != null) {
 			final Map<String, String> properties = readProperties(resource);
-			return new MessagesImpl(locale, properties);
+			return new MessagesImpl(resource.getLocale(), properties);
 		}
-		throw new ApplicationException(String.format("Can't find messages for %s", name));
+		return null;
 	}
 
 	/**
@@ -75,7 +74,7 @@ public class MessagesSourceImpl extends AbstractMessagesSource {
 	 *
 	 * @param resource resource
 	 * @return string properties from resource
-	 * @throws RuntimeException when error occurs while reading properties file
+	 * @throws ApplicationException when error occurs while reading properties file
 	 */
 	private Map<String, String> readProperties(final Resource resource) {
 		Reader reader = null;

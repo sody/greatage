@@ -54,7 +54,7 @@ public class ResourceLocatorImpl implements ResourceLocator {
 
 		for (ResourceProvider provider : resourceProviders) {
 			final Resource resource = provider.getResource(path);
-			if (resource != null && resource.exists()) {
+			if (resource.exists()) {
 				return resource;
 			}
 		}
@@ -69,7 +69,7 @@ public class ResourceLocatorImpl implements ResourceLocator {
 
 		for (ResourceProvider provider : resourceProviders) {
 			final Resource resource = provider.getResource(location, name, type, locale);
-			if (resource != null && resource.exists()) {
+			if (resource.exists()) {
 				return resource;
 			}
 		}

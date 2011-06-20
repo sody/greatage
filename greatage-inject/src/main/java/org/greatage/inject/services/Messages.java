@@ -27,25 +27,25 @@ public interface Messages {
 	/**
 	 * Checks if messages contains localized string with specified key.
 	 *
-	 * @param key localized string key
-	 * @return true if messages contains localized string, false otherwise
+	 * @param key localized string key, not {@code null}
+	 * @return {@code true} if messages contains localized string, {@code false} otherwise
 	 */
 	boolean contains(String key);
 
 	/**
 	 * Gets localized string with specified key or placeholder if messages doesn't contain key.
 	 *
-	 * @param key localized string key
-	 * @return localized string with specified key or placeholder
+	 * @param key localized string key, not {@code null}
+	 * @return localized string with specified key or placeholder, not {@code null}
 	 */
 	String get(String key);
 
 	/**
 	 * Formats localized string with specified key using parameters.
 	 *
-	 * @param key		localized string key
+	 * @param key		localized string key, not {@code null}
 	 * @param parameters format parameters
-	 * @return formatted localized string
+	 * @return formatted localized string, not {@code null}
 	 */
 	String format(String key, Object... parameters);
 }

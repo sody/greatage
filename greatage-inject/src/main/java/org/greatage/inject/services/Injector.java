@@ -33,6 +33,9 @@ public interface Injector {
 	 * services by id (needs {@link org.greatage.inject.annotations.Inject} annotation) or services by their interfaces by
 	 * default.
 	 *
+	 * @param service service definition
+	 * @param contributors service contributors
+	 * @param interceptors service interceptors
 	 * @return requested resource that implements specified class
 	 * @throws org.greatage.inject.ApplicationException
 	 *          if an error occurs instantiating resource

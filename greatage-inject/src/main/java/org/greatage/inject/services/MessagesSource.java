@@ -29,18 +29,18 @@ public interface MessagesSource {
 	/**
 	 * Creates or retrieves localized messages in specified locale based on specified class.
 	 *
-	 * @param clazz  messages class
-	 * @param locale messages locale
-	 * @return localized messages
+	 * @param clazz  messages class, not {@code null}
+	 * @param locale messages locale, if {@code null} then root locale will be used
+	 * @return localized messages or {@code null} if not found
 	 */
 	Messages getMessages(Class clazz, Locale locale);
 
 	/**
 	 * Creates or retrieves localized messages in specified locale based on specified name.
 	 *
-	 * @param name   messages name
-	 * @param locale messages locale
-	 * @return localized messages
+	 * @param name   messages name, not {@code null}
+	 * @param locale messages locale, if {@code null} then root locale will be used
+	 * @return localized messages or {@code null} if not found
 	 */
 	Messages getMessages(String name, Locale locale);
 }

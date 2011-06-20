@@ -35,7 +35,7 @@ public abstract class AbstractMessages implements Messages {
 	/**
 	 * Creates new instance of messages for specified locale. This locale will be used for formatting.
 	 *
-	 * @param locale messages locale
+	 * @param locale messages locale, not {@code null}
 	 */
 	protected AbstractMessages(final Locale locale) {
 		this.locale = locale;
@@ -52,15 +52,18 @@ public abstract class AbstractMessages implements Messages {
 	 * {@inheritDoc}
 	 */
 	public String get(final String key) {
-		return contains(key) ? getMessage(key) : String.format(MISSING_KEY_PLACEHOLDER, key);
+		return contains(key) ?
+				getMessage(key) :
+				String.format(MISSING_KEY_PLACEHOLDER, key);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public String format(final String key, final Object... parameters) {
-		final String format = get(key);
-		return String.format(locale, format, parameters);
+		return contains(key) ?
+				String.format(locale, getMessage(key), parameters) :
+				String.format(MISSING_KEY_PLACEHOLDER, key);
 	}
 
 	/**
