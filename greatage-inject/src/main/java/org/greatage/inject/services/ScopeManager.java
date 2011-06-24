@@ -16,8 +16,8 @@
 
 package org.greatage.inject.services;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
+import org.greatage.inject.Interceptor;
+import org.greatage.inject.Marker;
 
 /**
  * This interface represents utility service that obtains scope instances by their name.
@@ -27,13 +27,7 @@ import java.util.Collection;
  */
 public interface ScopeManager {
 
-	/**
-	 * Obtains scope instance by its name.
-	 *
-	 * @param scope scope name
-	 * @return scope instance correspondent to specified scope name or null if doesn't exist
-	 */
-	Scope getScope(Class<? extends Annotation> scope); //todo: get by marker?
+	<T> T get(Marker<T> marker);
 
-	Collection<Scope> getScopes();
+	<T> void register(Marker<T> marker, ObjectBuilder<T> builder, Interceptor interceptor);
 }

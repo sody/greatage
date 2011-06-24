@@ -17,27 +17,24 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.ApplicationException;
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.Key;
 import org.greatage.inject.Marker;
 import org.greatage.inject.ServiceLocator;
+import org.greatage.inject.annotations.Singleton;
 import org.greatage.inject.internal.proxy.JdkProxyFactory;
-import org.greatage.inject.internal.scope.ScopeManagerImpl;
-import org.greatage.inject.internal.scope.SingletonScope;
-import org.greatage.inject.services.InjectionProvider;
+import org.greatage.inject.internal.scope.CachedBuilder;
 import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.Module;
+import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ProxyFactory;
-import org.greatage.inject.services.Scope;
 import org.greatage.inject.services.ScopeManager;
-import org.greatage.inject.services.ServiceContributor;
 import org.greatage.inject.services.ServiceDefinition;
-import org.greatage.inject.services.ServiceInterceptor;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,11 +46,6 @@ import java.util.Map;
 public class ServiceLocatorBuilder {
 	private final ServiceLocatorModule rootModule = new ServiceLocatorModule();
 	private final Locker locker = new Locker();
-
-	private Injector injector;
-	private final Collection<Module> modules = CollectionUtils.newList();
-	private final Map<Marker<?>, ServiceDefinition<?>> services = CollectionUtils.newMap();
-	private final Map<Class<?>, Object> cache = CollectionUtils.newMap();
 
 	public static ServiceLocator createServiceLocator(final Module... modules) {
 		final ServiceLocatorBuilder builder = new ServiceLocatorBuilder().addModules(modules);
@@ -128,63 +120,61 @@ public class ServiceLocatorBuilder {
 	 */
 	public ServiceLocator build() {
 		locker.lock();
-		modules.addAll(rootModule.getModules());
-
-		for (Module module : modules) {
-			for (ServiceDefinition<?> service : module.getDefinitions()) {
-				final Marker<?> marker = service.getMarker();
-				if (!service.isOverride() && services.containsKey(marker)) {
-					throw new ApplicationException(String.format("Service (%s) already declared", marker));
-				}
-				services.put(marker, service);
-			}
-		}
-
-		final ProxyFactory fakeProxyFactory = new JdkProxyFactory();
-
-		final Scope scope = new SingletonScope();
-		final ScopeManager fakeScopeManager = new ScopeManagerImpl(CollectionUtils.<Scope, Scope>newList(scope));
-		cache.put(Scope.class, scope);
-
-		injector = createInjector(fakeProxyFactory, fakeScopeManager);
-
-		final ProxyFactory proxyFactory = getService(ProxyFactory.class);
-		final ScopeManager scopeManager = getService(ScopeManager.class);
-
-		injector = createInjector(proxyFactory, scopeManager);
-
-		return getService(ServiceLocator.class);
+		final Injector injector = new InternalInjector(rootModule.getModules());
+		return injector.inject(Key.get(ServiceLocator.class), ServiceLocator.class);
 	}
 
-	private DefaultInjector createInjector(final ProxyFactory proxyFactory,
-										   final ScopeManager scopeManager) {
-		final LoggerInjectionProvider loggerProvider = new LoggerInjectionProvider();
-		final InternalInjectionProvider internalProvider = new InternalInjectionProvider();
-		final List<InjectionProvider> providers = CollectionUtils.newList(loggerProvider, internalProvider);
-		return new DefaultInjector(providers, proxyFactory, scopeManager);
-	}
+	class InternalInjector implements Injector, ScopeManager {
+		private final Map<Marker, Object> services = CollectionUtils.newMap();
+		private final Map<Marker<?>, ServiceDefinition<?>> definitions = CollectionUtils.newMap();
+		private final ProxyFactory proxyFactory = new JdkProxyFactory();
 
-	private <T> T getService(final Class<T> serviceClass) {
-		if (!cache.containsKey(serviceClass)) {
-			final Marker<T> marker = Key.get(serviceClass);
-			@SuppressWarnings("unchecked")
-			final ServiceDefinition<T> service = (ServiceDefinition<T>) services.get(marker);
-			final List<ServiceContributor<T>> contributors = CollectionUtils.newList();
-			final List<ServiceInterceptor<T>> interceptors = CollectionUtils.newList();
+		private final Collection<Module> modules;
+
+		InternalInjector(final Collection<Module> modules) {
+			this.modules = modules;
+
 			for (Module module : modules) {
-				contributors.addAll(module.getContributors(marker));
-				interceptors.addAll(module.getInterceptors(marker));
+				for (ServiceDefinition<?> service : module.getDefinitions()) {
+					final Marker<?> marker = service.getMarker();
+					if (!service.isOverride() && definitions.containsKey(marker)) {
+						throw new ApplicationException(String.format("Service (%s) already declared", marker));
+					}
+					definitions.put(marker, service);
+				}
 			}
-
-			final T serviceInstance = injector.createService(service, contributors, interceptors);
-			cache.put(serviceClass, serviceInstance);
 		}
-		return serviceClass.cast(cache.get(serviceClass));
-	}
 
-	class InternalInjectionProvider implements InjectionProvider {
 		public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
-			return getService(resourceClass);
+			final Marker<T> resourceMarker = InternalUtils.generateMarker(resourceClass, annotations);
+			if (!services.containsKey(resourceMarker)) {
+				@SuppressWarnings("unchecked")
+				final ServiceDefinition<T> service = (ServiceDefinition<T>) definitions.get(resourceMarker);
+				//todo: throw error if null
+				if (service == null) {
+					throw new ApplicationException(String.format("Cannot find resource '%s'", resourceMarker));
+				}
+				final ServiceInitializer<T> initializer = new ServiceInitializer<T>(this, service);
+				for (Module module : modules) {
+					initializer.addContributors(module);
+					initializer.addInterceptors(module);
+				}
+				initializer.initialize(this);
+			}
+			return get(resourceMarker);
+		}
+
+		public <T> T get(final Marker<T> marker) {
+			return marker.getServiceClass().cast(services.get(marker));
+		}
+
+		public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder,
+								 final Interceptor interceptor) {
+			if (marker.getScope() == null || marker.getScope().equals(Singleton.class)) {
+				final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
+				final T proxy = proxyFactory.createProxy(marker.getServiceClass(), cachedBuilder, interceptor);
+				services.put(marker, proxy);
+			}
 		}
 	}
 }

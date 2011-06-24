@@ -17,7 +17,10 @@
 package org.greatage.inject.internal.scope;
 
 import org.greatage.inject.ApplicationException;
+import org.greatage.inject.Interceptor;
+import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Singleton;
+import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.Scope;
 import org.greatage.inject.services.ScopeManager;
 import org.greatage.util.CollectionUtils;
@@ -46,18 +49,24 @@ public class ScopeManagerImpl implements ScopeManager {
 		for (Scope scope : scopes) {
 			this.scopes.put(scope.getKey(), scope);
 		}
+
+		assert this.scopes.containsKey(Singleton.class);
 	}
 
-	public Scope getScope(final Class<? extends Annotation> scope) {
-		final Class<? extends Annotation> realScope = scope != null ? scope : Singleton.class;
-		if (!scopes.containsKey(realScope)) {
-			throw new ApplicationException(String.format("Cannot find scope '%s'", realScope.getSimpleName()));
+	public <T> T get(final Marker<T> marker) {
+		return getScope(marker).get(marker);
+	}
+
+	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
+		getScope(marker).register(marker, builder, interceptor);
+	}
+
+	private <T> Scope getScope(final Marker<T> marker) {
+		final Class<? extends Annotation> scopeKey = marker.getScope() != null ? marker.getScope() : Singleton.class;
+		final Scope scope = scopes.get(scopeKey);
+		if (scope == null) {
+			throw new ApplicationException(String.format("Cannot find scope '%s'", scopeKey.getSimpleName()));
 		}
-
-		return scopes.get(realScope);
-	}
-
-	public Collection<Scope> getScopes() {
-		return scopes.values();
+		return scope;
 	}
 }

@@ -16,7 +16,10 @@
 
 package org.greatage.inject.internal.proxy;
 
+import org.greatage.inject.Interceptor;
+import org.greatage.inject.Invocation;
 import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ProxyFactory;
 import org.greatage.javassist.ClassBuilder;
 import org.greatage.javassist.ClassPoolEx;
 import org.greatage.util.DescriptionBuilder;
@@ -32,10 +35,12 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JavassistProxyFactory extends AbstractProxyFactory {
+public class JavassistProxyFactory implements ProxyFactory {
 	private static final AtomicLong UID_GENERATOR = new AtomicLong(System.currentTimeMillis());
 
-	private static final String HANDLER_FIELD = "_handler";
+	private static final String BUILDER_FIELD = "_builder";
+	private static final String INTERCEPTOR_FIELD = "_interceptor";
+	private static final String INTERCEPT_METHOD = "_intercept";
 
 	private final ClassPoolEx pool;
 
@@ -58,36 +63,66 @@ public class JavassistProxyFactory extends AbstractProxyFactory {
 	/**
 	 * {@inheritDoc}
 	 */
-	public <T> T createProxy(final ObjectBuilder<T> builder) {
-		validate(builder);
+	public <T> T createProxy(final Class<T> objectClass, final ObjectBuilder<T> builder,
+							 final Interceptor interceptor) {
+		assert builder != null : "Object builder should be specified";
+		assert objectClass != null : "Object class should be specified";
+		if (!objectClass.isInterface()) {
+			try {
+				objectClass.getConstructor();
+			} catch (NoSuchMethodException e) {
+				throw new IllegalArgumentException(
+						String.format("Object class '%s' should have default constructor", objectClass), e);
+			}
+		}
 
-		final Class<T> proxyClass = createProxyClass(builder);
-		return ReflectionUtils.newInstance(proxyClass, builder);
+		final Class<T> proxyClass = createProxyClass(objectClass, interceptor != null);
+		return ReflectionUtils.newInstance(proxyClass, builder, interceptor);
 	}
 
 	/**
 	 * Generates proxy class around specified object builder.
 	 *
-	 * @param builder object builder
 	 * @return proxy class around specified object builder
 	 */
-	private <T> Class<T> createProxyClass(final ObjectBuilder<T> builder) {
-		final Class<T> proxyClass = builder.getObjectClass();
-		final String className = generateName(proxyClass);
+	private <T> Class<T> createProxyClass(final Class<T> objectClass, final boolean intercepted) {
+		final String className = generateName(objectClass);
 
-		final ClassBuilder<T> classBuilder = new ClassBuilder<T>(pool, className, false, proxyClass);
+		final ClassBuilder<T> classBuilder = new ClassBuilder<T>(pool, className, false, objectClass);
 
-		classBuilder.addField(HANDLER_FIELD, Modifier.PRIVATE | Modifier.FINAL, DefaultInvocationHandler.class);
-		classBuilder.addConstructor(new Class[]{ObjectBuilder.class}, null,
-				String.format("%s = new %s($$);", HANDLER_FIELD, DefaultInvocationHandler.class.getName()));
+		classBuilder.addField(BUILDER_FIELD, Modifier.PRIVATE | Modifier.FINAL, ObjectBuilder.class);
+		classBuilder.addField(INTERCEPTOR_FIELD, Modifier.PRIVATE | Modifier.FINAL, Interceptor.class);
 
-		for (Method method : proxyClass.getMethods()) {
+		final String constructorBody = String.format("{ %s = $1; %s = $2; }", BUILDER_FIELD, INTERCEPTOR_FIELD);
+		classBuilder.addConstructor(new Class[]{ObjectBuilder.class, Interceptor.class}, null, constructorBody);
+
+		if (intercepted) {
+			final String interceptBody = new StringBuilder("{ ")
+					.append(String.format("final %s _invocation = new %s($1, $2);",
+							Invocation.class.getName(), InvocationImpl.class.getName()))
+					.append(String.format("return ($r) %s.invoke(_invocation, $3);", INTERCEPTOR_FIELD))
+					.append(" }").toString();
+			classBuilder.addMethod(INTERCEPT_METHOD, Modifier.PRIVATE, Object.class,
+					new Class[]{Object.class, Method.class, Object[].class}, null, interceptBody);
+		}
+
+		for (Method method : objectClass.getMethods()) {
 			final int modifiers = method.getModifiers();
 			if (Modifier.isPublic(modifiers) && !Modifier.isFinal(modifiers)) {
 				final String methodName = method.getName();
-				final String methodBody = String.format(
-						"{ final %s method = getClass().getMethod(\"%s\", $sig); return ($r) %s.invoke(this, method, $args); }",
-						Method.class.getName(), methodName, HANDLER_FIELD);
+				final String methodBody;
+				if (intercepted) {
+					methodBody = new StringBuilder("{ ")
+							.append(String.format("final %s _target = %s.build();",
+									Object.class.getName(), BUILDER_FIELD))
+							.append(String.format("final %s _method = _target.getClass().getMethod(\"%s\", $sig);",
+									Method.class.getName(), methodName))
+							.append(String.format("return ($r) %s(_target, _method, $args);", INTERCEPT_METHOD))
+							.append(" }").toString();
+				} else {
+					methodBody = String.format("return ($r) ((%s)%s.build()).%s($$);",
+							objectClass.getName(), BUILDER_FIELD, methodName);
+				}
 				classBuilder.addMethod(methodName, Modifier.PUBLIC, method.getReturnType(),
 						method.getParameterTypes(), method.getExceptionTypes(), methodBody);
 			}

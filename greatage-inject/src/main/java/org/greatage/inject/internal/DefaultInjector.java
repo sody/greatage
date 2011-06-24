@@ -19,13 +19,6 @@ package org.greatage.inject.internal;
 import org.greatage.inject.Marker;
 import org.greatage.inject.services.InjectionProvider;
 import org.greatage.inject.services.Injector;
-import org.greatage.inject.services.ProxyFactory;
-import org.greatage.inject.services.Scope;
-import org.greatage.inject.services.ScopeManager;
-import org.greatage.inject.services.ServiceContributor;
-import org.greatage.inject.services.ServiceDefinition;
-import org.greatage.inject.services.ServiceInterceptor;
-import org.greatage.inject.services.ServiceResources;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
@@ -39,52 +32,20 @@ import java.util.List;
  */
 public class DefaultInjector implements Injector {
 	private final List<InjectionProvider> providers;
-	private final ProxyFactory proxyFactory;
-	private final ScopeManager scopeManager;
 
-	public DefaultInjector(final List<InjectionProvider> providers,
-						   final ProxyFactory proxyFactory,
-						   final ScopeManager scopeManager) {
+	public DefaultInjector(final List<InjectionProvider> providers) {
 		assert providers != null;
-		assert proxyFactory != null;
-		assert scopeManager != null;
 
 		this.providers = providers;
-		this.proxyFactory = proxyFactory;
-		this.scopeManager = scopeManager;
 	}
 
-	public <T> T createService(final ServiceDefinition<T> service,
-							   final List<ServiceContributor<T>> contributors,
-							   final List<ServiceInterceptor<T>> interceptors) {
-
-		final Marker<T> marker = service.getMarker();
-		final DefaultServiceResources<T> resources = new DefaultServiceResources<T>(marker);
-		final Scope scope = scopeManager.getScope(marker.getScope());
-
-		final ServiceBuilder<T> builder = new ServiceBuilder<T>(service, contributors, interceptors, resources, scope);
-		return service.isEager() ? builder.build() : proxyFactory.createProxy(builder);
-	}
-
-	class DefaultServiceResources<T> implements ServiceResources<T> {
-		private final Marker<T> marker;
-
-		DefaultServiceResources(final Marker<T> marker) {
-			this.marker = marker;
-		}
-
-		public Marker<T> getMarker() {
-			return marker;
-		}
-
-		public <R> R getResource(final Class<R> resourceClass, final Annotation... annotations) {
-			for (InjectionProvider provider : providers) {
-				final R resource = provider.inject(marker, resourceClass, annotations);
-				if (resource != null) {
-					return resource;
-				}
+	public <T> T inject(final Marker<?> marker, final Class<T> resourceClass, final Annotation... annotations) {
+		for (InjectionProvider provider : providers) {
+			final T resource = provider.inject(marker, resourceClass, annotations);
+			if (resource != null) {
+				return resource;
 			}
-			return null;
 		}
+		return null;
 	}
 }

@@ -16,9 +16,15 @@
 
 package org.greatage.inject.internal.scope;
 
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Prototype;
+import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ProxyFactory;
+import org.greatage.inject.services.Scope;
+import org.greatage.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
@@ -29,37 +35,35 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PrototypeScope extends AbstractScope {
+public class PrototypeScope implements Scope {
+	private final Map<Marker, ServiceInformationHolder> services = CollectionUtils.newMap();
+	private final ProxyFactory proxyFactory;
 
-	public PrototypeScope() {
-		super(Prototype.class);
+	public PrototypeScope(final ProxyFactory proxyFactory) {
+		this.proxyFactory = proxyFactory;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void cleanup() {
-		//do nothing
+	public Class<? extends Annotation> getKey() {
+		return Prototype.class;
 	}
 
-	@Override
-	protected <S> void putService(final Marker<S> marker, final S service) {
-		//do nothing
+	public <T> T get(final Marker<T> marker) {
+		final ServiceInformationHolder<T> holder = services.get(marker);
+		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(holder.builder);
+		return proxyFactory.createProxy(marker.getServiceClass(), cachedBuilder, holder.interceptor);
 	}
 
-	@Override
-	protected <S> S getService(final Marker<S> marker) {
-		return null;
+	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
+		services.put(marker, new ServiceInformationHolder<T>(builder, interceptor));
 	}
 
-	@Override
-	protected <S> boolean containsService(final Marker<S> marker) {
-		return false;
-	}
+	class ServiceInformationHolder<T> {
+		private final ObjectBuilder<T> builder;
+		private final Interceptor interceptor;
 
-	@Override
-	protected Map<Marker, Object> getScopeServices() {
-		return null;
+		ServiceInformationHolder(final ObjectBuilder<T> builder, final Interceptor interceptor) {
+			this.builder = builder;
+			this.interceptor = interceptor;
+		}
 	}
 }

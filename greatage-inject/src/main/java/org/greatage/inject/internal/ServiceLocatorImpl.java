@@ -22,15 +22,13 @@ import org.greatage.inject.Marker;
 import org.greatage.inject.ServiceLocator;
 import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.Module;
-import org.greatage.inject.services.ServiceContributor;
+import org.greatage.inject.services.ScopeManager;
 import org.greatage.inject.services.ServiceDefinition;
-import org.greatage.inject.services.ServiceInterceptor;
 import org.greatage.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,7 +42,8 @@ import java.util.Set;
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Logger logger = LoggerFactory.getLogger(ServiceLocatorImpl.class);
 
-	private final Map<Marker<?>, Object> services = CollectionUtils.newConcurrentMap();
+	private final Set<Marker<?>> services = CollectionUtils.newSet();
+	private final ScopeManager scopeManager;
 
 	/**
 	 * Creates new instance of service locator with defined modules.
@@ -52,9 +51,13 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @param modules  modules
 	 * @param injector injector
 	 */
-	public ServiceLocatorImpl(final Collection<Module> modules, final Injector injector) {
+	public ServiceLocatorImpl(final Collection<Module> modules,
+							  final Injector injector, final ScopeManager scopeManager) {
 		assert modules != null;
 		assert injector != null;
+		assert scopeManager != null;
+
+		this.scopeManager = scopeManager;
 
 		//creating and overriding service definitions
 		//TODO: implement this using set
@@ -78,7 +81,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	}
 
 	public Set<Marker<?>> getMarkers() {
-		return services.keySet();
+		return services;
 	}
 
 	/**
@@ -116,9 +119,9 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 	public <T> Set<T> findServices(final Marker<T> marker) {
 		final Set<T> result = CollectionUtils.newSet();
-		for (Map.Entry<Marker<?>, ?> entry : services.entrySet()) {
-			if (marker.isAssignableFrom(entry.getKey())) {
-				final Object service = entry.getValue();
+		for (Marker<?> serviceMarker : services) {
+			if (marker.isAssignableFrom(serviceMarker)) {
+				final Object service = scopeManager.get(serviceMarker);
 				result.add(marker.getServiceClass().cast(service));
 			}
 		}
@@ -129,15 +132,13 @@ public class ServiceLocatorImpl implements ServiceLocator {
 								final ServiceDefinition<T> service,
 								final Collection<Module> modules) {
 		final Marker<T> marker = service.getMarker();
-		final List<ServiceContributor<T>> contributors = CollectionUtils.newList();
-		final List<ServiceInterceptor<T>> interceptors = CollectionUtils.newList();
+		final ServiceInitializer<T> initializer = new ServiceInitializer<T>(injector, service);
 		for (Module module : modules) {
-			contributors.addAll(module.getContributors(marker));
-			interceptors.addAll(module.getInterceptors(marker));
+			initializer.addContributors(module);
+			initializer.addInterceptors(module);
 		}
-
-		final T serviceInstance = injector.createService(service, contributors, interceptors);
-		services.put(marker, serviceInstance);
+		initializer.initialize(scopeManager);
+		services.add(marker);
 	}
 
 	private void logStatistics() {
@@ -151,7 +152,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 		final StringBuilder statistics = new StringBuilder("Statistics:\n");
 		final String format = "%" + maxLength + "s : [%s]\n";
-		for (Marker<?> marker : services.keySet()) {
+		for (Marker<?> marker : services) {
 			final String name = marker.getServiceClass().getSimpleName();
 			final String scope = marker.getScope() != null ? marker.getScope().getSimpleName() : "Default";
 			statistics.append(String.format(format, name, scope));

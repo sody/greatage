@@ -16,10 +16,16 @@
 
 package org.greatage.inject.internal.scope;
 
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Threaded;
+import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ProxyFactory;
+import org.greatage.inject.services.Scope;
+import org.greatage.inject.services.ThreadManager;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
@@ -29,32 +35,28 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ThreadScope extends AbstractScope {
-	private final ThreadLocal<Map<Marker, Object>> services = new ThreadLocal<Map<Marker, Object>>() {
-		@Override
-		protected Map<Marker, Object> initialValue() {
-			return CollectionUtils.newConcurrentMap();
-		}
-	};
+public class ThreadScope implements Scope {
+	private final Map<Marker, Object> services = CollectionUtils.newMap();
 
-	public ThreadScope() {
-		super(Threaded.class);
+	private final ProxyFactory proxyFactory;
+	private final ThreadManager manager;
+
+	public ThreadScope(final ProxyFactory proxyFactory, final ThreadManager manager) {
+		this.proxyFactory = proxyFactory;
+		this.manager = manager;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void cleanup() {
-		super.cleanup();
-		services.remove();
+	public Class<? extends Annotation> getKey() {
+		return Threaded.class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Map<Marker, Object> getScopeServices() {
-		return services.get();
+	public <T> T get(final Marker<T> marker) {
+		return marker.getServiceClass().cast(services.get(marker));
+	}
+
+	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
+		final ThreadedBuilder<T> threadedBuilder = new ThreadedBuilder<T>(manager, marker, builder);
+		final T proxy = proxyFactory.createProxy(marker.getServiceClass(), threadedBuilder, interceptor);
+		services.put(marker, proxy);
 	}
 }

@@ -16,6 +16,7 @@
 
 package org.greatage.inject.services;
 
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 
 import java.lang.annotation.Annotation;
@@ -34,15 +35,10 @@ public interface Scope {
 	 * Gets service by its resource. If service is missed in this scope new instance will be built via specified builder.
 	 *
 	 * @param marker service resources that identifies the service
-	 * @param <S>    type of service
+	 * @param <T>    type of service
 	 * @return service instance bound to this scope
 	 */
-	<S> S get(Marker<S> marker);
+	<T> T get(Marker<T> marker);
 
-	<S> void put(Marker<S> marker, ObjectBuilder<S> builder);
-
-	/**
-	 * Close scope before end of lifetime.
-	 */
-	void cleanup();
+	<T> void register(Marker<T> marker, ObjectBuilder<T> builder, Interceptor interceptor);
 }

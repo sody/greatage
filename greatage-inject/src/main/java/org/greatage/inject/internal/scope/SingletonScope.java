@@ -16,10 +16,15 @@
 
 package org.greatage.inject.internal.scope;
 
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Singleton;
+import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ProxyFactory;
+import org.greatage.inject.services.Scope;
 import org.greatage.util.CollectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.util.Map;
 
 /**
@@ -29,18 +34,26 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SingletonScope extends AbstractScope {
-	private final Map<Marker, Object> services = CollectionUtils.newConcurrentMap();
+public class SingletonScope implements Scope {
+	private final Map<Marker, Object> services = CollectionUtils.newMap();
 
-	public SingletonScope() {
-		super(Singleton.class);
+	private final ProxyFactory proxyFactory;
+
+	public SingletonScope(final ProxyFactory proxyFactory) {
+		this.proxyFactory = proxyFactory;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	protected Map<Marker, Object> getScopeServices() {
-		return services;
+	public Class<? extends Annotation> getKey() {
+		return Singleton.class;
+	}
+
+	public <T> T get(final Marker<T> marker) {
+		return marker.getServiceClass().cast(services.get(marker));
+	}
+
+	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
+		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
+		final T proxy = proxyFactory.createProxy(marker.getServiceClass(), cachedBuilder, interceptor);
+		services.put(marker, proxy);
 	}
 }

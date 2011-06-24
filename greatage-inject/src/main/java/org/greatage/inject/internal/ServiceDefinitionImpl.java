@@ -72,7 +72,7 @@ public class ServiceDefinitionImpl<T> implements ServiceDefinition<T> {
 			final Object[] parameters = InternalUtils.calculateParameters(resources, constructor);
 			return implementationClass.cast(constructor.newInstance(parameters));
 		} catch (Exception e) {
-			throw new ApplicationException(String.format("Can't create service (%s)", resources.getMarker()), e);
+			throw new ApplicationException(String.format("Can't create service (%s)", marker), e);
 		}
 	}
 

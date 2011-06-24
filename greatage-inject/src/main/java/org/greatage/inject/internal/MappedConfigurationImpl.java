@@ -17,6 +17,8 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.MappedConfiguration;
+import org.greatage.inject.Marker;
+import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 
@@ -39,10 +41,9 @@ public class MappedConfigurationImpl<T, K, V> extends AbstractConfiguration<T, M
 	/**
 	 * Creates new instance of mapped service configuration with defined service resources.
 	 *
-	 * @param resources service resource
 	 */
-	MappedConfigurationImpl(final ServiceResources<T> resources) {
-		super(resources);
+	MappedConfigurationImpl(final Injector injector, final Marker<T> marker) {
+		super(injector, marker);
 	}
 
 	/**

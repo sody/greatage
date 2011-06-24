@@ -20,6 +20,7 @@ import org.greatage.inject.Key;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Qualifier;
 import org.greatage.inject.annotations.Scope;
+import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.ServiceResources;
 
 import java.lang.annotation.Annotation;
@@ -99,6 +100,24 @@ public class InternalUtils {
 		final Object[] parameters = new Object[count];
 		for (int i = 0; i < count; i++) {
 			parameters[i] = resources.getResource(types[i], annotations[i]);
+		}
+		return parameters;
+	}
+
+	public static Object[] calculateParameters(final Injector injector,
+											   final Marker<?> marker,
+											   final Constructor constructor) {
+		return calculateInjections(injector, marker, constructor.getParameterTypes(), constructor.getParameterAnnotations());
+	}
+
+	private static Object[] calculateInjections(final Injector injector,
+												final Marker<?> marker,
+												final Class<?>[] types,
+												final Annotation[][] annotations) {
+		final int count = types.length;
+		final Object[] parameters = new Object[count];
+		for (int i = 0; i < count; i++) {
+			parameters[i] = injector.inject(marker, types[i], annotations[i]);
 		}
 		return parameters;
 	}

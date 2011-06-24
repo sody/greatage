@@ -16,9 +16,10 @@
 
 package org.greatage.inject.internal.scope;
 
-import org.greatage.inject.ApplicationException;
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ProxyFactory;
 import org.greatage.inject.services.Scope;
 import org.greatage.util.CollectionUtils;
 
@@ -33,85 +34,27 @@ import java.util.Map;
  * @since 1.0
  */
 public abstract class AbstractScope implements Scope {
-	private final Map<Marker, ObjectBuilder> serviceBuilders = CollectionUtils.newConcurrentMap();
+	private final Map<Marker, Object> services = CollectionUtils.newMap();
 
 	private final Class<? extends Annotation> key;
+	private final ProxyFactory proxyFactory;
 
-	protected AbstractScope(final Class<? extends Annotation> key) {
+	protected AbstractScope(final Class<? extends Annotation> key, final ProxyFactory proxyFactory) {
 		this.key = key;
+		this.proxyFactory = proxyFactory;
 	}
 
 	public Class<? extends Annotation> getKey() {
 		return key;
 	}
 
-	public <S> S get(final Marker<S> marker) {
-		if (!serviceBuilders.containsKey(marker)) {
-			throw new ApplicationException(
-					String.format("Cannot find service (%s) in %s scope", marker, key.getSimpleName()));
-		}
-
-		if (!containsService(marker)) {
-			@SuppressWarnings("unchecked")
-			final ObjectBuilder<S> builder = serviceBuilders.get(marker);
-			final S service = builder.build();
-			putService(marker, service);
-			return service;
-		}
-
-		return getService(marker);
+	public <T> T get(final Marker<T> marker) {
+		return marker.getServiceClass().cast(services.get(marker));
 	}
 
-	public <S> void put(final Marker<S> marker, final ObjectBuilder<S> builder) {
-		serviceBuilders.put(marker, builder);
+	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
+		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
+		final T proxy = proxyFactory.createProxy(marker.getServiceClass(), cachedBuilder, interceptor);
+		services.put(marker, proxy);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void cleanup() {
-		//TODO: add functionality of closing services, add init method
-		getScopeServices().clear();
-	}
-
-	/**
-	 * Checks are there a service instance inside the scope.
-	 *
-	 * @param marker service resources
-	 * @param <S>    service type
-	 * @return true if there are a service instance inside the scope, false otherwise
-	 */
-	protected <S> boolean containsService(final Marker<S> marker) {
-		return getScopeServices().containsKey(marker);
-	}
-
-	/**
-	 * Gets service instance by its resources.
-	 *
-	 * @param marker service resources
-	 * @param <S>    service type
-	 * @return service instance
-	 */
-	protected <S> S getService(final Marker<S> marker) {
-		final Class<S> serviceClass = marker.getServiceClass();
-		return serviceClass.cast(getScopeServices().get(marker));
-	}
-
-	/**
-	 * Puts service instance to this scope.
-	 *
-	 * @param marker  service resources
-	 * @param service service instance
-	 * @param <S>     service type
-	 */
-	protected <S> void putService(final Marker<S> marker, final S service) {
-		getScopeServices().put(marker, service);
-	}
-
-	/**
-	 * Gets all service instances contained inside the scope mapped by their identifiers.
-	 *
-	 * @return all service instances mapped by their identifiers
-	 */
-	protected abstract Map<Marker, Object> getScopeServices();
 }

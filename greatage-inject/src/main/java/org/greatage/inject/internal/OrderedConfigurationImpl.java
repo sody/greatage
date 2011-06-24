@@ -16,7 +16,9 @@
 
 package org.greatage.inject.internal;
 
+import org.greatage.inject.Marker;
 import org.greatage.inject.OrderedConfiguration;
+import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Ordered;
@@ -43,8 +45,8 @@ public class OrderedConfigurationImpl<T, V> extends AbstractConfiguration<T, Lis
 	 *
 	 * @param resources service resource
 	 */
-	OrderedConfigurationImpl(final ServiceResources<T> resources) {
-		super(resources);
+	public OrderedConfigurationImpl(final Injector injector, final Marker<T> marker) {
+		super(injector, marker);
 	}
 
 	/**

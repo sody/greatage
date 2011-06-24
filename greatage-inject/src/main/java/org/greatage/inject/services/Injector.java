@@ -16,7 +16,9 @@
 
 package org.greatage.inject.services;
 
-import java.util.List;
+import org.greatage.inject.Marker;
+
+import java.lang.annotation.Annotation;
 
 /**
  * This class represents service resources that may be provided to a service when it initializes, are configurated or
@@ -27,20 +29,5 @@ import java.util.List;
  */
 public interface Injector {
 
-	/**
-	 * Gets resource to service by its type and annotations used. It can provide logger for service, injected symbols
-	 * configured by {@link SymbolSource} (needs {@link org.greatage.inject.annotations.Symbol} annotation), injected
-	 * services by id (needs {@link org.greatage.inject.annotations.Inject} annotation) or services by their interfaces by
-	 * default.
-	 *
-	 * @param service service definition
-	 * @param contributors service contributors
-	 * @param interceptors service interceptors
-	 * @return requested resource that implements specified class
-	 * @throws org.greatage.inject.ApplicationException
-	 *          if an error occurs instantiating resource
-	 */
-	<T> T createService(ServiceDefinition<T> service,
-						List<ServiceContributor<T>> contributors,
-						List<ServiceInterceptor<T>> interceptors);
+	<T> T inject(Marker<?> marker, Class<T> resourceClass, Annotation... annotations);
 }

@@ -16,9 +16,12 @@
 
 package org.greatage.inject.internal.proxy;
 
+import org.greatage.inject.Interceptor;
 import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ProxyFactory;
 import org.greatage.util.DescriptionBuilder;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 
 /**
@@ -27,31 +30,24 @@ import java.lang.reflect.Proxy;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdkProxyFactory extends AbstractProxyFactory {
+public class JdkProxyFactory implements ProxyFactory {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public <T> T createProxy(final ObjectBuilder<T> builder) {
-		validate(builder);
-
-		final ClassLoader classLoader = builder.getObjectClass().getClassLoader();
-
-		final Object proxyInstance = Proxy.newProxyInstance(classLoader,
-				new Class<?>[]{builder.getObjectClass()},
-				new DefaultInvocationHandler<T>(builder));
-		return builder.getObjectClass().cast(proxyInstance);
-	}
-
-	/**
-	 * {@inheritDoc} It also can not be created when original class is not interface.
-	 */
-	@Override
-	protected <T> void validate(final ObjectBuilder<T> builder) {
-		super.validate(builder);
-		if (!builder.getObjectClass().isInterface()) {
-			throw new IllegalArgumentException("Proxy class must be an interface");
+	public <T> T createProxy(final Class<T> objectClass,
+							 final ObjectBuilder<T> builder,
+							 final Interceptor interceptor) {
+		assert builder != null : "Object builder should be specified";
+		assert objectClass != null : "Object class should be specified";
+		if (!objectClass.isInterface()) {
+			throw new IllegalArgumentException("Object class should be an interface");
 		}
+
+		final ClassLoader classLoader = objectClass.getClassLoader();
+		final InvocationHandler handler = interceptor != null ?
+				new InterceptedInvocationHandler<T>(builder, interceptor) :
+				new DefaultInvocationHandler<T>(builder);
+		final Object proxy = Proxy.newProxyInstance(classLoader, new Class<?>[]{objectClass}, handler);
+
+		return objectClass.cast(proxy);
 	}
 
 	/**

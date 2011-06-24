@@ -17,6 +17,8 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.Configuration;
+import org.greatage.inject.Marker;
+import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.ServiceResources;
 import org.greatage.util.CollectionUtils;
 
@@ -39,8 +41,8 @@ public class ConfigurationImpl<T, V> extends AbstractConfiguration<T, Collection
 	 *
 	 * @param resources service resource
 	 */
-	ConfigurationImpl(final ServiceResources<T> resources) {
-		super(resources);
+	ConfigurationImpl(final Injector injector, final Marker<T> marker) {
+		super(injector, marker);
 	}
 
 	/**

@@ -41,6 +41,8 @@ import org.greatage.inject.internal.resource.ResourceLocatorImpl;
 import org.greatage.inject.internal.resource.URIResource;
 import org.greatage.inject.internal.scope.PrototypeScope;
 import org.greatage.inject.internal.scope.ScopeManagerImpl;
+import org.greatage.inject.internal.scope.SingletonScope;
+import org.greatage.inject.internal.scope.ThreadManagerImpl;
 import org.greatage.inject.internal.scope.ThreadScope;
 import org.greatage.inject.internal.symbol.DefaultSymbolProvider;
 import org.greatage.inject.internal.symbol.SymbolSourceImpl;
@@ -57,6 +59,7 @@ import org.greatage.inject.services.Scope;
 import org.greatage.inject.services.ScopeManager;
 import org.greatage.inject.services.SymbolProvider;
 import org.greatage.inject.services.SymbolSource;
+import org.greatage.inject.services.ThreadManager;
 import org.greatage.inject.services.TypeCoercer;
 
 /**
@@ -80,6 +83,7 @@ public class IOCModule {
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class).eager();
 		binder.bind(ScopeManager.class, ScopeManagerImpl.class).eager();
+		binder.bind(ThreadManager.class, ThreadManagerImpl.class).eager();
 
 		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
 		binder.bind(Injector.class, DefaultInjector.class);
@@ -101,8 +105,8 @@ public class IOCModule {
 	 * @param configuration scope manager mapped configuration
 	 */
 	@Contribute(ScopeManager.class)
-	public static void contributeScopeManager(final Configuration<Scope> configuration, final Scope defaultScope) {
-		configuration.add(defaultScope);
+	public static void contributeScopeManager(final Configuration<Scope> configuration) {
+		configuration.addInstance(SingletonScope.class);
 		configuration.addInstance(PrototypeScope.class);
 		configuration.addInstance(ThreadScope.class);
 	}

@@ -36,7 +36,7 @@ public class InvocationImpl implements Invocation {
 	 * @param target object instance
 	 * @param method invocation method
 	 */
-	InvocationImpl(final Object target, final Method method) {
+	public InvocationImpl(final Object target, final Method method) {
 		this.target = target;
 		this.method = method;
 	}

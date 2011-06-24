@@ -16,8 +16,6 @@
 
 package org.greatage.inject.services;
 
-import org.greatage.inject.Interceptor;
-
 /**
  * This interface represents proxy generation data.
  *
@@ -26,15 +24,6 @@ import org.greatage.inject.Interceptor;
  * @since 1.0
  */
 public interface ObjectBuilder<T> {
-
-	/**
-	 * Gets proxy interface that will be implemented with both proxy and real object classes.
-	 *
-	 * @return proxy interface
-	 */
-	Class<T> getObjectClass();
-
-	Interceptor getInterceptor();
 
 	/**
 	 * Builds real object. It is used for lazy creation of real object under the proxy.

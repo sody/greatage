@@ -17,7 +17,8 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.ApplicationException;
-import org.greatage.inject.services.ServiceResources;
+import org.greatage.inject.Marker;
+import org.greatage.inject.services.Injector;
 
 import java.lang.reflect.Constructor;
 
@@ -31,15 +32,15 @@ import java.lang.reflect.Constructor;
  * @since 1.0
  */
 public abstract class AbstractConfiguration<T, C> {
-	private final ServiceResources<T> resources;
+	private final Marker<T> marker;
+	private final Injector injector;
 
 	/**
 	 * Creates new instance of service configuration with defined service resources.
-	 *
-	 * @param resources service resources
 	 */
-	protected AbstractConfiguration(final ServiceResources<T> resources) {
-		this.resources = resources;
+	protected AbstractConfiguration(final Injector injector, final Marker<T> marker) {
+		this.marker = marker;
+		this.injector = injector;
 	}
 
 	/**
@@ -51,7 +52,7 @@ public abstract class AbstractConfiguration<T, C> {
 	protected <V> V newInstance(final Class<? extends V> valueClass) {
 		try {
 			final Constructor constructor = valueClass.getConstructors()[0];
-			final Object[] parameters = InternalUtils.calculateParameters(resources, constructor);
+			final Object[] parameters = InternalUtils.calculateParameters(injector, marker, constructor);
 			return valueClass.cast(constructor.newInstance(parameters));
 		} catch (Exception e) {
 			throw new ApplicationException(String.format("Can't create object of class '%s'", valueClass), e);

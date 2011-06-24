@@ -1,9 +1,10 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.Interceptor;
+import org.greatage.inject.Marker;
 import org.greatage.inject.ServiceAdvice;
 import org.greatage.inject.ServiceAdviceOptions;
-import org.greatage.inject.services.ServiceResources;
+import org.greatage.inject.services.Injector;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.OrderingUtils;
 
@@ -16,8 +17,8 @@ import java.util.List;
 public class ServiceAdviceImpl<T> extends AbstractConfiguration<T, Interceptor> implements ServiceAdvice {
 	private final List<ServiceAdviceOptionsImpl> advices = CollectionUtils.newList();
 
-	ServiceAdviceImpl(final ServiceResources<T> resources) {
-		super(resources);
+	public ServiceAdviceImpl(final Injector injector, final Marker<T> marker) {
+		super(injector, marker);
 	}
 
 	@Override

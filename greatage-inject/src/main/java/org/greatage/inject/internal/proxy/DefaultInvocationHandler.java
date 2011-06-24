@@ -16,8 +16,6 @@
 
 package org.greatage.inject.internal.proxy;
 
-import org.greatage.inject.Interceptor;
-import org.greatage.inject.Invocation;
 import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.util.DescriptionBuilder;
 
@@ -44,14 +42,7 @@ public class DefaultInvocationHandler<T> implements InvocationHandler {
 	}
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-		final T target = builder.build();
-		final Method realMethod = target.getClass().getMethod(method.getName(), method.getParameterTypes());
-		final Invocation invocation = new InvocationImpl(target, realMethod);
-		final Interceptor interceptor = builder.getInterceptor();
-		if (interceptor != null) {
-			return interceptor.invoke(invocation, args);
-		}
-		return invocation.proceed(args);
+		return method.invoke(builder.build(), args);
 	}
 
 	/**
