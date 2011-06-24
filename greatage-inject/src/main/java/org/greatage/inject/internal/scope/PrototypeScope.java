@@ -16,12 +16,11 @@
 
 package org.greatage.inject.internal.scope;
 
-import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Prototype;
-import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ProxyFactory;
 import org.greatage.inject.services.Scope;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -36,7 +35,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class PrototypeScope implements Scope {
-	private final Map<Marker, ServiceInformationHolder> services = CollectionUtils.newMap();
+	private final Map<Marker, ServiceBuilder> services = CollectionUtils.newMap();
 	private final ProxyFactory proxyFactory;
 
 	public PrototypeScope(final ProxyFactory proxyFactory) {
@@ -48,22 +47,13 @@ public class PrototypeScope implements Scope {
 	}
 
 	public <T> T get(final Marker<T> marker) {
-		final ServiceInformationHolder<T> holder = services.get(marker);
-		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(holder.builder);
-		return proxyFactory.createProxy(marker.getServiceClass(), cachedBuilder, holder.interceptor);
+		@SuppressWarnings({"unchecked"})
+		final ServiceBuilder<T> builder = services.get(marker);
+		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
+		return proxyFactory.createProxy(cachedBuilder);
 	}
 
-	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
-		services.put(marker, new ServiceInformationHolder<T>(builder, interceptor));
-	}
-
-	class ServiceInformationHolder<T> {
-		private final ObjectBuilder<T> builder;
-		private final Interceptor interceptor;
-
-		ServiceInformationHolder(final ObjectBuilder<T> builder, final Interceptor interceptor) {
-			this.builder = builder;
-			this.interceptor = interceptor;
-		}
+	public <T> void register(final ServiceBuilder<T> builder) {
+		services.put(builder.getMarker(), builder);
 	}
 }

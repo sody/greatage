@@ -17,7 +17,6 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.ApplicationException;
-import org.greatage.inject.Interceptor;
 import org.greatage.inject.Key;
 import org.greatage.inject.Marker;
 import org.greatage.inject.ServiceLocator;
@@ -26,9 +25,9 @@ import org.greatage.inject.internal.proxy.JdkProxyFactory;
 import org.greatage.inject.internal.scope.CachedBuilder;
 import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.Module;
-import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ProxyFactory;
 import org.greatage.inject.services.ScopeManager;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.inject.services.ServiceDefinition;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.Locker;
@@ -168,11 +167,11 @@ public class ServiceLocatorBuilder {
 			return marker.getServiceClass().cast(services.get(marker));
 		}
 
-		public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder,
-								 final Interceptor interceptor) {
+		public <T> void register(final ServiceBuilder<T> builder) {
+			final Marker<T> marker = builder.getMarker();
 			if (marker.getScope() == null || marker.getScope().equals(Singleton.class)) {
 				final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
-				final T proxy = proxyFactory.createProxy(marker.getServiceClass(), cachedBuilder, interceptor);
+				final T proxy = proxyFactory.createProxy(cachedBuilder);
 				services.put(marker, proxy);
 			}
 		}

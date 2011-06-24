@@ -8,6 +8,7 @@ import org.greatage.util.AnnotationFactory;
 import org.greatage.util.Ordered;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,7 +54,15 @@ public class ServiceAdviceOptionsImpl implements ServiceAdviceOptions, Ordered {
 		return this;
 	}
 
-	public InterceptorHolder build() {
-		return new InterceptorHolder(interceptor, annotation);
+	public boolean supports(final Method method) {
+		if (annotation != null) {
+			final Annotation methodAnnotation = method.getAnnotation(annotation.annotationType());
+			return annotation.equals(methodAnnotation);
+		}
+		return true;
+	}
+
+	public Interceptor getInterceptor() {
+		return interceptor;
 	}
 }

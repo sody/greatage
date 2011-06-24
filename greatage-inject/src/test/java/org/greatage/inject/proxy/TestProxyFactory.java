@@ -21,7 +21,7 @@ import org.greatage.inject.Invocation;
 import org.greatage.inject.internal.proxy.CGLibProxyFactory;
 import org.greatage.inject.internal.proxy.JavassistProxyFactory;
 import org.greatage.inject.internal.proxy.JdkProxyFactory;
-import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.inject.services.ProxyFactory;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
@@ -44,25 +44,25 @@ public class TestProxyFactory extends Assert {
 		return new Object[][]{
 				{
 						MockIOCInterface.class,
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterfaceImpl1.class, "test1"),
+						new MockServiceBuilder<MockIOCInterface>(MockIOCInterfaceImpl1.class, "test1"),
 						null,
 						"test", "test1"
 				},
 				{
 						MockIOCInterface.class,
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterfaceImpl2.class, "test2"),
+						new MockServiceBuilder<MockIOCInterface>(MockIOCInterfaceImpl2.class, "test2"),
 						null,
 						"test", "test2"
 				},
 				{
 						MockIOCInterface.class,
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterfaceImpl2.class),
+						new MockServiceBuilder<MockIOCInterface>(MockIOCInterfaceImpl2.class),
 						null,
 						"test", null
 				},
 				{
 						MockIOCInterface.class,
-						new MockObjectBuilder<MockIOCInterface>(MockIOCInterfaceImpl3.class),
+						new MockServiceBuilder<MockIOCInterface>(MockIOCInterfaceImpl3.class),
 						new MockInterceptor("invoke:"),
 						"invoke:test", "invoke:" + MockIOCInterfaceImpl3.MESSAGE
 				},
@@ -74,19 +74,19 @@ public class TestProxyFactory extends Assert {
 		return new Object[][]{
 				{
 						MockIOCInterfaceImpl2.class,
-						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class),
+						new MockServiceBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class),
 						null,
 						"test", null
 				},
 				{
 						MockIOCInterfaceImpl2.class,
-						new MockObjectBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, "test5"),
+						new MockServiceBuilder<MockIOCInterfaceImpl2>(MockIOCInterfaceImpl2.class, "test5"),
 						null,
 						"test", "test5"
 				},
 				{
 						MockIOCInterfaceImpl3.class,
-						new MockObjectBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class),
+						new MockServiceBuilder<MockIOCInterfaceImpl3>(MockIOCInterfaceImpl3.class),
 						new MockInterceptor("invoke:"),
 						"invoke:test", "invoke:" + MockIOCInterfaceImpl3.MESSAGE
 				},
@@ -98,12 +98,12 @@ public class TestProxyFactory extends Assert {
 		return new Object[][]{
 				{
 						MockIOCInterfaceImpl1.class,
-						new MockObjectBuilder<MockIOCInterfaceImpl1>(MockIOCInterfaceImpl1.class, "test1"),
+						new MockServiceBuilder<MockIOCInterfaceImpl1>(MockIOCInterfaceImpl1.class, "test1"),
 						null,
 				},
 				{
 						MockIOCInterfaceImpl4.class,
-						new MockObjectBuilder<MockIOCInterfaceImpl4>(MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
+						new MockServiceBuilder<MockIOCInterfaceImpl4>(MockIOCInterfaceImpl4.class, new MockIOCInterfaceImpl3()),
 						null,
 				},
 		};
@@ -119,7 +119,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryData")
 	public <T extends MockIOCInterface>
 	void testCGLibProxyFactory(final Class<T> objectClass,
-							   final ObjectBuilder<T> builder,
+							   final ServiceBuilder<T> builder,
 							   final Interceptor interceptor,
 							   final String expected1,
 							   final String expected2) {
@@ -131,7 +131,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryExtraData")
 	public <T extends MockIOCInterface>
 	void testCGLibProxyFactoryExtra(final Class<T> objectClass,
-									final ObjectBuilder<T> builder,
+									final ServiceBuilder<T> builder,
 									final Interceptor interceptor,
 									final String expected1,
 									final String expected2) {
@@ -143,7 +143,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryWrongData", expectedExceptions = IllegalArgumentException.class)
 	public <T extends MockIOCInterface>
 	void testCGLibProxyFactoryWrong(final Class<T> objectClass,
-									final ObjectBuilder<T> builder,
+									final ServiceBuilder<T> builder,
 									final Interceptor interceptor) {
 		final MockIOCInterface proxy = cglibProxyFactory.createProxy(objectClass, builder, interceptor);
 		proxy.say("test");
@@ -153,7 +153,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryData")
 	public <T extends MockIOCInterface>
 	void testJavassistProxyFactory(final Class<T> objectClass,
-								   final ObjectBuilder<T> builder,
+								   final ServiceBuilder<T> builder,
 								   final Interceptor interceptor,
 								   final String expected1,
 								   final String expected2) {
@@ -165,7 +165,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryExtraData")
 	public <T extends MockIOCInterface>
 	void testJavassistProxyFactoryExtra(final Class<T> objectClass,
-										final ObjectBuilder<T> builder,
+										final ServiceBuilder<T> builder,
 										final Interceptor interceptor,
 										final String expected1,
 										final String expected2) {
@@ -177,7 +177,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryWrongData", expectedExceptions = IllegalArgumentException.class)
 	public <T extends MockIOCInterface>
 	void testJavassistProxyFactoryWrong(final Class<T> objectClass,
-										final ObjectBuilder<T> builder,
+										final ServiceBuilder<T> builder,
 										final Interceptor interceptor) {
 		final MockIOCInterface proxy = javassistProxyFactory.createProxy(objectClass, builder, interceptor);
 		proxy.say("test");
@@ -187,7 +187,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryData")
 	public <T extends MockIOCInterface>
 	void testJdkProxyFactory(final Class<T> objectClass,
-							 final ObjectBuilder<T> builder,
+							 final ServiceBuilder<T> builder,
 							 final Interceptor interceptor,
 							 final String expected1,
 							 final String expected2) {
@@ -199,7 +199,7 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryExtraData", expectedExceptions = IllegalArgumentException.class)
 	public <T extends MockIOCInterface>
 	void testJdkProxyFactoryExtra(final Class<T> objectClass,
-								  final ObjectBuilder<T> builder,
+								  final ServiceBuilder<T> builder,
 								  final Interceptor interceptor,
 								  final String expected1,
 								  final String expected2) {
@@ -211,19 +211,19 @@ public class TestProxyFactory extends Assert {
 	@Test(dataProvider = "proxyFactoryWrongData", expectedExceptions = IllegalArgumentException.class)
 	public <T extends MockIOCInterface>
 	void testJdkProxyFactoryWrong(final Class<T> objectClass,
-								  final ObjectBuilder<T> builder,
+								  final ServiceBuilder<T> builder,
 								  final Interceptor interceptor) {
 		final MockIOCInterface proxy = jdkProxyFactory.createProxy(objectClass, builder, interceptor);
 		proxy.say("test");
 		proxy.say();
 	}
 
-	public static class MockObjectBuilder<T> implements ObjectBuilder<T> {
+	public static class MockServiceBuilder<T> implements ServiceBuilder<T> {
 		private final Class<? extends T> implementationClass;
 		private final Object[] constructionParameters;
 
-		public MockObjectBuilder(final Class<? extends T> implementationClass,
-								 final Object... constructionParameters) {
+		public MockServiceBuilder(final Class<? extends T> implementationClass,
+								  final Object... constructionParameters) {
 			this.implementationClass = implementationClass;
 			this.constructionParameters = constructionParameters;
 		}

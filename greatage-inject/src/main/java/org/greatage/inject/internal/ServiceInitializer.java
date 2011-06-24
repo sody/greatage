@@ -1,11 +1,13 @@
 package org.greatage.inject.internal;
 
 import org.greatage.inject.Interceptor;
+import org.greatage.inject.Invocation;
 import org.greatage.inject.Marker;
+import org.greatage.inject.internal.proxy.InvocationImpl;
 import org.greatage.inject.services.Injector;
 import org.greatage.inject.services.Module;
-import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ScopeManager;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.inject.services.ServiceContributor;
 import org.greatage.inject.services.ServiceDefinition;
 import org.greatage.inject.services.ServiceInterceptor;
@@ -15,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -57,35 +60,46 @@ public class ServiceInitializer<T> {
 			logger.debug("Interception service (%s) from (%s)", marker, interceptor);
 			interceptor.intercept(interceptionResources);
 		}
-		final Interceptor interceptor = serviceAdvice.build();
-		final Builder builder = new Builder();
-		scopeManager.register(service.getMarker(), builder, interceptor);
+		final Builder builder = new Builder(serviceAdvice.build());
+		scopeManager.register(builder);
 	}
 
-	class Builder implements ObjectBuilder<T> {
-		public T build() {
-			final BuildResources buildResources = new BuildResources();
-			logger.debug("Building service (%s) from (%s)", marker, service);
-			return service.build(buildResources);
-		}
-	}
+	class Builder implements ServiceBuilder<T> {
+		private final Map<Method, List<Interceptor>> interceptors;
+		private final Map<Method, Invocation> invocations = CollectionUtils.newMap();
 
-	class Resources implements ServiceResources<T> {
-		private final Object configuration;
-
-		Resources(final Object configuration) {
-			this.configuration = configuration;
+		Builder(final Map<Method, List<Interceptor>> interceptors) {
+			this.interceptors = interceptors;
 		}
 
 		public Marker<T> getMarker() {
 			return marker;
 		}
 
-		public <R> R getResource(final Class<R> resourceClass, final Annotation... annotations) {
-			if (resourceClass.isInstance(configuration)) {
-				return resourceClass.cast(configuration);
+		public boolean eager() {
+			return service.isEager();
+		}
+
+		public boolean intercepts(final Method method) {
+			return interceptors.containsKey(method);
+		}
+
+		public Object invoke(final Method method, final Object... parameters) {
+			if (!invocations.containsKey(method)) {
+				Invocation interceptedInvocation = new InvocationImpl(build(), method);
+				for (Interceptor interceptor : interceptors.get(method)) {
+					interceptedInvocation = new InterceptedInvocation(interceptedInvocation, interceptor);
+				}
+				invocations.put(method, interceptedInvocation);
+				return interceptedInvocation;
 			}
-			return injector.inject(marker, resourceClass, annotations);
+			return invocations.get(method);
+		}
+
+		public T build() {
+			final BuildResources buildResources = new BuildResources();
+			logger.debug("Building service (%s) from (%s)", marker, service);
+			return service.build(buildResources);
 		}
 	}
 
@@ -126,6 +140,25 @@ public class ServiceInitializer<T> {
 				logger.debug("Configuring service (%s) from (%s)", service.getMarker(), contributor);
 				contributor.contribute(contributionResources);
 			}
+		}
+	}
+
+	class Resources implements ServiceResources<T> {
+		private final Object configuration;
+
+		Resources(final Object configuration) {
+			this.configuration = configuration;
+		}
+
+		public Marker<T> getMarker() {
+			return marker;
+		}
+
+		public <R> R getResource(final Class<R> resourceClass, final Annotation... annotations) {
+			if (resourceClass.isInstance(configuration)) {
+				return resourceClass.cast(configuration);
+			}
+			return injector.inject(marker, resourceClass, annotations);
 		}
 	}
 }

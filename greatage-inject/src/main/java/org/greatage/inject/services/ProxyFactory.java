@@ -35,5 +35,5 @@ public interface ProxyFactory {
 	 * @return proxy around specified object builder
 	 * @throws RuntimeException if proxy creation is impossible or if an error occurs instantiating it
 	 */
-	<T> T createProxy(Class<T> objectClass, ObjectBuilder<T> builder, Interceptor interceptor);
+	<T> T createProxy(ServiceBuilder<T> builder);
 }

@@ -16,12 +16,11 @@
 
 package org.greatage.inject.internal.scope;
 
-import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Threaded;
-import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ProxyFactory;
 import org.greatage.inject.services.Scope;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.inject.services.ThreadManager;
 import org.greatage.util.CollectionUtils;
 
@@ -54,9 +53,10 @@ public class ThreadScope implements Scope {
 		return marker.getServiceClass().cast(services.get(marker));
 	}
 
-	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
+	public <T> void register(final ServiceBuilder<T> builder) {
+		final Marker<T> marker = builder.getMarker();
 		final ThreadedBuilder<T> threadedBuilder = new ThreadedBuilder<T>(manager, marker, builder);
-		final T proxy = proxyFactory.createProxy(marker.getServiceClass(), threadedBuilder, interceptor);
+		final T proxy = proxyFactory.createProxy(threadedBuilder);
 		services.put(marker, proxy);
 	}
 }

@@ -16,9 +16,8 @@
 
 package org.greatage.inject.internal.proxy;
 
-import org.greatage.inject.Interceptor;
-import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ProxyFactory;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.InvocationHandler;
@@ -32,22 +31,20 @@ import java.lang.reflect.Proxy;
  */
 public class JdkProxyFactory implements ProxyFactory {
 
-	public <T> T createProxy(final Class<T> objectClass,
-							 final ObjectBuilder<T> builder,
-							 final Interceptor interceptor) {
+	public <T> T createProxy(final ServiceBuilder<T> builder) {
 		assert builder != null : "Object builder should be specified";
-		assert objectClass != null : "Object class should be specified";
-		if (!objectClass.isInterface()) {
+
+		final Class<T> serviceClass = builder.getMarker().getServiceClass();
+		assert serviceClass != null : "Object class should be specified";
+		if (!serviceClass.isInterface()) {
 			throw new IllegalArgumentException("Object class should be an interface");
 		}
 
-		final ClassLoader classLoader = objectClass.getClassLoader();
-		final InvocationHandler handler = interceptor != null ?
-				new InterceptedInvocationHandler<T>(builder, interceptor) :
-				new DefaultInvocationHandler<T>(builder);
-		final Object proxy = Proxy.newProxyInstance(classLoader, new Class<?>[]{objectClass}, handler);
+		final ClassLoader classLoader = serviceClass.getClassLoader();
+		final InvocationHandler handler = new DefaultInvocationHandler<T>(builder);
+		final Object proxy = Proxy.newProxyInstance(classLoader, new Class<?>[]{serviceClass}, handler);
 
-		return objectClass.cast(proxy);
+		return serviceClass.cast(proxy);
 	}
 
 	/**

@@ -20,7 +20,7 @@ import org.greatage.inject.ApplicationException;
 import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Singleton;
-import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.inject.services.Scope;
 import org.greatage.inject.services.ScopeManager;
 import org.greatage.util.CollectionUtils;
@@ -57,8 +57,8 @@ public class ScopeManagerImpl implements ScopeManager {
 		return getScope(marker).get(marker);
 	}
 
-	public <T> void register(final Marker<T> marker, final ObjectBuilder<T> builder, final Interceptor interceptor) {
-		getScope(marker).register(marker, builder, interceptor);
+	public <T> void register(final ServiceBuilder<T> builder) {
+		getScope(builder.getMarker()).register(builder);
 	}
 
 	private <T> Scope getScope(final Marker<T> marker) {

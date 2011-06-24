@@ -18,9 +18,8 @@ package org.greatage.inject.internal.proxy;
 
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.InvocationHandler;
-import org.greatage.inject.Interceptor;
-import org.greatage.inject.services.ObjectBuilder;
 import org.greatage.inject.services.ProxyFactory;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 /**
@@ -31,28 +30,28 @@ import org.greatage.util.DescriptionBuilder;
  */
 public class CGLibProxyFactory implements ProxyFactory {
 
-	public <T> T createProxy(final Class<T> objectClass, final ObjectBuilder<T> builder,
-							 final Interceptor interceptor) {
+	public <T> T createProxy(final ServiceBuilder<T> builder) {
 		assert builder != null : "Object builder should be specified";
-		assert objectClass != null : "Object class should be specified";
-		if (!objectClass.isInterface()) {
+
+		final Class<T> serviceClass = builder.getMarker().getServiceClass();
+		assert serviceClass != null : "Object class should be specified";
+
+		if (!serviceClass.isInterface()) {
 			try {
-				objectClass.getConstructor();
+				serviceClass.getConstructor();
 			} catch (NoSuchMethodException e) {
 				throw new IllegalArgumentException(
-						String.format("Object class '%s' should have default constructor", objectClass), e);
+						String.format("Object class '%s' should have default constructor", serviceClass), e);
 			}
 		}
 
-		final Class superClass = objectClass.isInterface() ? Object.class : objectClass;
-		final InvocationHandler handler = interceptor != null ?
-				new CGLibInterceptedHandler<T>(builder, interceptor) :
-				new CGLibHandler<T>(builder);
-		final Object proxy = objectClass.isInterface() ?
-				Enhancer.create(superClass, new Class[]{objectClass}, handler) :
+		final Class superClass = serviceClass.isInterface() ? Object.class : serviceClass;
+		final InvocationHandler handler = new CGLibHandler<T>(builder);
+		final Object proxy = serviceClass.isInterface() ?
+				Enhancer.create(superClass, new Class[]{serviceClass}, handler) :
 				Enhancer.create(superClass, handler);
 
-		return objectClass.cast(proxy);
+		return serviceClass.cast(proxy);
 	}
 
 	/**
@@ -70,20 +69,8 @@ public class CGLibProxyFactory implements ProxyFactory {
 		 *
 		 * @param builder object builder
 		 */
-		CGLibHandler(final ObjectBuilder<T> builder) {
+		CGLibHandler(final ServiceBuilder<T> builder) {
 			super(builder);
-		}
-	}
-
-	public class CGLibInterceptedHandler<T> extends InterceptedInvocationHandler<T> implements InvocationHandler {
-
-		/**
-		 * Creates new instance of invocation handler for CGLib proxy objects.
-		 *
-		 * @param builder object builder
-		 */
-		CGLibInterceptedHandler(final ObjectBuilder<T> builder, final Interceptor interceptor) {
-			super(builder, interceptor);
 		}
 	}
 }

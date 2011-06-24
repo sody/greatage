@@ -16,6 +16,10 @@
 
 package org.greatage.inject.services;
 
+import org.greatage.inject.Marker;
+
+import java.lang.reflect.Method;
+
 /**
  * This interface represents proxy generation data.
  *
@@ -23,7 +27,15 @@ package org.greatage.inject.services;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface ObjectBuilder<T> {
+public interface ServiceBuilder<T> {
+
+	Marker<T> getMarker();
+
+	boolean eager();
+
+	boolean intercepts(Method method);
+
+	Object invoke(Method method, Object... parameters);
 
 	/**
 	 * Builds real object. It is used for lazy creation of real object under the proxy.

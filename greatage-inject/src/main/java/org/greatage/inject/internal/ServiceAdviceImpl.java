@@ -8,27 +8,41 @@ import org.greatage.inject.services.Injector;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.OrderingUtils;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ServiceAdviceImpl<T> extends AbstractConfiguration<T, Interceptor> implements ServiceAdvice {
+public class ServiceAdviceImpl<T>
+		extends AbstractConfiguration<T, Map<Method, List<Interceptor>>>
+		implements ServiceAdvice {
 	private final List<ServiceAdviceOptionsImpl> advices = CollectionUtils.newList();
+	private final Marker<T> marker;
 
 	public ServiceAdviceImpl(final Injector injector, final Marker<T> marker) {
 		super(injector, marker);
+		this.marker = marker;
 	}
 
 	@Override
-	protected Interceptor build() {
+	protected Map<Method, List<Interceptor>> build() {
 		final List<ServiceAdviceOptionsImpl> ordered = OrderingUtils.order(advices);
-		final List<InterceptorHolder> interceptors = CollectionUtils.newList();
-		for (ServiceAdviceOptionsImpl options : ordered) {
-			interceptors.add(options.build());
+
+		final Map<Method, List<Interceptor>> interceptors = CollectionUtils.newMap();
+		for (Method method : marker.getServiceClass().getMethods()) {
+			for (ServiceAdviceOptionsImpl options : ordered) {
+				if (options.supports(method)) {
+					if (!interceptors.containsKey(method)) {
+						interceptors.put(method, CollectionUtils.<Interceptor>newList());
+					}
+					interceptors.get(method).add(options.getInterceptor());
+				}
+			}
 		}
-		return new CompositeInterceptor(interceptors);
+		return interceptors;
 	}
 
 	public ServiceAdviceOptions add(final Interceptor interceptor,

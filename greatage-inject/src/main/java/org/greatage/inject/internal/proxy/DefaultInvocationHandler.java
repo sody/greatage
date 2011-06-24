@@ -16,7 +16,7 @@
 
 package org.greatage.inject.internal.proxy;
 
-import org.greatage.inject.services.ObjectBuilder;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 import java.lang.reflect.InvocationHandler;
@@ -30,18 +30,21 @@ import java.lang.reflect.Method;
  * @since 1.0
  */
 public class DefaultInvocationHandler<T> implements InvocationHandler {
-	private final ObjectBuilder<T> builder;
+	private final ServiceBuilder<T> builder;
 
 	/**
 	 * Creates new instance of utility for lazy creation of object from specified object builder.
 	 *
 	 * @param builder object builder, not null
 	 */
-	public DefaultInvocationHandler(final ObjectBuilder<T> builder) {
+	public DefaultInvocationHandler(final ServiceBuilder<T> builder) {
 		this.builder = builder;
 	}
 
 	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+		if (builder.intercepts(method)) {
+			return builder.invoke(method, args);
+		}
 		return method.invoke(builder.build(), args);
 	}
 

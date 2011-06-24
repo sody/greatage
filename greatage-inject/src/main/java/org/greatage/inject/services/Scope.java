@@ -40,5 +40,5 @@ public interface Scope {
 	 */
 	<T> T get(Marker<T> marker);
 
-	<T> void register(Marker<T> marker, ObjectBuilder<T> builder, Interceptor interceptor);
+	<T> void register(ServiceBuilder<T> builder);
 }
