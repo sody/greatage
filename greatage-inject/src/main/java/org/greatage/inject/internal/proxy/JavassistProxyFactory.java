@@ -104,11 +104,12 @@ public class JavassistProxyFactory implements ProxyFactory {
 				if (builder.intercepts(method)) {
 					methodBody = new StringBuilder("{ ")
 							.append(String.format("final %s _method = %s.getMethod(\"%s\", $sig);",
-									INTERFACE_FIELD, Method.class.getName(), methodName))
-							.append(String.format("return ($r) %s.invoke(_method, $$);", BUILDER_FIELD))
+									Method.class.getName(), INTERFACE_FIELD, methodName))
+							.append(String.format("return ($r) %s.invoke(_method, $args);", BUILDER_FIELD))
 							.append(" }").toString();
 				} else {
-					methodBody = String.format("return ($r) %s.build().%s($$);", BUILDER_FIELD, methodName);
+					methodBody = String.format("return ($r) ((%s)%s.build()).%s($$);",
+							objectClass.getName(), BUILDER_FIELD, methodName);
 				}
 				classBuilder.addMethod(methodName, Modifier.PUBLIC, method.getReturnType(),
 						method.getParameterTypes(), method.getExceptionTypes(), methodBody);

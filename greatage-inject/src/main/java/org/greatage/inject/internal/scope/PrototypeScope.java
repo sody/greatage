@@ -49,8 +49,12 @@ public class PrototypeScope implements Scope {
 	public <T> T get(final Marker<T> marker) {
 		@SuppressWarnings({"unchecked"})
 		final ServiceBuilder<T> builder = services.get(marker);
-		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
-		return proxyFactory.createProxy(cachedBuilder);
+		if (builder.eager()) {
+			return builder.build();
+		} else {
+			final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
+			return proxyFactory.createProxy(cachedBuilder);
+		}
 	}
 
 	public <T> void register(final ServiceBuilder<T> builder) {

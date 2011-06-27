@@ -84,7 +84,17 @@ public class ServiceInitializer<T> {
 			return interceptors.containsKey(method);
 		}
 
-		public Object invoke(final Method method, final Object... parameters) {
+		public Object invoke(final Method method, final Object... parameters) throws Throwable {
+			return getInvocation(method).proceed(parameters);
+		}
+
+		public T build() {
+			final BuildResources buildResources = new BuildResources();
+			logger.debug("Building service (%s) from (%s)", marker, service);
+			return service.build(buildResources);
+		}
+
+		private Invocation getInvocation(final Method method) {
 			if (!invocations.containsKey(method)) {
 				Invocation interceptedInvocation = new InvocationImpl(build(), method);
 				for (Interceptor interceptor : interceptors.get(method)) {
@@ -94,12 +104,6 @@ public class ServiceInitializer<T> {
 				return interceptedInvocation;
 			}
 			return invocations.get(method);
-		}
-
-		public T build() {
-			final BuildResources buildResources = new BuildResources();
-			logger.debug("Building service (%s) from (%s)", marker, service);
-			return service.build(buildResources);
 		}
 	}
 

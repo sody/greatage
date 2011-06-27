@@ -35,7 +35,7 @@ public interface ServiceBuilder<T> {
 
 	boolean intercepts(Method method);
 
-	Object invoke(Method method, Object... parameters);
+	Object invoke(Method method, Object... parameters) throws Throwable;
 
 	/**
 	 * Builds real object. It is used for lazy creation of real object under the proxy.

@@ -52,8 +52,12 @@ public class SingletonScope implements Scope {
 
 	public <T> void register(final ServiceBuilder<T> builder) {
 		final Marker<T> marker = builder.getMarker();
-		final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
-		final T proxy = proxyFactory.createProxy(cachedBuilder);
-		services.put(marker, proxy);
+		if (builder.eager()) {
+			services.put(marker, builder.build());
+		} else {
+			final CachedBuilder<T> cachedBuilder = new CachedBuilder<T>(builder);
+			final T proxy = proxyFactory.createProxy(cachedBuilder);
+			services.put(marker, proxy);
+		}
 	}
 }

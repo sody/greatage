@@ -30,7 +30,7 @@ public class CachedBuilder<T> implements ServiceBuilder<T> {
 		return builder.intercepts(method);
 	}
 
-	public Object invoke(final Method method, final Object... parameters) {
+	public Object invoke(final Method method, final Object... parameters) throws Throwable {
 		return builder.invoke(method, parameters);
 	}
 
