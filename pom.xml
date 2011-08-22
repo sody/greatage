@@ -510,32 +510,32 @@
 		<site.url>file://${user.home}/greatage-site/</site.url>
 
 		<!--common dependencies-->
-		<testng.version>5.14.10</testng.version>
+		<testng.version>6.2</testng.version>
 
 		<!--inject dependencies-->
 		<log4j.version>1.2.16</log4j.version>
-		<slf4j.version>1.6.1</slf4j.version>
+		<slf4j.version>1.6.2</slf4j.version>
 
-		<javassist.version>3.14.0-GA</javassist.version>
-		<cglib.version>2.2</cglib.version>
+		<javassist.version>3.15.0-GA</javassist.version>
+		<cglib.version>2.2.2</cglib.version>
 
 		<jcache.version>1.1</jcache.version>
-		<ehcache.version>2.4.1</ehcache.version>
+		<ehcache.version>2.4.4</ehcache.version>
 		<oscache.version>2.4.1</oscache.version>
 
-		<guice.version>2.0</guice.version>
+		<guice.version>3.0</guice.version>
 
 		<!--security dependencies-->
-		<drools.version>5.1.1</drools.version>
+		<drools.version>5.2.0.M1</drools.version>
 
 		<!--domain dependencies-->
 		<persistence.api.version>1.0</persistence.api.version>
 		<jdo.api.version>2.3-eb</jdo.api.version>
-		<hibernate.version>3.6.1.Final</hibernate.version>
+		<hibernate.version>4.0.0.CR1</hibernate.version>
 
 		<!--front dependencies-->
 		<servlet.api.version>2.5</servlet.api.version>
-		<tapestry.version>5.2.5</tapestry.version>
+		<tapestry.version>5.3.0</tapestry.version>
 	</properties>
 
 	<profiles>

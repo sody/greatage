@@ -29,8 +29,8 @@
 	<artifactId>greatage-inject</artifactId>
 	<packaging>jar</packaging>
 
-	<name>GreatAge IoC Container</name>
-	<description>GreatAge IoC Container</description>
+	<name>GreatAge DI Container</name>
+	<description>GreatAge Dependency Injection Container</description>
 
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
