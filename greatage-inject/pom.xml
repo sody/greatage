@@ -134,4 +134,8 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<properties>
+		<invoker.skip>true</invoker.skip>
+	</properties>
 </project>
