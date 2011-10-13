@@ -7,14 +7,14 @@ import org.greatage.db.*;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAECondition<T extends ChangeBuilder> implements ConditionBuilder<T> {
+public class GAECondition<T extends ChangeSetBuilder.ChangeBuilder> implements ChangeSetBuilder.ConditionBuilder<T> {
 	private final T change;
 
 	GAECondition(final T change) {
 		this.change = change;
 	}
 
-	public ConditionEntryBuilder<T> and(final String propertyName) {
+	public ChangeSetBuilder.ConditionEntryBuilder<T> and(final String propertyName) {
 		return new GAEConditionEntry(propertyName);
 	}
 
@@ -22,34 +22,34 @@ public class GAECondition<T extends ChangeBuilder> implements ConditionBuilder<T
 		return change;
 	}
 
-	class GAEConditionEntry implements ConditionEntryBuilder<T> {
+	class GAEConditionEntry implements ChangeSetBuilder.ConditionEntryBuilder<T> {
 		private final String propertyName;
 
 		GAEConditionEntry(final String propertyName) {
 			this.propertyName = propertyName;
 		}
 
-		public ConditionBuilder<T> greaterThan(final Object value) {
+		public ChangeSetBuilder.ConditionBuilder<T> greaterThan(final Object value) {
 			return addCondition(Query.FilterOperator.GREATER_THAN, value);
 		}
 
-		public ConditionBuilder<T> greaterOrEqual(final Object value) {
+		public ChangeSetBuilder.ConditionBuilder<T> greaterOrEqual(final Object value) {
 			return addCondition(Query.FilterOperator.GREATER_THAN_OR_EQUAL, value);
 		}
 
-		public ConditionBuilder<T> lessThan(final Object value) {
+		public ChangeSetBuilder.ConditionBuilder<T> lessThan(final Object value) {
 			return addCondition(Query.FilterOperator.LESS_THAN, value);
 		}
 
-		public ConditionBuilder<T> lessOrEqual(final Object value) {
+		public ChangeSetBuilder.ConditionBuilder<T> lessOrEqual(final Object value) {
 			return addCondition(Query.FilterOperator.LESS_THAN_OR_EQUAL, value);
 		}
 
-		public ConditionBuilder<T> equal(final Object value) {
+		public ChangeSetBuilder.ConditionBuilder<T> equal(final Object value) {
 			return addCondition(Query.FilterOperator.EQUAL, value);
 		}
 
-		public ConditionBuilder<T> notEqual(final Object value) {
+		public ChangeSetBuilder.ConditionBuilder<T> notEqual(final Object value) {
 			return addCondition(Query.FilterOperator.NOT_EQUAL, value);
 		}
 

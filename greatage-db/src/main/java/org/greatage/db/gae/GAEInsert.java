@@ -2,7 +2,7 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import org.greatage.db.InsertBuilder;
+import org.greatage.db.ChangeSetBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEInsert extends GAEChange implements InsertBuilder {
+public class GAEInsert extends GAEChange implements ChangeSetBuilder.InsertBuilder {
 	private final Entity entity;
 
 	GAEInsert(final GAEChangeSet changeSet, final String entityName) {
@@ -19,7 +19,7 @@ public class GAEInsert extends GAEChange implements InsertBuilder {
 		entity = new Entity(entityName);
 	}
 
-	public InsertBuilder set(final String propertyName, final Object value) {
+	public ChangeSetBuilder.InsertBuilder set(final String propertyName, final Object value) {
 		entity.setProperty(propertyName, value);
 		return this;
 	}

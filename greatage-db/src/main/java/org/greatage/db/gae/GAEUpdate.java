@@ -3,8 +3,7 @@ package org.greatage.db.gae;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
-import org.greatage.db.ConditionEntryBuilder;
-import org.greatage.db.UpdateBuilder;
+import org.greatage.db.ChangeSetBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEUpdate extends GAEConditionalChange implements UpdateBuilder {
+public class GAEUpdate extends GAEConditionalChange implements ChangeSetBuilder.UpdateBuilder {
 	private final Entity entity;
 
 	GAEUpdate(final GAEChangeSet changeSet, final String entityName) {
@@ -21,13 +20,13 @@ public class GAEUpdate extends GAEConditionalChange implements UpdateBuilder {
 		this.entity = new Entity(entityName);
 	}
 
-	public UpdateBuilder set(final String propertyName, final Object value) {
+	public ChangeSetBuilder.UpdateBuilder set(final String propertyName, final Object value) {
 		entity.setProperty(propertyName, value);
 		return this;
 	}
 
-	public ConditionEntryBuilder<UpdateBuilder> where(final String property) {
-		return new GAECondition<UpdateBuilder>(this).and(property);
+	public ChangeSetBuilder.ConditionEntryBuilder<ChangeSetBuilder.UpdateBuilder> where(final String property) {
+		return new GAECondition<ChangeSetBuilder.UpdateBuilder>(this).and(property);
 	}
 
 	public Object doInDataStore(final DatastoreService dataStore) {

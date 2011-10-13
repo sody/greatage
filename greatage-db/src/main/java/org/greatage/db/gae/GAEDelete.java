@@ -3,15 +3,14 @@ package org.greatage.db.gae;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
-import org.greatage.db.ConditionEntryBuilder;
-import org.greatage.db.DeleteBuilder;
+import org.greatage.db.ChangeSetBuilder;
 import org.greatage.util.DescriptionBuilder;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEDelete extends GAEConditionalChange implements DeleteBuilder {
+public class GAEDelete extends GAEConditionalChange implements ChangeSetBuilder.DeleteBuilder {
 	private final String entityName;
 
 	GAEDelete(final GAEChangeSet changeSet, final String entityName) {
@@ -19,8 +18,8 @@ public class GAEDelete extends GAEConditionalChange implements DeleteBuilder {
 		this.entityName = entityName;
 	}
 
-	public ConditionEntryBuilder<DeleteBuilder> where(final String propertyName) {
-		return new GAECondition<DeleteBuilder>(this).and(propertyName);
+	public ChangeSetBuilder.ConditionEntryBuilder<ChangeSetBuilder.DeleteBuilder> where(final String propertyName) {
+		return new GAECondition<ChangeSetBuilder.DeleteBuilder>(this).and(propertyName);
 	}
 
 	public Object doInDataStore(final DatastoreService dataStore) {
