@@ -95,7 +95,12 @@ public class JdoRepository extends AbstractEntityRepository {
 	E get(final Class<E> entityClass, final PK pk) {
 		return executor.execute(new JdoCallback<E>() {
 			public E doInJdo(final PersistenceManager pm) throws Throwable {
-				return pm.getObjectById(getImplementation(entityClass), pk);
+				try {
+					return pm.getObjectById(getImplementation(entityClass), pk);
+				} catch (Exception e) {
+					// todo: needs to process only needed exceptions
+					return null;
+				}
 			}
 		});
 	}

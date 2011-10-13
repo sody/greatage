@@ -21,19 +21,18 @@ import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * This class represents default implementation of {@link EntityService}.
  *
+ * @param <PK> type of entities primary key
+ * @param <E>  type of entities
+ * @param <Q>  type of entities query
  * @author Ivan Khalopik
- * @param <PK>       type of entities primary key
- * @param <E>        type of entities
- * @param <Q>        type of entities query
  * @since 1.0
  */
-public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q extends EntityQuery<PK, E, Q>>
-		implements EntityService<PK, E> {
+public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q extends EntityQueryImpl<PK, E, Q>>
+		implements EntityService<PK, E, Q> {
 
 	private final EntityRepository repository;
 	private final Class<E> entityClass;
@@ -85,7 +84,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	}
 
 	public E create() {
-		return repository().create(getEntityClass());
+		return repository.create(getEntityClass());
 	}
 
 	@Transactional
@@ -99,60 +98,25 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 
 	@Transactional
 	public void save(final E entity) {
-		repository().save(entity);
+		repository.save(entity);
 	}
 
 	@Transactional
 	public void update(final E entity) {
-		repository().update(entity);
+		repository.update(entity);
 	}
 
 	@Transactional
 	public void delete(final E entity) {
-		repository().delete(entity);
+		repository.delete(entity);
 	}
 
 	public E get(final PK pk) {
-		return repository().get(getEntityClass(), pk);
+		return repository.get(getEntityClass(), pk);
 	}
 
-	public int getEntitiesCount() {
-		return createQuery().count();
-	}
-
-	public List<E> getEntities() {
-		return createQuery().list(createDefaultPagination());
-	}
-
-	public List<E> getEntities(final Pagination pagination) {
-		return createQuery().list(pagination);
-	}
-
-	/**
-	 * Gets entity repository.
-	 *
-	 * @return entity repository
-	 */
-	protected EntityRepository repository() {
-		return repository;
-	}
-
-	/**
-	 * Gets default pagination for entities selection.
-	 *
-	 * @return default pagination for entities selection
-	 */
-	protected Pagination createDefaultPagination() {
-		return Pagination.ALL;
-	}
-
-	/**
-	 * Creates default filter for entities selection.
-	 *
-	 * @return default filter for entities selection
-	 */
-	protected Q createQuery() {
-		return ReflectionUtils.newInstance(queryClass).assign(repository());
+	public Q query() {
+		return ReflectionUtils.newInstance(queryClass, repository);
 	}
 
 	@Override

@@ -17,19 +17,21 @@
 package org.greatage.domain;
 
 
+import org.greatage.domain.annotations.Transactional;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * This interface represents service for working with specified class of entities.
  *
+ * @param <PK> type of entities primary key
+ * @param <E>  type of entities
  * @author Ivan Khalopik
- * @param <PK>       type of entities primary key
- * @param <E>        type of entities
  * @see org.greatage.domain.EntityRepository
  * @since 1.0
  */
-public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
+public interface EntityService<PK extends Serializable, E extends Entity<PK>, Q extends EntityQuery<PK, E, Q>> {
 
 	/**
 	 * Gets entity class, service working with.
@@ -44,28 +46,6 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 	 * @return entity name
 	 */
 	String getEntityName();
-
-	/**
-	 * Gets entities count.
-	 *
-	 * @return entities count
-	 */
-	int getEntitiesCount();
-
-	/**
-	 * Gets list of entities.
-	 *
-	 * @return list of entities or empty list if not found
-	 */
-	List<E> getEntities();
-
-	/**
-	 * Gets list of entities.
-	 *
-	 * @param pagination selection pagination
-	 * @return list of entities or empty list if not found
-	 */
-	List<E> getEntities(Pagination pagination);
 
 	/**
 	 * Gets detailed entity selected by primary key.
@@ -87,6 +67,7 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 	 *
 	 * @param entity detailed entity
 	 */
+	@Transactional
 	void save(E entity);
 
 	/**
@@ -94,6 +75,7 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 	 *
 	 * @param entity detailed entity
 	 */
+	@Transactional
 	void update(E entity);
 
 	/**
@@ -101,6 +83,7 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 	 *
 	 * @param entity detailed entity
 	 */
+	@Transactional
 	void saveOrUpdate(E entity);
 
 	/**
@@ -108,6 +91,9 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 	 *
 	 * @param entity detailed entity
 	 */
+	@Transactional
 	void delete(E entity);
+
+	Q query();
 
 }
