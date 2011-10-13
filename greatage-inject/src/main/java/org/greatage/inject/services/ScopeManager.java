@@ -16,8 +16,9 @@
 
 package org.greatage.inject.services;
 
-import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
+
+import java.util.Set;
 
 /**
  * This interface represents utility service that obtains scope instances by their name.
@@ -27,7 +28,11 @@ import org.greatage.inject.Marker;
  */
 public interface ScopeManager {
 
+	Set<Marker<?>> getMarkers();
+
 	<T> T get(Marker<T> marker);
+
+	<T> Set<T> find(Marker<T> marker);
 
 	<T> void register(ServiceBuilder<T> builder);
 }

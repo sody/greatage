@@ -16,7 +16,9 @@
 
 package org.greatage.hibernate.type;
 
+import org.hibernate.HibernateException;
 import org.hibernate.MappingException;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.usertype.ParameterizedType;
 import org.hibernate.usertype.UserType;
 
@@ -111,7 +113,7 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 	/**
 	 * {@inheritDoc}
 	 */
-	public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws SQLException {
+	public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
 		final V value = get(rs, names[0]);
 		return value == null || rs.wasNull() ? null : getEnum(value);
 	}
@@ -119,11 +121,11 @@ public abstract class AbstractEnumUserType<E extends Enum, V extends Serializabl
 	/**
 	 * {@inheritDoc}
 	 */
-	@SuppressWarnings("unchecked")
-	public void nullSafeSet(final PreparedStatement st, final Object value, final int index) throws SQLException {
+	public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
 		if (value == null) {
 			st.setNull(index, getSqlType());
 		} else {
+			@SuppressWarnings("unchecked")
 			final V v = getValue((E) value);
 			set(st, v, index);
 		}

@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -42,7 +43,6 @@ import java.util.Set;
 public class ServiceLocatorImpl implements ServiceLocator {
 	private final Logger logger = LoggerFactory.getLogger(ServiceLocatorImpl.class);
 
-	private final Set<Marker<?>> services = CollectionUtils.newSet();
 	private final ScopeManager scopeManager;
 
 	/**
@@ -52,7 +52,8 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @param injector injector
 	 */
 	public ServiceLocatorImpl(final Collection<Module> modules,
-							  final Injector injector, final ScopeManager scopeManager) {
+							  final Injector injector,
+							  final ScopeManager scopeManager) {
 		assert modules != null;
 		assert injector != null;
 		assert scopeManager != null;
@@ -61,19 +62,25 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 		//creating and overriding service definitions
 		//TODO: implement this using set
-		final Map<Marker<?>, ServiceDefinition<?>> internalServices = CollectionUtils.newMap();
+		final List<Marker<?>> markers = CollectionUtils.newList();
+		final Map<Marker<?>, ServiceDefinition<?>> definitions = CollectionUtils.newMap();
 		for (Module module : modules) {
-			for (ServiceDefinition<?> service : module.getDefinitions()) {
-				final Marker<?> marker = service.getMarker();
-				if (!service.isOverride() && internalServices.containsKey(marker)) {
-					throw new ApplicationException(String.format("Service (%s) already declared", marker));
+			for (ServiceDefinition<?> definition : module.getDefinitions()) {
+				final Marker<?> marker = definition.getMarker();
+				if (definitions.containsKey(marker)) {
+					if (!definition.isOverride()) {
+						throw new ApplicationException(String.format("Service (%s) already declared", marker));
+					}
+					markers.remove(marker);
 				}
-				internalServices.put(marker, service);
+				markers.add(marker);
+				definitions.put(marker, definition);
 			}
 		}
 
-		for (ServiceDefinition<?> service : internalServices.values()) {
-			addService(injector, service, modules);
+		for (Marker<?> marker : markers) {
+			final ServiceDefinition<?> definition = definitions.get(marker);
+			addService(injector, definition, modules);
 		}
 
 		//logging statistics
@@ -81,7 +88,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	}
 
 	public Set<Marker<?>> getMarkers() {
-		return services;
+		return scopeManager.getMarkers();
 	}
 
 	/**
@@ -99,7 +106,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	 * @throws ApplicationException if service not found
 	 */
 	public <T> T getService(final Marker<T> marker) {
-		final Set<T> services = findServices(marker);
+		final Set<T> services = scopeManager.find(marker);
 		if (services.size() > 1) {
 			throw new ApplicationException(
 					String.format("Can't find service (%s). More than one service available", marker));
@@ -118,27 +125,18 @@ public class ServiceLocatorImpl implements ServiceLocator {
 	}
 
 	public <T> Set<T> findServices(final Marker<T> marker) {
-		final Set<T> result = CollectionUtils.newSet();
-		for (Marker<?> serviceMarker : services) {
-			if (marker.isAssignableFrom(serviceMarker)) {
-				final Object service = scopeManager.get(serviceMarker);
-				result.add(marker.getServiceClass().cast(service));
-			}
-		}
-		return result;
+		return scopeManager.find(marker);
 	}
 
 	private <T> void addService(final Injector injector,
 								final ServiceDefinition<T> service,
 								final Collection<Module> modules) {
-		final Marker<T> marker = service.getMarker();
-		final ServiceInitializer<T> initializer = new ServiceInitializer<T>(injector, service);
+		final ServiceBuilderImpl<T> builder = new ServiceBuilderImpl<T>(injector, service);
 		for (Module module : modules) {
-			initializer.addContributors(module);
-			initializer.addInterceptors(module);
+			builder.addContributors(module);
+			builder.addInterceptors(module);
 		}
-		initializer.initialize(scopeManager);
-		services.add(marker);
+		scopeManager.register(builder);
 	}
 
 	private void logStatistics() {
@@ -152,7 +150,7 @@ public class ServiceLocatorImpl implements ServiceLocator {
 
 		final StringBuilder statistics = new StringBuilder("Statistics:\n");
 		final String format = "%" + maxLength + "s : [%s]\n";
-		for (Marker<?> marker : services) {
+		for (Marker<?> marker : getMarkers()) {
 			final String name = marker.getServiceClass().getSimpleName();
 			final String scope = marker.getScope() != null ? marker.getScope().getSimpleName() : "Default";
 			statistics.append(String.format(format, name, scope));

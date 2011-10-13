@@ -82,11 +82,12 @@ public class IOCModule {
 	@Bind
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(ProxyFactory.class, JavassistProxyFactory.class).eager();
-		binder.bind(ScopeManager.class, ScopeManagerImpl.class).eager();
-		binder.bind(ThreadManager.class, ThreadManagerImpl.class).eager();
+		binder.bind(ThreadManager.class, ThreadManagerImpl.class);
+		binder.bind(ScopeManager.class, ScopeManagerImpl.class);
 
-		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
 		binder.bind(Injector.class, DefaultInjector.class);
+		binder.bind(ServiceLocator.class, ServiceLocatorImpl.class);
+
 		binder.bind(TypeCoercer.class, TypeCoercerImpl.class);
 		binder.bind(CoercionProvider.class, DefaultCoercionProvider.class);
 		binder.bind(SymbolSource.class, SymbolSourceImpl.class);

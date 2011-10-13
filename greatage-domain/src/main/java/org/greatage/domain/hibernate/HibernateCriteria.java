@@ -21,8 +21,8 @@ import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.engine.SessionImplementor;
-import org.hibernate.impl.CriteriaImpl;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.internal.CriteriaImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;

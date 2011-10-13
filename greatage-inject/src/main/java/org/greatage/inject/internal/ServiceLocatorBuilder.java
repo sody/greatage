@@ -35,6 +35,7 @@ import org.greatage.util.Locker;
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class represents utility that simplifies {@link org.greatage.inject.ServiceLocator} building process.
@@ -153,14 +154,23 @@ public class ServiceLocatorBuilder {
 				if (service == null) {
 					throw new ApplicationException(String.format("Cannot find resource '%s'", resourceMarker));
 				}
-				final ServiceInitializer<T> initializer = new ServiceInitializer<T>(this, service);
+				final ServiceBuilderImpl<T> builder = new ServiceBuilderImpl<T>(this, service);
 				for (Module module : modules) {
-					initializer.addContributors(module);
-					initializer.addInterceptors(module);
+					builder.addContributors(module);
+					builder.addInterceptors(module);
 				}
-				initializer.initialize(this);
+				register(builder);
 			}
 			return get(resourceMarker);
+		}
+
+		public Set<Marker<?>> getMarkers() {
+			return definitions.keySet();
+		}
+
+		public <T> Set<T> find(Marker<T> marker) {
+			//noinspection unchecked
+			return CollectionUtils.newSet(get(marker));
 		}
 
 		public <T> T get(final Marker<T> marker) {

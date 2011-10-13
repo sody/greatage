@@ -17,17 +17,17 @@
 package org.greatage.inject.internal.scope;
 
 import org.greatage.inject.ApplicationException;
-import org.greatage.inject.Interceptor;
 import org.greatage.inject.Marker;
 import org.greatage.inject.annotations.Singleton;
-import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.inject.services.Scope;
 import org.greatage.inject.services.ScopeManager;
+import org.greatage.inject.services.ServiceBuilder;
 import org.greatage.util.CollectionUtils;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * This class represents default {@link ScopeManager} implementation that obtains scope instances by their name.
@@ -36,6 +36,7 @@ import java.util.Map;
  * @since 1.0
  */
 public class ScopeManagerImpl implements ScopeManager {
+	private final Set<Marker<?>> services = CollectionUtils.newSet();
 	private final Map<Class<? extends Annotation>, Scope> scopes = CollectionUtils.newMap();
 
 	/**
@@ -53,12 +54,28 @@ public class ScopeManagerImpl implements ScopeManager {
 		assert this.scopes.containsKey(Singleton.class);
 	}
 
+	public Set<Marker<?>> getMarkers() {
+		return services;
+	}
+
+	public <T> Set<T> find(final Marker<T> marker) {
+		final Set<T> result = CollectionUtils.newSet();
+		for (Marker<?> serviceMarker : services) {
+			if (marker.isAssignableFrom(serviceMarker)) {
+				final Object service = getScope(marker).get(serviceMarker);
+				result.add(marker.getServiceClass().cast(service));
+			}
+		}
+		return result;
+	}
+
 	public <T> T get(final Marker<T> marker) {
 		return getScope(marker).get(marker);
 	}
 
 	public <T> void register(final ServiceBuilder<T> builder) {
 		getScope(builder.getMarker()).register(builder);
+		services.add(builder.getMarker());
 	}
 
 	private <T> Scope getScope(final Marker<T> marker) {
