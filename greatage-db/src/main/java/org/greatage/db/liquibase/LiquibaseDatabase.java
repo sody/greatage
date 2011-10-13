@@ -10,17 +10,17 @@ import liquibase.resource.ResourceAccessor;
 import org.greatage.db.ChangeLog;
 import org.greatage.db.ChangeSetBuilder;
 import org.greatage.db.Database;
+import org.greatage.util.CollectionUtils;
 
 import javax.sql.DataSource;
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
 public class LiquibaseDatabase implements Database {
-	private boolean skip;
-	private boolean dropFirst;
-
 	private final DataSource dataSource;
 	private final ResourceAccessor resourceAccessor;
 
@@ -33,36 +33,27 @@ public class LiquibaseDatabase implements Database {
 		this.resourceAccessor = resourceAccessor;
 	}
 
-	public boolean isSkip() {
-		return skip;
-	}
-
-	public void setSkip(final boolean skip) {
-		this.skip = skip;
-	}
-
-	public boolean isDropFirst() {
-		return dropFirst;
-	}
-
-	public void setDropFirst(final boolean dropFirst) {
-		this.dropFirst = dropFirst;
-	}
-
 	public void update(final ChangeLog changeLog, final String... context) {
-		if (isSkip()) {
-//			log.info("LiquiBase skipped due to skip flag configuration");
-			return;
-		}
+		options().context(context).update(changeLog);
+	}
 
+	public UpdateOptions options() {
+		return new LiquibaseUpdateOptions();
+	}
+
+	public ChangeSetBuilder changeSet(final String id, final String author, final String location) {
+		throw new UnsupportedOperationException("Liquibase implementation has its own change set structure");
+	}
+
+	private void update(final ChangeLog changeLog, final LiquibaseUpdateOptions options) {
 		Liquibase liquibase = null;
 		try {
-			liquibase = createLiquibase(((LiquibaseChangeLog)changeLog).getChangeLog());
-			if (isDropFirst()) {
+			liquibase = createLiquibase(((LiquibaseChangeLog) changeLog).getChangeLog());
+			if (options.dropFirst) {
 				liquibase.dropAll();
 			}
 			final StringBuilder contexts = new StringBuilder();
-			for (String entry : context) {
+			for (String entry : options.context) {
 				if (contexts.length() > 0) {
 					contexts.append(',');
 				}
@@ -91,10 +82,6 @@ public class LiquibaseDatabase implements Database {
 		}
 	}
 
-	public ChangeSetBuilder changeSet(final String id, final String author, final String location) {
-		throw new UnsupportedOperationException("Liquibase implementation has its own change set structure");
-	}
-
 	protected Liquibase createLiquibase(final String changeLog) throws Exception {
 		return new Liquibase(changeLog, resourceAccessor, getDatabase());
 	}
@@ -105,5 +92,30 @@ public class LiquibaseDatabase implements Database {
 
 	protected DatabaseConnection getDatabaseConnection() throws Exception {
 		return new JdbcConnection(dataSource.getConnection());
+	}
+
+	class LiquibaseUpdateOptions implements UpdateOptions {
+		private final Set<String> context = CollectionUtils.newSet();
+		private boolean dropFirst;
+		private boolean clearCheckSums;
+
+		public UpdateOptions dropFirst() {
+			dropFirst = true;
+			return this;
+		}
+
+		public UpdateOptions clearCheckSums() {
+			clearCheckSums = true;
+			return this;
+		}
+
+		public UpdateOptions context(final String... context) {
+			Collections.addAll(this.context, context);
+			return this;
+		}
+
+		public void update(final ChangeLog changeLog) {
+			LiquibaseDatabase.this.update(changeLog, this);
+		}
 	}
 }

@@ -10,4 +10,16 @@ public interface Database {
 
 	ChangeSetBuilder changeSet(String id, String author, String location);
 
+	UpdateOptions options();
+
+	public interface UpdateOptions {
+
+		UpdateOptions dropFirst();
+
+		UpdateOptions clearCheckSums();
+
+		UpdateOptions context(String... context);
+
+		void update(ChangeLog changeLog);
+	}
 }

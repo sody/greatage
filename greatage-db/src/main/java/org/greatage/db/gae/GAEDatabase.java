@@ -15,9 +15,9 @@ import java.util.Set;
  */
 public class GAEDatabase implements Database {
 	private final Set<CompositeKey> ranChangeSets = CollectionUtils.newSet();
-	private final Set<String> context = CollectionUtils.newSet();
 	private final DatastoreService dataStore;
 
+	private GAEUpdateOptions options;
 	private ChangeSetBuilder lastChangeSet;
 
 	public GAEDatabase() {
@@ -28,22 +28,16 @@ public class GAEDatabase implements Database {
 		this.dataStore = dataStore;
 	}
 
-	public synchronized void update(final ChangeLog changeLog, final String... context) {
-		lock();
-		Collections.addAll(this.context, context);
-		try {
-			changeLog.execute(this);
-
-			ensureChangeSetClosed();
-		} finally {
-			this.context.clear();
-			ranChangeSets.clear();
-			unlock();
-		}
+	public void update(final ChangeLog changeLog, final String... context) {
+		options().context(context).update(changeLog);
 	}
 
 	public ChangeSetBuilder changeSet(final String title, final String author, final String location) {
 		return beginChangeSet(new GAEChangeSet(this, title, author, location));
+	}
+
+	public UpdateOptions options() {
+		return new GAEUpdateOptions();
 	}
 
 	GAEChangeSet beginChangeSet(final GAEChangeSet changeSet) {
@@ -53,7 +47,7 @@ public class GAEDatabase implements Database {
 	}
 
 	void endChangeSet(final GAEChangeSet changeSet) {
-		if (changeSet.supports(context)) {
+		if (changeSet.supports(options.context)) {
 			final CompositeKey key = new CompositeKey(changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation());
 			if (ranChangeSets.contains(key)) {
 				throw new DatabaseException(String.format("ChangeSet '%s' has already been executed", changeSet));
@@ -71,7 +65,7 @@ public class GAEDatabase implements Database {
 			} else {
 				final String actual = changeSet.getCheckSum();
 				final String expected = (String) logEntry.getProperty(SystemTables.LOG.CHECKSUM);
-				if (!CheckSumUtils.isValid(expected)) {
+				if (options.clearCheckSums || !CheckSumUtils.isValid(expected)) {
 					logEntry.setProperty(SystemTables.LOG.CHECKSUM, actual);
 					dataStore.put(logEntry);
 				} else if (!expected.equals(actual)) {
@@ -131,6 +125,48 @@ public class GAEDatabase implements Database {
 		logEntry.setProperty(SystemTables.LOG.CHECKSUM, changeSet.getCheckSum());
 		logEntry.setProperty(SystemTables.LOG.EXECUTED_AT, new Date());
 		dataStore.put(logEntry);
+	}
+
+	private synchronized void update(final ChangeLog changeLog, final GAEUpdateOptions options) {
+		this.options = options;
+		if (options.dropFirst) {
+			//todo: drop all data
+		}
+		lock();
+		try {
+			changeLog.execute(this);
+
+			ensureChangeSetClosed();
+		} finally {
+			this.options = null;
+			ranChangeSets.clear();
+			unlock();
+		}
+	}
+
+	class GAEUpdateOptions implements UpdateOptions {
+		private final Set<String> context = CollectionUtils.newSet();
+		private boolean dropFirst;
+		private boolean clearCheckSums;
+
+		public UpdateOptions dropFirst() {
+			dropFirst = true;
+			return this;
+		}
+
+		public UpdateOptions clearCheckSums() {
+			clearCheckSums = true;
+			return this;
+		}
+
+		public UpdateOptions context(final String... context) {
+			Collections.addAll(this.context, context);
+			return this;
+		}
+
+		public void update(final ChangeLog changeLog) {
+			GAEDatabase.this.update(changeLog, this);
+		}
 	}
 
 	interface SystemTables {
