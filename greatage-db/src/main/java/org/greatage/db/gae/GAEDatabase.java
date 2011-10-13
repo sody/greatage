@@ -5,6 +5,7 @@ import org.greatage.db.*;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.CompositeKey;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
@@ -14,6 +15,7 @@ import java.util.Set;
  */
 public class GAEDatabase implements Database {
 	private final Set<CompositeKey> ranChangeSets = CollectionUtils.newSet();
+	private final Set<String> context = CollectionUtils.newSet();
 	private final DatastoreService dataStore;
 
 	private ChangeSetBuilder lastChangeSet;
@@ -26,16 +28,15 @@ public class GAEDatabase implements Database {
 		this.dataStore = dataStore;
 	}
 
-	public synchronized void update(final ChangeLog changeLog) {
+	public synchronized void update(final ChangeLog changeLog, final String... context) {
 		lock();
+		Collections.addAll(this.context, context);
 		try {
 			changeLog.execute(this);
 
-			if (lastChangeSet != null) {
-				lastChangeSet.end();
-				lastChangeSet = null;
-			}
+			ensureChangeSetClosed();
 		} finally {
+			this.context.clear();
 			ranChangeSets.clear();
 			unlock();
 		}
@@ -46,41 +47,47 @@ public class GAEDatabase implements Database {
 	}
 
 	GAEChangeSet beginChangeSet(final GAEChangeSet changeSet) {
-		if (this.lastChangeSet != null) {
-			this.lastChangeSet.end();
-		}
+		ensureChangeSetClosed();
 		this.lastChangeSet = changeSet;
 		return changeSet;
 	}
 
 	void endChangeSet(final GAEChangeSet changeSet) {
-		final CompositeKey key = new CompositeKey(changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation());
-		if (ranChangeSets.contains(key)) {
-			throw new DatabaseException(String.format("ChangeSet '%s : %s : %s' has already been executed",
-					changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation()));
-		}
-		ranChangeSets.add(key);
-
-		final Query query = new Query(SystemTables.LOG.NAME)
-				.addFilter(SystemTables.LOG.TITLE, Query.FilterOperator.EQUAL, changeSet.getTitle())
-				.addFilter(SystemTables.LOG.AUTHOR, Query.FilterOperator.EQUAL, changeSet.getAuthor())
-				.addFilter(SystemTables.LOG.LOCATION, Query.FilterOperator.EQUAL, changeSet.getLocation());
-		final Entity logEntry = dataStore.prepare(query).asSingleEntity();
-		if (logEntry == null) {
-			changeSet.doInDataStore(dataStore);
-			log(changeSet);
-		} else {
-			final String actual = changeSet.getCheckSum();
-			final String expected = (String) logEntry.getProperty(SystemTables.LOG.CHECKSUM);
-			if (!CheckSumUtils.isValid(expected)) {
-				logEntry.setProperty(SystemTables.LOG.CHECKSUM, actual);
-				dataStore.put(logEntry);
-			} else if (!expected.equals(actual)) {
-				throw new DatabaseException(String.format("CheckSum check failed for change set '%s : %s : %s'. Should be '%s' but was '%s'",
-						changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation(), expected, actual));
+		if (changeSet.supports(context)) {
+			final CompositeKey key = new CompositeKey(changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation());
+			if (ranChangeSets.contains(key)) {
+				throw new DatabaseException(String.format("ChangeSet '%s' has already been executed", changeSet));
 			}
+			ranChangeSets.add(key);
+
+			final Query query = new Query(SystemTables.LOG.NAME)
+					.addFilter(SystemTables.LOG.TITLE, Query.FilterOperator.EQUAL, changeSet.getTitle())
+					.addFilter(SystemTables.LOG.AUTHOR, Query.FilterOperator.EQUAL, changeSet.getAuthor())
+					.addFilter(SystemTables.LOG.LOCATION, Query.FilterOperator.EQUAL, changeSet.getLocation());
+			final Entity logEntry = dataStore.prepare(query).asSingleEntity();
+			if (logEntry == null) {
+				changeSet.doInDataStore(dataStore);
+				log(changeSet);
+			} else {
+				final String actual = changeSet.getCheckSum();
+				final String expected = (String) logEntry.getProperty(SystemTables.LOG.CHECKSUM);
+				if (!CheckSumUtils.isValid(expected)) {
+					logEntry.setProperty(SystemTables.LOG.CHECKSUM, actual);
+					dataStore.put(logEntry);
+				} else if (!expected.equals(actual)) {
+					throw new DatabaseException(String.format("CheckSum check failed for change set '%s'. Should be '%s' but was '%s'",
+							changeSet, expected, actual));
+				}
+			}
+			this.lastChangeSet = null;
 		}
-		this.lastChangeSet = null;
+	}
+
+	private void ensureChangeSetClosed() {
+		if (lastChangeSet != null) {
+			lastChangeSet.end();
+			lastChangeSet = null;
+		}
 	}
 
 	private void lock() {

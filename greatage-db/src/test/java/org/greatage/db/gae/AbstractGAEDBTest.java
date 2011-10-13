@@ -2,6 +2,8 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import org.greatage.db.Database;
@@ -30,5 +32,22 @@ public abstract class AbstractGAEDBTest extends Assert {
 		database = null;
 		dataStore = null;
 		helper.tearDown();
+	}
+
+	protected void assertExist(final Query query) {
+		assertCount(query, 1, "Requested entity doesn't exist");
+	}
+
+	protected void assertNotExist(final Query query) {
+		assertCount(query, 0, "Requested entity exists");
+	}
+
+	protected void assertCount(final Query query, final int expected) {
+		assertCount(query, expected, null);
+	}
+
+	protected void assertCount(final Query query, final int expected, final String message) {
+		final int count = dataStore.prepare(query).countEntities(FetchOptions.Builder.withDefaults());
+		assertEquals(count, expected, message);
 	}
 }

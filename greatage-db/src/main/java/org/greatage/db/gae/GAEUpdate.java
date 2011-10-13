@@ -50,11 +50,9 @@ public class GAEUpdate extends GAEConditionalChange implements ChangeSetBuilder.
 		for (Map.Entry<String, Object> entry : entity.getProperties().entrySet()) {
 			builder.append(entry.getKey(), entry.getValue());
 		}
-		final DescriptionBuilder conditionsBuilder = new DescriptionBuilder("Conditions");
-		for (Query.FilterPredicate filter : getConditions()) {
-			conditionsBuilder.append(filter);
+		if (!getConditions().isEmpty()) {
+			builder.append("conditions", getConditions());
 		}
-		builder.append("conditions", conditionsBuilder);
 		return builder.toString();
 	}
 }

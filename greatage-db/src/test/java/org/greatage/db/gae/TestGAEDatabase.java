@@ -253,20 +253,43 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		database.update(changeLog);
 	}
 
-	private void assertExist(final Query query) {
-		assertCount(query, 1, "Requested entity doesn't exist");
+	@Test(expectedExceptions = DatabaseException.class, expectedExceptionsMessageRegExp = "^Already locked.*$")
+	public void gae_already_locked() {
+		database.update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				begin("1").insert("company").set("name", "company1").end().end();
+				database.update(this);
+			}
+		});
 	}
 
-	private void assertNotExist(final Query query) {
-		assertCount(query, 0, "Requested entity exists");
-	}
+	@Test
+	public void gae_unlock_when_failed() {
+		try {
+			database.update(new ChangeLog() {
+				@Override
+				protected void init() {
+					location("test");
+					begin("1").insert("company").set("name", "company1").end().end();
+					throw new IllegalStateException("Fail");
+				}
+			});
+		} catch (Exception e) {
+			// pass
+		}
+		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
 
-	private void assertCount(final Query query, final int expected) {
-		assertCount(query, expected, null);
-	}
-
-	private void assertCount(final Query query, final int expected, final String message) {
-		final int count = dataStore.prepare(query).countEntities(FetchOptions.Builder.withDefaults());
-		assertEquals(count, expected, message);
+		database.update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				begin("1").insert("company").set("name", "company1").end().end();
+				begin("2").insert("company").set("name", "company2").end().end();
+			}
+		});
+		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
+		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company2"));
 	}
 }

@@ -30,6 +30,38 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							}
 						}
 				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").context("test1").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").context("test1").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").context("test1", "test2").end();
+							}
+						}
+				},
 
 				{
 						new ChangeLog() {
@@ -287,6 +319,134 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								begin("1")
 										.update("company").set("name", "company2").end()
 										.update("company").set("name", "company1").end();
+							}
+						}
+				},
+
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("department").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").where("name").equal("company").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").where("name").notEqual("company").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").where("name").equal("company").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").where("description").equal("company").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1")
+										.delete("company")
+										.where("name").equal("company")
+										.and("description").equal("company").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").where("name").equal("company").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1")
+										.delete("company")
+										.where("name").equal("company")
+										.and("description").equal("company").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1")
+										.delete("company")
+										.where("description").equal("company")
+										.and("name").equal("company").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1")
+										.delete("company").end()
+										.delete("department").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").delete("company").end();
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1")
+										.delete("company").end()
+										.delete("department").end();
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1")
+										.delete("department").end()
+										.delete("company").end();
 							}
 						}
 				},

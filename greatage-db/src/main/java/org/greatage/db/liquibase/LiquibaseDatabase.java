@@ -20,8 +20,6 @@ import javax.sql.DataSource;
 public class LiquibaseDatabase implements Database {
 	private boolean skip;
 	private boolean dropFirst;
-	private String contexts;
-	private String changeLog;
 
 	private final DataSource dataSource;
 	private final ResourceAccessor resourceAccessor;
@@ -51,15 +49,7 @@ public class LiquibaseDatabase implements Database {
 		this.dropFirst = dropFirst;
 	}
 
-	public String getContexts() {
-		return contexts;
-	}
-
-	public void setContexts(final String contexts) {
-		this.contexts = contexts;
-	}
-
-	public void update(final ChangeLog changeLog) {
+	public void update(final ChangeLog changeLog, final String... context) {
 		if (isSkip()) {
 //			log.info("LiquiBase skipped due to skip flag configuration");
 			return;
@@ -71,7 +61,14 @@ public class LiquibaseDatabase implements Database {
 			if (isDropFirst()) {
 				liquibase.dropAll();
 			}
-			liquibase.update(getContexts());
+			final StringBuilder contexts = new StringBuilder();
+			for (String entry : context) {
+				if (contexts.length() > 0) {
+					contexts.append(',');
+				}
+				contexts.append(entry);
+			}
+			liquibase.update(contexts.toString());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {

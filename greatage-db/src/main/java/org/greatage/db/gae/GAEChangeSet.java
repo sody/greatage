@@ -1,7 +1,10 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import org.greatage.db.*;
+import org.greatage.db.ChangeSetBuilder;
+import org.greatage.db.CheckSumUtils;
+import org.greatage.util.DescriptionBuilder;
+import org.greatage.util.StringUtils;
 
 import java.util.*;
 
@@ -28,28 +31,28 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 		this.location = location;
 	}
 
-	public String getTitle() {
+	String getTitle() {
 		return title;
 	}
 
-	public String getAuthor() {
+	String getAuthor() {
 		return author;
 	}
 
-	public String getLocation() {
+	String getLocation() {
 		return location;
 	}
 
-	public String getComment() {
+	String getComment() {
 		return comment;
 	}
 
-	public String getCheckSum() {
-		final StringBuilder builder = new StringBuilder().append(comment);
-		for (GAEChange change : changes) {
-			builder.append(":").append(change);
-		}
-		return CheckSumUtils.compositeCheckSum(builder.toString());
+	String getCheckSum() {
+		return CheckSumUtils.compositeCheckSum(toString());
+	}
+
+	boolean supports(final Set<String> runContext) {
+		return context.isEmpty() || context.containsAll(runContext);
 	}
 
 	public ChangeSetBuilder comment(final String comment) {
@@ -103,5 +106,21 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 			lastChange.end();
 			lastChange = null;
 		}
+	}
+
+	@Override
+	public String toString() {
+		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+		builder.append(title).append(author).append(location);
+		if (!context.isEmpty()) {
+			builder.append("context", context);
+		}
+		if (!StringUtils.isEmpty(comment)) {
+			builder.append("comment", comment);
+		}
+		if (!changes.isEmpty()) {
+			builder.append("changes", changes);
+		}
+		return builder.toString();
 	}
 }

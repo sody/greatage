@@ -6,7 +6,7 @@ package org.greatage.db;
  */
 public interface Database {
 
-	void update(ChangeLog changeLog);
+	void update(ChangeLog changeLog, String... context);
 
 	ChangeSetBuilder changeSet(String id, String author, String location);
 
