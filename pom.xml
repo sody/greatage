@@ -344,6 +344,38 @@
 				<version>${drools.version}</version>
 			</dependency>
 
+			<!--db dependencies-->
+			<dependency>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-core</artifactId>
+				<version>${liquibase.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-api-1.0-sdk</artifactId>
+				<version>${appengine.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-api-labs</artifactId>
+				<version>${appengine.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-api-stubs</artifactId>
+				<version>${appengine.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.appengine</groupId>
+				<artifactId>appengine-testing</artifactId>
+				<version>${appengine.version}</version>
+			</dependency>
+
+
 			<!--domain dependencies-->
 			<dependency>
 				<groupId>javax.jdo</groupId>
@@ -419,6 +451,10 @@
 
 		<!--security dependencies-->
 		<drools.version>5.2.0.M1</drools.version>
+
+		<!--db dependencies-->
+		<liquibase.version>2.0-rc5-ra1.4</liquibase.version>
+		<appengine.version>1.5.2</appengine.version>
 
 		<!--domain dependencies-->
 		<persistence.api.version>1.0</persistence.api.version>
