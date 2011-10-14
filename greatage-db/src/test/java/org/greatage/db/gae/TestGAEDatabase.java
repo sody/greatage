@@ -291,4 +291,42 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company2"));
 	}
+
+	@Test
+	public void gae_lot_of_data() {
+		assertNotExist(new Query("company"));
+
+		final int count = 3000;
+		database.update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				for (int i = 0; i < count; i++) {
+					begin("change_" + i).insert("company").set("name", "company" + i);
+				}
+			}
+		});
+
+		assertCount(new Query("company"), count);
+
+		database.update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				begin("update").update("company").set("name", "company");
+			}
+		});
+
+		assertCount(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company"), count);
+
+		database.update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				begin("delete").delete("company");
+			}
+		});
+
+		assertNotExist(new Query("company"));
+	}
 }

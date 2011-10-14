@@ -40,6 +40,24 @@ public class GAEDatabase implements Database {
 		return new GAEUpdateOptions();
 	}
 
+	private synchronized void update(final ChangeLog changeLog, final GAEUpdateOptions options) {
+		this.options = options;
+		lock();
+		try {
+			if (options.dropFirst) {
+				dropAll();
+			}
+
+			changeLog.execute(this);
+
+			ensureChangeSetClosed();
+		} finally {
+			this.options = null;
+			ranChangeSets.clear();
+			unlock();
+		}
+	}
+
 	GAEChangeSet beginChangeSet(final GAEChangeSet changeSet) {
 		ensureChangeSetClosed();
 		this.lastChangeSet = changeSet;
@@ -127,20 +145,14 @@ public class GAEDatabase implements Database {
 		dataStore.put(logEntry);
 	}
 
-	private synchronized void update(final ChangeLog changeLog, final GAEUpdateOptions options) {
-		this.options = options;
-		if (options.dropFirst) {
-			//todo: drop all data
-		}
-		lock();
-		try {
-			changeLog.execute(this);
-
-			ensureChangeSetClosed();
-		} finally {
-			this.options = null;
-			ranChangeSets.clear();
-			unlock();
+	private void dropAll() {
+		for (Entity kindMetadata : dataStore.prepare(new Query(Query.KIND_METADATA_KIND)).asIterable()) {
+			final String kind = kindMetadata.getKey().getName();
+			if (!SystemTables.LOCK.NAME.equals(kind)) {
+				for (Entity entity : dataStore.prepare(new Query(kind).setKeysOnly()).asIterable()) {
+					dataStore.delete(entity.getKey());
+				}
+			}
 		}
 	}
 

@@ -2,6 +2,7 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.Query;
 import org.greatage.db.ChangeLog;
+import org.greatage.db.ChangeSetBuilder;
 import org.testng.annotations.Test;
 
 /**
@@ -100,7 +101,7 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 		assertNotExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company2"));
 	}
 
-	@Test(enabled = false)
+	@Test
 	public void gae_drop_first() {
 		assertNotExist(new Query("company"));
 		database.update(new ChangeLog() {
@@ -125,5 +126,47 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 		});
 		assertNotExist(new Query("company"));
 		assertExist(new Query("department").addFilter("name", Query.FilterOperator.EQUAL, "dep1"));
+	}
+
+	@Test
+	public void gae_drop_first_lot_of_data() {
+		assertNotExist(new Query("company"));
+		assertNotExist(new Query("department"));
+		assertNotExist(new Query("employee"));
+
+		final int count = 3000;
+		database.update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				final ChangeSetBuilder changeSet = begin("1");
+
+				for (int i = 0; i < count; i++) {
+					changeSet
+							.insert("company").set("name", "company" + i).end()
+							.insert("department").set("name", "department" + i).set("company", i).end()
+							.insert("employee").set("name", "employee" + i + "1").set("department", i).end()
+							.insert("employee").set("name", "employee2" + i + "2").set("department", i).end()
+							.insert("employee").set("name", "employee3" + i + "3").set("department", i).end();
+				}
+			}
+		});
+
+		assertCount(new Query("company"), count);
+		assertCount(new Query("department"), count);
+		assertCount(new Query("employee"), count * 3);
+
+		database.options().dropFirst().update(new ChangeLog() {
+			@Override
+			protected void init() {
+				location("test");
+				begin("1").insert("test");
+				//To change body of implemented methods use File | Settings | File Templates.
+			}
+		});
+		assertNotExist(new Query("company"));
+		assertNotExist(new Query("department"));
+		assertNotExist(new Query("employee"));
+		assertExist(new Query("test"));
 	}
 }
