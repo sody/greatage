@@ -20,32 +20,43 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AbstractAuthenticationProvider<T extends Authentication, E extends AuthenticationToken>
-		implements AuthenticationProvider<T> {
+public abstract class AbstractAuthenticationProvider<A extends Authentication, T extends AuthenticationToken>
+		implements AuthenticationProvider {
 
-	private final Class<E> supportedTokenClass;
 
-	protected AbstractAuthenticationProvider(final Class<E> supportedTokenClass) {
-		this.supportedTokenClass = supportedTokenClass;
+	private final Class<A> authenticationClass;
+	private final Class<T> tokenClass;
+
+	protected AbstractAuthenticationProvider(final Class<A> authenticationClass, final Class<T> tokenClass) {
+		this.authenticationClass = authenticationClass;
+		this.tokenClass = tokenClass;
 	}
 
 	@SuppressWarnings({"unchecked"})
-	public T signIn(final AuthenticationToken token) throws AuthenticationException {
+	public A signIn(final AuthenticationToken token) throws AuthenticationException {
 		if (supports(token)) {
-			return doSignIn((E) token);
+			return doSignIn((T) token);
 		}
 
 		return null;
 	}
 
-	public void signOut(final T authentication) throws AuthenticationException {
-		//do nothing by default
+	@SuppressWarnings({"unchecked"})
+	public void signOut(final Authentication authentication) throws AuthenticationException {
+		if (supports(authentication)) {
+			doSignOut((A) authentication);
+		}
 	}
 
 	protected boolean supports(final AuthenticationToken token) {
-		return token != null && supportedTokenClass.isAssignableFrom(token.getClass());
+		return token != null && tokenClass.isAssignableFrom(token.getClass());
 	}
 
-	protected abstract T doSignIn(final E token);
+	protected boolean supports(final Authentication authentication) {
+		return authentication != null && authenticationClass.isAssignableFrom(authentication.getClass());
+	}
 
+	protected abstract A doSignIn(final T token);
+
+	protected abstract void doSignOut(final A authentication);
 }

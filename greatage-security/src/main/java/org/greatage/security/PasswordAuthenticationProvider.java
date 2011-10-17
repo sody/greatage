@@ -20,19 +20,19 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class PasswordAuthenticationProvider<T extends PasswordAuthentication>
-		extends AbstractAuthenticationProvider<T, PasswordAuthenticationToken> {
+public abstract class PasswordAuthenticationProvider
+		extends AbstractAuthenticationProvider<PasswordAuthentication, PasswordAuthenticationToken> {
 
 	private final PasswordEncoder passwordEncoder;
 
 	public PasswordAuthenticationProvider(final PasswordEncoder passwordEncoder) {
-		super(PasswordAuthenticationToken.class);
+		super(PasswordAuthentication.class, PasswordAuthenticationToken.class);
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
-	protected T doSignIn(final PasswordAuthenticationToken token) {
-		final T authentication = getAuthentication(token.getName());
+	protected PasswordAuthentication doSignIn(final PasswordAuthenticationToken token) {
+		final PasswordAuthentication authentication = getAuthentication(token.getName());
 		if (authentication == null) {
 			throw new AuthenticationException(String.format("Wrong name '%s'", token.getName()));
 		}
@@ -41,7 +41,12 @@ public abstract class PasswordAuthenticationProvider<T extends PasswordAuthentic
 		return authentication;
 	}
 
-	protected abstract T getAuthentication(final String name);
+	@Override
+	protected void doSignOut(final PasswordAuthentication authentication) {
+		//do nothing by default
+	}
+
+	protected abstract PasswordAuthentication getAuthentication(final String name);
 
 	protected void checkPassword(final String password, final String expected) {
 		final String actual = passwordEncoder.encode(password);

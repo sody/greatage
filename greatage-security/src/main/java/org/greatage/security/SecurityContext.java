@@ -22,18 +22,11 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface SecurityContext<T extends Authentication> {
+public interface SecurityContext {
 
-	T getCurrentUser();
+	Authentication getCurrentUser();
 
-	T getUser(String name);
+	void setCurrentUser(Authentication currentUser);
 
-	List<T> getLoggedUsers();
-
-	void initCurrentUser(T user);
-
-	void clearCurrentUser();
-
-	void removeCurrentUser();
-
+	List<Authentication> getLoggedUsers();
 }

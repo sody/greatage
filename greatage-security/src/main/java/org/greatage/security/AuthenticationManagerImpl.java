@@ -22,29 +22,28 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AuthenticationManagerImpl<T extends Authentication> implements AuthenticationManager {
-	private final List<AuthenticationProvider<T>> providers;
-	private final SecurityContext<T> securityContext;
+public class AuthenticationManagerImpl implements AuthenticationManager {
+	private final List<AuthenticationProvider> providers;
+	private final SecurityContext securityContext;
 
-	public AuthenticationManagerImpl(final List<AuthenticationProvider<T>> providers, final SecurityContext<T> securityContext) {
+	public AuthenticationManagerImpl(final List<AuthenticationProvider> providers, final SecurityContext securityContext) {
 		this.providers = providers;
 		this.securityContext = securityContext;
 	}
 
 	public void signIn(final AuthenticationToken token) throws AuthenticationException {
-		final T user = doSignIn(token);
-		securityContext.initCurrentUser(user);
+		final Authentication user = doSignIn(token);
+		securityContext.setCurrentUser(user);
 	}
 
 	public void signOut() throws AuthenticationException {
-		final T user = securityContext.getCurrentUser();
-		doSignOut(user);
-		securityContext.removeCurrentUser();
+		doSignOut(securityContext.getCurrentUser());
+		securityContext.setCurrentUser(null);
 	}
 
-	private T doSignIn(final AuthenticationToken token) throws AuthenticationException {
-		for (AuthenticationProvider<T> provider : providers) {
-			final T user = provider.signIn(token);
+	private Authentication doSignIn(final AuthenticationToken token) throws AuthenticationException {
+		for (AuthenticationProvider provider : providers) {
+			final Authentication user = provider.signIn(token);
 			if (user != null) {
 				return user;
 			}
@@ -52,8 +51,8 @@ public class AuthenticationManagerImpl<T extends Authentication> implements Auth
 		throw new AuthenticationException(String.format("Authentication token are not supported %s", token));
 	}
 
-	private void doSignOut(final T authentication) throws AuthenticationException {
-		for (AuthenticationProvider<T> provider : providers) {
+	private void doSignOut(final Authentication authentication) throws AuthenticationException {
+		for (AuthenticationProvider provider : providers) {
 			provider.signOut(authentication);
 		}
 	}

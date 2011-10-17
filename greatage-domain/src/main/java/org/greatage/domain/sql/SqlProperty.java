@@ -28,40 +28,51 @@ import java.util.Collection;
  */
 public abstract class SqlProperty implements EntityProperty {
 
-	public EntityCriterion in(Collection values) {
-		return null;  //todo: change default method body
+	protected abstract String property();
+
+	public EntityCriterion in(final Collection values) {
+		return in(values.toArray());
 	}
 
 	public EntityCriterion in(Object[] values) {
-		return null;  //todo: change default method body
+		final StringBuilder builder = new StringBuilder();
+		builder.append('(');
+		for (Object value : values) {
+			if (builder.length() > 1) {
+				builder.append(',');
+			}
+			builder.append(wrap(value));
+		}
+		builder.append(')');
+		return raw("in", builder.toString());
 	}
 
 	public EntityCriterion like(Object value) {
-		return null;  //todo: change default method body
+		return sql("like", value);
 	}
 
 	public EntityCriterion eq(Object value) {
-		return null;  //todo: change default method body
+		return sql("=", value);
 	}
 
 	public EntityCriterion ne(Object value) {
-		return null;  //todo: change default method body
+		return sql("!=", value);
 	}
 
 	public EntityCriterion gt(Object value) {
-		return null;  //todo: change default method body
+		return sql(">", value);
 	}
 
 	public EntityCriterion lt(Object value) {
-		return null;  //todo: change default method body
+		return sql("<", value);
 	}
 
 	public EntityCriterion le(Object value) {
-		return null;  //todo: change default method body
+		return sql("<=", value);
 	}
 
 	public EntityCriterion ge(Object value) {
-		return null;  //todo: change default method body
+		return sql(">=", value);
 	}
 
 	public EntityCriterion between(Object min, Object max) {
@@ -93,11 +104,11 @@ public abstract class SqlProperty implements EntityProperty {
 	}
 
 	public EntityCriterion isNull() {
-		return null;  //todo: change default method body
+		return raw("is", "null");
 	}
 
 	public EntityCriterion isNotNull() {
-		return null;  //todo: change default method body
+		return raw("not", "null");
 	}
 
 	public EntityCriterion isEmpty() {
@@ -106,6 +117,21 @@ public abstract class SqlProperty implements EntityProperty {
 
 	public EntityCriterion isNotEmpty() {
 		return null;  //todo: change default method body
+	}
+
+	protected SqlCriterion sql(final String operation, final Object value) {
+		return raw(operation, wrap(value));
+	}
+
+	protected SqlCriterion raw(final String operation, final String value) {
+		return new SqlCriterion(property(), operation, value);
+	}
+
+	protected String wrap(final Object value) {
+		if (value instanceof Number || value instanceof Boolean) {
+			return String.valueOf(value);
+		}
+		return "'" + String.valueOf(value) + "'";
 	}
 
 	@Override

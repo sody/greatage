@@ -29,6 +29,4 @@ public @interface Deny {
 
 	String[] value();
 
-	Operation operation() default Operation.AND;
-
 }

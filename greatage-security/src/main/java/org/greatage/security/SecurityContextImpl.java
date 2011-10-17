@@ -25,38 +25,27 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SecurityContextImpl<T extends Authentication> implements SecurityContext<T> {
-	private final ThreadLocal<T> currentUser = new ThreadLocal<T>();
-	private final Map<String, T> loggedUsers = CollectionUtils.newConcurrentMap();
+public class SecurityContextImpl implements SecurityContext {
+	private final ThreadLocal<Authentication> currentUser = new ThreadLocal<Authentication>();
+	private final Map<String, Authentication> loggedUsers = CollectionUtils.newConcurrentMap();
 
-	public T getCurrentUser() {
+	public Authentication getCurrentUser() {
 		return currentUser.get();
 	}
 
-	public T getUser(final String name) {
-		return loggedUsers.get(name);
+	public void setCurrentUser(final Authentication currentUser) {
+		if (currentUser == null) {
+			final Authentication user = getCurrentUser();
+			if (user != null) {
+				loggedUsers.remove(user.getName());
+			}
+		} else {
+			loggedUsers.put(currentUser.getName(), currentUser);
+		}
+		this.currentUser.set(currentUser);
 	}
 
-	public List<T> getLoggedUsers() {
+	public List<Authentication> getLoggedUsers() {
 		return CollectionUtils.newList(loggedUsers.values());
-	}
-
-	public void initCurrentUser(final T user) {
-		if (user != null) {
-			loggedUsers.put(user.getName(), user);
-		}
-		currentUser.set(user);
-	}
-
-	public void clearCurrentUser() {
-		currentUser.set(null);
-	}
-
-	public void removeCurrentUser() {
-		final T user = currentUser.get();
-		if (user != null) {
-			loggedUsers.remove(user.getName());
-		}
-		currentUser.set(null);
 	}
 }

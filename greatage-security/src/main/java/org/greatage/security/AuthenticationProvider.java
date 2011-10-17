@@ -20,10 +20,10 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface AuthenticationProvider<T extends Authentication> {
+public interface AuthenticationProvider {
 
-	T signIn(AuthenticationToken token) throws AuthenticationException;
+	Authentication signIn(AuthenticationToken token) throws AuthenticationException;
 
-	void signOut(T authentication) throws AuthenticationException;
+	void signOut(Authentication authentication) throws AuthenticationException;
 
 }

@@ -17,7 +17,6 @@
 package org.greatage.domain.jdo;
 
 import org.greatage.domain.*;
-import org.greatage.domain.sql.SqlCriterion;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
 
@@ -38,7 +37,7 @@ public class JdoCriteria implements EntityCriteria {
 	private final Map<String, EntityProperty> properties = new HashMap<String, EntityProperty>();
 	private final Map<String, JdoCriteria> criterias = new HashMap<String, JdoCriteria>();
 
-	private SqlCriterion filter;
+	private JdoCriterion filter;
 
 	private JdoCriteria(final Query query, final String alias) {
 		this.query = query;
@@ -53,7 +52,7 @@ public class JdoCriteria implements EntityCriteria {
 
 	Query assign() {
 		if (filter != null) {
-			query.setFilter(filter.getSql());
+			query.setFilter(filter.getJql());
 		}
 		return query;
 	}
@@ -82,9 +81,9 @@ public class JdoCriteria implements EntityCriteria {
 
 	public void add(final EntityCriterion criterion) {
 		if (filter == null) {
-			filter = (SqlCriterion) criterion;
+			filter = (JdoCriterion) criterion;
 		} else {
-			filter.and(criterion);
+			filter = (JdoCriterion) filter.and(criterion);
 		}
 	}
 

@@ -26,7 +26,11 @@ import org.greatage.util.DescriptionBuilder;
 public class SqlCriterion implements EntityCriterion {
 	private final String sql;
 
-	public SqlCriterion(String sql) {
+	public SqlCriterion(final String property, final String operation, final String value) {
+		this(new StringBuilder(property).append(' ').append(operation).append(' ').append(value).toString());
+	}
+
+	public SqlCriterion(final String sql) {
 		this.sql = sql;
 	}
 
@@ -58,8 +62,6 @@ public class SqlCriterion implements EntityCriterion {
 
 	@Override
 	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append(sql);
-		return builder.toString();
+		return new DescriptionBuilder(getClass()).append(sql).toString();
 	}
 }

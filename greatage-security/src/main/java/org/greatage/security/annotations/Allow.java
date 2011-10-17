@@ -29,6 +29,4 @@ public @interface Allow {
 
 	String[] value();
 
-	Operation operation() default Operation.AND;
-
 }
