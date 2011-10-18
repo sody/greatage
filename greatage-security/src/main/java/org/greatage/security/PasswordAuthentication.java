@@ -24,7 +24,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PasswordAuthentication implements Authentication {
+public class PasswordAuthentication extends AbstractAuthentication implements Authentication {
 	private final String name;
 	private final List<String> authorities;
 	private final String encodedPassword;

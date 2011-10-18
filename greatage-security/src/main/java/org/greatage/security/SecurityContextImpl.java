@@ -20,7 +20,6 @@ import org.greatage.util.CollectionUtils;
 
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ public class SecurityContextImpl implements SecurityContext, AuthorityConstants 
 
 	public <T> T doAs(final Authentication authentication, final PrivilegedAction<T> action) {
 		try {
-			doStartSession(authentication, false);
+			doStartSession(authentication);
 			return action.run();
 		} finally {
 			doEndSession(authentication);
@@ -54,7 +53,7 @@ public class SecurityContextImpl implements SecurityContext, AuthorityConstants 
 
 	public <T> T doAs(final Authentication authentication, final PrivilegedExceptionAction<T> action) throws Exception {
 		try {
-			doStartSession(authentication, false);
+			doStartSession(authentication);
 			return action.run();
 		} finally {
 			doEndSession(authentication);
@@ -63,7 +62,7 @@ public class SecurityContextImpl implements SecurityContext, AuthorityConstants 
 
 	public void signIn(final AuthenticationToken token) {
 		final Authentication authentication = doSignIn(token);
-		doStartSession(authentication, true);
+		doStartSession(authentication);
 	}
 
 	public void signOut() {
@@ -88,24 +87,9 @@ public class SecurityContextImpl implements SecurityContext, AuthorityConstants 
 		}
 	}
 
-	private void doStartSession(final Authentication authentication, final boolean createNew) {
+	private void doStartSession(final Authentication authentication) {
 		if (authentication != null) {
-			final long checkTime = System.currentTimeMillis();
-			if (!createNew) {
-				final Iterator<Map.Entry<Authentication, Long>> iterator = sessions.entrySet().iterator();
-				while (iterator.hasNext()) {
-					final Map.Entry<Authentication, Long> entry = iterator.next();
-					if (checkTime - entry.getValue() > sessionExpirationPeriod) {
-						iterator.remove();
-					}
-				}
-
-				if (!sessions.containsKey(authentication)) {
-					throw new AuthenticationException("Session expired.");
-				}
-			}
-
-			sessions.put(authentication, checkTime);
+			sessions.put(authentication, System.currentTimeMillis());
 			currentUser.set(authentication);
 		} else {
 			currentUser.remove();
