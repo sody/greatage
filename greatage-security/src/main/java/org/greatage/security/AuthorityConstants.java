@@ -20,12 +20,12 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AuthorityConstants {
-	public static final String STATUS_ANONYMOUS = "STATUS_ANONYMOUS";
-	public static final String STATUS_LOGGED = "STATUS_LOGGED";
+public interface AuthorityConstants {
+	String STATUS_ANONYMOUS = "STATUS_ANONYMOUS";
+	String STATUS_AUTHENTICATED = "STATUS_AUTHENTICATED";
 
-	public static final String PERMISSION_READ = "PERMISSION_READ";
-	public static final String PERMISSION_WRITE = "PERMISSION_WRITE";
-	public static final String PERMISSION_CREATE = "PERMISSION_CREATE";
-	public static final String PERMISSION_DELETE = "PERMISSION_DELETE";
+	String PERMISSION_READ = "PERMISSION_READ";
+	String PERMISSION_WRITE = "PERMISSION_WRITE";
+	String PERMISSION_CREATE = "PERMISSION_CREATE";
+	String PERMISSION_DELETE = "PERMISSION_DELETE";
 }

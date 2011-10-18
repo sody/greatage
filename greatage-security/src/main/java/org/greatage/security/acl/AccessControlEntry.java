@@ -14,16 +14,20 @@
  * limitations under the License.
  */
 
-package org.greatage.security;
+package org.greatage.security.acl;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface AuthenticationManager {
+public interface AccessControlEntry {
 
-	void signIn(AuthenticationToken token) throws AuthenticationException;
+	Object getSecuredObject();
 
-	void signOut() throws AuthenticationException;
+	String getAuthority();
+
+	String getPermission();
+
+	boolean isGranted();
 
 }

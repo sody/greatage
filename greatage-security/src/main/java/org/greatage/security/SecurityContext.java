@@ -16,7 +16,8 @@
 
 package org.greatage.security;
 
-import java.util.List;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
 
 /**
  * @author Ivan Khalopik
@@ -26,7 +27,12 @@ public interface SecurityContext {
 
 	Authentication getCurrentUser();
 
-	void setCurrentUser(Authentication currentUser);
+	<T> T doAs(Authentication authentication, PrivilegedAction<T> action);
 
-	List<Authentication> getLoggedUsers();
+	<T> T doAs(Authentication authentication, PrivilegedExceptionAction<T> action) throws Exception;
+
+	void signIn(AuthenticationToken token);
+
+	void signOut();
+
 }

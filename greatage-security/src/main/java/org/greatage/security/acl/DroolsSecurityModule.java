@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.greatage.security.drools;
+package org.greatage.security.acl;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
@@ -26,11 +26,8 @@ import org.drools.io.ResourceFactory;
 import org.greatage.inject.ServiceBinder;
 import org.greatage.inject.annotations.Bind;
 import org.greatage.inject.annotations.Build;
-import org.greatage.inject.annotations.Dependency;
 import org.greatage.inject.services.Resource;
 import org.greatage.inject.services.ResourceLocator;
-import org.greatage.security.AccessControlManager;
-import org.greatage.security.SecurityModule;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,7 +37,6 @@ import java.util.Collection;
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Dependency(SecurityModule.class)
 public class DroolsSecurityModule {
 
 	@Bind

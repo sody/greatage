@@ -18,6 +18,9 @@ package org.greatage.security;
 
 import org.greatage.util.CollectionUtils;
 
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -25,27 +28,94 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SecurityContextImpl implements SecurityContext {
+public class SecurityContextImpl implements SecurityContext, AuthorityConstants {
 	private final ThreadLocal<Authentication> currentUser = new ThreadLocal<Authentication>();
-	private final Map<String, Authentication> loggedUsers = CollectionUtils.newConcurrentMap();
+	private final Map<Authentication, Long> sessions = CollectionUtils.newConcurrentMap();
+	private final long sessionExpirationPeriod = 1000000l;
+
+	private final List<AuthenticationProvider> providers;
+
+	public SecurityContextImpl(final List<AuthenticationProvider> providers) {
+		this.providers = providers;
+	}
 
 	public Authentication getCurrentUser() {
 		return currentUser.get();
 	}
 
-	public void setCurrentUser(final Authentication currentUser) {
-		if (currentUser == null) {
-			final Authentication user = getCurrentUser();
-			if (user != null) {
-				loggedUsers.remove(user.getName());
-			}
-		} else {
-			loggedUsers.put(currentUser.getName(), currentUser);
+	public <T> T doAs(final Authentication authentication, final PrivilegedAction<T> action) {
+		try {
+			doStartSession(authentication, false);
+			return action.run();
+		} finally {
+			doEndSession(authentication);
 		}
-		this.currentUser.set(currentUser);
 	}
 
-	public List<Authentication> getLoggedUsers() {
-		return CollectionUtils.newList(loggedUsers.values());
+	public <T> T doAs(final Authentication authentication, final PrivilegedExceptionAction<T> action) throws Exception {
+		try {
+			doStartSession(authentication, false);
+			return action.run();
+		} finally {
+			doEndSession(authentication);
+		}
+	}
+
+	public void signIn(final AuthenticationToken token) {
+		final Authentication authentication = doSignIn(token);
+		doStartSession(authentication, true);
+	}
+
+	public void signOut() {
+		final Authentication authentication = currentUser.get();
+		doSignOut(authentication);
+		doEndSession(authentication);
+	}
+
+	private Authentication doSignIn(final AuthenticationToken token) throws AuthenticationException {
+		for (AuthenticationProvider provider : providers) {
+			final Authentication user = provider.signIn(token);
+			if (user != null) {
+				return user;
+			}
+		}
+		throw new AuthenticationException(String.format("Authentication token are not supported %s", token));
+	}
+
+	private void doSignOut(final Authentication authentication) throws AuthenticationException {
+		for (AuthenticationProvider provider : providers) {
+			provider.signOut(authentication);
+		}
+	}
+
+	private void doStartSession(final Authentication authentication, final boolean createNew) {
+		if (authentication != null) {
+			final long checkTime = System.currentTimeMillis();
+			if (!createNew) {
+				final Iterator<Map.Entry<Authentication, Long>> iterator = sessions.entrySet().iterator();
+				while (iterator.hasNext()) {
+					final Map.Entry<Authentication, Long> entry = iterator.next();
+					if (checkTime - entry.getValue() > sessionExpirationPeriod) {
+						iterator.remove();
+					}
+				}
+
+				if (!sessions.containsKey(authentication)) {
+					throw new AuthenticationException("Session expired.");
+				}
+			}
+
+			sessions.put(authentication, checkTime);
+			currentUser.set(authentication);
+		} else {
+			currentUser.remove();
+		}
+	}
+
+	private void doEndSession(final Authentication authentication) {
+		if (authentication != null) {
+			sessions.remove(authentication);
+		}
+		currentUser.remove();
 	}
 }

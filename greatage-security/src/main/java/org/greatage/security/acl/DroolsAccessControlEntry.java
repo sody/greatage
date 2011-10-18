@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package org.greatage.security.drools;
+package org.greatage.security.acl;
 
-import org.greatage.security.AccessControlEntry;
+import org.greatage.security.acl.AccessControlEntry;
 
 /**
  * @author Ivan Khalopik

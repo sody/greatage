@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.security.drools;
+package org.greatage.security.acl;
 
 import org.drools.KnowledgeBase;
 import org.drools.runtime.StatelessKnowledgeSession;
-import org.greatage.security.AccessControlEntry;
-import org.greatage.security.AccessControlList;
 
 /**
  * @author Ivan Khalopik

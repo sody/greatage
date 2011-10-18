@@ -14,20 +14,14 @@
  * limitations under the License.
  */
 
-package org.greatage.security;
+package org.greatage.security.acl;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface AccessControlEntry {
+public interface AccessControlManager {
 
-	Object getSecuredObject();
-
-	String getAuthority();
-
-	String getPermission();
-
-	boolean isGranted();
+	AccessControlList getAccessControlList(Object object);
 
 }

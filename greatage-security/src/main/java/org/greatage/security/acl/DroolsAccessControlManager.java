@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package org.greatage.security;
+package org.greatage.security.acl;
 
-import org.greatage.inject.ServiceBinder;
-import org.greatage.inject.annotations.Bind;
+import org.drools.KnowledgeBase;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SecurityModule {
+public class DroolsAccessControlManager implements AccessControlManager {
+	private final KnowledgeBase knowledgeBase;
 
-	@Bind
-	public static void bind(final ServiceBinder binder) {
-		binder.bind(AuthenticationManager.class, AuthenticationManagerImpl.class);
-		binder.bind(SecurityContext.class, SecurityContextImpl.class);
+	public DroolsAccessControlManager(final KnowledgeBase knowledgeBase) {
+		this.knowledgeBase = knowledgeBase;
+	}
+
+	public AccessControlList getAccessControlList(final Object object) {
+		return new DroolsAccessControlList(knowledgeBase, object);
 	}
 }

@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-package org.greatage.security;
+package org.greatage.security.acl;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SecurityException extends RuntimeException {
-	public SecurityException() {
-	}
+public interface AccessControlList {
 
-	public SecurityException(final String message) {
-		super(message);
-	}
+	Object getSecuredObject();
 
-	public SecurityException(final String message, final Throwable cause) {
-		super(message, cause);
-	}
+	AccessControlEntry getAccessControlEntry(String authority, String permission);
 
-	public SecurityException(final Throwable cause) {
-		super(cause);
-	}
 }
