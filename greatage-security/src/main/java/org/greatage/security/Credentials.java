@@ -20,8 +20,32 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface PasswordEncoder {
+public class Credentials implements AuthenticationToken {
+	public static final String DEFAULT_TYPE = "credentials";
 
-	String encode(String password);
+	private final String type;
+	private final String key;
+	private final String secret;
 
+	public Credentials(final String key, final String secret) {
+		this(DEFAULT_TYPE, key, secret);
+	}
+
+	public Credentials(final String type, final String key, final String secret) {
+		this.type = type;
+		this.key = key;
+		this.secret = secret;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public String getSecret() {
+		return secret;
+	}
 }

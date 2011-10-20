@@ -20,5 +20,8 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AnonymousAuthenticationToken implements AuthenticationToken {
+public interface SecretEncoder {
+
+	String encode(String password);
+
 }

@@ -16,12 +16,28 @@
 
 package org.greatage.security;
 
+import org.greatage.util.CollectionUtils;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PlainTextPasswordEncoder implements PasswordEncoder {
-	public String encode(final String password) {
-		return password;
+public class AnonymousProvider extends AbstractAuthenticationProvider<Authentication, AnonymousToken> {
+	public AnonymousProvider() {
+		super(Authentication.class, AnonymousToken.class);
+	}
+
+	@Override
+	protected Authentication doSignIn(final AnonymousToken token) {
+		return getAntonymousAuthentication();
+	}
+
+	@Override
+	protected void doSignOut(final Authentication authentication) {
+		//do nothing by default
+	}
+
+	protected User getAntonymousAuthentication() {
+		return new User("anonymous", CollectionUtils.<String, String>newList(AuthorityConstants.STATUS_ANONYMOUS));
 	}
 }

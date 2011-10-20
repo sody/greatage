@@ -2,11 +2,28 @@ package org.greatage.security;
 
 import org.greatage.util.DescriptionBuilder;
 
+import java.util.List;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AbstractAuthentication implements Authentication {
+public class User implements Authentication {
+	private final String name;
+	private final List<String> authorities;
+
+	public User(final String name, final List<String> authorities) {
+		this.name = name;
+		this.authorities = authorities;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public List<String> getAuthorities() {
+		return authorities;
+	}
 
 	@Override
 	public boolean equals(Object o) {
@@ -27,6 +44,10 @@ public abstract class AbstractAuthentication implements Authentication {
 
 	@Override
 	public String toString() {
-		return new DescriptionBuilder(getClass()).append("name", getName()).toString();
+		return new DescriptionBuilder(getClass())
+				.append("name", getName())
+				.append("authorities", authorities)
+				.toString();
 	}
+
 }

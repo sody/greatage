@@ -20,23 +20,5 @@ package org.greatage.security;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AnonymousAuthenticationProvider
-		extends AbstractAuthenticationProvider<Authentication, AnonymousAuthenticationToken> {
-
-	public AnonymousAuthenticationProvider() {
-		super(Authentication.class, AnonymousAuthenticationToken.class);
-	}
-
-	@Override
-	protected Authentication doSignIn(final AnonymousAuthenticationToken token) {
-		return getAntonymousAuthentication();
-	}
-
-	@Override
-	protected void doSignOut(final Authentication authentication) {
-		//do nothing by default
-	}
-
-	protected abstract Authentication getAntonymousAuthentication();
-
+public class AnonymousToken implements AuthenticationToken {
 }

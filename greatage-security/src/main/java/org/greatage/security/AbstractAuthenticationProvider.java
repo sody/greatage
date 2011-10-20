@@ -23,7 +23,6 @@ package org.greatage.security;
 public abstract class AbstractAuthenticationProvider<A extends Authentication, T extends AuthenticationToken>
 		implements AuthenticationProvider {
 
-
 	private final Class<A> authenticationClass;
 	private final Class<T> tokenClass;
 
@@ -49,11 +48,11 @@ public abstract class AbstractAuthenticationProvider<A extends Authentication, T
 	}
 
 	protected boolean supports(final AuthenticationToken token) {
-		return token != null && tokenClass.isAssignableFrom(token.getClass());
+		return token != null && tokenClass.equals(token.getClass());
 	}
 
 	protected boolean supports(final Authentication authentication) {
-		return authentication != null && authenticationClass.isAssignableFrom(authentication.getClass());
+		return authentication != null && authenticationClass.equals(authentication.getClass());
 	}
 
 	protected abstract A doSignIn(final T token);
