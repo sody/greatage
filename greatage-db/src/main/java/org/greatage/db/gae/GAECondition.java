@@ -7,11 +7,11 @@ import org.greatage.db.*;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAECondition<T extends ChangeSetBuilder.ChangeBuilder> implements ChangeSetBuilder.ConditionBuilder<T> {
-	private final T change;
+public class GAECondition<T> implements ChangeSetBuilder.ConditionBuilder<T> {
+	private final T parent;
 
-	GAECondition(final T change) {
-		this.change = change;
+	GAECondition(final T parent) {
+		this.parent = parent;
 	}
 
 	public ChangeSetBuilder.ConditionEntryBuilder<T> and(final String propertyName) {
@@ -19,7 +19,7 @@ public class GAECondition<T extends ChangeSetBuilder.ChangeBuilder> implements C
 	}
 
 	public T end() {
-		return change;
+		return parent;
 	}
 
 	class GAEConditionEntry implements ChangeSetBuilder.ConditionEntryBuilder<T> {
@@ -54,7 +54,7 @@ public class GAECondition<T extends ChangeSetBuilder.ChangeBuilder> implements C
 		}
 
 		GAECondition<T> addCondition(final Query.FilterOperator operator, final Object value) {
-			((GAEConditionalChange) change).addCondition(new Query.FilterPredicate(propertyName, operator, value));
+			((GAEConditional) parent).addCondition(new Query.FilterPredicate(propertyName, operator, value));
 			return GAECondition.this;
 		}
 	}

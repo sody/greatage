@@ -27,6 +27,8 @@ public interface ChangeSetBuilder {
 
 		UpdateBuilder set(String propertyName, Object value);
 
+		SetBuilder<UpdateBuilder> setFrom(String propertyName, String entityName);
+
 		ConditionEntryBuilder<UpdateBuilder> where(String property);
 	}
 
@@ -36,12 +38,17 @@ public interface ChangeSetBuilder {
 		ConditionEntryBuilder<DeleteBuilder> where(String propertyName);
 	}
 
-	interface ConditionBuilder<T extends ChangeBuilder> extends ChildBuilder<T> {
+	interface SetBuilder<T extends ChangeBuilder> extends ChildBuilder<T> {
+
+		ConditionEntryBuilder<SetBuilder<T>> where(String property);
+	}
+
+	interface ConditionBuilder<T> extends ChildBuilder<T> {
 
 		ConditionEntryBuilder<T> and(String propertyName);
 	}
 
-	interface ConditionEntryBuilder<T extends ChangeBuilder> {
+	interface ConditionEntryBuilder<T> {
 
 		ConditionBuilder<T> greaterThan(Object value);
 
