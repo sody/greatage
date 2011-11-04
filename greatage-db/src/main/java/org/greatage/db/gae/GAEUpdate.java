@@ -74,6 +74,7 @@ public class GAEUpdate extends GAEChange implements ChangeSetBuilder.UpdateBuild
 			builder.append(entry.getKey(), entry.getValue());
 		}
 		builder.append("query", query);
+		builder.append("setters", setters);
 		return builder.toString();
 	}
 }

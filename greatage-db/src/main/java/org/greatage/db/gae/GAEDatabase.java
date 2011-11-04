@@ -66,6 +66,7 @@ public class GAEDatabase implements Database {
 
 	void endChangeSet(final GAEChangeSet changeSet) {
 		if (changeSet.supports(options.context)) {
+			System.out.println("Executing ChangeSet: " + changeSet.toString());
 			final CompositeKey key = new CompositeKey(changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation());
 			if (ranChangeSets.contains(key)) {
 				throw new DatabaseException(String.format("ChangeSet '%s' has already been executed", changeSet));

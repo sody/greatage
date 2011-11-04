@@ -189,7 +189,13 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 						.insert("company").set("name", "company3").end()
 						.end();
 
-				begin("2")
+				begin("2").update("company").set("name", "company22").where("company").equal("company2").end();
+
+				begin("3").update("company").set("name", "company2")
+						.setFrom("country", "country").where("id").equal("1").end().end()
+						.where("company").equal("company22").end();
+
+				begin("4")
 						.delete("company").where("name").equal("company1").end().end()
 						.end();
 			}

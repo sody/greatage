@@ -20,6 +20,7 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 
 	private String comment;
 	private Set<String> context = new HashSet<String>();
+	private String checkSum;
 
 	private final List<GAEChange> changes = new ArrayList<GAEChange>();
 	private GAEChange lastChange;
@@ -48,7 +49,7 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 	}
 
 	String getCheckSum() {
-		return CheckSumUtils.compositeCheckSum(toString());
+		return checkSum;
 	}
 
 	boolean supports(final Set<String> runContext) {
@@ -79,6 +80,7 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 
 	public void end() {
 		ensureChangeClosed();
+		checkSum = CheckSumUtils.compositeCheckSum(toString());
 		database.endChangeSet(this);
 	}
 
