@@ -67,5 +67,7 @@ public interface Trick {
 		Condition equal(Object value);
 
 		Condition notEqual(Object value);
+
+		Condition in(Object... values);
 	}
 }

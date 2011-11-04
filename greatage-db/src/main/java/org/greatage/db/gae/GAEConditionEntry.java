@@ -3,6 +3,8 @@ package org.greatage.db.gae;
 import com.google.appengine.api.datastore.Query;
 import org.greatage.db.Trick;
 
+import java.util.Arrays;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
@@ -36,6 +38,10 @@ public class GAEConditionEntry implements Trick.ConditionEntry {
 
 	public Trick.Condition notEqual(final Object value) {
 		return createCondition(Query.FilterOperator.NOT_EQUAL, value);
+	}
+
+	public Trick.Condition in(final Object... values) {
+		return createCondition(Query.FilterOperator.IN, Arrays.asList(values));
 	}
 
 	private Trick.Condition createCondition(final Query.FilterOperator operator, final Object value) {
