@@ -6,7 +6,7 @@ import com.google.appengine.api.datastore.DatastoreService;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface DataStoreCallback<T> {
+public interface DataStoreCallback {
 
-	T doInDataStore(DatastoreService dataStore);
+	void doInDataStore(DatastoreService dataStore);
 }

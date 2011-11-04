@@ -1,35 +1,57 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import org.greatage.db.ChangeSetBuilder;
 import org.greatage.db.CheckSumUtils;
+import org.greatage.db.Database;
+import org.greatage.db.Trick;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object> {
-	private final GAEDatabase database;
-	private final String title;
-	private final String author;
-	private final String location;
+public class GAEChangeSet implements Database.ChangeSet, DataStoreCallback {
+	private final GAETrick trick = new GAETrick();
 
+	private final String title;
+	private String author = "<unknown>";
+	private String location = "<unknown>";
+
+	private final Set<String> context = new HashSet<String>();
 	private String comment;
-	private Set<String> context = new HashSet<String>();
 	private String checkSum;
 
-	private final List<GAEChange> changes = new ArrayList<GAEChange>();
-	private GAEChange lastChange;
-
-	GAEChangeSet(final GAEDatabase database, final String title, final String author, final String location) {
-		this.database = database;
+	GAEChangeSet(final String title) {
 		this.title = title;
+	}
+
+	public Database.ChangeSet author(final String author) {
 		this.author = author;
+		return this;
+	}
+
+	public Database.ChangeSet location(final String location) {
 		this.location = location;
+		return this;
+	}
+
+	public Database.ChangeSet comment(final String comment) {
+		this.comment = comment;
+		return this;
+	}
+
+	public Database.ChangeSet context(final String... context) {
+		Collections.addAll(this.context, context);
+		return this;
+	}
+
+	public Trick trick() {
+		return trick;
 	}
 
 	String getTitle() {
@@ -49,65 +71,14 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 	}
 
 	String getCheckSum() {
+		if (checkSum == null) {
+			checkSum = CheckSumUtils.compositeCheckSum(toString());
+		}
 		return checkSum;
 	}
 
 	boolean supports(final Set<String> runContext) {
 		return context.isEmpty() || context.containsAll(runContext);
-	}
-
-	public ChangeSetBuilder comment(final String comment) {
-		this.comment = comment;
-		return this;
-	}
-
-	public ChangeSetBuilder context(final String... context) {
-		Collections.addAll(this.context, context);
-		return this;
-	}
-
-	public InsertBuilder insert(final String entityName) {
-		return beginChange(new GAEInsert(this, entityName));
-	}
-
-	public UpdateBuilder update(final String entityName) {
-		return beginChange(new GAEUpdate(this, entityName));
-	}
-
-	public DeleteBuilder delete(final String entityName) {
-		return beginChange(new GAEDelete(this, entityName));
-	}
-
-	public void end() {
-		ensureChangeClosed();
-		checkSum = CheckSumUtils.compositeCheckSum(toString());
-		database.endChangeSet(this);
-	}
-
-	public Object doInDataStore(final DatastoreService dataStore) {
-		for (GAEChange change : changes) {
-			change.doInDataStore(dataStore);
-		}
-		return null;
-	}
-
-	<T extends GAEChange> T beginChange(final T change) {
-		ensureChangeClosed();
-		lastChange = change;
-		return change;
-	}
-
-	<T extends GAEChange> GAEChangeSet endChange(final T change) {
-		changes.add(change);
-		lastChange = null;
-		return this;
-	}
-
-	private void ensureChangeClosed() {
-		if (lastChange != null) {
-			lastChange.end();
-			lastChange = null;
-		}
 	}
 
 	@Override
@@ -120,9 +91,11 @@ public class GAEChangeSet implements ChangeSetBuilder, DataStoreCallback<Object>
 		if (!StringUtils.isEmpty(comment)) {
 			builder.append("comment", comment);
 		}
-		if (!changes.isEmpty()) {
-			builder.append("changes", changes);
-		}
+		builder.append(trick);
 		return builder.toString();
+	}
+
+	public void doInDataStore(final DatastoreService dataStore) {
+		trick.doInDataStore(dataStore);
 	}
 }

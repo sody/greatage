@@ -8,7 +8,6 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.greatage.db.ChangeLog;
-import org.greatage.db.ChangeSetBuilder;
 import org.greatage.db.Database;
 import org.greatage.util.CollectionUtils;
 
@@ -37,11 +36,11 @@ public class LiquibaseDatabase implements Database {
 		options().context(context).update(changeLog);
 	}
 
-	public UpdateOptions options() {
+	public Options options() {
 		return new LiquibaseUpdateOptions();
 	}
 
-	public ChangeSetBuilder changeSet(final String id, final String author, final String location) {
+	public ChangeSet changeSet(final String id) {
 		throw new UnsupportedOperationException("Liquibase implementation has its own change set structure");
 	}
 
@@ -94,22 +93,22 @@ public class LiquibaseDatabase implements Database {
 		return new JdbcConnection(dataSource.getConnection());
 	}
 
-	class LiquibaseUpdateOptions implements UpdateOptions {
+	class LiquibaseUpdateOptions implements Options {
 		private final Set<String> context = CollectionUtils.newSet();
 		private boolean dropFirst;
 		private boolean clearCheckSums;
 
-		public UpdateOptions dropFirst() {
+		public Options dropFirst() {
 			dropFirst = true;
 			return this;
 		}
 
-		public UpdateOptions clearCheckSums() {
+		public Options clearCheckSums() {
 			clearCheckSums = true;
 			return this;
 		}
 
-		public UpdateOptions context(final String... context) {
+		public Options context(final String... context) {
 			Collections.addAll(this.context, context);
 			return this;
 		}

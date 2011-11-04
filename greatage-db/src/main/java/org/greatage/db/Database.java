@@ -8,18 +8,36 @@ public interface Database {
 
 	void update(ChangeLog changeLog, String... context);
 
-	ChangeSetBuilder changeSet(String id, String author, String location);
+	Options options();
 
-	UpdateOptions options();
+	ChangeSet changeSet(String id);
 
-	public interface UpdateOptions {
+	interface Options {
 
-		UpdateOptions dropFirst();
+		Options dropFirst();
 
-		UpdateOptions clearCheckSums();
+		Options clearCheckSums();
 
-		UpdateOptions context(String... context);
+		Options context(String... context);
 
 		void update(ChangeLog changeLog);
+	}
+
+	interface ChangeSet {
+
+		ChangeSet author(String author);
+
+		ChangeSet location(String location);
+
+		ChangeSet comment(String comment);
+
+		ChangeSet context(String... context);
+
+		Trick trick();
+	}
+
+	interface Callback {
+
+		void doWithTricks(Trick trick);
 	}
 }

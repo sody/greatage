@@ -27,16 +27,16 @@ public abstract class ChangeLog {
 		this.location = location;
 	}
 
-	protected ChangeSetBuilder begin(final String title) {
+	protected Database.ChangeSet begin(final String title) {
 		return begin(title, DEFAULT_AUTHOR);
 	}
 
-	protected ChangeSetBuilder begin(final String title, final String author) {
+	protected Database.ChangeSet begin(final String title, final String author) {
 		assert database != null;
 		assert title != null;
 		assert author != null;
 
-		return database.changeSet(title, author, location);
+		return database.changeSet(title).author(author).location(location);
 	}
 
 	protected void add(final ChangeLog changeLog) {

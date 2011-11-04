@@ -2,6 +2,7 @@ package org.greatage.db.gae;
 
 import org.greatage.db.ChangeLog;
 import org.greatage.db.DatabaseException;
+import org.greatage.db.Trick;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -19,14 +20,14 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").end();
+								begin("1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").comment("some comment").end();
+								begin("1").comment("some comment");
 							}
 						}
 				},
@@ -35,14 +36,14 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").end();
+								begin("1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").context("test1").end();
+								begin("1").context("test1");
 							}
 						}
 				},
@@ -51,101 +52,14 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").context("test1").end();
+								begin("1").context("test1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").context("test1", "test2").end();
-							}
-						}
-				},
-
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("company").set("name", "company1").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("company").set("name", "company2").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("company").set("name", "company1").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("company").set("description", "company1").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("company").set("name", "company1").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("department").set("name", "company1").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1")
-										.insert("company").set("name", "company1").end()
-										.insert("company").set("name", "company2").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").insert("company").set("name", "company1").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1")
-										.insert("company").set("name", "company1").end()
-										.insert("company").set("name", "company2").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1")
-										.insert("company").set("name", "company2").end()
-										.insert("company").set("name", "company1").end();
+								begin("1").context("test1", "test2");
 							}
 						}
 				},
@@ -155,14 +69,16 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").end();
+								begin("1").trick()
+										.insert("company").set("name", "company1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company2").end();
+								begin("1").trick()
+										.insert("company").set("name", "company2");
 							}
 						}
 				},
@@ -171,14 +87,16 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").end();
+								begin("1").trick()
+										.insert("company").set("name", "company1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("description", "company1").end();
+								begin("1").trick()
+										.insert("company").set("description", "company1");
 							}
 						}
 				},
@@ -187,14 +105,16 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").end();
+								begin("1").trick()
+										.insert("company").set("name", "company1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("department").set("name", "company1").end();
+								begin("1").trick()
+										.insert("department").set("name", "company1");
 							}
 						}
 				},
@@ -203,14 +123,17 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").where("name").equal("company").end();
+								final Trick trick = begin("1").trick();
+								trick.insert("company").set("name", "company1");
+								trick.insert("company").set("name", "company2");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").end();
+								begin("1").trick()
+										.insert("company").set("name", "company1");
 							}
 						}
 				},
@@ -219,106 +142,18 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").where("name").equal("company").end();
+								final Trick trick = begin("1").trick();
+								trick.insert("company").set("name", "company1");
+								trick.insert("company").set("name", "company2");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").update("company").set("name", "company1").where("name").notEqual("company").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1").where("name").equal("company").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1").where("description").equal("company").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1")
-										.where("name").equal("company")
-										.and("description").equal("company").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1").where("name").equal("company").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1")
-										.where("name").equal("company")
-										.and("description").equal("company").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1")
-										.where("description").equal("company")
-										.and("name").equal("company").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1")
-										.update("company").set("name", "company1").end()
-										.update("company").set("name", "company2").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1").update("company").set("name", "company1").end();
-							}
-						}
-				},
-				{
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1")
-										.update("company").set("name", "company1").end()
-										.update("company").set("name", "company2").end();
-							}
-						},
-						new ChangeLog() {
-							@Override
-							protected void init() {
-								location("test");
-								begin("1")
-										.update("company").set("name", "company2").end()
-										.update("company").set("name", "company1").end();
+								final Trick trick = begin("1").trick();
+								trick.insert("company").set("name", "company2");
+								trick.insert("company").set("name", "company1");
 							}
 						}
 				},
@@ -328,14 +163,16 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").end();
+								begin("1").trick()
+										.update("company").set("name", "company1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("department").end();
+								begin("1").trick()
+										.update("company").set("name", "company2");
 							}
 						}
 				},
@@ -344,14 +181,16 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").where("name").equal("company").end();
+								begin("1").trick()
+										.update("company").set("name", "company1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").where("name").notEqual("company").end();
+								begin("1").trick()
+										.update("company").set("description", "company1");
 							}
 						}
 				},
@@ -360,14 +199,16 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").where("name").equal("company").end();
+								begin("1").trick()
+										.update("company").set("name", "company1");
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").where("description").equal("company").end();
+								begin("1").trick()
+										.update("department").set("name", "company1");
 							}
 						}
 				},
@@ -376,17 +217,17 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1")
-										.delete("company")
-										.where("name").equal("company")
-										.and("description").equal("company").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").equal("company"));
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").where("name").equal("company").end();
+								begin("1").trick()
+										.update("company").set("name", "company1");
 							}
 						}
 				},
@@ -395,20 +236,18 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1")
-										.delete("company")
-										.where("name").equal("company")
-										.and("description").equal("company").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").equal("company"));
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1")
-										.delete("company")
-										.where("description").equal("company")
-										.and("name").equal("company").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").notEqual("company"));
 							}
 						}
 				},
@@ -417,16 +256,18 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1")
-										.delete("company").end()
-										.delete("department").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").equal("company"));
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1").delete("company").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("description").equal("company"));
 							}
 						}
 				},
@@ -435,18 +276,224 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1")
-										.delete("company").end()
-										.delete("department").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").equal("company").and(
+												trick.condition("description").equal("company")
+										));
 							}
 						},
 						new ChangeLog() {
 							@Override
 							protected void init() {
 								location("test");
-								begin("1")
-										.delete("department").end()
-										.delete("company").end();
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").equal("company"));
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("name").equal("company").and(
+												trick.condition("description").equal("company")
+										));
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1")
+										.where(trick.condition("description").equal("company").and(
+												trick.condition("name").equal("company")
+										));
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1");
+								trick.update("company").set("name", "company2");
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").trick().update("company").set("name", "company1");
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company1");
+								trick.update("company").set("name", "company2");
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.update("company").set("name", "company2");
+								trick.update("company").set("name", "company1");
+							}
+						}
+				},
+
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").trick().delete("company");
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								begin("1").trick().delete("department");
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("name").equal("company"));
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("name").notEqual("company"));
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("name").equal("company"));
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("description").equal("company"));
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("name").equal("company").and(
+												trick.condition("description").equal("company")
+										));
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("name").equal("company"));
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("name").equal("company").and(
+												trick.condition("description").equal("company")
+										));
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company")
+										.where(trick.condition("description").equal("company").and(
+												trick.condition("name").equal("company")
+										));
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company");
+								trick.delete("department");
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company");
+							}
+						}
+				},
+				{
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("company");
+								trick.delete("department");
+							}
+						},
+						new ChangeLog() {
+							@Override
+							protected void init() {
+								location("test");
+								final Trick trick = begin("1").trick();
+								trick.delete("department");
+								trick.delete("company");
 							}
 						}
 				},

@@ -1,7 +1,15 @@
 package org.greatage.db.gae;
 
-import com.google.appengine.api.datastore.*;
-import org.greatage.db.*;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.datastore.Query;
+import org.greatage.db.ChangeLog;
+import org.greatage.db.CheckSumUtils;
+import org.greatage.db.Database;
+import org.greatage.db.DatabaseException;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.CompositeKey;
 
@@ -17,8 +25,8 @@ public class GAEDatabase implements Database {
 	private final Set<CompositeKey> ranChangeSets = CollectionUtils.newSet();
 	private final DatastoreService dataStore;
 
-	private GAEUpdateOptions options;
-	private ChangeSetBuilder lastChangeSet;
+	private GAEOptions options;
+	private GAEChangeSet lastChangeSet;
 
 	public GAEDatabase() {
 		this(DatastoreServiceFactory.getDatastoreService());
@@ -32,15 +40,15 @@ public class GAEDatabase implements Database {
 		options().context(context).update(changeLog);
 	}
 
-	public ChangeSetBuilder changeSet(final String title, final String author, final String location) {
-		return beginChangeSet(new GAEChangeSet(this, title, author, location));
+	public Options options() {
+		return new GAEOptions();
 	}
 
-	public UpdateOptions options() {
-		return new GAEUpdateOptions();
+	public ChangeSet changeSet(final String id) {
+		return begin(new GAEChangeSet(id));
 	}
 
-	private synchronized void update(final ChangeLog changeLog, final GAEUpdateOptions options) {
+	private synchronized void update(final ChangeLog changeLog, final GAEOptions options) {
 		this.options = options;
 		lock();
 		try {
@@ -50,23 +58,27 @@ public class GAEDatabase implements Database {
 
 			changeLog.execute(this);
 
-			ensureChangeSetClosed();
+			commit();
 		} finally {
 			this.options = null;
+			lastChangeSet = null;
 			ranChangeSets.clear();
 			unlock();
 		}
 	}
 
-	GAEChangeSet beginChangeSet(final GAEChangeSet changeSet) {
-		ensureChangeSetClosed();
+	GAEChangeSet begin(final GAEChangeSet changeSet) {
+		commit();
 		this.lastChangeSet = changeSet;
 		return changeSet;
 	}
 
-	void endChangeSet(final GAEChangeSet changeSet) {
+	void end(final GAEChangeSet changeSet) {
 		if (changeSet.supports(options.context)) {
+			final String checkSum = changeSet.getCheckSum();
 			System.out.println("Executing ChangeSet: " + changeSet.toString());
+			System.out.println("CheckSum : " + checkSum);
+
 			final CompositeKey key = new CompositeKey(changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation());
 			if (ranChangeSets.contains(key)) {
 				throw new DatabaseException(String.format("ChangeSet '%s' has already been executed", changeSet));
@@ -80,25 +92,24 @@ public class GAEDatabase implements Database {
 			final Entity logEntry = dataStore.prepare(query).asSingleEntity();
 			if (logEntry == null) {
 				changeSet.doInDataStore(dataStore);
-				log(changeSet);
+				log(changeSet, checkSum);
 			} else {
-				final String actual = changeSet.getCheckSum();
-				final String expected = (String) logEntry.getProperty(SystemTables.LOG.CHECKSUM);
-				if (options.clearCheckSums || !CheckSumUtils.isValid(expected)) {
-					logEntry.setProperty(SystemTables.LOG.CHECKSUM, actual);
+				final String expectedCheckSum = (String) logEntry.getProperty(SystemTables.LOG.CHECKSUM);
+				if (options.clearCheckSums || !CheckSumUtils.isValid(expectedCheckSum)) {
+					logEntry.setProperty(SystemTables.LOG.CHECKSUM, checkSum);
 					dataStore.put(logEntry);
-				} else if (!expected.equals(actual)) {
+				} else if (!expectedCheckSum.equals(checkSum)) {
 					throw new DatabaseException(String.format("CheckSum check failed for change set '%s'. Should be '%s' but was '%s'",
-							changeSet, expected, actual));
+							changeSet, expectedCheckSum, checkSum));
 				}
 			}
 			this.lastChangeSet = null;
 		}
 	}
 
-	private void ensureChangeSetClosed() {
+	private void commit() {
 		if (lastChangeSet != null) {
-			lastChangeSet.end();
+			end(lastChangeSet);
 			lastChangeSet = null;
 		}
 	}
@@ -135,13 +146,13 @@ public class GAEDatabase implements Database {
 		}
 	}
 
-	private void log(final GAEChangeSet changeSet) {
+	private void log(final GAEChangeSet changeSet, final String checkSum) {
 		final Entity logEntry = new Entity(SystemTables.LOG.NAME);
 		logEntry.setProperty(SystemTables.LOG.TITLE, changeSet.getTitle());
 		logEntry.setProperty(SystemTables.LOG.AUTHOR, changeSet.getAuthor());
 		logEntry.setProperty(SystemTables.LOG.LOCATION, changeSet.getLocation());
 		logEntry.setProperty(SystemTables.LOG.COMMENT, changeSet.getComment());
-		logEntry.setProperty(SystemTables.LOG.CHECKSUM, changeSet.getCheckSum());
+		logEntry.setProperty(SystemTables.LOG.CHECKSUM, checkSum);
 		logEntry.setProperty(SystemTables.LOG.EXECUTED_AT, new Date());
 		dataStore.put(logEntry);
 	}
@@ -157,22 +168,22 @@ public class GAEDatabase implements Database {
 		}
 	}
 
-	class GAEUpdateOptions implements UpdateOptions {
+	class GAEOptions implements Options {
 		private final Set<String> context = CollectionUtils.newSet();
 		private boolean dropFirst;
 		private boolean clearCheckSums;
 
-		public UpdateOptions dropFirst() {
+		public Options dropFirst() {
 			dropFirst = true;
 			return this;
 		}
 
-		public UpdateOptions clearCheckSums() {
+		public Options clearCheckSums() {
 			clearCheckSums = true;
 			return this;
 		}
 
-		public UpdateOptions context(final String... context) {
+		public Options context(final String... context) {
 			Collections.addAll(this.context, context);
 			return this;
 		}

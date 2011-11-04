@@ -1,21 +1,10 @@
 package org.greatage.db.gae;
 
-import org.greatage.db.ChangeSetBuilder;
-
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class GAEChange implements ChangeSetBuilder.ChangeBuilder, DataStoreCallback<Object> {
-	private final GAEChangeSet changeSet;
-
-	GAEChange(final GAEChangeSet changeSet) {
-		this.changeSet = changeSet;
-	}
-
-	public ChangeSetBuilder end() {
-		return changeSet.endChange(this);
-	}
+public abstract class GAEChange implements DataStoreCallback {
 
 	@Override
 	public String toString() {
