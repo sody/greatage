@@ -2,7 +2,6 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.Query;
 import org.greatage.db.ChangeLog;
-import org.greatage.db.Trick;
 import org.testng.annotations.Test;
 
 /**
@@ -13,17 +12,17 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 	private static final ChangeLog CHANGE_LOG = new ChangeLog() {
 		@Override
 		protected void init() {
-			begin("1").trick()
-					.insert("company").set("name", "company1");
+			begin("1");
+			insert("company").set("name", "company1");
 
-			begin("2").context("test1").trick()
-					.insert("company").set("name", "company2");
+			begin("2").context("test1");
+			insert("company").set("name", "company2");
 
-			begin("3").context("test2").trick()
-					.insert("company").set("name", "company3");
+			begin("3").context("test2");
+			insert("company").set("name", "company3");
 
-			begin("4").context("test1", "test2").trick()
-					.insert("company").set("name", "company4");
+			begin("4").context("test1", "test2");
+			insert("company").set("name", "company4");
 		}
 	};
 
@@ -84,7 +83,9 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("company").set("name", "company1");
+
+				begin("1");
+				insert("company").set("name", "company1");
 			}
 		});
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
@@ -93,7 +94,9 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("company").set("name", "company2");
+
+				begin("1");
+				insert("company").set("name", "company2");
 			}
 		});
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
@@ -107,9 +110,14 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("company").set("name", "company1");
-				begin("2").trick().insert("company").set("name", "company2");
-				begin("3").trick().insert("company").set("name", "company3");
+				begin("1");
+				insert("company").set("name", "company1");
+
+				begin("2");
+				insert("company").set("name", "company2");
+
+				begin("3");
+				insert("company").set("name", "company3");
 			}
 		});
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
@@ -120,7 +128,9 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("department").set("name", "dep1");
+
+				begin("1");
+				insert("department").set("name", "dep1");
 			}
 		});
 		assertNotExist(new Query("company"));
@@ -138,14 +148,14 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				final Trick trick = begin("1").trick();
 
+				begin("1");
 				for (int i = 0; i < count; i++) {
-					trick.insert("company").set("name", "company" + i);
-					trick.insert("department").set("name", "department" + i).set("company", i);
-					trick.insert("employee").set("name", "employee" + i + "1").set("department", i);
-					trick.insert("employee").set("name", "employee2" + i + "2").set("department", i);
-					trick.insert("employee").set("name", "employee3" + i + "3").set("department", i);
+					insert("company").set("name", "company" + i);
+					insert("department").set("name", "department" + i).set("company", i);
+					insert("employee").set("name", "employee" + i + "1").set("department", i);
+					insert("employee").set("name", "employee2" + i + "2").set("department", i);
+					insert("employee").set("name", "employee3" + i + "3").set("department", i);
 				}
 			}
 		});
@@ -158,7 +168,9 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("test");
+
+				begin("1");
+				insert("test");
 				//To change body of implemented methods use File | Settings | File Templates.
 			}
 		});

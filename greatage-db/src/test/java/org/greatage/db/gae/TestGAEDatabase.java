@@ -4,7 +4,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
 import org.greatage.db.ChangeLog;
 import org.greatage.db.DatabaseException;
-import org.greatage.db.Trick;
 import org.testng.annotations.Test;
 
 /**
@@ -21,16 +20,16 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		final ChangeLog changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				final Trick trick = begin("1").trick();
-				trick.insert("company").set("name", "company1");
-				trick.insert("company").set("name", "company2");
-				trick.insert("company").set("name", "company3");
+				begin("1");
+				insert("company").set("name", "company1");
+				insert("company").set("name", "company2");
+				insert("company").set("name", "company3");
 
-				begin("2", "author").trick()
-						.insert("department").set("name", "department1").set("company", 10l);
+				begin("2").author("author");
+				insert("department").set("name", "department1").set("company", 10l);
 
-				begin("3", "author").comment("test employee").trick()
-						.insert("employee").set("name", "employee1").set("department", 10l);
+				begin("3").comment("test employee");
+				insert("employee").set("name", "employee1").set("department", 10l);
 			}
 		};
 
@@ -85,16 +84,16 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		final ChangeLog changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				begin("1").trick()
-						.update("company").set("name", "company");
+				begin("1");
+				update("company").set("name", "company");
 
-				Trick trick = begin("2", "author").comment("test employee").trick();
-				trick.update("employee").set("name", "employee111")
-						.where(trick.condition("department").equal(100l));
+				begin("2").comment("test employee");
+				update("employee").set("name", "employee111")
+						.where(condition("department").equal(100l));
 
-				trick = begin("3", "author").trick();
-				trick.update("department").set("name", "department11")
-						.where(trick.condition("name").equal("department1"));
+				begin("3");
+				update("department").set("name", "department11")
+						.where(condition("name").equal("department1"));
 			}
 		};
 
@@ -145,16 +144,16 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		final ChangeLog changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				begin("1").trick()
-						.delete("company");
+				begin("1");
+				delete("company");
 
-				Trick trick = begin("2", "author").comment("test employee").trick();
-				trick.delete("employee")
-						.where(trick.condition("department").equal(100l));
+				begin("2").comment("test employee");
+				delete("employee")
+						.where(condition("department").equal(100l));
 
-				trick = begin("3", "author").trick();
-				trick.delete("department")
-						.where(trick.condition("name").equal("department2"));
+				begin("3");
+				delete("department")
+						.where(condition("name").equal("department2"));
 
 			}
 		};
@@ -179,23 +178,23 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		final ChangeLog changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				Trick trick = begin("1").trick();
-				trick.insert("company").set("name", "company1");
-				trick.insert("company").set("name", "company2");
-				trick.insert("company").set("name", "company3");
+				begin("1");
+				insert("company").set("name", "company1");
+				insert("company").set("name", "company2");
+				insert("company").set("name", "company3");
 
-				trick = begin("2").trick();
-				trick.update("company").set("name", "company22")
-						.where(trick.condition("company").equal("company2"));
+				begin("2");
+				update("company").set("name", "company22")
+						.where(condition("company").equal("company2"));
 
-				trick = begin("3").trick();
-				trick.update("company").set("name", "company2")
-						.set("country", trick.select("country").where(trick.condition("id").equal(1)))
-						.where(trick.condition("company").equal("company22"));
+				begin("3");
+				update("company").set("name", "company2")
+						.set("country", select("country").where(condition("id").equal(1)))
+						.where(condition("company").equal("company22"));
 
-				trick = begin("4").trick();
-				trick.delete("company")
-						.where(trick.condition("name").equal("company1"));
+				begin("4");
+				delete("company")
+						.where(condition("name").equal("company1"));
 			}
 		};
 
@@ -221,8 +220,11 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		ChangeLog changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				begin("1").trick().insert("company").set("name", "company1");
-				begin("2").trick().insert("company").set("name", "company2");
+				begin("1");
+				insert("company").set("name", "company1");
+
+				begin("2");
+				insert("company").set("name", "company2");
 			}
 		};
 
@@ -232,8 +234,11 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				begin("3").trick().insert("company").set("name", "company3");
-				begin("4").trick().insert("company").set("name", "company4");
+				begin("3");
+				insert("company").set("name", "company3");
+
+				begin("4");
+				insert("company").set("name", "company4");
 			}
 		};
 
@@ -246,11 +251,20 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		final ChangeLog changeLog = new ChangeLog() {
 			@Override
 			protected void init() {
-				begin("1").trick().insert("company").set("name", "company1");
-				begin("2").trick().insert("company").set("name", "company2");
-				begin("3").trick().insert("company").set("name", "company3");
-				begin("4").trick().insert("company").set("name", "company4");
-				begin("1").trick().insert("company").set("name", "company5");
+				begin("1");
+				insert("company").set("name", "company1");
+
+				begin("2");
+				insert("company").set("name", "company2");
+
+				begin("3");
+				insert("company").set("name", "company3");
+
+				begin("4");
+				insert("company").set("name", "company4");
+
+				begin("1");
+				insert("company").set("name", "company5");
 			}
 		};
 		database.update(changeLog);
@@ -262,7 +276,9 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("company").set("name", "company1");
+
+				begin("1");
+				insert("company").set("name", "company1");
 				database.update(this);
 			}
 		});
@@ -275,7 +291,9 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 				@Override
 				protected void init() {
 					location("test");
-					begin("1").trick().insert("company").set("name", "company1");
+
+					begin("1");
+					insert("company").set("name", "company1");
 					throw new IllegalStateException("Fail");
 				}
 			});
@@ -288,8 +306,12 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("1").trick().insert("company").set("name", "company1");
-				begin("2").trick().insert("company").set("name", "company2");
+
+				begin("1");
+				insert("company").set("name", "company1");
+
+				begin("2");
+				insert("company").set("name", "company2");
 			}
 		});
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
@@ -306,7 +328,8 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 			protected void init() {
 				location("test");
 				for (int i = 0; i < count; i++) {
-					begin("change_" + i).trick().insert("company").set("name", "company" + i);
+					begin("change_" + i);
+					insert("company").set("name", "company" + i);
 				}
 			}
 		});
@@ -317,7 +340,9 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("update").trick().update("company").set("name", "company");
+
+				begin("update");
+				update("company").set("name", "company");
 			}
 		});
 
@@ -327,7 +352,9 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 			@Override
 			protected void init() {
 				location("test");
-				begin("delete").trick().delete("company");
+
+				begin("delete");
+				delete("company");
 			}
 		});
 

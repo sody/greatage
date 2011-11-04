@@ -8,11 +8,14 @@ public abstract class ChangeLog {
 	private static final String DEFAULT_AUTHOR = "<unknown>";
 
 	private Database database;
+	private Database.ChangeSet changeSet;
 
+	private String author;
 	private String location;
 
 	protected ChangeLog() {
 		location = getClass().getName();
+		author = DEFAULT_AUTHOR;
 	}
 
 	public final void execute(final Database database) {
@@ -27,16 +30,38 @@ public abstract class ChangeLog {
 		this.location = location;
 	}
 
-	protected Database.ChangeSet begin(final String title) {
-		return begin(title, DEFAULT_AUTHOR);
-	}
-
-	protected Database.ChangeSet begin(final String title, final String author) {
-		assert database != null;
-		assert title != null;
+	protected void author(final String author) {
 		assert author != null;
 
-		return database.changeSet(title).author(author).location(location);
+		this.author = author;
+	}
+
+	protected Database.ChangeSet begin(final String title) {
+		assert database != null;
+		assert title != null;
+
+		changeSet = database.changeSet(title).author(author).location(location);
+		return changeSet;
+	}
+
+	protected Trick.Insert insert(final String entityName) {
+		return changeSet.trick().insert(entityName);
+	}
+
+	protected Trick.Update update(final String entityName) {
+		return changeSet.trick().update(entityName);
+	}
+
+	protected Trick.Delete delete(final String entityName) {
+		return changeSet.trick().delete(entityName);
+	}
+
+	protected Trick.Select select(final String entityName) {
+		return changeSet.trick().select(entityName);
+	}
+
+	protected Trick.ConditionEntry condition(final String propertyName) {
+		return changeSet.trick().condition(propertyName);
 	}
 
 	protected void add(final ChangeLog changeLog) {
