@@ -52,8 +52,14 @@ public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> ext
 	}
 
 	public enum Operator {
+		EQUAL,
+		NOT_EQUAL,
 		GREATER_THAN,
 		GREATER_OR_EQUAL,
-		EQUAL
+		LESS_THAN,
+		LESS_OR_EQUAL,
+		LIKE,
+		IN,
+		NOT_IN
 	}
 }

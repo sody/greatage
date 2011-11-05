@@ -15,8 +15,17 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+
 <dataset>
 	<company company_id="1" name="company1"/>
 	<company company_id="2" name="company2"/>
 	<company company_id="3" name="company3"/>
+
+	<department department_id="1" name="department1" company_id="1"/>
+	<department department_id="2" name="department2" company_id="1"/>
+	<department department_id="3" name="department3" company_id="1"/>
+
+	<department department_id="4" name="department4" company_id="3"/>
+	<department department_id="5" name="department5" company_id="3"/>
+
 </dataset>

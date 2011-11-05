@@ -27,6 +27,7 @@ import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -37,13 +38,12 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.example.criteria.Entities.company;
-import static org.example.criteria.Entities.department;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestHibernateRepository {
+public class TestHibernateRepository extends Assert {
 	private HibernateExecutor executor;
 	private EntityRepository repository;
 	private JdbcDatabaseTester tester;
@@ -86,11 +86,41 @@ public class TestHibernateRepository {
 	}
 
 	@Test
-	public void select_company() {
+	public void find_company() {
 		List<Company> companies = repository.find(Company.class, company.name.eq("company1"), Pagination.ALL);
-		companies = repository.find(Company.class, company.id.eq(2l), Pagination.ALL);
-		final List<Department> departments = repository.find(Department.class, department.name.eq("c1").and(department.company.name.eq("c1")), Pagination.ALL);
-		System.out.println();
+		assertNotNull(companies);
+		assertEquals(companies.size(), 1);
 
+		companies = repository.find(Company.class, company.name.eq("c1"), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 0);
+
+		companies = repository.find(Company.class, company.id.eq(3l), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 1);
+
+		companies = repository.find(Company.class, company.id.eq(8l), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 0);
+
+		companies = repository.find(Company.class, company.id.eq(2l).and(company.name.eq("company2")), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 1);
+
+		companies = repository.find(Company.class, company.id.eq(2l).and(company.name.eq("company3")), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 0);
+
+		companies = repository.find(Company.class, company.name.like("company%"), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 3);
+
+		companies = repository.find(Company.class, company.name.like("%company"), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 0);
+
+		companies = repository.find(Company.class, company.name.ne("company3"), Pagination.ALL);
+		assertNotNull(companies);
+		assertEquals(companies.size(), 2);
 	}
 }

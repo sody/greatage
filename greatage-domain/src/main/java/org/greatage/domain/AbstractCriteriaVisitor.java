@@ -17,26 +17,26 @@
 package org.greatage.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implements Criteria<PK, E> {
-	public Criteria<PK, E> and(final Criteria<PK, E> criteria) {
-		return new GroupCriteria<PK, E>(GroupCriteria.Operator.AND, group(criteria));
+public abstract class AbstractCriteriaVisitor<PK extends Serializable, E extends Entity<PK>> implements CriteriaVisitor<PK, E> {
+
+	public void visit(final Criteria<PK, E> criteria) {
+		if (criteria instanceof GroupCriteria) {
+			visitGroup((GroupCriteria<PK, E>) criteria);
+		} else if (criteria instanceof PropertyCriteria) {
+			visitProperty((PropertyCriteria<PK, E>) criteria);
+		} else if (criteria instanceof SortCriteria) {
+			visitSort((SortCriteria<PK, E>) criteria);
+		}
 	}
 
-	public Criteria<PK, E> or(final Criteria<PK, E> criteria) {
-		return new GroupCriteria<PK, E>(GroupCriteria.Operator.OR, group(criteria));
-	}
+	protected abstract void visitSort(SortCriteria<PK, E> criteria);
 
-	private List<Criteria<PK, E>> group(final Criteria<PK, E> criteria) {
-		final List<Criteria<PK, E>> group = new ArrayList<Criteria<PK, E>>();
-		group.add(this);
-		group.add(criteria);
-		return group;
-	}
+	protected abstract void visitProperty(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitGroup(GroupCriteria<PK, E> criteria);
 }

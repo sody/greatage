@@ -33,21 +33,21 @@ public class GroupCriteria<PK extends Serializable, E extends Entity<PK>> extend
 	}
 
 	@Override
-	public Criteria<PK, E> and(final Criteria<PK, E> criteria, final Criteria<PK, E>... other) {
+	public Criteria<PK, E> and(final Criteria<PK, E> criteria) {
 		if (operator == Operator.AND) {
 			children.add(criteria);
 			return this;
 		}
-		return super.and(criteria, other);
+		return super.and(criteria);
 	}
 
 	@Override
-	public Criteria<PK, E> or(final Criteria<PK, E> criteria, final Criteria<PK, E>... other) {
+	public Criteria<PK, E> or(final Criteria<PK, E> criteria) {
 		if (operator == Operator.OR) {
 			children.add(criteria);
 			return this;
 		}
-		return super.and(criteria, other);
+		return super.and(criteria);
 	}
 
 	public List<Criteria<PK, E>> getChildren() {
