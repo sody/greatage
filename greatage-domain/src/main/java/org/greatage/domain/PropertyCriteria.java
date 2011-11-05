@@ -17,20 +17,43 @@
 package org.greatage.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
+	private final String path;
+	private final String property;
+	private final Operator operator;
+	private final Object value;
 
-	int count();
+	public PropertyCriteria(final String path, final String property, final Operator operator, final Object value) {
+		this.path = path;
+		this.property = property;
+		this.operator = operator;
+		this.value = value;
+	}
 
-	List<E> list(Pagination pagination);
+	public String getPath() {
+		return path;
+	}
 
-	List<E> list();
+	public String getProperty() {
+		return property;
+	}
 
-	E unique();
+	public Operator getOperator() {
+		return operator;
+	}
 
+	public Object getValue() {
+		return value;
+	}
+
+	public enum Operator {
+		GREATER_THAN,
+		GREATER_OR_EQUAL,
+		EQUAL
+	}
 }

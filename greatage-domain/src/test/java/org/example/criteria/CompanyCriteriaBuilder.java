@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.example.criteria;
+
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityCriteriaBuilder;
+import org.greatage.domain.PropertyCriteriaBuilder;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityCriterion {
+public class CompanyCriteriaBuilder<E extends Entity<Long>> extends EntityCriteriaBuilder<Long, E> {
+	public final PropertyCriteriaBuilder<Long, E, Long> id = property("id");
+	public final PropertyCriteriaBuilder<Long, E, String> name = property("name");
 
-	EntityCriterion or(EntityCriterion... criterions);
-
-	EntityCriterion and(EntityCriterion... criterions);
-
-	EntityCriterion not();
-
+	CompanyCriteriaBuilder(final String path) {
+		super(path);
+	}
 }

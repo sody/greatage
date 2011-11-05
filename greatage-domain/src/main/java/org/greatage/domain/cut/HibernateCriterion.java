@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.hibernate;
+package org.greatage.domain.cut;
 
-import org.greatage.domain.EntityCriterion;
 import org.greatage.util.DescriptionBuilder;
 import org.hibernate.criterion.Conjunction;
 import org.hibernate.criterion.Criterion;

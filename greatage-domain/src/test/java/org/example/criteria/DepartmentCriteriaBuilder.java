@@ -14,32 +14,22 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.example.criteria;
+
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityCriteriaBuilder;
+import org.greatage.domain.PropertyCriteriaBuilder;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SortConstraintImpl implements SortConstraint {
-	private String property;
-	private boolean ascending;
-	private boolean ignoreCase;
+public class DepartmentCriteriaBuilder<E extends Entity<Long>> extends EntityCriteriaBuilder<Long, E> {
+	public final PropertyCriteriaBuilder<Long, E, Long> id = property("id");
+	public final PropertyCriteriaBuilder<Long, E, String> name = property("name");
+	public final CompanyCriteriaBuilder<E> company = new CompanyCriteriaBuilder<E>("company");
 
-	public SortConstraintImpl(final String property, final boolean ascending, final boolean ignoreCase) {
-		this.property = property;
-		this.ascending = ascending;
-		this.ignoreCase = ignoreCase;
-	}
-
-	public String getProperty() {
-		return property;
-	}
-
-	public boolean isIgnoreCase() {
-		return ignoreCase;
-	}
-
-	public boolean isAscending() {
-		return ascending;
+	DepartmentCriteriaBuilder(final String path) {
+		super(path);
 	}
 }

@@ -19,47 +19,10 @@ package org.greatage.domain;
 import java.io.Serializable;
 
 /**
- * This interface  represents pagination info for selections from repository and services.
- *
  * @author Ivan Khalopik
- * @see org.greatage.domain.PaginationBuilder
- * @see EntityService
- * @see EntityRepository
+ * @since 1.0
  */
-public interface Pagination extends Serializable {
+public interface CriteriaVisitor<PK extends Serializable, E extends Entity<PK>> {
 
-	/**
-	 * Gets selection start position.
-	 *
-	 * @return selection start position
-	 */
-	int getStart();
-
-	/**
-	 * Gets selection count.
-	 *
-	 * @return selection count
-	 */
-	int getCount();
-
-	Pagination ALL = new Pagination() {
-		public int getStart() {
-			return 0;
-		}
-
-		public int getCount() {
-			return -1;
-		}
-	};
-
-	Pagination UNIQUE = new Pagination() {
-		public int getStart() {
-			return 0;
-		}
-
-		public int getCount() {
-			return 1;
-		}
-	};
-
+	void visit(Criteria<PK, E> criteria);
 }

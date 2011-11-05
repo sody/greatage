@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.cut;
 
 import java.util.Collection;
 

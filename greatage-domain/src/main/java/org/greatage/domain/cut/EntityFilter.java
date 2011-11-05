@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.cut;
+
+import org.greatage.domain.Entity;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -22,11 +24,11 @@ import java.util.Collection;
 /**
  * This interface represents base filter for selection entities from repositories.
  *
+ * @param <PK> type of entities primary key
+ * @param <E>  type of entities
  * @author Ivan Khalopik
- * @param <PK>       type of entities primary key
- * @param <E>        type of entities
- * @see EntityRepository
- * @see EntityService
+ * @see org.greatage.domain.EntityRepository
+ * @see org.greatage.domain.EntityService
  * @since 1.0
  */
 public interface EntityFilter<PK extends Serializable, E extends Entity<PK>> {

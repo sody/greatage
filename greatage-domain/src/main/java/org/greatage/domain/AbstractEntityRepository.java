@@ -20,7 +20,6 @@ import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -37,22 +36,22 @@ public abstract class AbstractEntityRepository implements EntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	int count(final Class<E> entityClass) {
-		return count(createDefaultFilter(entityClass));
+		return count(entityClass, new AllCriteria<PK, E>());
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	List<E> find(final Class<E> entityClass, final Pagination pagination) {
-		return find(createDefaultFilter(entityClass), pagination);
+		return find(entityClass, new AllCriteria<PK, E>(), pagination);
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	List<PK> findKeys(final Class<E> entityClass, final Pagination pagination) {
-		return findKeys(createDefaultFilter(entityClass), pagination);
+		return findKeys(entityClass, new AllCriteria<PK, E>(), pagination);
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	List<Map<String, Object>> findValueObjects(final Class<E> entityClass, final Map<String, String> projection, final Pagination pagination) {
-		return findValueObjects(createDefaultFilter(entityClass), projection, pagination);
+		return findValueObjects(entityClass, new AllCriteria<PK, E>(), projection, pagination);
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
@@ -69,19 +68,6 @@ public abstract class AbstractEntityRepository implements EntityRepository {
 		}
 	}
 
-	/**
-	 * Creates default entity filter for entityClass.
-	 *
-	 * @param entityClass entity class
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
-	 * @return default entity filter for entityClass
-	 */
-	protected <PK extends Serializable, E extends Entity<PK>>
-	EntityFilter<PK, E> createDefaultFilter(final Class<E> entityClass) {
-		return new DefaultEntityFilter<PK, E>(entityClass);
-	}
-
 	@SuppressWarnings({"unchecked"})
 	protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
 		final Class implementation = entityMapping.get(entityClass);
@@ -94,29 +80,4 @@ public abstract class AbstractEntityRepository implements EntityRepository {
 		builder.append("mapping", entityMapping);
 		return builder.toString();
 	}
-
-	class DefaultEntityFilter<PK extends Serializable, E extends Entity<PK>> implements EntityFilter<PK, E> {
-		private final Class<E> entityClass;
-
-		public DefaultEntityFilter(final Class<E> entityClass) {
-			this.entityClass = entityClass;
-		}
-
-		public Class<E> getEntityClass() {
-			return entityClass;
-		}
-
-		public Collection<PK> getIncludeKeys() {
-			return null;
-		}
-
-		public Collection<PK> getExcludeKeys() {
-			return null;
-		}
-
-		public String getQueryString() {
-			return null;
-		}
-	}
-
 }

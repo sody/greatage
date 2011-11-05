@@ -20,7 +20,6 @@ package org.greatage.domain;
 import org.greatage.domain.annotations.Transactional;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * This interface represents service for working with specified class of entities.
@@ -31,7 +30,7 @@ import java.util.List;
  * @see org.greatage.domain.EntityRepository
  * @since 1.0
  */
-public interface EntityService<PK extends Serializable, E extends Entity<PK>, Q extends EntityQuery<PK, E, Q>> {
+public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 
 	/**
 	 * Gets entity class, service working with.
@@ -94,6 +93,6 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>, Q 
 	@Transactional
 	void delete(E entity);
 
-	Q query();
+	EntityQuery<PK, E> query(Criteria<PK, E>... criteria);
 
 }

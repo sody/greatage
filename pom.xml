@@ -79,7 +79,7 @@
 	<repositories>
 		<repository>
 			<id>jboss</id>
-			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+			<url>http://repository.jboss.org/nexus/content/groups/public-jboss</url>
 		</repository>
 	</repositories>
 
@@ -395,6 +395,18 @@
 				<version>${hibernate.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>hsqldb</groupId>
+				<artifactId>hsqldb</artifactId>
+				<version>1.8.0.10</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.dbunit</groupId>
+				<artifactId>dbunit</artifactId>
+				<version>2.4.7</version>
+			</dependency>
+
 			<!--front dependencies-->
 			<dependency>
 				<groupId>javax.servlet</groupId>
@@ -459,7 +471,7 @@
 		<!--domain dependencies-->
 		<persistence.api.version>1.0</persistence.api.version>
 		<jdo.api.version>2.3-eb</jdo.api.version>
-		<hibernate.version>4.0.0.CR1</hibernate.version>
+		<hibernate.version>4.0.0.CR5</hibernate.version>
 
 		<!--front dependencies-->
 		<servlet.api.version>2.5</servlet.api.version>

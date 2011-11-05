@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.example.criteria;
 
-import java.io.Serializable;
-import java.util.List;
+import org.example.Company;
+import org.example.Department;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
-
-	int count();
-
-	List<E> list(Pagination pagination);
-
-	List<E> list();
-
-	E unique();
-
+public class Entities {
+	public static final CompanyCriteriaBuilder<Company> company = new CompanyCriteriaBuilder<Company>(null);
+	public static final DepartmentCriteriaBuilder<Department> department = new DepartmentCriteriaBuilder<Department>(null);
 }

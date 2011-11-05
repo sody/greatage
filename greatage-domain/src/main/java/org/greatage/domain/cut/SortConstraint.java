@@ -14,27 +14,18 @@
  * limitations under the License.
  */
 
-package org.example;
-
-import org.greatage.domain.AbstractEntity;
+package org.greatage.domain.cut;
 
 /**
  * @author Ivan Khalopik
- * @version $Revision$ $Date$
+ * @since 1.0
  */
-public class Example extends AbstractEntity<Long> {
-	private Long id;
-	private String name;
+public interface SortConstraint {
 
-	public Long getId() {
-		return id;
-	}
+	String getProperty();
 
-	public String getName() {
-		return name;
-	}
+	boolean isIgnoreCase();
 
-	public void setName(String name) {
-		this.name = name;
-	}
+	boolean isAscending();
+
 }

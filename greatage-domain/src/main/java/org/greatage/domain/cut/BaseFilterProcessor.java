@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.cut;
 
+import org.greatage.domain.Entity;
+import org.greatage.domain.Pagination;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
@@ -38,11 +40,6 @@ public class BaseFilterProcessor implements EntityFilterProcessor {
 	protected void processPagination(final EntityCriteria criteria, final Pagination pagination) {
 		criteria.setPagination(pagination);
 
-		if (pagination.getSortConstraints() != null) {
-			for (SortConstraint definition : pagination.getSortConstraints()) {
-				processSort(criteria, definition);
-			}
-		}
 	}
 
 	protected void processSort(final EntityCriteria criteria, final SortConstraint sort) {

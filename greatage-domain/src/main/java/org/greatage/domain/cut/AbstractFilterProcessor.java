@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.cut;
 
+import org.greatage.domain.Entity;
+import org.greatage.domain.Pagination;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
@@ -24,10 +26,10 @@ import java.io.Serializable;
  * This class represents abstract implementation of {@link EntityFilterProcessor} that works only with filters of
  * specified class.
  *
+ * @param <PK> type of entities primary key
+ * @param <E>  type of entities
+ * @param <F>  type of entities filter
  * @author Ivan Khalopik
- * @param <PK>       type of entities primary key
- * @param <E>        type of entities
- * @param <F>        type of entities filter
  * @since 1.0
  */
 public abstract class AbstractFilterProcessor<PK extends Serializable, E extends Entity<PK>, F extends EntityFilter<PK, E>>

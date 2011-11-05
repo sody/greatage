@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.jdo;
+package org.greatage.domain.cut;
 
-import org.greatage.domain.EntityCriterion;
-import org.greatage.domain.EntityProperty;
 import org.greatage.util.DescriptionBuilder;
 
 import javax.jdo.Query;

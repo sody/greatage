@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.jdo;
 
+import org.greatage.domain.Criteria;
+import org.greatage.domain.CriteriaVisitor;
+import org.greatage.domain.Entity;
+
+import javax.jdo.Query;
 import java.io.Serializable;
 
 /**
- * This interface represents filter processing logic to inject it into hibernate criteria.
- *
  * @author Ivan Khalopik
- * @see EntityRepository
  * @since 1.0
  */
-public interface EntityFilterProcessor {
+public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>> implements CriteriaVisitor<PK, E> {
+	private final Query query;
 
-	/**
-	 * Executes some logic to inject into hibernate criteria parameters stored in filter.
-	 *
-	 * @param criteria   hibernate criteria
-	 * @param filter	 processed entity filter
-	 * @param pagination pagination
-	 * @param <PK>       type of entities primary key
-	 * @param <E>        type of entities
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void process(EntityCriteria criteria, EntityFilter<PK, E> filter, Pagination pagination);
+	public JDOCriteriaVisitor(final Query query) {
+		this.query = query;
+	}
 
+	public void visit(final Criteria<PK, E> criteria) {
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
 }

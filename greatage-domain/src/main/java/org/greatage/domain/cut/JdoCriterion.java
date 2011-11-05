@@ -14,54 +14,53 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.sql;
+package org.greatage.domain.cut;
 
-import org.greatage.domain.EntityCriterion;
 import org.greatage.util.DescriptionBuilder;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class SqlCriterion implements EntityCriterion {
-	private final String sql;
+public class JdoCriterion implements EntityCriterion {
+	private final String jql;
 
-	public SqlCriterion(final String property, final String operation, final String value) {
+	public JdoCriterion(final String property, final String operation, final String value) {
 		this(new StringBuilder(property).append(' ').append(operation).append(' ').append(value).toString());
 	}
 
-	public SqlCriterion(final String sql) {
-		this.sql = sql;
+	public JdoCriterion(final String jql) {
+		this.jql = jql;
 	}
 
-	public String getSql() {
-		return sql;
+	public String getJql() {
+		return jql;
 	}
 
-	public EntityCriterion or(final EntityCriterion... criterions) {
-		final StringBuilder sb = new StringBuilder(getSql());
+	public JdoCriterion or(final EntityCriterion... criterions) {
+		final StringBuilder sb = new StringBuilder(jql);
 		for (EntityCriterion criterion : criterions) {
-			sb.append(" or ");
-			sb.append(((SqlCriterion) criterion).getSql());
+			sb.append(" || ");
+			sb.append(((JdoCriterion) criterion).getJql());
 		}
-		return new SqlCriterion(sb.toString());
+		return new JdoCriterion(sb.toString());
 	}
 
 	public EntityCriterion and(final EntityCriterion... criterions) {
-		final StringBuilder sb = new StringBuilder(getSql());
+		final StringBuilder sb = new StringBuilder(jql);
 		for (EntityCriterion criterion : criterions) {
-			sb.append(" and ");
-			sb.append(((SqlCriterion) criterion).getSql());
+			sb.append(" && ");
+			sb.append(((JdoCriterion) criterion).getJql());
 		}
-		return new SqlCriterion(sb.toString());
+		return new JdoCriterion(sb.toString());
 	}
 
 	public EntityCriterion not() {
-		return new SqlCriterion("not " + getSql());
+		return new JdoCriterion("! " + jql);
 	}
 
 	@Override
 	public String toString() {
-		return new DescriptionBuilder(getClass()).append(sql).toString();
+		return new DescriptionBuilder(getClass()).append(jql).toString();
 	}
 }

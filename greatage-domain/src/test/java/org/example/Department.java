@@ -14,18 +14,48 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.example;
+
+import org.greatage.domain.AbstractEntity;
+
+import javax.persistence.*;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface SortConstraint {
+@Entity
+@Table(name = "department")
+public class Department extends AbstractEntity<Long> {
 
-	String getProperty();
+	@Id
+	@Column(name = "department_id")
+	private Long id;
 
-	boolean isIgnoreCase();
+	@Column(name = "name")
+	private String name;
 
-	boolean isAscending();
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company;
 
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(final Company company) {
+		this.company = company;
+	}
 }

@@ -16,21 +16,12 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.BaseFilterProcessor;
-import org.greatage.domain.CompositeFilterProcessor;
 import org.greatage.domain.DomainConstants;
-import org.greatage.domain.EntityFilterProcessor;
 import org.greatage.domain.EntityRepository;
-import org.greatage.inject.Configuration;
 import org.greatage.inject.MappedConfiguration;
 import org.greatage.inject.OrderedConfiguration;
 import org.greatage.inject.ServiceBinder;
-import org.greatage.inject.annotations.Bind;
-import org.greatage.inject.annotations.Build;
-import org.greatage.inject.annotations.Contribute;
-import org.greatage.inject.annotations.Named;
-import org.greatage.inject.annotations.Symbol;
-import org.greatage.inject.annotations.Threaded;
+import org.greatage.inject.annotations.*;
 import org.greatage.inject.services.ResourceLocator;
 import org.greatage.inject.services.SymbolProvider;
 import org.hibernate.SessionFactory;
@@ -51,7 +42,6 @@ public class HibernateModule {
 				.named("HibernateAnnotationConfiguration");
 		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class).named("HibernatePropertyConfiguration");
 		binder.bind(HibernateExecutor.class, HibernateExecutorImpl.class).withScope(Threaded.class);
-		binder.bind(EntityFilterProcessor.class, CompositeFilterProcessor.class);
 	}
 
 	@Contribute(SymbolProvider.class)
@@ -81,13 +71,7 @@ public class HibernateModule {
 
 	@Build
 	public EntityRepository buildHibernateRepository(final Map<Class, Class> aliases,
-													 final HibernateExecutor executor,
-													 final EntityFilterProcessor processor) {
-		return new HibernateRepository(aliases, executor, processor);
-	}
-
-	@Contribute(EntityFilterProcessor.class)
-	public void contributeHibernateFilterProcessor(final Configuration<EntityFilterProcessor> configuration) {
-		configuration.addInstance(BaseFilterProcessor.class);
+													 final HibernateExecutor executor) {
+		return new HibernateRepository(executor, aliases);
 	}
 }

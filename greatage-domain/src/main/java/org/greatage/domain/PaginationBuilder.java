@@ -16,11 +16,7 @@
 
 package org.greatage.domain;
 
-import org.greatage.util.CollectionUtils;
 import org.greatage.util.DescriptionBuilder;
-
-import java.util.Collection;
-import java.util.List;
 
 /**
  * This class represents featured implementation of {@link org.greatage.domain.Pagination} with programmatic build and
@@ -37,7 +33,6 @@ public class PaginationBuilder implements Pagination {
 	private int to;
 	private int page;
 	private int size = -1;
-	private final List<SortConstraint> sortDefinitions = CollectionUtils.newList();
 
 	private boolean modified = true;
 
@@ -49,11 +44,6 @@ public class PaginationBuilder implements Pagination {
 	public int getCount() {
 		lazyBuild();
 		return count;
-	}
-
-	public Collection<SortConstraint> getSortConstraints() {
-		lazyBuild();
-		return sortDefinitions;
 	}
 
 	/**
@@ -120,50 +110,6 @@ public class PaginationBuilder implements Pagination {
 			throw new IllegalStateException("to attribute already exists");
 		}
 		this.page = page;
-		return modify();
-	}
-
-	/**
-	 * Sets case sensitive ascending sort order by property.
-	 *
-	 * @param property sort property
-	 * @return this
-	 */
-	public PaginationBuilder sort(final String property) {
-		return sort(property, true);
-	}
-
-	/**
-	 * Sets case insensitive sort order by property, parameterized by ascending.
-	 *
-	 * @param property  sort property
-	 * @param ascending ascending sort order
-	 * @return this
-	 */
-	public PaginationBuilder sort(final String property, final boolean ascending) {
-		return sort(property, ascending, true);
-	}
-
-	/**
-	 * Sets sort order by property, parameterized by ascending and ignoreCase.
-	 *
-	 * @param property   sort property
-	 * @param ascending  ascending sort order
-	 * @param ignoreCase ignore case
-	 * @return this
-	 */
-	public PaginationBuilder sort(final String property, final boolean ascending, final boolean ignoreCase) {
-		sortDefinitions.add(new SortConstraintImpl(property, ascending, ignoreCase));
-		return modify();
-	}
-
-	/**
-	 * Clears sort orders.
-	 *
-	 * @return this
-	 */
-	public PaginationBuilder unsorted() {
-		sortDefinitions.clear();
 		return modify();
 	}
 

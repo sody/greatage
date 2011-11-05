@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.jdo;
+package org.greatage.domain.cut;
 
-import org.greatage.domain.*;
+import org.greatage.domain.Entity;
+import org.greatage.domain.Pagination;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
 
