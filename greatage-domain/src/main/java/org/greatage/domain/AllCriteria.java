@@ -39,4 +39,9 @@ public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implemen
 		group.add(criteria);
 		return group;
 	}
+
+	@Override
+	public String toString() {
+		return "1=1";
+	}
 }

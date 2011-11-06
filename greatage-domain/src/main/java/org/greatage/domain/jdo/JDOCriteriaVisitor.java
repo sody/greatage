@@ -16,9 +16,7 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.Criteria;
-import org.greatage.domain.CriteriaVisitor;
-import org.greatage.domain.Entity;
+import org.greatage.domain.*;
 
 import javax.jdo.Query;
 import java.io.Serializable;
@@ -27,14 +25,26 @@ import java.io.Serializable;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>> implements CriteriaVisitor<PK, E> {
+public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
+		extends AbstractCriteriaVisitor<PK, E> {
 	private final Query query;
 
 	public JDOCriteriaVisitor(final Query query) {
 		this.query = query;
 	}
 
-	public void visit(final Criteria<PK, E> criteria) {
+	@Override
+	protected void visitGroup(final GroupCriteria<PK, E> criteria) {
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	protected void visitProperty(final PropertyCriteria<PK, E> pkePropertyCriteria) {
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
+
+	@Override
+	protected void visitSort(final SortCriteria<PK, E> pkeSortCriteria) {
 		//To change body of implemented methods use File | Settings | File Templates.
 	}
 }

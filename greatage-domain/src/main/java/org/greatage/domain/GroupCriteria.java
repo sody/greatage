@@ -47,7 +47,7 @@ public class GroupCriteria<PK extends Serializable, E extends Entity<PK>> extend
 			children.add(criteria);
 			return this;
 		}
-		return super.and(criteria);
+		return super.or(criteria);
 	}
 
 	public List<Criteria<PK, E>> getChildren() {
@@ -56,6 +56,19 @@ public class GroupCriteria<PK extends Serializable, E extends Entity<PK>> extend
 
 	public Operator getOperator() {
 		return operator;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("(");
+		for (Criteria<PK, E> child : children) {
+			if (builder.length() > 1) {
+				builder.append(operator == Operator.AND ? " and " : " or ");
+			}
+			builder.append(child);
+		}
+		builder.append(")");
+		return builder.toString();
 	}
 
 	public enum Operator {

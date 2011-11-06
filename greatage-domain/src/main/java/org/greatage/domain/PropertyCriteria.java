@@ -51,6 +51,46 @@ public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> ext
 		return value;
 	}
 
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		if (path != null) {
+			builder.append(path).append('.');
+		}
+		builder.append(property);
+		switch (operator) {
+			case EQUAL:
+				builder.append(" = ");
+				break;
+			case NOT_EQUAL:
+				builder.append(" <> ");
+				break;
+			case GREATER_THAN:
+				builder.append(" > ");
+				break;
+			case GREATER_OR_EQUAL:
+				builder.append(" >= ");
+				break;
+			case LESS_THAN:
+				builder.append(" < ");
+				break;
+			case LESS_OR_EQUAL:
+				builder.append(" <= ");
+				break;
+			case LIKE:
+				builder.append(" like ");
+				break;
+			case IN:
+				builder.append(" in ");
+				break;
+			case NOT_IN:
+				builder.append(" not in ");
+				break;
+		}
+		builder.append(value);
+		return builder.toString();
+	}
+
 	public enum Operator {
 		EQUAL,
 		NOT_EQUAL,

@@ -50,4 +50,18 @@ public class SortCriteria<PK extends Serializable, E extends Entity<PK>> extends
 	public boolean isIgnoreCase() {
 		return ignoreCase;
 	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder("order by ");
+		if (path != null) {
+			builder.append(path).append('.');
+		}
+		builder.append(property);
+		builder.append(ascending ? " asc" : " desc");
+		if (ignoreCase) {
+			builder.append("(ic)");
+		}
+		return builder.toString();
+	}
 }

@@ -22,6 +22,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author Ivan Khalopik
@@ -36,6 +37,9 @@ public class Company extends AbstractEntity<Long> {
 
 	@Column(name = "name")
 	private String name;
+
+	@Column(name = "registered_at")
+	private Date registeredAt;
 
 	public Long getId() {
 		return id;
