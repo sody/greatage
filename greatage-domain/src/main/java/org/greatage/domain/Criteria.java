@@ -27,4 +27,6 @@ public interface Criteria<PK extends Serializable, E extends Entity<PK>> {
 	Criteria<PK, E> and(Criteria<PK, E> criteria);
 
 	Criteria<PK, E> or(Criteria<PK, E> criteria);
+
+	Criteria<PK, E> not();
 }

@@ -25,8 +25,8 @@ import java.io.Serializable;
 public abstract class AbstractCriteriaVisitor<PK extends Serializable, E extends Entity<PK>> implements CriteriaVisitor<PK, E> {
 
 	public void visit(final Criteria<PK, E> criteria) {
-		if (criteria instanceof GroupCriteria) {
-			visitGroup((GroupCriteria<PK, E>) criteria);
+		if (criteria instanceof JunctionCriteria) {
+			visitJunction((JunctionCriteria<PK, E>) criteria);
 		} else if (criteria instanceof PropertyCriteria) {
 			visitProperty((PropertyCriteria<PK, E>) criteria);
 		} else if (criteria instanceof SortCriteria) {
@@ -34,9 +34,9 @@ public abstract class AbstractCriteriaVisitor<PK extends Serializable, E extends
 		}
 	}
 
-	protected abstract void visitSort(SortCriteria<PK, E> criteria);
+	protected abstract void visitJunction(JunctionCriteria<PK, E> criteria);
 
 	protected abstract void visitProperty(PropertyCriteria<PK, E> criteria);
 
-	protected abstract void visitGroup(GroupCriteria<PK, E> criteria);
+	protected abstract void visitSort(SortCriteria<PK, E> criteria);
 }

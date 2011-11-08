@@ -111,7 +111,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>>
 		if (criteria.length == 1) {
 			return criteria[0];
 		}
-		return new GroupCriteria<PK, E>(GroupCriteria.Operator.AND, Arrays.asList(criteria));
+		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, Arrays.asList(criteria));
 	}
 
 	@Override

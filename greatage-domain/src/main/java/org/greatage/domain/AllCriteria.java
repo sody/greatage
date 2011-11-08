@@ -25,15 +25,26 @@ import java.util.List;
  * @since 1.0
  */
 public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implements Criteria<PK, E> {
+	private boolean negative;
+
 	public Criteria<PK, E> and(final Criteria<PK, E> criteria) {
-		return new GroupCriteria<PK, E>(GroupCriteria.Operator.AND, group(criteria));
+		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, junction(criteria));
 	}
 
 	public Criteria<PK, E> or(final Criteria<PK, E> criteria) {
-		return new GroupCriteria<PK, E>(GroupCriteria.Operator.OR, group(criteria));
+		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR, junction(criteria));
 	}
 
-	private List<Criteria<PK, E>> group(final Criteria<PK, E> criteria) {
+	public Criteria<PK, E> not() {
+		negative = !negative;
+		return this;
+	}
+
+	public boolean isNegative() {
+		return negative;
+	}
+
+	private List<Criteria<PK, E>> junction(final Criteria<PK, E> criteria) {
 		final List<Criteria<PK, E>> group = new ArrayList<Criteria<PK, E>>();
 		group.add(this);
 		group.add(criteria);
@@ -42,6 +53,6 @@ public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implemen
 
 	@Override
 	public String toString() {
-		return "1=1";
+		return negative ? "1=2" : "1=1";
 	}
 }

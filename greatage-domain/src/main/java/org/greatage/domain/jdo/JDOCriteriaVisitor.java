@@ -16,7 +16,11 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.*;
+import org.greatage.domain.AbstractCriteriaVisitor;
+import org.greatage.domain.Entity;
+import org.greatage.domain.JunctionCriteria;
+import org.greatage.domain.PropertyCriteria;
+import org.greatage.domain.SortCriteria;
 
 import javax.jdo.Query;
 import java.io.Serializable;
@@ -34,7 +38,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	protected void visitGroup(final GroupCriteria<PK, E> criteria) {
+	protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
 		//To change body of implemented methods use File | Settings | File Templates.
 	}
 

@@ -23,11 +23,11 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GroupCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
+public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
 	private final List<Criteria<PK, E>> children;
 	private final Operator operator;
 
-	public GroupCriteria(final Operator operator, final List<Criteria<PK, E>> children) {
+	public JunctionCriteria(final Operator operator, final List<Criteria<PK, E>> children) {
 		this.operator = operator;
 		this.children = children;
 	}

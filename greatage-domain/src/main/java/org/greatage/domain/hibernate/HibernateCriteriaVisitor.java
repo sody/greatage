@@ -16,9 +16,18 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.*;
+import org.greatage.domain.AbstractCriteriaVisitor;
+import org.greatage.domain.Criteria;
+import org.greatage.domain.Entity;
+import org.greatage.domain.JunctionCriteria;
+import org.greatage.domain.PropertyCriteria;
+import org.greatage.domain.SortCriteria;
 import org.greatage.util.StringUtils;
-import org.hibernate.criterion.*;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Property;
+import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,6 +41,7 @@ import java.util.Map;
  */
 public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		extends AbstractCriteriaVisitor<PK, E> {
+
 	private final Map<String, org.hibernate.Criteria> children = new HashMap<String, org.hibernate.Criteria>();
 	private final List<String> names = new ArrayList<String>();
 
@@ -43,19 +53,9 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		this.root = root;
 	}
 
-	public void visit(final Criteria<PK, E> criteria) {
-		if (criteria instanceof GroupCriteria) {
-			visitGroup((GroupCriteria<PK, E>) criteria);
-		} else if (criteria instanceof PropertyCriteria) {
-			visitProperty((PropertyCriteria<PK, E>) criteria);
-		} else if (criteria instanceof SortCriteria) {
-			visitSort((SortCriteria<PK, E>) criteria);
-		}
-	}
-
-	protected void visitGroup(final GroupCriteria<PK, E> criteria) {
+	protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
 		final Junction parent = this.junction;
-		junction = criteria.getOperator() == GroupCriteria.Operator.AND ?
+		junction = criteria.getOperator() == JunctionCriteria.Operator.AND ?
 				Restrictions.conjunction() :
 				Restrictions.disjunction();
 
@@ -66,7 +66,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		final Junction temp = junction;
 		junction = parent;
 
-		addCriterion(temp);
+		addCriterion(temp, criteria.isNegative());
 	}
 
 	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
@@ -74,35 +74,35 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		switch (criteria.getOperator()) {
 			case EQUAL:
 				if (criteria.getValue() == null) {
-					addCriterion(property.isNull());
+					addCriterion(property.isNull(), criteria.isNegative());
 				} else {
-					addCriterion(property.eq(criteria.getValue()));
+					addCriterion(property.eq(criteria.getValue()), criteria.isNegative());
 				}
 				break;
 			case NOT_EQUAL:
 				if (criteria.getValue() == null) {
-					addCriterion(property.isNotNull());
+					addCriterion(property.isNotNull(), criteria.isNegative());
 				} else {
-					addCriterion(property.ne(criteria.getValue()));
+					addCriterion(property.ne(criteria.getValue()), criteria.isNegative());
 				}
 				break;
 			case GREATER_THAN:
-				addCriterion(property.gt(criteria.getValue()));
+				addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
 				break;
 			case GREATER_OR_EQUAL:
-				addCriterion(property.ge(criteria.getValue()));
+				addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
 				break;
 			case LESS_THAN:
-				addCriterion(property.lt(criteria.getValue()));
+				addCriterion(property.lt(criteria.getValue()), criteria.isNegative());
 				break;
 			case LESS_OR_EQUAL:
-				addCriterion(property.le(criteria.getValue()));
+				addCriterion(property.le(criteria.getValue()), criteria.isNegative());
 				break;
 			case LIKE:
-				addCriterion(property.like(criteria.getValue()));
+				addCriterion(property.like(criteria.getValue()), criteria.isNegative());
 				break;
 			case IN:
-				addCriterion(property.in((List) criteria.getValue()));
+				addCriterion(property.in((List) criteria.getValue()), criteria.isNegative());
 				break;
 		}
 	}
@@ -118,11 +118,11 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		getCriteria(criteria.getPath()).addOrder(order);
 	}
 
-	private void addCriterion(final Criterion criterion) {
+	private void addCriterion(final Criterion criterion, final boolean negative) {
 		if (junction != null) {
-			junction.add(criterion);
+			junction.add(negative ? Restrictions.not(criterion) : criterion);
 		} else {
-			root.add(criterion);
+			root.add(negative ? Restrictions.not(criterion) : criterion);
 		}
 	}
 
