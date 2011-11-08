@@ -146,6 +146,13 @@ public class TestHibernateRepository extends Assert {
 				{Company.class, company.name.like("%pany8%"), 0},
 				{Company.class, company.name.like("%com%any%"), 3},
 
+				{Company.class, company.id.in(1l, 3l), 2},
+				{Company.class, company.id.in(1l, 8l), 1},
+				{Company.class, company.id.in(7l, 8l), 0},
+				{Company.class, company.name.in("company2", "company3"), 2},
+				{Company.class, company.name.in("company8", "company3"), 1},
+				{Company.class, company.name.in("c1"), 0},
+
 				{Company.class, company.name.eq("company1").and(company.id.eq(1l)), 1},
 				{Company.class, company.name.eq("company1").and(company.id.eq(2l)), 0},
 				{Company.class, company.name.eq("company1").or(company.id.eq(1l)), 1},

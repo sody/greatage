@@ -22,14 +22,14 @@ import java.io.Serializable;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class EntityCriteriaBuilder<PK extends Serializable, E extends Entity<PK>> {
+public class EntityMapper<PK extends Serializable, E extends Entity<PK>> {
 	private final String path;
 
-	public EntityCriteriaBuilder(final String path) {
+	public EntityMapper(final String path) {
 		this.path = path;
 	}
 
-	protected <V> PropertyCriteriaBuilder<PK, E, V> property(final String property) {
-		return new PropertyCriteriaBuilder<PK, E, V>(path, property);
+	protected <V> PropertyMapper<PK, E, V> property(final String property) {
+		return new PropertyMapper<PK, E, V>(path, property);
 	}
 }

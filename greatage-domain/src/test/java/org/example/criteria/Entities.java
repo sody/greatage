@@ -24,6 +24,6 @@ import org.example.Department;
  * @since 1.0
  */
 public class Entities {
-	public static final CompanyCriteriaBuilder<Company> company = new CompanyCriteriaBuilder<Company>(null);
-	public static final DepartmentCriteriaBuilder<Department> department = new DepartmentCriteriaBuilder<Department>(null);
+	public static final CompanyMapper<Company> company = new CompanyMapper<Company>(null);
+	public static final DepartmentMapper<Department> department = new DepartmentMapper<Department>(null);
 }

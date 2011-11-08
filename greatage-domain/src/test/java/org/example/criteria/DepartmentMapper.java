@@ -17,18 +17,19 @@
 package org.example.criteria;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.EntityCriteriaBuilder;
-import org.greatage.domain.PropertyCriteriaBuilder;
+import org.greatage.domain.EntityMapper;
+import org.greatage.domain.PropertyMapper;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class CompanyCriteriaBuilder<E extends Entity<Long>> extends EntityCriteriaBuilder<Long, E> {
-	public final PropertyCriteriaBuilder<Long, E, Long> id = property("id");
-	public final PropertyCriteriaBuilder<Long, E, String> name = property("name");
+public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
+	public final PropertyMapper<Long, E, Long> id = property("id");
+	public final PropertyMapper<Long, E, String> name = property("name");
+	public final CompanyMapper<E> company = new CompanyMapper<E>("company");
 
-	CompanyCriteriaBuilder(final String path) {
+	DepartmentMapper(final String path) {
 		super(path);
 	}
 }

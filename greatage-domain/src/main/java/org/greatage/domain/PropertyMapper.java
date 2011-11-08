@@ -17,16 +17,20 @@
 package org.greatage.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PropertyCriteriaBuilder<PK extends Serializable, E extends Entity<PK>, V> {
+public class PropertyMapper<PK extends Serializable, E extends Entity<PK>, V> {
 	private final String path;
 	private final String property;
 
-	public PropertyCriteriaBuilder(final String path, final String property) {
+	public PropertyMapper(final String path, final String property) {
 		this.property = property;
 		this.path = path;
 	}
@@ -89,6 +93,16 @@ public class PropertyCriteriaBuilder<PK extends Serializable, E extends Entity<P
 
 	public PropertyCriteria<PK, E> like(final V value) {
 		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.LIKE, value);
+	}
+
+	public PropertyCriteria<PK, E> in(final V... values) {
+		final List<V> value = Arrays.asList(values);
+		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.IN, value);
+	}
+
+	public PropertyCriteria<PK, E> in(final Collection<V> values) {
+		final List<V> value = new ArrayList<V>(values);
+		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.IN, value);
 	}
 
 	public SortCriteria<PK, E> asc() {

@@ -83,9 +83,6 @@ public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> ext
 			case IN:
 				builder.append(" in ");
 				break;
-			case NOT_IN:
-				builder.append(" not in ");
-				break;
 		}
 		builder.append(value);
 		return builder.toString();
@@ -99,7 +96,6 @@ public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> ext
 		LESS_THAN,
 		LESS_OR_EQUAL,
 		LIKE,
-		IN,
-		NOT_IN
+		IN
 	}
 }
