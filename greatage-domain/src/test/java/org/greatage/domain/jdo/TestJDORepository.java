@@ -145,6 +145,7 @@ public class TestJDORepository extends Assert {
 				{Company.class, company.name.like("%pany8%"), 0},
 				{Company.class, company.name.like("%pany8%"), 0},
 				{Company.class, company.name.like("%com%any%"), 3},
+				*/
 
 				{Company.class, company.id.in(1l, 3l), 2},
 				{Company.class, company.id.in(1l, 8l), 1},
@@ -157,7 +158,9 @@ public class TestJDORepository extends Assert {
 				{Company.class, company.name.eq("company1").and(company.id.eq(2l)), 0},
 				{Company.class, company.name.eq("company1").or(company.id.eq(1l)), 1},
 				{Company.class, company.name.eq("company1").or(company.id.eq(2l)), 2},
+				/*
 				{Company.class, company.name.like("company%").or(company.name.isNull()), 4},
+				*/
 
 				{Company.class, company.name.eq("company2").not(), 2},
 				{Company.class, company.name.eq("company2").not().not(), 1},
@@ -166,6 +169,7 @@ public class TestJDORepository extends Assert {
 				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).not(), 2},
 				{Company.class, company.id.eq(1l).or(company.id.eq(2l)).not(), 2},
 
+				/*
 				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).and(company.name.like("company%")), 1},
 				{Company.class, company.name.eq("company1").and(company.id.eq(2l)).and(company.name.isNull()), 0},
 				{Company.class, company.name.eq("company1").or(company.id.eq(1l)).or(company.name.like("company%")), 3},

@@ -81,6 +81,22 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	@Override
 	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
 		final StringBuilder criterion = new StringBuilder();
+
+		// in expression workaround
+		if (criteria.getOperator() == PropertyCriteria.Operator.IN) {
+			final String parameterName = allocateName(criteria.getProperty());
+			criterion.append(":").append(parameterName).append(".contains(");
+			if (criteria.getPath() != null) {
+				criterion.append(criteria.getPath()).append('.');
+			}
+			criterion.append(criteria.getProperty());
+			criterion.append(")");
+
+			addCriterion(criterion.toString(), criteria.isNegative());
+			parameters.put(parameterName, criteria.getValue());
+			return;
+		}
+
 		if (criteria.getPath() != null) {
 			criterion.append(criteria.getPath()).append('.');
 		}
@@ -106,8 +122,6 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 				break;
 			case LIKE:
 				break;
-			case IN:
-				break;
 		}
 		final String parameterName = allocateName(criteria.getProperty());
 		criterion.append(":").append(parameterName);
@@ -121,7 +135,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	private void addCriterion(final String criterion, final boolean negative) {
-		junction.add(negative ? "!" + criterion : criterion);
+		junction.add(negative ? "!(" + criterion + ")" : criterion);
 	}
 
 	private String getJunction(final List<String> children, final String function) {
