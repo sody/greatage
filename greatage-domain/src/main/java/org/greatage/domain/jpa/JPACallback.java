@@ -16,15 +16,14 @@
 
 package org.greatage.domain.jpa;
 
-import org.greatage.domain.TransactionExecutor;
+import javax.persistence.EntityManager;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface JPAExecutor1 extends TransactionExecutor {
+public interface JPACallback<T> {
 
-	<T> T execute(JPACallback1<T> callback);
+	T doInJpa(EntityManager em) throws Throwable;
 
-	void clear();
 }

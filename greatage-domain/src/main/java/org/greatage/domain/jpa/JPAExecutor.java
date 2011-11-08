@@ -16,26 +16,15 @@
 
 package org.greatage.domain.jpa;
 
-import org.greatage.domain.Transaction;
-
-import javax.persistence.EntityTransaction;
+import org.greatage.domain.TransactionExecutor;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JPATransaction1 implements Transaction {
-	private final EntityTransaction transaction;
+public interface JPAExecutor extends TransactionExecutor {
 
-	public JPATransaction1(final EntityTransaction transaction) {
-		this.transaction = transaction;
-	}
+	<T> T execute(JPACallback<T> callback);
 
-	public void commit() {
-		transaction.commit();
-	}
-
-	public void rollback() {
-		transaction.rollback();
-	}
+	void clear();
 }
