@@ -48,15 +48,15 @@ import static org.example.hibernate.Entities.company;
  * @since 1.0
  */
 public class TestJDORepository extends Assert {
-	private JDOExecutor1 executor;
+	private JDOExecutor executor;
 	private EntityRepository repository;
 	private JdbcDatabaseTester tester;
 
 	@BeforeTest
 	public void setup_repository() {
 		final PersistenceManagerFactory factory = JDOHelper.getPersistenceManagerFactory("jdo.properties");
-		executor = new JDOExecutor1Impl(factory);
-		repository = new JDORepository1(executor, new HashMap<Class, Class>());
+		executor = new JDOExecutorImpl(factory);
+		repository = new JDORepository(executor, new HashMap<Class, Class>());
 
 		repository.find(Company.class, Pagination.ALL);
 		repository.find(Department.class, Pagination.ALL);

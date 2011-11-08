@@ -34,12 +34,12 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JDORepository1 extends AbstractEntityRepository {
+public class JDORepository extends AbstractEntityRepository {
 	private static final String COUNT_RESULT = "count(id)";
 
-	private final JDOExecutor1 executor;
+	private final JDOExecutor executor;
 
-	public JDORepository1(final JDOExecutor1 executor, final Map<Class, Class> entityMapping) {
+	public JDORepository(final JDOExecutor executor, final Map<Class, Class> entityMapping) {
 		super(entityMapping);
 		this.executor = executor;
 	}
@@ -90,7 +90,7 @@ public class JDORepository1 extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new JDOCallback1<E>() {
+		return executor.execute(new JDOCallback<E>() {
 			public E doInJdo(final PersistenceManager pm) throws Throwable {
 				try {
 					return pm.getObjectById(getImplementation(entityClass), pk);
@@ -104,7 +104,7 @@ public class JDORepository1 extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new JDOCallback1<Object>() {
+		executor.execute(new JDOCallback<Object>() {
 			public Object doInJdo(final PersistenceManager pm) throws Throwable {
 				pm.makePersistent(entity);
 				return null;
@@ -114,7 +114,7 @@ public class JDORepository1 extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new JDOCallback1<Object>() {
+		executor.execute(new JDOCallback<Object>() {
 			public Object doInJdo(final PersistenceManager pm) throws Throwable {
 				pm.refresh(entity);
 				return null;
@@ -124,7 +124,7 @@ public class JDORepository1 extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new JDOCallback1<Object>() {
+		executor.execute(new JDOCallback<Object>() {
 			public Object doInJdo(final PersistenceManager pm) throws Throwable {
 				pm.deletePersistent(entity);
 				return null;
@@ -134,7 +134,7 @@ public class JDORepository1 extends AbstractEntityRepository {
 
 	private <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T> callback) {
-		return executor.execute(new JDOCallback1<T>() {
+		return executor.execute(new JDOCallback<T>() {
 			public T doInJdo(final PersistenceManager pm) throws JDOException {
 				final Extent<? extends Entity> extent = pm.getExtent(getImplementation(entityClass), true);
 				final Query query = pm.newQuery(extent);

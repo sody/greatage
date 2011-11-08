@@ -16,16 +16,14 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.TransactionExecutor;
+import javax.jdo.PersistenceManager;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface JDOExecutor1 extends TransactionExecutor {
+public interface JDOCallback<T> {
 
-	<T> T execute(JDOCallback1<T> callback);
-
-	void clear();
+	T doInJdo(PersistenceManager pm) throws Throwable;
 
 }

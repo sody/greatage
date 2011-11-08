@@ -22,10 +22,10 @@ import org.greatage.domain.Transaction;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JDOTransaction1 implements Transaction {
+public class JDOTransaction implements Transaction {
 	private final javax.jdo.Transaction transaction;
 
-	public JDOTransaction1(final javax.jdo.Transaction transaction) {
+	public JDOTransaction(final javax.jdo.Transaction transaction) {
 		this.transaction = transaction;
 	}
 
