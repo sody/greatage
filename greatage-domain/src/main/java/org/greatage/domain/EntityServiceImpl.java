@@ -18,25 +18,23 @@ package org.greatage.domain;
 
 import org.greatage.domain.annotations.Transactional;
 import org.greatage.util.DescriptionBuilder;
-import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * This class represents default implementation of {@link EntityService}.
  *
  * @param <PK> type of entities primary key
  * @param <E>  type of entities
- * @param <Q>  type of entities query
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q extends EntityQueryImpl<PK, E, Q>>
-		implements EntityService<PK, E, Q> {
+public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>>
+		implements EntityService<PK, E> {
 
 	private final EntityRepository repository;
 	private final Class<E> entityClass;
-	private final Class<Q> queryClass;
 	private final String entityName;
 
 	/**
@@ -54,24 +52,11 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 	 *
 	 * @param repository  entity repository
 	 * @param entityClass entity class
-	 * @param queryClass  entity filter class
-	 */
-	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass, final Class<Q> queryClass) {
-		this(repository, entityClass, queryClass, null);
-	}
-
-	/**
-	 * Constructor with specified repository and entity class.
-	 *
-	 * @param repository  entity repository
-	 * @param entityClass entity class
-	 * @param queryClass  entity filter class
 	 * @param entityName  entity name
 	 */
-	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass, final Class<Q> queryClass, final String entityName) {
+	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass, final String entityName) {
 		this.repository = repository;
 		this.entityClass = entityClass;
-		this.queryClass = queryClass;
 		this.entityName = entityName != null ? entityName : entityClass.getName();
 	}
 
@@ -115,8 +100,18 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>, Q 
 		return repository.get(getEntityClass(), pk);
 	}
 
-	public Q query() {
-		return ReflectionUtils.newInstance(queryClass, repository);
+	public EntityQuery<PK, E> query(final Criteria<PK, E>... criteria) {
+		return new EntityQueryImpl<PK, E>(repository, entityClass, group(criteria));
+	}
+
+	private Criteria<PK, E> group(final Criteria<PK, E>... criteria) {
+		if (criteria == null || criteria.length == 0) {
+			return new AllCriteria<PK, E>();
+		}
+		if (criteria.length == 1) {
+			return criteria[0];
+		}
+		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, Arrays.asList(criteria));
 	}
 
 	@Override

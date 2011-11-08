@@ -14,23 +14,26 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.jdo;
 
-import java.io.Serializable;
-import java.util.List;
+import org.greatage.domain.Transaction;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+public class JDOTransaction implements Transaction {
+	private final javax.jdo.Transaction transaction;
 
-	long count();
+	public JDOTransaction(final javax.jdo.Transaction transaction) {
+		this.transaction = transaction;
+	}
 
-	List<E> list(Pagination pagination);
+	public void commit() {
+		transaction.commit();
+	}
 
-	List<E> list();
-
-	E unique();
-
+	public void rollback() {
+		transaction.rollback();
+	}
 }

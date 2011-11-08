@@ -14,23 +14,18 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.jdo;
 
-import java.io.Serializable;
-import java.util.List;
+import org.greatage.domain.TransactionExecutor;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+public interface JDOExecutor extends TransactionExecutor {
 
-	long count();
+	<T> T execute(JDOCallback<T> callback);
 
-	List<E> list(Pagination pagination);
-
-	List<E> list();
-
-	E unique();
+	void clear();
 
 }

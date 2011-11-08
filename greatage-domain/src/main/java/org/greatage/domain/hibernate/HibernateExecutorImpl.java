@@ -26,8 +26,7 @@ import org.hibernate.SessionFactory;
  */
 public class HibernateExecutorImpl implements HibernateExecutor {
 	private final SessionFactory sessionFactory;
-
-	private Session session;
+	private final ThreadLocal<Session> session = new ThreadLocal<Session>();
 
 	public HibernateExecutorImpl(final SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -47,9 +46,9 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 	}
 
 	public void clear() {
-		if (session != null) {
-			session.close();
-			session = null;
+		if (session.get() != null) {
+			session.get().clear();
+			session.remove();
 		}
 	}
 
@@ -58,9 +57,9 @@ public class HibernateExecutorImpl implements HibernateExecutor {
 	}
 
 	private Session getSession() {
-		if (session == null) {
-			session = sessionFactory.openSession();
+		if (session.get() == null) {
+			session.set(sessionFactory.openSession());
 		}
-		return session;
+		return session.get();
 	}
 }

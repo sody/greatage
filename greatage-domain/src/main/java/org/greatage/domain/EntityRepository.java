@@ -30,76 +30,79 @@ import java.util.Map;
 public interface EntityRepository {
 
 	/**
-	 * Gets count of entities selected by filter.
+	 * Gets count of entities selected by criteria.
 	 *
-	 * @param filter selection filter (not null)
-	 * @param <PK>   type of entities primary key
-	 * @param <E>    type of entities
+	 *
+	 * @param entityClass entity class (not null)
+	 * @param criteria	entity criteria
 	 * @return count of entities selected by filter
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	int count(EntityFilter<PK, E> filter);
+	long count(Class<E> entityClass, Criteria<PK, E> criteria);
 
 	/**
 	 * Gets list of entities selected by filter.
 	 *
-	 * @param filter	 selection filter (not null)
-	 * @param pagination selection pagination(not null)
-	 * @param <PK>       type of entities primary key
-	 * @param <E>        type of entities
+	 * @param entityClass entity class (not null)
+	 * @param criteria	entity criteria
+	 * @param pagination  selection pagination(not null)
+	 * @param <PK>        type of entities primary key
+	 * @param <E>         type of entities
 	 * @return list of entities selected by filter or empty list if not found
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	List<E> find(EntityFilter<PK, E> filter, Pagination pagination);
+	List<E> find(Class<E> entityClass, Criteria<PK, E> criteria, Pagination pagination);
 
 	/**
 	 * Gets list of entity`s pks selected by filter.
 	 *
-	 * @param filter	 selection filter (not null)
-	 * @param pagination selection pagination(not null)
-	 * @param <PK>       type of entities primary key
-	 * @param <E>        type of entities
+	 * @param entityClass entity class (not null)
+	 * @param criteria	entity criteria
+	 * @param pagination  selection pagination(not null)
+	 * @param <PK>        type of entities primary key
+	 * @param <E>         type of entities
 	 * @return list of entity`s pks selected by filter or empty list if not found
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	List<PK> findKeys(EntityFilter<PK, E> filter, Pagination pagination);
+	List<PK> findKeys(Class<E> entityClass, Criteria<PK, E> criteria, Pagination pagination);
 
 	/**
 	 * Gets list of entity`s value objects (map property->value) selected by filter according to projection options.
 	 * Projection options looks like map (property name->property path).
 	 *
-	 * @param filter	 selection filter (not null)
-	 * @param projection projection options (not null)
-	 * @param pagination selection pagination(not null)
-	 * @param <PK>       type of entities primary key
-	 * @param <E>        type of entities
+	 * @param entityClass entity class (not null)
+	 * @param criteria	entity criteria
+	 * @param projection  projection options (not null)
+	 * @param pagination  selection pagination(not null)
+	 * @param <PK>        type of entities primary key
+	 * @param <E>         type of entities
 	 * @return list of entity`s value objects selected by filter or empty list if not found
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	List<Map<String, Object>> findValueObjects(EntityFilter<PK, E> filter, Map<String, String> projection, Pagination pagination);
+	List<Map<String, Object>> findValueObjects(Class<E> entityClass, Criteria<PK, E> criteria, Map<String, String> projection, Pagination pagination);
 
 	/**
 	 * Gets unique entity selected by filter.
 	 *
-	 * @param filter selection filter (not null)
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
+	 * @param entityClass entity class (not null)
+	 * @param criteria	entity criteria
+	 * @param <PK>        type of entity primary key
+	 * @param <E>         type of entity
 	 * @return first found entity selected by filter or null if not found
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	E findUnique(EntityFilter<PK, E> filter);
+	E findUnique(Class<E> entityClass, Criteria<PK, E> criteria);
 
 
 	/**
 	 * Gets count of entities selected by entityClass.
 	 *
+	 *
 	 * @param entityClass entity class (not null)
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
 	 * @return count of entities selected by entityClass
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	int count(Class<E> entityClass);
+	long count(Class<E> entityClass);
 
 	/**
 	 * Gets list of entities selected by entityClass.

@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
-
-import java.io.Serializable;
-import java.util.List;
+package org.example.jdo;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
-
-	long count();
-
-	List<E> list(Pagination pagination);
-
-	List<E> list();
-
-	E unique();
-
+public class Entities {
+	public static final CompanyMapper<Company> company = new CompanyMapper<Company>(null);
+	public static final DepartmentMapper<Department> department = new DepartmentMapper<Department>(null);
 }

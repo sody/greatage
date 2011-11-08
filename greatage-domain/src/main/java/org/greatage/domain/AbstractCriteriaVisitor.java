@@ -17,20 +17,26 @@
 package org.greatage.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+public abstract class AbstractCriteriaVisitor<PK extends Serializable, E extends Entity<PK>> implements CriteriaVisitor<PK, E> {
 
-	long count();
+	public void visit(final Criteria<PK, E> criteria) {
+		if (criteria instanceof JunctionCriteria) {
+			visitJunction((JunctionCriteria<PK, E>) criteria);
+		} else if (criteria instanceof PropertyCriteria) {
+			visitProperty((PropertyCriteria<PK, E>) criteria);
+		} else if (criteria instanceof SortCriteria) {
+			visitSort((SortCriteria<PK, E>) criteria);
+		}
+	}
 
-	List<E> list(Pagination pagination);
+	protected abstract void visitJunction(JunctionCriteria<PK, E> criteria);
 
-	List<E> list();
+	protected abstract void visitProperty(PropertyCriteria<PK, E> criteria);
 
-	E unique();
-
+	protected abstract void visitSort(SortCriteria<PK, E> criteria);
 }

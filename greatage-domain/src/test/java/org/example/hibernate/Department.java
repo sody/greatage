@@ -14,23 +14,48 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.example.hibernate;
 
-import java.io.Serializable;
-import java.util.List;
+import org.greatage.domain.AbstractEntity;
+
+import javax.persistence.*;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+@Entity
+@Table(name = "department")
+public class Department extends AbstractEntity<Long> {
 
-	long count();
+	@Id
+	@Column(name = "department_id")
+	private Long id;
 
-	List<E> list(Pagination pagination);
+	@Column(name = "name")
+	private String name;
 
-	List<E> list();
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company;
 
-	E unique();
+	public Long getId() {
+		return id;
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(final Company company) {
+		this.company = company;
+	}
 }
