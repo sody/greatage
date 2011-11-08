@@ -93,6 +93,8 @@ public class TestHibernateRepository extends Assert {
 	@DataProvider
 	public Object[][] find_data() {
 		return new Object[][]{
+				{Company.class, company.all(), 4},
+
 				{Company.class, company.id.eq(3l), 1},
 				{Company.class, company.id.eq(8l), 0},
 				{Company.class, company.name.eq("company2"), 1},
