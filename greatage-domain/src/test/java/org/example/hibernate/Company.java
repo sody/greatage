@@ -14,22 +14,42 @@
  * limitations under the License.
  */
 
-package org.example.criteria;
+package org.example.hibernate;
 
-import org.greatage.domain.Entity;
-import org.greatage.domain.EntityMapper;
-import org.greatage.domain.PropertyMapper;
+import org.greatage.domain.AbstractEntity;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * @author Ivan Khalopik
- * @since 1.0
  */
-public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
-	public final PropertyMapper<Long, E, Long> id = property("id");
-	public final PropertyMapper<Long, E, String> name = property("name");
-	public final CompanyMapper<E> company = new CompanyMapper<E>("company");
+@Entity
+@Table(name = "company")
+public class Company extends AbstractEntity<Long> {
 
-	DepartmentMapper(final String path) {
-		super(path);
+	@Id
+	@Column(name = "company_id")
+	private Long id;
+
+	@Column(name = "name")
+	private String name;
+
+	@Column(name = "registered_at")
+	private Date registeredAt;
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package org.example;
+package org.example.jdo;
 
 import org.greatage.domain.AbstractEntity;
 
-import javax.persistence.*;
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Entity
-@Table(name = "department")
+@PersistenceCapable(table = "department")
 public class Department extends AbstractEntity<Long> {
 
-	@Id
-	@Column(name = "department_id")
+	@PrimaryKey
+	@Persistent(column = "department_id", valueStrategy = IdGeneratorStrategy.INCREMENT)
 	private Long id;
 
-	@Column(name = "name")
+	@Persistent(column = "name")
 	private String name;
 
-	@ManyToOne
-	@JoinColumn(name = "company_id")
+	@Persistent(column = "company_id")
 	private Company company;
 
 	public Long getId() {

@@ -35,7 +35,7 @@ public abstract class AbstractEntityRepository implements EntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	int count(final Class<E> entityClass) {
+	long count(final Class<E> entityClass) {
 		return count(entityClass, new AllCriteria<PK, E>());
 	}
 

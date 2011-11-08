@@ -31,7 +31,6 @@ import java.util.Map;
  * methods based on filterProcessor parameter.
  *
  * @author Ivan Khalopik
- * @see org.greatage.domain.cut.EntityFilterProcessor
  * @since 1.0
  */
 public class HibernateRepository extends AbstractEntityRepository {
@@ -43,12 +42,12 @@ public class HibernateRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	int count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
+	long count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
 		return execute(entityClass, criteria, Pagination.ALL, new CriteriaCallback<Number>() {
 			public Number doInCriteria(final org.hibernate.Criteria criteria) {
 				return (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 			}
-		}).intValue();
+		}).longValue();
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>

@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.cut;
+package org.example.jdo;
+
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityMapper;
+import org.greatage.domain.PropertyMapper;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface SortConstraint {
+public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
+	public final PropertyMapper<Long, E, Long> id = property("id");
+	public final PropertyMapper<Long, E, String> name = property("name");
+	public final CompanyMapper<E> company = new CompanyMapper<E>("company");
 
-	String getProperty();
-
-	boolean isIgnoreCase();
-
-	boolean isAscending();
-
+	DepartmentMapper(final String path) {
+		super(path);
+	}
 }

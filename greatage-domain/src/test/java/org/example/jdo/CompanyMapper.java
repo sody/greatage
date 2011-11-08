@@ -14,26 +14,21 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.jdo;
+package org.example.jdo;
 
-import org.greatage.domain.Transaction;
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityMapper;
+import org.greatage.domain.PropertyMapper;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoTransaction implements Transaction {
-	private final javax.jdo.Transaction transaction;
+public class CompanyMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
+	public final PropertyMapper<Long, E, Long> id = property("id");
+	public final PropertyMapper<Long, E, String> name = property("name");
 
-	public JdoTransaction(final javax.jdo.Transaction transaction) {
-		this.transaction = transaction;
-	}
-
-	public void commit() {
-		transaction.commit();
-	}
-
-	public void rollback() {
-		transaction.rollback();
+	CompanyMapper(final String path) {
+		super(path);
 	}
 }

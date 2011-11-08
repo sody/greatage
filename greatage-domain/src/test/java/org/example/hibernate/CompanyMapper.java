@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.example.hibernate;
 
-import java.io.Serializable;
-import java.util.List;
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityMapper;
+import org.greatage.domain.PropertyMapper;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+public class CompanyMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
+	public final PropertyMapper<Long, E, Long> id = property("id");
+	public final PropertyMapper<Long, E, String> name = property("name");
 
-	long count();
-
-	List<E> list(Pagination pagination);
-
-	List<E> list();
-
-	E unique();
-
+	CompanyMapper(final String path) {
+		super(path);
+	}
 }

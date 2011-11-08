@@ -14,16 +14,22 @@
  * limitations under the License.
  */
 
-package org.example.criteria;
+package org.example.hibernate;
 
-import org.example.Company;
-import org.example.Department;
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityMapper;
+import org.greatage.domain.PropertyMapper;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class Entities {
-	public static final CompanyMapper<Company> company = new CompanyMapper<Company>(null);
-	public static final DepartmentMapper<Department> department = new DepartmentMapper<Department>(null);
+public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
+	public final PropertyMapper<Long, E, Long> id = property("id");
+	public final PropertyMapper<Long, E, String> name = property("name");
+	public final CompanyMapper<E> company = new CompanyMapper<E>("company");
+
+	DepartmentMapper(final String path) {
+		super(path);
+	}
 }

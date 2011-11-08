@@ -14,16 +14,48 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.jdo;
+package org.example.hibernate;
 
-import javax.jdo.PersistenceManager;
+import org.greatage.domain.AbstractEntity;
+
+import javax.persistence.*;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface JdoCallback<T> {
+@Entity
+@Table(name = "department")
+public class Department extends AbstractEntity<Long> {
 
-	T doInJdo(PersistenceManager pm) throws Throwable;
+	@Id
+	@Column(name = "department_id")
+	private Long id;
 
+	@Column(name = "name")
+	private String name;
+
+	@ManyToOne
+	@JoinColumn(name = "company_id")
+	private Company company;
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(final Company company) {
+		this.company = company;
+	}
 }

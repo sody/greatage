@@ -34,32 +34,33 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoRepository extends AbstractEntityRepository {
-	private static final String COUNT_RESULT = "count()";
+public class JDORepository1 extends AbstractEntityRepository {
+	private static final String COUNT_RESULT = "count(id)";
 
-	private final JdoExecutor executor;
+	private final JDOExecutor1 executor;
 
-	public JdoRepository(final JdoExecutor executor, final Map<Class, Class> entityMapping) {
+	public JDORepository1(final JDOExecutor1 executor, final Map<Class, Class> entityMapping) {
 		super(entityMapping);
 		this.executor = executor;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	int count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
-		return execute(entityClass, criteria, Pagination.ALL, new QueryCallback<Integer>() {
-			public Integer doInQuery(final Query query) {
+	long count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
+		return execute(entityClass, criteria, Pagination.ALL, new QueryCallback<Number>() {
+			public Number doInQuery(final Query query, final Map parameters) {
 				query.setResult(COUNT_RESULT);
-				return (Integer) query.execute();
+				query.setUnique(true);
+				return (Number) query.executeWithMap(parameters);
 			}
-		});
+		}).longValue();
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	List<E> find(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination) {
 		return execute(entityClass, criteria, pagination, new QueryCallback<List<E>>() {
 			@SuppressWarnings({"unchecked"})
-			public List<E> doInQuery(final Query query) {
-				return (List<E>) query.execute();
+			public List<E> doInQuery(final Query query, final Map parameters) {
+				return (List<E>) query.executeWithMap(parameters);
 			}
 		});
 	}
@@ -80,16 +81,16 @@ public class JdoRepository extends AbstractEntityRepository {
 	E findUnique(final Class<E> entityClass, final Criteria<PK, E> criteria) {
 		return execute(entityClass, criteria, Pagination.UNIQUE, new QueryCallback<E>() {
 			@SuppressWarnings({"unchecked"})
-			public E doInQuery(final Query query) {
+			public E doInQuery(final Query query, final Map parameters) {
 				query.setUnique(true);
-				return (E) query.execute();
+				return (E) query.executeWithMap(parameters);
 			}
 		});
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new JdoCallback<E>() {
+		return executor.execute(new JDOCallback1<E>() {
 			public E doInJdo(final PersistenceManager pm) throws Throwable {
 				try {
 					return pm.getObjectById(getImplementation(entityClass), pk);
@@ -103,7 +104,7 @@ public class JdoRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new JdoCallback<Object>() {
+		executor.execute(new JDOCallback1<Object>() {
 			public Object doInJdo(final PersistenceManager pm) throws Throwable {
 				pm.makePersistent(entity);
 				return null;
@@ -113,7 +114,7 @@ public class JdoRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new JdoCallback<Object>() {
+		executor.execute(new JDOCallback1<Object>() {
 			public Object doInJdo(final PersistenceManager pm) throws Throwable {
 				pm.refresh(entity);
 				return null;
@@ -123,7 +124,7 @@ public class JdoRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new JdoCallback<Object>() {
+		executor.execute(new JDOCallback1<Object>() {
 			public Object doInJdo(final PersistenceManager pm) throws Throwable {
 				pm.deletePersistent(entity);
 				return null;
@@ -133,7 +134,7 @@ public class JdoRepository extends AbstractEntityRepository {
 
 	private <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T> callback) {
-		return executor.execute(new JdoCallback<T>() {
+		return executor.execute(new JDOCallback1<T>() {
 			public T doInJdo(final PersistenceManager pm) throws JDOException {
 				final Extent<? extends Entity> extent = pm.getExtent(getImplementation(entityClass), true);
 				final Query query = pm.newQuery(extent);
@@ -147,14 +148,14 @@ public class JdoRepository extends AbstractEntityRepository {
 					query.setRange(start, end);
 				}
 
-				return callback.doInQuery(query);
+				return callback.doInQuery(query, visitor.getParameters());
 			}
 		});
 	}
 
 	public static interface QueryCallback<T> {
 
-		T doInQuery(Query query);
+		T doInQuery(Query query, Map parameters);
 	}
 
 	@Override

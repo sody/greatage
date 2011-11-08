@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.hibernate;
+package org.greatage.domain.jdo;
 
 import org.dbunit.JdbcDatabaseTester;
 import org.dbunit.PropertiesBasedJdbcDatabaseTester;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
-import org.example.hibernate.Company;
-import org.example.hibernate.Department;
+import org.example.jdo.Company;
+import org.example.jdo.Department;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import javax.jdo.JDOHelper;
+import javax.jdo.PersistenceManagerFactory;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -42,26 +42,25 @@ import java.util.List;
 import java.util.Properties;
 
 import static org.example.hibernate.Entities.company;
-import static org.example.hibernate.Entities.department;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestHibernateRepository extends Assert {
-	private HibernateExecutor executor;
+public class TestJDORepository extends Assert {
+	private JDOExecutor1 executor;
 	private EntityRepository repository;
 	private JdbcDatabaseTester tester;
 
 	@BeforeTest
 	public void setup_repository() {
-		final Configuration configuration = new Configuration();
-		configuration.addAnnotatedClass(Company.class);
-		configuration.addAnnotatedClass(Department.class);
-		final SessionFactory sessionFactory = configuration.buildSessionFactory();
+		final PersistenceManagerFactory factory = JDOHelper.getPersistenceManagerFactory("jdo.properties");
+		executor = new JDOExecutor1Impl(factory);
+		repository = new JDORepository1(executor, new HashMap<Class, Class>());
 
-		executor = new HibernateExecutorImpl(sessionFactory);
-		repository = new HibernateRepository(executor, new HashMap<Class, Class>());
+		repository.find(Company.class, Pagination.ALL);
+		repository.find(Department.class, Pagination.ALL);
+		executor.clear();
 	}
 
 	@BeforeTest(dependsOnMethods = "setup_repository")
@@ -129,6 +128,7 @@ public class TestHibernateRepository extends Assert {
 				{Company.class, company.name.le("company2"), 2},
 				{Company.class, company.name.le("c1"), 0},
 
+				/*
 				{Company.class, company.id.like(3l), 1},
 				{Company.class, company.id.like(8l), 0},
 				{Company.class, company.name.like("company2"), 1},
@@ -175,6 +175,7 @@ public class TestHibernateRepository extends Assert {
 
 				{Department.class, department.name.like("dep%").and(department.company.name.eq("company1")), 3},
 				{Department.class, department.name.eq("department4").and(department.company.name.eq("company1")), 0},
+				*/
 		};
 	}
 
@@ -186,40 +187,6 @@ public class TestHibernateRepository extends Assert {
 		final List<E> actual = repository.find(entityClass, criteria, Pagination.ALL);
 		assertNotNull(actual);
 		assertEquals(actual.size(), expectedCount);
-	}
-
-	@DataProvider
-	public Object[][] sorting_data() {
-		return new Object[][]{
-				{Company.class, company.id.asc(), ids(1, 2, 3, 4)},
-				{Company.class, company.id.desc(), ids(4, 3, 2, 1)},
-				{Company.class, company.name.sort(true), ids(4, 1, 2, 3)},
-				{Company.class, company.name.sort(false), ids(3, 2, 1, 4)},
-
-				{Company.class, company.name.like("company%").and(company.name.asc()), ids(1, 2, 3)},
-				{Department.class,
-						department.name.like("dep%")
-								.and(department.company.name.eq("company1"))
-								.and(department.name.desc()),
-						ids(3, 2, 1)},
-				{Department.class,
-						department.name.like("dep%")
-								.and(department.company.name.like("company%"))
-								.and(department.company.name.asc())
-								.and(department.name.desc()),
-						ids(3, 2, 1, 5, 4)},
-		};
-	}
-
-	@Test(dataProvider = "sorting_data")
-	public <PK extends Serializable, E extends Entity<PK>>
-	void test_sorting(final Class<E> entityClass, final Criteria<PK, E> criteria, final long[] expectedIds) {
-		final List<E> actual = repository.find(entityClass, criteria, Pagination.ALL);
-		assertNotNull(actual);
-		assertEquals(actual.size(), expectedIds.length);
-		for (int i = 0; i < expectedIds.length; i++) {
-			assertEquals(actual.get(i).getId(), expectedIds[i]);
-		}
 	}
 
 	private static long[] ids(final long... ids) {

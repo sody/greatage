@@ -30,12 +30,12 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoModule {
+public class JDOModule1 {
 
 	@Bind
 	public static void bind(final ServiceBinder binder) {
-		binder.bind(EntityRepository.class, JdoRepository.class);
-		binder.bind(JdoExecutor.class, JdoExecutorImpl.class).withScope(Threaded.class);
+		binder.bind(EntityRepository.class, JDORepository1.class);
+		binder.bind(JDOExecutor1.class, JDOExecutor1Impl.class).withScope(Threaded.class);
 	}
 
 	@Build

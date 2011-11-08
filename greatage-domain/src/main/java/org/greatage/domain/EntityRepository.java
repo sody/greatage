@@ -32,14 +32,13 @@ public interface EntityRepository {
 	/**
 	 * Gets count of entities selected by criteria.
 	 *
+	 *
 	 * @param entityClass entity class (not null)
 	 * @param criteria	entity criteria
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
 	 * @return count of entities selected by filter
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	int count(Class<E> entityClass, Criteria<PK, E> criteria);
+	long count(Class<E> entityClass, Criteria<PK, E> criteria);
 
 	/**
 	 * Gets list of entities selected by filter.
@@ -98,13 +97,12 @@ public interface EntityRepository {
 	/**
 	 * Gets count of entities selected by entityClass.
 	 *
+	 *
 	 * @param entityClass entity class (not null)
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
 	 * @return count of entities selected by entityClass
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
-	int count(Class<E> entityClass);
+	long count(Class<E> entityClass);
 
 	/**
 	 * Gets list of entities selected by entityClass.

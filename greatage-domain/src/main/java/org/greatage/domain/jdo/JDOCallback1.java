@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.jdo;
 
-import java.io.Serializable;
-import java.util.List;
+import javax.jdo.PersistenceManager;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface EntityQuery<PK extends Serializable, E extends Entity<PK>> {
+public interface JDOCallback1<T> {
 
-	long count();
-
-	List<E> list(Pagination pagination);
-
-	List<E> list();
-
-	E unique();
+	T doInJdo(PersistenceManager pm) throws Throwable;
 
 }

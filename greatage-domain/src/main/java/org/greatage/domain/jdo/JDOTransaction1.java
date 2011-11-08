@@ -16,14 +16,24 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.Transaction;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface JdoExecutor extends TransactionExecutor {
+public class JDOTransaction1 implements Transaction {
+	private final javax.jdo.Transaction transaction;
 
-	<T> T execute(JdoCallback<T> callback);
+	public JDOTransaction1(final javax.jdo.Transaction transaction) {
+		this.transaction = transaction;
+	}
 
+	public void commit() {
+		transaction.commit();
+	}
+
+	public void rollback() {
+		transaction.rollback();
+	}
 }

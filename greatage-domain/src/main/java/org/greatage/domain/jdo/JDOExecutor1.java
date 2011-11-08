@@ -14,42 +14,18 @@
  * limitations under the License.
  */
 
-package org.example;
+package org.greatage.domain.jdo;
 
-import org.greatage.domain.AbstractEntity;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
+import org.greatage.domain.TransactionExecutor;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
-@Entity
-@Table(name = "company")
-public class Company extends AbstractEntity<Long> {
+public interface JDOExecutor1 extends TransactionExecutor {
 
-	@Id
-	@Column(name = "company_id")
-	private Long id;
+	<T> T execute(JDOCallback1<T> callback);
 
-	@Column(name = "name")
-	private String name;
+	void clear();
 
-	@Column(name = "registered_at")
-	private Date registeredAt;
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 }

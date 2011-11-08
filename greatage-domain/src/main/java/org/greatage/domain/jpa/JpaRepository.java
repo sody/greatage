@@ -42,7 +42,7 @@ public class JpaRepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	int count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
+	long count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
 		return execute("select count() from entityClass", entityClass, criteria, Pagination.ALL, new QueryCallback<Integer>() {
 			public Integer doInQuery(final Query query) {
 				return (Integer) query.getSingleResult();

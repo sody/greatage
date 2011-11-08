@@ -14,21 +14,13 @@
  * limitations under the License.
  */
 
-package org.example.criteria;
-
-import org.greatage.domain.Entity;
-import org.greatage.domain.EntityMapper;
-import org.greatage.domain.PropertyMapper;
+package org.example.jdo;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class CompanyMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
-	public final PropertyMapper<Long, E, Long> id = property("id");
-	public final PropertyMapper<Long, E, String> name = property("name");
-
-	CompanyMapper(final String path) {
-		super(path);
-	}
+public class Entities {
+	public static final CompanyMapper<Company> company = new CompanyMapper<Company>(null);
+	public static final DepartmentMapper<Department> department = new DepartmentMapper<Department>(null);
 }

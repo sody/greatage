@@ -52,7 +52,7 @@ public class EntityQueryImpl<PK extends Serializable, E extends Entity<PK>> impl
 	 *
 	 * @return entities count selected by this query instance
 	 */
-	public int count() {
+	public long count() {
 		return repository.count(entityClass, criteria);
 	}
 

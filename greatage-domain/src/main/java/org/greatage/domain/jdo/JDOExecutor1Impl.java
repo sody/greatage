@@ -25,16 +25,16 @@ import javax.jdo.PersistenceManagerFactory;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JdoExecutorImpl implements JdoExecutor {
+public class JDOExecutor1Impl implements JDOExecutor1 {
 	private final PersistenceManagerFactory persistenceManagerFactory;
 
 	private PersistenceManager persistenceManager;
 
-	public JdoExecutorImpl(final PersistenceManagerFactory persistenceManagerFactory) {
+	public JDOExecutor1Impl(final PersistenceManagerFactory persistenceManagerFactory) {
 		this.persistenceManagerFactory = persistenceManagerFactory;
 	}
 
-	public <T> T execute(final JdoCallback<T> callback) {
+	public <T> T execute(final JDOCallback1<T> callback) {
 		try {
 			final PersistenceManager persistenceManager = getPersistenceManager();
 			return callback.doInJdo(persistenceManager);
@@ -42,6 +42,13 @@ public class JdoExecutorImpl implements JdoExecutor {
 			throw ex;
 		} catch (Throwable throwable) {
 			throw new RuntimeException(throwable);
+		}
+	}
+
+	public void clear() {
+		if (persistenceManager != null) {
+			persistenceManager.close();
+			persistenceManager = null;
 		}
 	}
 
@@ -55,6 +62,6 @@ public class JdoExecutorImpl implements JdoExecutor {
 	public Transaction begin() {
 		final javax.jdo.Transaction transaction = getPersistenceManager().currentTransaction();
 		transaction.begin();
-		return new JdoTransaction(transaction);
+		return new JDOTransaction1(transaction);
 	}
 }
