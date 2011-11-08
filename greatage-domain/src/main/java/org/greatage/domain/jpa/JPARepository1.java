@@ -33,21 +33,21 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JpaRepository extends AbstractEntityRepository {
-	private final JpaExecutor executor;
+public class JPARepository1 extends AbstractEntityRepository {
+	private final JPAExecutor1 executor;
 
-	public JpaRepository(final JpaExecutor executor, final Map<Class, Class> entityMapping) {
+	public JPARepository1(final JPAExecutor1 executor, final Map<Class, Class> entityMapping) {
 		super(entityMapping);
 		this.executor = executor;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	long count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
-		return execute("select count() from entityClass", entityClass, criteria, Pagination.ALL, new QueryCallback<Integer>() {
-			public Integer doInQuery(final Query query) {
-				return (Integer) query.getSingleResult();
+		return execute("select count() from entityClass", entityClass, criteria, Pagination.ALL, new QueryCallback<Number>() {
+			public Number doInQuery(final Query query) {
+				return (Number) query.getSingleResult();
 			}
-		});
+		}).longValue();
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
@@ -82,7 +82,7 @@ public class JpaRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new JpaCallback<E>() {
+		return executor.execute(new JPACallback1<E>() {
 			public E doInJpa(final EntityManager em) throws Throwable {
 				return em.find(getImplementation(entityClass), pk);
 			}
@@ -91,7 +91,7 @@ public class JpaRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new JpaCallback<Object>() {
+		executor.execute(new JPACallback1<Object>() {
 			public Object doInJpa(final EntityManager em) throws Throwable {
 				em.persist(entity);
 				return null;
@@ -101,7 +101,7 @@ public class JpaRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new JpaCallback<Object>() {
+		executor.execute(new JPACallback1<Object>() {
 			public Object doInJpa(final EntityManager em) throws Throwable {
 				em.merge(entity);
 				return null;
@@ -111,7 +111,7 @@ public class JpaRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new JpaCallback<Object>() {
+		executor.execute(new JPACallback1<Object>() {
 			public Object doInJpa(final EntityManager em) throws Throwable {
 				em.remove(entity);
 				return null;
@@ -121,7 +121,7 @@ public class JpaRepository extends AbstractEntityRepository {
 
 	protected <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final String queryString, final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T> callback) {
-		return executor.execute(new JpaCallback<T>() {
+		return executor.execute(new JPACallback1<T>() {
 			public T doInJpa(EntityManager em) throws PersistenceException {
 				final Query query = em.createQuery(queryString.replaceAll("entityClass", entityClass.getName()));
 

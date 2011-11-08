@@ -16,14 +16,26 @@
 
 package org.greatage.domain.jpa;
 
-import javax.persistence.EntityManager;
+import org.greatage.domain.Transaction;
+
+import javax.persistence.EntityTransaction;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface JpaCallback<T> {
+public class JPATransaction1 implements Transaction {
+	private final EntityTransaction transaction;
 
-	T doInJpa(EntityManager em) throws Throwable;
+	public JPATransaction1(final EntityTransaction transaction) {
+		this.transaction = transaction;
+	}
 
+	public void commit() {
+		transaction.commit();
+	}
+
+	public void rollback() {
+		transaction.rollback();
+	}
 }

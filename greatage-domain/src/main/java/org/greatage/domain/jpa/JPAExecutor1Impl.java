@@ -26,16 +26,16 @@ import javax.persistence.EntityTransaction;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JpaExecutorImpl implements JpaExecutor {
+public class JPAExecutor1Impl implements JPAExecutor1 {
 	private final EntityManagerFactory entityManagerFactory;
 
 	private EntityManager entityManager;
 
-	public JpaExecutorImpl(final EntityManagerFactory entityManagerFactory) {
+	public JPAExecutor1Impl(final EntityManagerFactory entityManagerFactory) {
 		this.entityManagerFactory = entityManagerFactory;
 	}
 
-	public <T> T execute(final JpaCallback<T> callback) {
+	public <T> T execute(final JPACallback1<T> callback) {
 		try {
 			final EntityManager entityManager = getEntityManager();
 			return callback.doInJpa(entityManager);
@@ -43,6 +43,13 @@ public class JpaExecutorImpl implements JpaExecutor {
 			throw ex;
 		} catch (Throwable throwable) {
 			throw new RuntimeException(throwable);
+		}
+	}
+
+	public void clear() {
+		if (entityManager != null) {
+			entityManager.close();
+			entityManager = null;
 		}
 	}
 
@@ -56,6 +63,6 @@ public class JpaExecutorImpl implements JpaExecutor {
 	public Transaction begin() {
 		final EntityTransaction transaction = getEntityManager().getTransaction();
 		transaction.begin();
-		return new JpaTransaction(transaction);
+		return new JPATransaction1(transaction);
 	}
 }
