@@ -29,6 +29,10 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> {
 		this.path = path;
 	}
 
+	public AllCriteria<PK, E> all() {
+		return new AllCriteria<PK, E>();
+	}
+
 	protected <V> PropertyMapper<PK, E, V> property(final String property) {
 		return new PropertyMapper<PK, E, V>(path, property);
 	}

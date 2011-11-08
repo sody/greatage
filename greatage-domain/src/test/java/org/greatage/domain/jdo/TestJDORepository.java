@@ -23,6 +23,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.example.jdo.Company;
 import org.example.jdo.Department;
+import org.greatage.domain.AllCriteria;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.EntityRepository;
@@ -92,6 +93,8 @@ public class TestJDORepository extends Assert {
 	@DataProvider
 	public Object[][] find_data() {
 		return new Object[][]{
+				{Company.class, company.all(), 4},
+
 				{Company.class, company.id.eq(3l), 1},
 				{Company.class, company.id.eq(8l), 0},
 				{Company.class, company.name.eq("company2"), 1},

@@ -22,6 +22,7 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.JunctionCriteria;
 import org.greatage.domain.PropertyCriteria;
 import org.greatage.domain.SortCriteria;
+import org.greatage.util.StringUtils;
 
 import javax.jdo.Query;
 import java.io.Serializable;
@@ -52,7 +53,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		level++;
 		super.visit(criteria);
 		level--;
-		if (level == 0) {
+		// google-app-engine fix for empty filter
+		if (level == 0 && !junction.isEmpty()) {
 			query.setFilter(getJunction(junction, " && "));
 		}
 	}
