@@ -35,6 +35,11 @@ public class SortCriteria<PK extends Serializable, E extends Entity<PK>> extends
 		this.ignoreCase = ignoreCase;
 	}
 
+	@Override
+	public Criteria<PK, E> not() {
+		throw new UnsupportedOperationException("Can't negate sorting");
+	}
+
 	public String getPath() {
 		return path;
 	}
@@ -54,14 +59,17 @@ public class SortCriteria<PK extends Serializable, E extends Entity<PK>> extends
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder("order by ");
+		if (ignoreCase) {
+			builder.append("lower(");
+		}
 		if (path != null) {
 			builder.append(path).append('.');
 		}
 		builder.append(property);
-		builder.append(ascending ? " asc" : " desc");
 		if (ignoreCase) {
-			builder.append("(ic)");
+			builder.append(")");
 		}
+		builder.append(ascending ? " asc" : " desc");
 		return builder.toString();
 	}
 }

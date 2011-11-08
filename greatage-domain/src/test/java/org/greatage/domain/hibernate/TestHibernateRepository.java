@@ -187,4 +187,42 @@ public class TestHibernateRepository extends Assert {
 		assertNotNull(actual);
 		assertEquals(actual.size(), expectedCount);
 	}
+
+	@DataProvider
+	public Object[][] sorting_data() {
+		return new Object[][]{
+				{Company.class, company.id.asc(), ids(1, 2, 3, 4)},
+				{Company.class, company.id.desc(), ids(4, 3, 2, 1)},
+				{Company.class, company.name.sort(true), ids(4, 1, 2, 3)},
+				{Company.class, company.name.sort(false), ids(3, 2, 1, 4)},
+
+				{Company.class, company.name.like("company%").and(company.name.asc()), ids(1, 2, 3)},
+				{Department.class,
+						department.name.like("dep%")
+								.and(department.company.name.eq("company1"))
+								.and(department.name.desc()),
+						ids(3, 2, 1)},
+				{Department.class,
+						department.name.like("dep%")
+								.and(department.company.name.like("company%"))
+								.and(department.company.name.asc())
+								.and(department.name.desc()),
+						ids(3, 2, 1, 5, 4)},
+		};
+	}
+
+	@Test(dataProvider = "sorting_data")
+	public <PK extends Serializable, E extends Entity<PK>>
+	void test_sorting(final Class<E> entityClass, final Criteria<PK, E> criteria, final long[] expectedIds) {
+		final List<E> actual = repository.find(entityClass, criteria, Pagination.ALL);
+		assertNotNull(actual);
+		assertEquals(actual.size(), expectedIds.length);
+		for (int i = 0; i < expectedIds.length; i++) {
+			assertEquals(actual.get(i).getId(), expectedIds[i]);
+		}
+	}
+
+	private static long[] ids(final long... ids) {
+		return ids;
+	}
 }

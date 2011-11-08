@@ -53,6 +53,6 @@ public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implemen
 
 	@Override
 	public String toString() {
-		return negative ? "1=2" : "1=1";
+		return negative ? "not 1=1" : "1=1";
 	}
 }

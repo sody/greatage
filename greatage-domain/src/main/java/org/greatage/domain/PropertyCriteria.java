@@ -85,7 +85,7 @@ public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> ext
 				break;
 		}
 		builder.append(value);
-		return builder.toString();
+		return isNegative() ? "not " + builder.toString() : builder.toString();
 	}
 
 	public enum Operator {

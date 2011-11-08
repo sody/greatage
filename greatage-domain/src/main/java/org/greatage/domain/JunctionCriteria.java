@@ -68,7 +68,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 			builder.append(child);
 		}
 		builder.append(")");
-		return builder.toString();
+		return isNegative() ? "not " + builder.toString() : builder.toString();
 	}
 
 	public enum Operator {
