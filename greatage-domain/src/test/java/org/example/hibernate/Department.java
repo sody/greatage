@@ -18,7 +18,12 @@ package org.example.hibernate;
 
 import org.greatage.domain.AbstractEntity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * @author Ivan Khalopik
@@ -38,6 +43,20 @@ public class Department extends AbstractEntity<Long> {
 	@ManyToOne
 	@JoinColumn(name = "company_id")
 	private Company company;
+
+	public Department() {
+	}
+
+	public Department(final Long id, final String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public Department(final Long id, final String name, final Company company) {
+		this.id = id;
+		this.name = name;
+		this.company = company;
+	}
 
 	public Long getId() {
 		return id;

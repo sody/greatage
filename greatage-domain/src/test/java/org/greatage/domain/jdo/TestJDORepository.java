@@ -28,7 +28,9 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -51,7 +53,7 @@ public class TestJDORepository extends Assert {
 	private EntityRepository repository;
 	private JdbcDatabaseTester tester;
 
-	@BeforeTest
+	@BeforeClass
 	public void setup_repository() throws Exception {
 		final PersistenceManagerFactory factory = JDOHelper.getPersistenceManagerFactory("jdo.properties");
 		final JDOExecutor executor = new JDOExecutor(factory);
@@ -79,7 +81,7 @@ public class TestJDORepository extends Assert {
 		tester.onSetup();
 	}
 
-	@AfterTest
+	@AfterClass
 	public void cleanup_database() throws Exception {
 		tester.onTearDown();
 		repository = null;

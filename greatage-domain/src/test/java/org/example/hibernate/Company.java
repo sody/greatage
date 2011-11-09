@@ -41,6 +41,20 @@ public class Company extends AbstractEntity<Long> {
 	@Column(name = "registered_at")
 	private Date registeredAt;
 
+	public Company() {
+	}
+
+	public Company(final Long id, final String name) {
+		this.id = id;
+		this.name = name;
+	}
+
+	public Company(final Long id, final String name, final Date registeredAt) {
+		this.id = id;
+		this.name = name;
+		this.registeredAt = registeredAt;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -51,5 +65,13 @@ public class Company extends AbstractEntity<Long> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Date getRegisteredAt() {
+		return registeredAt;
+	}
+
+	public void setRegisteredAt(final Date registeredAt) {
+		this.registeredAt = registeredAt;
 	}
 }

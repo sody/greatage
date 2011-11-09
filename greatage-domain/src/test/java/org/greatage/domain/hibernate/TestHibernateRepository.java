@@ -16,30 +16,15 @@
 
 package org.greatage.domain.hibernate;
 
-import org.dbunit.JdbcDatabaseTester;
-import org.dbunit.PropertiesBasedJdbcDatabaseTester;
-import org.dbunit.dataset.xml.FlatXmlDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
-import org.dbunit.operation.DatabaseOperation;
 import org.example.hibernate.Company;
 import org.example.hibernate.Department;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
-import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.testng.Assert;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import static org.example.hibernate.Entities.company;
 import static org.example.hibernate.Entities.department;
@@ -48,44 +33,7 @@ import static org.example.hibernate.Entities.department;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class TestHibernateRepository extends Assert {
-	private EntityRepository repository;
-	private JdbcDatabaseTester tester;
-
-	@BeforeTest
-	public void setup_repository() throws Exception {
-		final Configuration configuration = new Configuration();
-		configuration.addAnnotatedClass(Company.class);
-		configuration.addAnnotatedClass(Department.class);
-		final SessionFactory sessionFactory = configuration.buildSessionFactory();
-
-		final HibernateExecutor executor = new HibernateExecutor(sessionFactory);
-		repository = new HibernateRepository(executor, new HashMap<Class, Class>());
-
-		final Properties properties = new Properties();
-		properties.load(getClass().getResourceAsStream("/dbunit.properties"));
-		tester = new JdbcDatabaseTester(
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA)
-		);
-		tester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT);
-		tester.setTearDownOperation(DatabaseOperation.DELETE_ALL);
-
-		final InputStream inputStream = getClass().getResourceAsStream("/database.xml");
-		final FlatXmlDataSet dataSet = new FlatXmlDataSetBuilder().build(inputStream);
-		tester.setDataSet(dataSet);
-
-		tester.onSetup();
-	}
-
-	@AfterTest
-	public void cleanup_database() throws Exception {
-		tester.onTearDown();
-		repository = null;
-	}
+public class TestHibernateRepository extends AbstractHibernateRepositoryTest {
 
 	@DataProvider
 	public Object[][] find_data() {
@@ -244,21 +192,5 @@ public class TestHibernateRepository extends Assert {
 		final List<E> actual = repository.find(entityClass, criteria, Pagination.ALL);
 		assertNotNull(actual);
 		assertIds(actual, expectedIds);
-	}
-
-	private static <E extends Entity<Long>>
-	void assertIds(final List<E> actual, final long[] expected) {
-		final long[] actualIds = new long[actual.size()];
-		for (int i = 0; i < actualIds.length; i++) {
-			actualIds[i] = actual.get(i).getId();
-		}
-		final String message = String.format("Ids not match expected result:\n\texpected: %s\n\tactual: %s\n",
-				Arrays.toString(expected),
-				Arrays.toString(actualIds));
-		assertEquals(actualIds, expected, message);
-	}
-
-	private static long[] ids(final long... ids) {
-		return ids;
 	}
 }

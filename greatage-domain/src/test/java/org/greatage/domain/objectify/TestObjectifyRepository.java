@@ -26,7 +26,9 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -46,7 +48,7 @@ public class TestObjectifyRepository extends Assert {
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	private EntityRepository repository;
 
-	@BeforeTest
+	@BeforeClass
 	public void setup_repository() {
 		helper.setUp();
 		ObjectifyService.register(Company.class);
@@ -62,7 +64,7 @@ public class TestObjectifyRepository extends Assert {
 		repository = new ObjectifyRepository(executor, new HashMap<Class, Class>());
 	}
 
-	@AfterTest
+	@AfterClass
 	public void cleanup_repository() {
 		repository = null;
 		helper.tearDown();

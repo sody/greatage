@@ -30,6 +30,16 @@ import java.util.Map;
 public interface EntityRepository {
 
 	/**
+	 * Gets count of entities selected by entityClass.
+	 *
+	 *
+	 * @param entityClass entity class (not null)
+	 * @return count of entities selected by entityClass
+	 */
+	<PK extends Serializable, E extends Entity<PK>>
+	long count(Class<E> entityClass);
+
+	/**
 	 * Gets count of entities selected by criteria.
 	 *
 	 *
@@ -39,6 +49,18 @@ public interface EntityRepository {
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
 	long count(Class<E> entityClass, Criteria<PK, E> criteria);
+
+	/**
+	 * Gets list of entities selected by entityClass.
+	 *
+	 * @param entityClass entity class (not null)
+	 * @param pagination  selection pagination (not null)
+	 * @param <PK>        type of entities primary key
+	 * @param <E>         type of entities
+	 * @return list of entities selected by entityClass or empty list if not found
+	 */
+	<PK extends Serializable, E extends Entity<PK>>
+	List<E> find(Class<E> entityClass, Pagination pagination);
 
 	/**
 	 * Gets list of entities selected by filter.
@@ -54,6 +76,19 @@ public interface EntityRepository {
 	List<E> find(Class<E> entityClass, Criteria<PK, E> criteria, Pagination pagination);
 
 	/**
+	 * Gets list of entity`s pks selected by entityClass.
+	 *
+	 * @param entityClass entity class (not null)
+	 * @param pagination  selection pagination (not null)
+	 * @param <PK>        type of entities primary key
+	 * @param <E>         type of entities
+	 * @return list of entity`s pks selected by entityClass or empty list if not found
+	 */
+	<PK extends Serializable, E extends Entity<PK>>
+	List<PK> findKeys(Class<E> entityClass, Pagination pagination);
+
+
+	/**
 	 * Gets list of entity`s pks selected by filter.
 	 *
 	 * @param entityClass entity class (not null)
@@ -65,6 +100,20 @@ public interface EntityRepository {
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
 	List<PK> findKeys(Class<E> entityClass, Criteria<PK, E> criteria, Pagination pagination);
+
+	/**
+	 * Gets list of entity`s value objects (map property->value) selected by entityClass according to projection options.
+	 * Projection options looks like map (property name->property path).
+	 *
+	 * @param entityClass entity class (not null)
+	 * @param projection  projection options (not null)
+	 * @param pagination  selection pagination(not null)
+	 * @param <PK>        type of entities primary key
+	 * @param <E>         type of entities
+	 * @return list of entity`s value objects selected by entityClass or empty list if not found
+	 */
+	<PK extends Serializable, E extends Entity<PK>>
+	List<Map<String, Object>> findValueObjects(Class<E> entityClass, Map<String, String> projection, Pagination pagination);
 
 	/**
 	 * Gets list of entity`s value objects (map property->value) selected by filter according to projection options.
@@ -92,55 +141,6 @@ public interface EntityRepository {
 	 */
 	<PK extends Serializable, E extends Entity<PK>>
 	E findUnique(Class<E> entityClass, Criteria<PK, E> criteria);
-
-
-	/**
-	 * Gets count of entities selected by entityClass.
-	 *
-	 *
-	 * @param entityClass entity class (not null)
-	 * @return count of entities selected by entityClass
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	long count(Class<E> entityClass);
-
-	/**
-	 * Gets list of entities selected by entityClass.
-	 *
-	 * @param entityClass entity class (not null)
-	 * @param pagination  selection pagination (not null)
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
-	 * @return list of entities selected by entityClass or empty list if not found
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	List<E> find(Class<E> entityClass, Pagination pagination);
-
-	/**
-	 * Gets list of entity`s pks selected by entityClass.
-	 *
-	 * @param entityClass entity class (not null)
-	 * @param pagination  selection pagination (not null)
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
-	 * @return list of entity`s pks selected by entityClass or empty list if not found
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	List<PK> findKeys(Class<E> entityClass, Pagination pagination);
-
-	/**
-	 * Gets list of entity`s value objects (map property->value) selected by entityClass according to projection options.
-	 * Projection options looks like map (property name->property path).
-	 *
-	 * @param entityClass entity class (not null)
-	 * @param projection  projection options (not null)
-	 * @param pagination  selection pagination(not null)
-	 * @param <PK>        type of entities primary key
-	 * @param <E>         type of entities
-	 * @return list of entity`s value objects selected by entityClass or empty list if not found
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	List<Map<String, Object>> findValueObjects(Class<E> entityClass, Map<String, String> projection, Pagination pagination);
 
 	/**
 	 * Gets detailed entity by pk.
