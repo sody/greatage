@@ -36,7 +36,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.InputStream;
-import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -90,101 +90,129 @@ public class TestHibernateRepository extends Assert {
 	@DataProvider
 	public Object[][] find_data() {
 		return new Object[][]{
-				{Company.class, company.all(), 4},
+				{Company.class, company.all(), ids(1, 2, 3, 4)},
 
-				{Company.class, company.id.eq(3l), 1},
-				{Company.class, company.id.eq(8l), 0},
-				{Company.class, company.name.eq("company2"), 1},
-				{Company.class, company.name.eq("c1"), 0},
+				{Company.class, company.id.eq(3l), ids(3)},
+				{Company.class, company.id.eq(8l), ids()},
+				{Company.class, company.name.eq("company2"), ids(2)},
+				{Company.class, company.name.eq("c1"), ids()},
 
-				{Company.class, company.id.ne(3l), 3},
-				{Company.class, company.id.ne(8l), 4},
+				{Company.class, company.id.ne(3l), ids(1, 2, 4)},
+				{Company.class, company.id.ne(8l), ids(1, 2, 3, 4)},
 				// null is ignored
-				{Company.class, company.name.ne("company2"), 2},
-				{Company.class, company.name.ne("c1"), 3},
+				{Company.class, company.name.ne("company2"), ids(1, 3)},
+				{Company.class, company.name.ne("c1"), ids(1, 2, 3)},
 
-				{Company.class, company.id.isNull(), 0},
-				{Company.class, company.id.notNull(), 4},
-				{Company.class, company.name.isNull(), 1},
-				{Company.class, company.name.notNull(), 3},
+				{Company.class, company.id.isNull(), ids()},
+				{Company.class, company.id.notNull(), ids(1, 2, 3, 4)},
+				{Company.class, company.name.isNull(), ids(4)},
+				{Company.class, company.name.notNull(), ids(1, 2, 3)},
 
-				{Company.class, company.id.gt(3l), 1},
-				{Company.class, company.id.gt(8l), 0},
-				{Company.class, company.name.gt("company2"), 1},
-				{Company.class, company.name.gt("c1"), 3},
+				{Company.class, company.id.gt(3l), ids(4)},
+				{Company.class, company.id.gt(8l), ids()},
+				{Company.class, company.name.gt("company2"), ids(3)},
+				{Company.class, company.name.gt("c1"), ids(1, 2, 3)},
 
-				{Company.class, company.id.ge(3l), 2},
-				{Company.class, company.id.ge(8l), 0},
-				{Company.class, company.name.ge("company2"), 2},
-				{Company.class, company.name.ge("c1"), 3},
+				{Company.class, company.id.ge(3l), ids(3, 4)},
+				{Company.class, company.id.ge(8l), ids()},
+				{Company.class, company.name.ge("company2"), ids(2, 3)},
+				{Company.class, company.name.ge("c1"), ids(1, 2, 3)},
 
-				{Company.class, company.id.lt(3l), 2},
-				{Company.class, company.id.lt(8l), 4},
-				{Company.class, company.name.lt("company2"), 1},
-				{Company.class, company.name.lt("c1"), 0},
+				{Company.class, company.id.lt(3l), ids(1, 2)},
+				{Company.class, company.id.lt(8l), ids(1, 2, 3, 4)},
+				{Company.class, company.name.lt("company2"), ids(1)},
+				{Company.class, company.name.lt("c1"), ids()},
 
-				{Company.class, company.id.le(3l), 3},
-				{Company.class, company.id.le(8l), 4},
-				{Company.class, company.name.le("company2"), 2},
-				{Company.class, company.name.le("c1"), 0},
+				{Company.class, company.id.le(3l), ids(1, 2, 3)},
+				{Company.class, company.id.le(8l), ids(1, 2, 3, 4)},
+				{Company.class, company.name.le("company2"), ids(1, 2)},
+				{Company.class, company.name.le("c1"), ids()},
 
-				{Company.class, company.id.like(3l), 1},
-				{Company.class, company.id.like(8l), 0},
-				{Company.class, company.name.like("company2"), 1},
-				{Company.class, company.name.like("c1"), 0},
+				{Company.class, company.id.like(3l), ids(3)},
+				{Company.class, company.id.like(8l), ids()},
+				{Company.class, company.name.like("company2"), ids(2)},
+				{Company.class, company.name.like("c1"), ids()},
 
-				{Company.class, company.name.like("%pany2"), 1},
-				{Company.class, company.name.like("%company2"), 1},
-				{Company.class, company.name.like("%pany"), 0},
-				{Company.class, company.name.like("company%"), 3},
-				{Company.class, company.name.like("company2%"), 1},
-				{Company.class, company.name.like("somecompany%"), 0},
-				{Company.class, company.name.like("%company%"), 3},
-				{Company.class, company.name.like("%pany2%"), 1},
-				{Company.class, company.name.like("%pany8%"), 0},
-				{Company.class, company.name.like("%pany8%"), 0},
-				{Company.class, company.name.like("%com%any%"), 3},
+				{Company.class, company.name.like("%pany2"), ids(2)},
+				{Company.class, company.name.like("%company2"), ids(2)},
+				{Company.class, company.name.like("%pany"), ids()},
+				{Company.class, company.name.like("company%"), ids(1, 2, 3)},
+				{Company.class, company.name.like("company2%"), ids(2)},
+				{Company.class, company.name.like("somecompany%"), ids()},
+				{Company.class, company.name.like("%company%"), ids(1, 2, 3)},
+				{Company.class, company.name.like("%pany2%"), ids(2)},
+				{Company.class, company.name.like("%pany8%"), ids()},
+				{Company.class, company.name.like("%pany8%"), ids()},
+				{Company.class, company.name.like("%com%any%"), ids(1, 2, 3)},
 
-				{Company.class, company.id.in(1l, 3l), 2},
-				{Company.class, company.id.in(1l, 8l), 1},
-				{Company.class, company.id.in(7l, 8l), 0},
-				{Company.class, company.name.in("company2", "company3"), 2},
-				{Company.class, company.name.in("company8", "company3"), 1},
-				{Company.class, company.name.in("c1"), 0},
+				{Company.class, company.id.in(1l, 3l), ids(1, 3)},
+				{Company.class, company.id.in(1l, 8l), ids(1)},
+				{Company.class, company.id.in(7l, 8l), ids()},
+				{Company.class, company.name.in("company2", "company3"), ids(2, 3)},
+				{Company.class, company.name.in("company8", "company3"), ids(3)},
+				{Company.class, company.name.in("c1"), ids()},
 
-				{Company.class, company.name.eq("company1").and(company.id.eq(1l)), 1},
-				{Company.class, company.name.eq("company1").and(company.id.eq(2l)), 0},
-				{Company.class, company.name.eq("company1").or(company.id.eq(1l)), 1},
-				{Company.class, company.name.eq("company1").or(company.id.eq(2l)), 2},
-				{Company.class, company.name.like("company%").or(company.name.isNull()), 4},
+				{Company.class, company.name.eq("company1").and(company.id.eq(1l)), ids(1)},
+				{Company.class, company.name.eq("company1").and(company.id.eq(2l)), ids()},
+				{Company.class, company.name.eq("company1").or(company.id.eq(1l)), ids(1)},
+				{Company.class, company.name.eq("company1").or(company.id.eq(2l)), ids(1, 2)},
+				{Company.class, company.name.like("company%").or(company.name.isNull()), ids(1, 2, 3, 4)},
 
-				{Company.class, company.name.eq("company2").not(), 2},
-				{Company.class, company.name.eq("company2").not().not(), 1},
-				{Company.class, company.id.gt(3l).not(), 3},
-				{Company.class, company.id.gt(3l).not().not(), 1},
-				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).not(), 2},
-				{Company.class, company.id.eq(1l).or(company.id.eq(2l)).not(), 2},
+				{Company.class, company.name.eq("company2").not(), ids(1, 3)},
+				{Company.class, company.name.eq("company2").not().not(), ids(2)},
+				{Company.class, company.id.gt(3l).not(), ids(1, 2, 3)},
+				{Company.class, company.id.gt(3l).not().not(), ids(4)},
+				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).not(), ids(2, 3)},
+				{Company.class, company.id.eq(1l).or(company.id.eq(2l)).not(), ids(3, 4)},
 
-				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).and(company.name.like("company%")), 1},
-				{Company.class, company.name.eq("company1").and(company.id.eq(2l)).and(company.name.isNull()), 0},
-				{Company.class, company.name.eq("company1").or(company.id.eq(1l)).or(company.name.like("company%")), 3},
-				{Company.class, company.name.eq("company1").or(company.id.eq(2l)).or(company.name.isNull()), 3},
-				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).or(company.name.like("company%")), 3},
-				{Company.class, company.name.eq("company1").or(company.id.eq(4l)).and(company.name.isNull()), 1},
+				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).and(company.name.like("company%")), ids(1)},
+				{Company.class, company.name.eq("company1").and(company.id.eq(2l)).and(company.name.isNull()), ids()},
+				{Company.class, company.name.eq("company1").or(company.id.eq(1l)).or(company.name.like("company%")), ids(1, 2, 3)},
+				{Company.class, company.name.eq("company1").or(company.id.eq(2l)).or(company.name.isNull()), ids(1, 2, 4)},
+				{Company.class, company.name.eq("company1").and(company.id.eq(1l)).or(company.name.like("company%")), ids(1, 2, 3)},
+				{Company.class, company.name.eq("company1").or(company.id.eq(4l)).and(company.name.isNull()), ids(4)},
 
-				{Department.class, department.name.like("dep%").and(department.company.name.eq("company1")), 3},
-				{Department.class, department.name.eq("department4").and(department.company.name.eq("company1")), 0},
+				{Department.class, department.name.like("dep%").and(department.company.name.eq("company1")), ids(1, 2, 3)},
+				{Department.class, department.name.eq("department4").and(department.company.name.eq("company1")), ids()},
 		};
 	}
 
 	@Test(dataProvider = "find_data")
-	public <PK extends Serializable, E extends Entity<PK>>
-	void test_find(final Class<E> entityClass, final Criteria<PK, E> criteria, final long expectedCount) {
-		final long actualCount = repository.count(entityClass, criteria);
-		assertEquals(actualCount, expectedCount);
+	public <E extends Entity<Long>>
+	void test_find(final Class<E> entityClass, final Criteria<Long, E> criteria, final long[] expectedIds) {
 		final List<E> actual = repository.find(entityClass, criteria, Pagination.ALL);
 		assertNotNull(actual);
-		assertEquals(actual.size(), expectedCount);
+		assertIds(actual, expectedIds);
+	}
+
+	@Test(dataProvider = "find_data")
+	public <E extends Entity<Long>>
+	void test_count(final Class<E> entityClass, final Criteria<Long, E> criteria, final long[] expectedIds) {
+		final long actualCount = repository.count(entityClass, criteria);
+		assertEquals(actualCount, expectedIds.length);
+	}
+
+	@DataProvider
+	public Object[][] find_all_data() {
+		return new Object[][]{
+				{Company.class, ids(1, 2, 3, 4)},
+				{Department.class, ids(1, 2, 3, 4, 5)},
+		};
+	}
+
+	@Test(dataProvider = "find_all_data")
+	public <E extends Entity<Long>>
+	void test_find_all(final Class<E> entityClass, final long[] expectedIds) {
+		final List<E> actual = repository.find(entityClass, Pagination.ALL);
+		assertNotNull(actual);
+		assertIds(actual, expectedIds);
+	}
+
+	@Test(dataProvider = "find_all_data")
+	public <E extends Entity<Long>>
+	void test_count_all(final Class<E> entityClass, final long[] expectedIds) {
+		final long actualCount = repository.count(entityClass);
+		assertEquals(actualCount, expectedIds.length);
 	}
 
 	@DataProvider
@@ -211,14 +239,23 @@ public class TestHibernateRepository extends Assert {
 	}
 
 	@Test(dataProvider = "sorting_data")
-	public <PK extends Serializable, E extends Entity<PK>>
-	void test_sorting(final Class<E> entityClass, final Criteria<PK, E> criteria, final long[] expectedIds) {
+	public <E extends Entity<Long>>
+	void test_sorting(final Class<E> entityClass, final Criteria<Long, E> criteria, final long[] expectedIds) {
 		final List<E> actual = repository.find(entityClass, criteria, Pagination.ALL);
 		assertNotNull(actual);
-		assertEquals(actual.size(), expectedIds.length);
-		for (int i = 0; i < expectedIds.length; i++) {
-			assertEquals(actual.get(i).getId(), expectedIds[i]);
+		assertIds(actual, expectedIds);
+	}
+
+	private static <E extends Entity<Long>>
+	void assertIds(final List<E> actual, final long[] expected) {
+		final long[] actualIds = new long[actual.size()];
+		for (int i = 0; i < actualIds.length; i++) {
+			actualIds[i] = actual.get(i).getId();
 		}
+		final String message = String.format("Ids not match expected result:\n\texpected: %s\n\tactual: %s\n",
+				Arrays.toString(expected),
+				Arrays.toString(actualIds));
+		assertEquals(actualIds, expected, message);
 	}
 
 	private static long[] ids(final long... ids) {
