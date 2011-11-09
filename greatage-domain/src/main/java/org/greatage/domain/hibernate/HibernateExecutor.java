@@ -16,17 +16,67 @@
 
 package org.greatage.domain.hibernate;
 
+import org.greatage.domain.SessionCallback;
+import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
-
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface HibernateExecutor extends TransactionExecutor {
+public class HibernateExecutor implements TransactionExecutor<Transaction, Session> {
+	private final SessionFactory sessionFactory;
+	private final ThreadLocal<Session> sessionHolder = new ThreadLocal<Session>();
 
-	<T> T execute(HibernateCallback<T> callback);
+	public HibernateExecutor(final SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
 
-	void clear();
+	public <V> V execute(final TransactionCallback<V, Transaction> callback) {
+		return execute(new SessionCallback<V, Session>() {
+			public V doInSession(final Session session) throws Exception {
+				Transaction transaction = null;
+				try {
+					transaction = session.beginTransaction();
+					final V result = callback.doInTransaction(transaction);
+					transaction.commit();
+					return result;
+				} catch (RuntimeException e) {
+					throw e;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					if (transaction != null && transaction.isActive()) {
+						transaction.rollback();
+					}
+				}
+			}
+		});
+	}
 
+	public <V> V execute(final SessionCallback<V, Session> callback) {
+		Session session = sessionHolder.get();
+		final boolean sessionCreated = session == null;
+		try {
+			if (session == null) {
+				session = sessionFactory.openSession();
+				sessionHolder.set(session);
+			}
+			final V result = callback.doInSession(session);
+			session.flush();
+			return result;
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (sessionCreated && session != null) {
+				session.close();
+				sessionHolder.remove();
+			}
+		}
+	}
 }

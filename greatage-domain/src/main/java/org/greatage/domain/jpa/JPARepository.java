@@ -20,10 +20,12 @@ import org.greatage.domain.AbstractEntityRepository;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.domain.SessionCallback;
+import org.greatage.domain.TransactionExecutor;
 import org.greatage.util.DescriptionBuilder;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
+import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 import java.io.Serializable;
 import java.util.List;
@@ -34,9 +36,10 @@ import java.util.Map;
  * @since 1.0
  */
 public class JPARepository extends AbstractEntityRepository {
-	private final JPAExecutor executor;
+	private final TransactionExecutor<EntityTransaction, EntityManager> executor;
 
-	public JPARepository(final JPAExecutor executor, final Map<Class, Class> entityMapping) {
+	public JPARepository(final TransactionExecutor<EntityTransaction, EntityManager> executor,
+						 final Map<Class, Class> entityMapping) {
 		super(entityMapping);
 		this.executor = executor;
 	}
@@ -82,18 +85,18 @@ public class JPARepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new JPACallback<E>() {
-			public E doInJpa(final EntityManager em) throws Throwable {
-				return em.find(getImplementation(entityClass), pk);
+		return executor.execute(new SessionCallback<E, EntityManager>() {
+			public E doInSession(final EntityManager session) throws Exception {
+				return session.find(getImplementation(entityClass), pk);
 			}
 		});
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new JPACallback<Object>() {
-			public Object doInJpa(final EntityManager em) throws Throwable {
-				em.persist(entity);
+		executor.execute(new SessionCallback<Object, EntityManager>() {
+			public Object doInSession(final EntityManager session) throws Exception {
+				session.persist(entity);
 				return null;
 			}
 		});
@@ -101,9 +104,9 @@ public class JPARepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new JPACallback<Object>() {
-			public Object doInJpa(final EntityManager em) throws Throwable {
-				em.merge(entity);
+		executor.execute(new SessionCallback<Object, EntityManager>() {
+			public Object doInSession(final EntityManager session) throws Exception {
+				session.merge(entity);
 				return null;
 			}
 		});
@@ -111,9 +114,9 @@ public class JPARepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new JPACallback<Object>() {
-			public Object doInJpa(final EntityManager em) throws Throwable {
-				em.remove(entity);
+		executor.execute(new SessionCallback<Object, EntityManager>() {
+			public Object doInSession(final EntityManager session) throws Exception {
+				session.remove(entity);
 				return null;
 			}
 		});
@@ -121,9 +124,9 @@ public class JPARepository extends AbstractEntityRepository {
 
 	protected <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final String queryString, final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T> callback) {
-		return executor.execute(new JPACallback<T>() {
-			public T doInJpa(EntityManager em) throws PersistenceException {
-				final Query query = em.createQuery(queryString.replaceAll("entityClass", entityClass.getName()));
+		return executor.execute(new SessionCallback<T, EntityManager>() {
+			public T doInSession(final EntityManager session) throws Exception {
+				final Query query = session.createQuery(queryString.replaceAll("entityClass", entityClass.getName()));
 
 				if (pagination.getStart() > 0) {
 					query.setFirstResult(pagination.getStart());
@@ -140,7 +143,6 @@ public class JPARepository extends AbstractEntityRepository {
 	public interface QueryCallback<T> {
 
 		T doInQuery(Query query);
-
 	}
 
 	@Override

@@ -20,8 +20,10 @@ package org.greatage.domain;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface TransactionExecutor {
+public interface TransactionExecutor<T, S> {
 
-	Transaction begin();
+	<V> V execute(TransactionCallback<V, T> callback);
+
+	<V> V execute(SessionCallback<V, S> callback);
 
 }

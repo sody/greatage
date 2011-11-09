@@ -49,23 +49,19 @@ import static org.example.hibernate.Entities.department;
  * @since 1.0
  */
 public class TestHibernateRepository extends Assert {
-	private HibernateExecutor executor;
 	private EntityRepository repository;
 	private JdbcDatabaseTester tester;
 
 	@BeforeTest
-	public void setup_repository() {
+	public void setup_repository() throws Exception {
 		final Configuration configuration = new Configuration();
 		configuration.addAnnotatedClass(Company.class);
 		configuration.addAnnotatedClass(Department.class);
 		final SessionFactory sessionFactory = configuration.buildSessionFactory();
 
-		executor = new HibernateExecutorImpl(sessionFactory);
+		final HibernateExecutor executor = new HibernateExecutor(sessionFactory);
 		repository = new HibernateRepository(executor, new HashMap<Class, Class>());
-	}
 
-	@BeforeTest(dependsOnMethods = "setup_repository")
-	public void setup_database() throws Exception {
 		final Properties properties = new Properties();
 		properties.load(getClass().getResourceAsStream("/dbunit.properties"));
 		tester = new JdbcDatabaseTester(
@@ -88,6 +84,7 @@ public class TestHibernateRepository extends Assert {
 	@AfterTest
 	public void cleanup_database() throws Exception {
 		tester.onTearDown();
+		repository = null;
 	}
 
 	@DataProvider

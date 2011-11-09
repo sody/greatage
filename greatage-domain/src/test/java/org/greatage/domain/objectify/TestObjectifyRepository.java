@@ -26,6 +26,7 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
 import org.testng.Assert;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -43,7 +44,6 @@ import static org.example.hibernate.Entities.company;
  */
 public class TestObjectifyRepository extends Assert {
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-	private ObjectifyExecutor executor;
 	private EntityRepository repository;
 
 	@BeforeTest
@@ -58,10 +58,11 @@ public class TestObjectifyRepository extends Assert {
 		companies.add(new Company(4l, null));
 		objectify.put(companies);
 
-		executor = new ObjectifyExecutorImpl(objectify);
+		final ObjectifyExecutor executor = new ObjectifyExecutor(objectify);
 		repository = new ObjectifyRepository(executor, new HashMap<Class, Class>());
 	}
 
+	@AfterTest
 	public void cleanup_repository() {
 		repository = null;
 		helper.tearDown();

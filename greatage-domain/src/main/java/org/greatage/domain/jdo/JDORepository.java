@@ -20,12 +20,14 @@ import org.greatage.domain.AbstractEntityRepository;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
+import org.greatage.domain.SessionCallback;
+import org.greatage.domain.TransactionExecutor;
 import org.greatage.util.DescriptionBuilder;
 
 import javax.jdo.Extent;
-import javax.jdo.JDOException;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +39,10 @@ import java.util.Map;
 public class JDORepository extends AbstractEntityRepository {
 	private static final String COUNT_RESULT = "count(id)";
 
-	private final JDOExecutor executor;
+	private final TransactionExecutor<Transaction, PersistenceManager> executor;
 
-	public JDORepository(final JDOExecutor executor, final Map<Class, Class> entityMapping) {
+	public JDORepository(final TransactionExecutor<Transaction, PersistenceManager> executor,
+						 final Map<Class, Class> entityMapping) {
 		super(entityMapping);
 		this.executor = executor;
 	}
@@ -90,10 +93,10 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new JDOCallback<E>() {
-			public E doInJdo(final PersistenceManager pm) throws Throwable {
+		return executor.execute(new SessionCallback<E, PersistenceManager>() {
+			public E doInSession(final PersistenceManager session) throws Exception {
 				try {
-					return pm.getObjectById(getImplementation(entityClass), pk);
+					return session.getObjectById(getImplementation(entityClass), pk);
 				} catch (Exception e) {
 					// todo: needs to process only needed exceptions
 					return null;
@@ -104,9 +107,9 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new JDOCallback<Object>() {
-			public Object doInJdo(final PersistenceManager pm) throws Throwable {
-				pm.makePersistent(entity);
+		executor.execute(new SessionCallback<Object, PersistenceManager>() {
+			public Object doInSession(final PersistenceManager session) throws Exception {
+				session.makePersistent(entity);
 				return null;
 			}
 		});
@@ -114,9 +117,9 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new JDOCallback<Object>() {
-			public Object doInJdo(final PersistenceManager pm) throws Throwable {
-				pm.refresh(entity);
+		executor.execute(new SessionCallback<Object, PersistenceManager>() {
+			public Object doInSession(final PersistenceManager session) throws Exception {
+				session.refresh(entity);
 				return null;
 			}
 		});
@@ -124,9 +127,9 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new JDOCallback<Object>() {
-			public Object doInJdo(final PersistenceManager pm) throws Throwable {
-				pm.deletePersistent(entity);
+		executor.execute(new SessionCallback<Object, PersistenceManager>() {
+			public Object doInSession(final PersistenceManager session) throws Exception {
+				session.deletePersistent(entity);
 				return null;
 			}
 		});
@@ -134,10 +137,10 @@ public class JDORepository extends AbstractEntityRepository {
 
 	private <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T> callback) {
-		return executor.execute(new JDOCallback<T>() {
-			public T doInJdo(final PersistenceManager pm) throws JDOException {
-				final Extent<? extends Entity> extent = pm.getExtent(getImplementation(entityClass), true);
-				final Query query = pm.newQuery(extent);
+		return executor.execute(new SessionCallback<T, PersistenceManager>() {
+			public T doInSession(final PersistenceManager session) throws Exception {
+				final Extent<? extends Entity> extent = session.getExtent(getImplementation(entityClass), true);
+				final Query query = session.newQuery(extent);
 
 				final JDOCriteriaVisitor<PK, E> visitor = new JDOCriteriaVisitor<PK, E>(query);
 				visitor.visit(criteria);

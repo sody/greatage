@@ -16,16 +16,69 @@
 
 package org.greatage.domain.jdo;
 
+import org.greatage.domain.SessionCallback;
+import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.PersistenceManagerFactory;
+import javax.jdo.Transaction;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface JDOExecutor extends TransactionExecutor {
+public class JDOExecutor implements TransactionExecutor<Transaction, PersistenceManager> {
+	private final PersistenceManagerFactory persistenceManagerFactory;
+	private final ThreadLocal<PersistenceManager> sessionHolder = new ThreadLocal<PersistenceManager>();
 
-	<T> T execute(JDOCallback<T> callback);
+	public JDOExecutor(final PersistenceManagerFactory persistenceManagerFactory) {
+		this.persistenceManagerFactory = persistenceManagerFactory;
+	}
 
-	void clear();
+	public <V> V execute(final TransactionCallback<V, Transaction> callback) {
+		return execute(new SessionCallback<V, PersistenceManager>() {
+			public V doInSession(final PersistenceManager session) throws Exception {
+				Transaction transaction = null;
+				try {
+					transaction = session.currentTransaction();
+					transaction.begin();
+					final V result = callback.doInTransaction(transaction);
+					transaction.commit();
+					return result;
+				} catch (RuntimeException e) {
+					throw e;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					if (transaction != null && transaction.isActive()) {
+						transaction.rollback();
+					}
+				}
+			}
+		});
+	}
 
+	public <V> V execute(final SessionCallback<V, PersistenceManager> callback) {
+		PersistenceManager session = sessionHolder.get();
+		final boolean sessionCreated = session == null;
+		try {
+			if (session == null) {
+				session = persistenceManagerFactory.getPersistenceManager();
+				sessionHolder.set(session);
+			}
+			final V result = callback.doInSession(session);
+			session.flush();
+			return result;
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (sessionCreated && session != null) {
+				session.close();
+				sessionHolder.remove();
+			}
+		}
+	}
 }

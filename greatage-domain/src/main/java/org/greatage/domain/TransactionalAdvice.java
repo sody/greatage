@@ -25,9 +25,9 @@ import org.greatage.inject.Invocation;
  * @since 1.0
  */
 public class TransactionalAdvice implements Interceptor {
-	private final TransactionExecutor executor;
+	private final TransactionExecutor<Object, Object> executor;
 
-	public TransactionalAdvice(final TransactionExecutor executor) {
+	public TransactionalAdvice(final TransactionExecutor<Object, Object> executor) {
 		this.executor = executor;
 	}
 
@@ -36,14 +36,16 @@ public class TransactionalAdvice implements Interceptor {
 	}
 
 	public Object invoke(final Invocation invocation, final Object... parameters) throws Throwable {
-		final Transaction transaction = executor.begin();
-		try {
-			final Object result = invocation.proceed(parameters);
-			transaction.commit();
-			return result;
-		} catch (Throwable throwable) {
-			transaction.rollback();
-			throw throwable;
-		}
+		return executor.execute(new TransactionCallback<Object, Object>() {
+			public Object doInTransaction(final Object transaction) throws Exception {
+				try {
+					return invocation.proceed(parameters);
+				} catch (Exception e) {
+					throw e;
+				} catch (Throwable throwable) {
+					throw new RuntimeException(throwable);
+				}
+			}
+		});
 	}
 }

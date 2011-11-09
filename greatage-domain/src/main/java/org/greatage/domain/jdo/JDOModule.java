@@ -35,7 +35,7 @@ public class JDOModule {
 	@Bind
 	public static void bind(final ServiceBinder binder) {
 		binder.bind(EntityRepository.class, JDORepository.class);
-		binder.bind(JDOExecutor.class, JDOExecutorImpl.class).withScope(Threaded.class);
+		binder.bind(JDOExecutor.class, JDOExecutor.class).withScope(Threaded.class);
 	}
 
 	@Build

@@ -23,7 +23,6 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.example.jdo.Company;
 import org.example.jdo.Department;
-import org.greatage.domain.AllCriteria;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.EntityRepository;
@@ -49,23 +48,18 @@ import static org.example.hibernate.Entities.company;
  * @since 1.0
  */
 public class TestJDORepository extends Assert {
-	private JDOExecutor executor;
 	private EntityRepository repository;
 	private JdbcDatabaseTester tester;
 
 	@BeforeTest
-	public void setup_repository() {
+	public void setup_repository() throws Exception {
 		final PersistenceManagerFactory factory = JDOHelper.getPersistenceManagerFactory("jdo.properties");
-		executor = new JDOExecutorImpl(factory);
+		final JDOExecutor executor = new JDOExecutor(factory);
 		repository = new JDORepository(executor, new HashMap<Class, Class>());
 
 		repository.find(Company.class, Pagination.ALL);
 		repository.find(Department.class, Pagination.ALL);
-		executor.clear();
-	}
 
-	@BeforeTest(dependsOnMethods = "setup_repository")
-	public void setup_database() throws Exception {
 		final Properties properties = new Properties();
 		properties.load(getClass().getResourceAsStream("/dbunit.properties"));
 		tester = new JdbcDatabaseTester(
@@ -88,6 +82,7 @@ public class TestJDORepository extends Assert {
 	@AfterTest
 	public void cleanup_database() throws Exception {
 		tester.onTearDown();
+		repository = null;
 	}
 
 	@DataProvider

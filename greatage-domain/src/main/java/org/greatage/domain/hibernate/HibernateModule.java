@@ -18,13 +18,20 @@ package org.greatage.domain.hibernate;
 
 import org.greatage.domain.DomainConstants;
 import org.greatage.domain.EntityRepository;
+import org.greatage.domain.TransactionExecutor;
 import org.greatage.inject.MappedConfiguration;
 import org.greatage.inject.OrderedConfiguration;
 import org.greatage.inject.ServiceBinder;
-import org.greatage.inject.annotations.*;
+import org.greatage.inject.annotations.Bind;
+import org.greatage.inject.annotations.Build;
+import org.greatage.inject.annotations.Contribute;
+import org.greatage.inject.annotations.Named;
+import org.greatage.inject.annotations.Symbol;
 import org.greatage.inject.services.ResourceLocator;
 import org.greatage.inject.services.SymbolProvider;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,7 +48,7 @@ public class HibernateModule {
 		binder.bind(HibernateConfiguration.class, HibernateAnnotationConfiguration.class)
 				.named("HibernateAnnotationConfiguration");
 		binder.bind(HibernateConfiguration.class, HibernatePropertyConfiguration.class).named("HibernatePropertyConfiguration");
-		binder.bind(HibernateExecutor.class, HibernateExecutorImpl.class).withScope(Threaded.class);
+		binder.bind(TransactionExecutor.class, HibernateExecutor.class);
 	}
 
 	@Contribute(SymbolProvider.class)
@@ -71,7 +78,7 @@ public class HibernateModule {
 
 	@Build
 	public EntityRepository buildHibernateRepository(final Map<Class, Class> aliases,
-													 final HibernateExecutor executor) {
+													 final TransactionExecutor<Transaction, Session> executor) {
 		return new HibernateRepository(executor, aliases);
 	}
 }

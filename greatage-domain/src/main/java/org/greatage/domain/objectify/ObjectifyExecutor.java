@@ -16,16 +16,48 @@
 
 package org.greatage.domain.objectify;
 
+import com.google.appengine.api.datastore.Transaction;
+import com.googlecode.objectify.Objectify;
+import org.greatage.domain.SessionCallback;
+import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface ObjectifyExecutor extends TransactionExecutor {
+public class ObjectifyExecutor implements TransactionExecutor<Transaction, Objectify> {
+	private final Objectify objectify;
 
-	<T> T execute(ObjectifyCallback<T> callback);
+	public ObjectifyExecutor(final Objectify objectify) {
+		this.objectify = objectify;
+	}
 
-	void clear();
+	public <V> V execute(final TransactionCallback<V, Transaction> callback) {
+		Transaction transaction = null;
+		try {
+			transaction = objectify.getTxn();
+			final V result = callback.doInTransaction(transaction);
+			transaction.commit();
+			return result;
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		} finally {
+			if (transaction != null && transaction.isActive()) {
+				transaction.rollback();
+			}
+		}
+	}
 
+	public <V> V execute(final SessionCallback<V, Objectify> callback) {
+		try {
+			return callback.doInSession(objectify);
+		} catch (RuntimeException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

@@ -16,9 +16,16 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.*;
+import org.greatage.domain.AbstractEntityRepository;
+import org.greatage.domain.Criteria;
+import org.greatage.domain.CriteriaVisitor;
+import org.greatage.domain.Entity;
+import org.greatage.domain.Pagination;
+import org.greatage.domain.SessionCallback;
+import org.greatage.domain.TransactionExecutor;
 import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Projections;
 
@@ -34,9 +41,9 @@ import java.util.Map;
  * @since 1.0
  */
 public class HibernateRepository extends AbstractEntityRepository {
-	private final HibernateExecutor executor;
+	private final TransactionExecutor<Transaction, Session> executor;
 
-	public HibernateRepository(final HibernateExecutor executor, final Map<Class, Class> entityMapping) {
+	public HibernateRepository(final TransactionExecutor<Transaction, Session> executor, final Map<Class, Class> entityMapping) {
 		super(entityMapping);
 		this.executor = executor;
 	}
@@ -87,9 +94,9 @@ public class HibernateRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new HibernateCallback<E>() {
+		return executor.execute(new SessionCallback<E, Session>() {
 			@SuppressWarnings({"unchecked"})
-			public E doInSession(final Session session) throws Throwable {
+			public E doInSession(final Session session) throws Exception {
 				return (E) session.get(getImplementation(entityClass), pk);
 			}
 		});
@@ -97,8 +104,8 @@ public class HibernateRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new HibernateCallback<Object>() {
-			public Object doInSession(final Session session) throws Throwable {
+		executor.execute(new SessionCallback<Object, Session>() {
+			public Object doInSession(final Session session) throws Exception {
 				session.save(entity);
 				return null;
 			}
@@ -107,8 +114,8 @@ public class HibernateRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new HibernateCallback<Object>() {
-			public Object doInSession(final Session session) throws Throwable {
+		executor.execute(new SessionCallback<Object, Session>() {
+			public Object doInSession(final Session session) throws Exception {
 				session.update(entity);
 				return null;
 			}
@@ -118,8 +125,8 @@ public class HibernateRepository extends AbstractEntityRepository {
 	@Override
 	public <PK extends Serializable, E extends Entity<PK>>
 	void saveOrUpdate(final E entity) {
-		executor.execute(new HibernateCallback<Object>() {
-			public Object doInSession(final Session session) throws Throwable {
+		executor.execute(new SessionCallback<Object, Session>() {
+			public Object doInSession(final Session session) throws Exception {
 				session.saveOrUpdate(entity);
 				return null;
 			}
@@ -128,8 +135,8 @@ public class HibernateRepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new HibernateCallback<Object>() {
-			public Object doInSession(final Session session) throws Throwable {
+		executor.execute(new SessionCallback<Object, Session>() {
+			public Object doInSession(final Session session) throws Exception {
 				session.delete(entity);
 				return null;
 			}
@@ -151,8 +158,8 @@ public class HibernateRepository extends AbstractEntityRepository {
 	 */
 	private <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final CriteriaCallback<T> callback) {
-		return executor.execute(new HibernateCallback<T>() {
-			public T doInSession(final Session session) throws Throwable {
+		return executor.execute(new SessionCallback<T, Session>() {
+			public T doInSession(final Session session) throws Exception {
 				final org.hibernate.Criteria signedCriteria = session.createCriteria(getImplementation(entityClass));
 
 				final CriteriaVisitor<PK, E> visitor = new HibernateCriteriaVisitor<PK, E>(signedCriteria);
