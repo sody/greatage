@@ -56,7 +56,8 @@ public class GAEUpdate extends GAEChange implements Trick.Update {
 				}
 				entity.setProperty(entry.getKey(), keys);
 			} else {
-				//todo: implement this
+				final Entity value = dataStore.prepare(selectQuery.getQuery()).asSingleEntity();
+				entity.setProperty(entry.getKey(), value != null ? value.getKey() : null);
 			}
 		}
 
