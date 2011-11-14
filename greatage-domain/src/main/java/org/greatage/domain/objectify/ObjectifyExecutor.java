@@ -18,6 +18,7 @@ package org.greatage.domain.objectify;
 
 import com.google.appengine.api.datastore.Transaction;
 import com.googlecode.objectify.Objectify;
+import com.googlecode.objectify.ObjectifyFactory;
 import org.greatage.domain.SessionCallback;
 import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
@@ -27,37 +28,53 @@ import org.greatage.domain.TransactionExecutor;
  * @since 1.0
  */
 public class ObjectifyExecutor implements TransactionExecutor<Transaction, Objectify> {
-	private final Objectify objectify;
+	private final ThreadLocal<Objectify> sessionHolder = new ThreadLocal<Objectify>();
 
-	public ObjectifyExecutor(final Objectify objectify) {
-		this.objectify = objectify;
+	private final ObjectifyFactory objectifyFactory;
+
+	public ObjectifyExecutor(final ObjectifyFactory objectifyFactory) {
+		this.objectifyFactory = objectifyFactory;
 	}
 
 	public <V> V execute(final TransactionCallback<V, Transaction> callback) {
-		Transaction transaction = null;
+		return execute(new SessionCallback<V, Objectify>() {
+			public V doInSession(final Objectify session) throws Exception {
+				Transaction transaction = null;
+				try {
+					transaction = session.getTxn();
+					final V result = callback.doInTransaction(transaction);
+					transaction.commit();
+					return result;
+				} catch (RuntimeException e) {
+					throw e;
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				} finally {
+					if (transaction != null && transaction.isActive()) {
+						transaction.rollback();
+					}
+				}
+			}
+		});
+	}
+
+	public <V> V execute(final SessionCallback<V, Objectify> callback) {
+		Objectify session = sessionHolder.get();
+		final boolean sessionCreated = session == null;
 		try {
-			transaction = objectify.getTxn();
-			final V result = callback.doInTransaction(transaction);
-			transaction.commit();
-			return result;
+			if (session == null) {
+				session = objectifyFactory.begin();
+				sessionHolder.set(session);
+			}
+			return callback.doInSession(session);
 		} catch (RuntimeException e) {
 			throw e;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
-			if (transaction != null && transaction.isActive()) {
-				transaction.rollback();
+			if (sessionCreated && session != null) {
+				sessionHolder.remove();
 			}
-		}
-	}
-
-	public <V> V execute(final SessionCallback<V, Objectify> callback) {
-		try {
-			return callback.doInSession(objectify);
-		} catch (RuntimeException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
 		}
 	}
 }

@@ -19,7 +19,7 @@ package org.greatage.domain.objectify;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Objectify;
-import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.ObjectifyFactory;
 import org.example.objectify.Company;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
@@ -27,9 +27,7 @@ import org.greatage.domain.EntityRepository;
 import org.greatage.domain.Pagination;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -51,8 +49,9 @@ public class TestObjectifyRepository extends Assert {
 	@BeforeClass
 	public void setup_repository() {
 		helper.setUp();
-		ObjectifyService.register(Company.class);
-		final Objectify objectify = ObjectifyService.begin();
+		final ObjectifyFactory objectifyFactory = new ObjectifyFactory();
+		objectifyFactory.register(Company.class);
+		final Objectify objectify = objectifyFactory.begin();
 		final List<Company> companies = new ArrayList<Company>();
 		companies.add(new Company(1l, "company1"));
 		companies.add(new Company(2l, "company2"));
@@ -60,7 +59,7 @@ public class TestObjectifyRepository extends Assert {
 		companies.add(new Company(4l, null));
 		objectify.put(companies);
 
-		final ObjectifyExecutor executor = new ObjectifyExecutor(objectify);
+		final ObjectifyExecutor executor = new ObjectifyExecutor(objectifyFactory);
 		repository = new ObjectifyRepository(executor, new HashMap<Class, Class>());
 	}
 
