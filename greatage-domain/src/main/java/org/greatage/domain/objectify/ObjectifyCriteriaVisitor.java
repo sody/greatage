@@ -15,9 +15,9 @@ import java.io.Serializable;
  * @since 1.0
  */
 public class ObjectifyCriteriaVisitor<PK extends Serializable, E extends Entity<PK>> extends AbstractCriteriaVisitor<PK, E> {
-	private final Query<E> query;
+	private final Query<? extends E> query;
 
-	public ObjectifyCriteriaVisitor(final Query<E> query) {
+	public ObjectifyCriteriaVisitor(final Query<? extends E> query) {
 		this.query = query;
 	}
 

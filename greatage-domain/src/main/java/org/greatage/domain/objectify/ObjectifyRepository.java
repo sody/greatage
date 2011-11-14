@@ -30,7 +30,7 @@ public class ObjectifyRepository extends AbstractEntityRepository {
 	public <PK extends Serializable, E extends Entity<PK>>
 	long count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
 		return execute(entityClass, criteria, Pagination.ALL, new QueryCallback<Number, E>() {
-			public Number doInQuery(final Query<E> query) {
+			public Number doInQuery(final Query<? extends E> query) {
 				return query.count();
 			}
 		}).longValue();
@@ -39,8 +39,8 @@ public class ObjectifyRepository extends AbstractEntityRepository {
 	public <PK extends Serializable, E extends Entity<PK>>
 	List<E> find(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination) {
 		return execute(entityClass, criteria, pagination, new QueryCallback<List<E>, E>() {
-			public List<E> doInQuery(final Query<E> query) {
-				return query.list();
+			public List<E> doInQuery(final Query<? extends E> query) {
+				return (List) query.list();
 			}
 		});
 	}
@@ -58,7 +58,7 @@ public class ObjectifyRepository extends AbstractEntityRepository {
 	public <PK extends Serializable, E extends Entity<PK>>
 	E findUnique(final Class<E> entityClass, final Criteria<PK, E> criteria) {
 		return execute(entityClass, criteria, Pagination.UNIQUE, new QueryCallback<E, E>() {
-			public E doInQuery(final Query<E> query) {
+			public E doInQuery(final Query<? extends E> query) {
 				return query.get();
 			}
 		});
@@ -107,7 +107,7 @@ public class ObjectifyRepository extends AbstractEntityRepository {
 	T execute(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T, E> callback) {
 		return executor.execute(new SessionCallback<T, Objectify>() {
 			public T doInSession(final Objectify session) throws Exception {
-				final Query<E> query = session.query(entityClass);
+				final Query<? extends E> query = session.query(getImplementation(entityClass));
 
 				final ObjectifyCriteriaVisitor<PK, E> visitor = new ObjectifyCriteriaVisitor<PK, E>(query);
 				visitor.visit(criteria);
@@ -127,6 +127,6 @@ public class ObjectifyRepository extends AbstractEntityRepository {
 
 	public static interface QueryCallback<T, E> {
 
-		T doInQuery(Query<E> query);
+		T doInQuery(Query<? extends E> query);
 	}
 }

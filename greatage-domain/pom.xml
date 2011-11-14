@@ -82,6 +82,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>com.vercer.engine.persist</groupId>
+			<artifactId>twig-persist</artifactId>
+			<version>1.0.4</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
 			<optional>true</optional>

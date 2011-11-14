@@ -41,7 +41,7 @@ public class ObjectifyExecutor implements TransactionExecutor<Transaction, Objec
 			public V doInSession(final Objectify session) throws Exception {
 				Transaction transaction = null;
 				try {
-					transaction = session.getTxn();
+					transaction = session.getDatastore().beginTransaction();
 					final V result = callback.doInTransaction(transaction);
 					transaction.commit();
 					return result;
