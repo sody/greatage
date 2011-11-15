@@ -68,7 +68,7 @@ public class ObjectifyRepository extends AbstractEntityRepository {
 	E get(final Class<E> entityClass, final PK pk) {
 		return executor.execute(new SessionCallback<E, Objectify>() {
 			public E doInSession(final Objectify session) throws Exception {
-				return session.get(entityClass, (Long) pk);
+				return session.get(getImplementation(entityClass), (Long) pk);
 			}
 		});
 	}
