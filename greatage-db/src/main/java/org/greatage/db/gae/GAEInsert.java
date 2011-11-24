@@ -46,6 +46,7 @@ public class GAEInsert extends GAEChange implements Trick.Insert {
 		for (int i = 0; i < into.size(); i++) {
 			value.setProperty(into.get(i), values[i]);
 		}
+		this.values.add(value);
 		return this;
 	}
 
