@@ -17,10 +17,13 @@ import java.util.Map;
  * @since 1.0
  */
 public class GAEInsert extends GAEChange implements Trick.Insert {
+	public static final String PARENT_PROPERTY = "__parent__";
+
 	private final Entity entity;
 	private final Map<String, Trick.Select> setters = new HashMap<String, Trick.Select>();
 	private final List<String> into = new ArrayList<String>();
 	private final List<Entity> values = new ArrayList<Entity>();
+	private Trick.Select parent;
 
 	GAEInsert(final String entityName) {
 		entity = new Entity(entityName);
@@ -32,7 +35,11 @@ public class GAEInsert extends GAEChange implements Trick.Insert {
 	}
 
 	public Trick.Insert set(final String propertyName, final Trick.Select select) {
-		setters.put(propertyName, select);
+		if (PARENT_PROPERTY.equals(propertyName)) {
+			parent = select;
+		} else {
+			setters.put(propertyName, select);
+		}
 		return this;
 	}
 
@@ -51,6 +58,9 @@ public class GAEInsert extends GAEChange implements Trick.Insert {
 	}
 
 	public void doInDataStore(final DatastoreService dataStore) {
+		final Key parentKey = parent != null ?
+				dataStore.prepare(((GAESelect) parent).getQuery()).asSingleEntity().getKey() : null;
+
 		for (Map.Entry<String, Trick.Select> entry : setters.entrySet()) {
 			final GAESelect selectQuery = (GAESelect) entry.getValue();
 
@@ -61,16 +71,34 @@ public class GAEInsert extends GAEChange implements Trick.Insert {
 				}
 				entity.setProperty(entry.getKey(), keys);
 			} else {
-				//todo: implement this
+				final Entity value = dataStore.prepare(selectQuery.getQuery()).asSingleEntity();
+				entity.setProperty(entry.getKey(), value != null ? value.getKey() : null);
 			}
 		}
 		if (values.isEmpty()) {
-			dataStore.put(entity);
-		} else {
-			for (Entity value : values) {
-				value.setPropertiesFrom(entity);
+			if (parentKey != null) {
+				final Entity clonedEntity = new Entity(entity.getKind(), parentKey);
+				clonedEntity.setPropertiesFrom(entity);
+				dataStore.put(clonedEntity);
+			} else {
+				dataStore.put(entity);
 			}
-			dataStore.put(values);
+		} else {
+			if (parentKey != null) {
+				final List<Entity> clonedEntities = new ArrayList<Entity>();
+				for (Entity value : values) {
+					final Entity clonedEntity = new Entity(value.getKind(), parentKey);
+					clonedEntity.setPropertiesFrom(value);
+					clonedEntity.setPropertiesFrom(entity);
+					clonedEntities.add(clonedEntity);
+				}
+				dataStore.put(clonedEntities);
+			} else {
+				for (Entity value : values) {
+					value.setPropertiesFrom(entity);
+				}
+				dataStore.put(values);
+			}
 		}
 	}
 
@@ -78,6 +106,9 @@ public class GAEInsert extends GAEChange implements Trick.Insert {
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
 		builder.append(entity.getKind());
+		if (parent != null) {
+			builder.append(PARENT_PROPERTY, parent);
+		}
 		for (Map.Entry<String, Object> entry : entity.getProperties().entrySet()) {
 			builder.append(entry.getKey(), entry.getValue());
 		}
