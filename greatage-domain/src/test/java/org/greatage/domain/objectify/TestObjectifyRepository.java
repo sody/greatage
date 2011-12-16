@@ -20,6 +20,7 @@ import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestC
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.ObjectifyOpts;
 import org.example.objectify.Company;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
@@ -59,7 +60,7 @@ public class TestObjectifyRepository extends Assert {
 		companies.add(new Company(4l, null));
 		objectify.put(companies);
 
-		final ObjectifyExecutor executor = new ObjectifyExecutor(objectifyFactory);
+		final ObjectifyExecutor executor = new ObjectifyExecutor(objectifyFactory, new ObjectifyOpts());
 		repository = new ObjectifyRepository(executor, new HashMap<Class, Class>());
 	}
 

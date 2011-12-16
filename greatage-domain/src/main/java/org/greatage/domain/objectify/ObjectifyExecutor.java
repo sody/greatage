@@ -19,6 +19,7 @@ package org.greatage.domain.objectify;
 import com.google.appengine.api.datastore.Transaction;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
+import com.googlecode.objectify.ObjectifyOpts;
 import org.greatage.domain.SessionCallback;
 import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
@@ -31,9 +32,11 @@ public class ObjectifyExecutor implements TransactionExecutor<Transaction, Objec
 	private final ThreadLocal<Objectify> sessionHolder = new ThreadLocal<Objectify>();
 
 	private final ObjectifyFactory objectifyFactory;
+	private final ObjectifyOpts options;
 
-	public ObjectifyExecutor(final ObjectifyFactory objectifyFactory) {
+	public ObjectifyExecutor(final ObjectifyFactory objectifyFactory, final ObjectifyOpts options) {
 		this.objectifyFactory = objectifyFactory;
+		this.options = options;
 	}
 
 	public <V> V execute(final TransactionCallback<V, Transaction> callback) {
@@ -63,7 +66,7 @@ public class ObjectifyExecutor implements TransactionExecutor<Transaction, Objec
 		final boolean sessionCreated = session == null;
 		try {
 			if (session == null) {
-				session = objectifyFactory.begin();
+				session = objectifyFactory.begin(options);
 				sessionHolder.set(session);
 			}
 			return callback.doInSession(session);
