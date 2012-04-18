@@ -212,6 +212,44 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.registeredAt$.le(null)                        | [1, 3, 4]
 	}
 
+	def "in property criteria should find only entities with property value in specified range"() {
+		when:
+		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		then:
+		actual == expected
+
+		where:
+		entityClass   | criteria                                                                              | expected
+		Company.class | company$.id$.in(1, 2, 3)                                                              | [1, 2, 3]
+		Company.class | company$.id$.in(1)                                                                    | [1]
+		Company.class | company$.id$.in(10)                                                                   | []
+		Company.class | company$.id$.in(1, 6, 10)                                                             | [1, 6]
+		Company.class | company$.name$.in("company", "company1")                                              | [1, 5, 6]
+		Company.class | company$.name$.in("company")                                                          | [5, 6]
+		Company.class | company$.name$.in("company8")                                                         | []
+		Company.class | company$.name$.in("company2", "company8")                                             | [2]
+		Company.class | company$.name$.in([null])                                                             | [4]
+		Company.class | company$.name$.in("company2", "company8", null)                                       | [2, 4]
+		Company.class | company$.registeredAt$.in(date("2001-01-01"), date("2001-02-02"))                     | [5, 6]
+		Company.class | company$.registeredAt$.in(date("2012-10-10"))                                         | []
+		Company.class | company$.registeredAt$.in(date("2001-01-01"), date("2010-10-10"), date("1999-01-01")) | [2, 5]
+		Company.class | company$.registeredAt$.in([null])                                                     | [1, 3, 4]
+		Company.class | company$.registeredAt$.in(date("2001-01-01"), null)                                   | [1, 3, 4, 5]
+	}
+
+	def "like property criteria should find only entities with property value like specified"() {
+		when:
+		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		then:
+		actual == expected
+
+		where:
+		entityClass   | criteria                       | expected
+		Company.class | company$.id$.like(1)           | [1]
+		Company.class | company$.id$.like(10)          | []
+		Company.class | company$.name$.like("company") | [5, 6]
+		Company.class | company$.name$.like("company8") | []
+	}
 
 	def "property criteria should throw exception if it is used with key column and null value"() {
 		when:
