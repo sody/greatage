@@ -41,6 +41,9 @@
 			<testResource>
 				<directory>src/test/resources</directory>
 			</testResource>
+			<testResource>
+				<directory>src/test/groovy</directory>
+			</testResource>
 		</testResources>
 	</build>
 
@@ -103,6 +106,18 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 

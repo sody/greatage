@@ -1,5 +1,6 @@
 package org.example.objectify;
 
+import org.example.model.Company;
 import org.greatage.domain.AbstractEntity;
 
 import javax.persistence.Entity;
@@ -11,7 +12,7 @@ import java.util.Date;
  * @since 1.0
  */
 @Entity(name = "company")
-public class Company extends AbstractEntity<Long> {
+public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
 	@Id
 	private Long id;
@@ -19,16 +20,20 @@ public class Company extends AbstractEntity<Long> {
 	private String name;
 	private Date registeredAt;
 
-	public Company() {
+	public CompanyImpl() {
 	}
 
-	public Company(final Long id, final String name) {
+	public CompanyImpl(final Long id, final String name) {
 		this.id = id;
 		this.name = name;
 	}
 
 	public Long getId() {
 		return id;
+	}
+
+	public void setId(final Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

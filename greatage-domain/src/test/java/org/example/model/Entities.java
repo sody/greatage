@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.example.objectify;
+package org.example.model;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class Entities {
-	public static final CompanyMapper<Company> company = new CompanyMapper<Company>(null);
-	public static final DepartmentMapper<Department> department = new DepartmentMapper<Department>(null);
+public abstract class Entities {
+	public static final CompanyMapper<Company> company$ = new CompanyMapper<Company>(null);
+	public static final DepartmentMapper<Department> department$ = new DepartmentMapper<Department>(null);
 }

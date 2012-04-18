@@ -16,6 +16,8 @@
 
 package org.example.objectify;
 
+import org.example.model.Company;
+import org.example.model.Department;
 import org.greatage.domain.AbstractEntity;
 
 import javax.persistence.Entity;
@@ -26,14 +28,14 @@ import javax.persistence.Id;
  * @since 1.0
  */
 @Entity(name = "department")
-public class Department extends AbstractEntity<Long> {
+public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 
 	@Id
 	private Long id;
 
 	private String name;
 
-	private Company company;
+	private CompanyImpl company;
 
 	public Long getId() {
 		return id;
@@ -52,6 +54,10 @@ public class Department extends AbstractEntity<Long> {
 	}
 
 	public void setCompany(final Company company) {
+		this.company = (CompanyImpl) company;
+	}
+
+	public void setCompany(final CompanyImpl company) {
 		this.company = company;
 	}
 }
