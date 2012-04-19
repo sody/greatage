@@ -72,6 +72,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.equal(1)                            | [1]
 		Company.class | company$.id$.eq(4)                               | [4]
 		Company.class | company$.id$.eq(10)                              | []
+//		Company.class | company$.id$.eq(null)                            | []
 		Company.class | company$.name$.equal("company")                  | [5, 6]
 		Company.class | company$.name$.eq("company1")                    | [1]
 		Company.class | company$.name$.eq("company8")                    | []
@@ -91,6 +92,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		entityClass   | criteria                                      | expected
 		Company.class | company$.id$.notEqual(1)                      | [2, 3, 4, 5, 6]
 		Company.class | company$.id$.ne(10)                           | [1, 2, 3, 4, 5, 6]
+//		Company.class | company$.id$.ne(null)                         | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.notEqual("company")            | [1, 2, 3, 4]
 		Company.class | company$.name$.ne("company1")                 | [2, 3, 4, 5, 6]
 		Company.class | company$.name$.ne("company8")                 | [1, 2, 3, 4, 5, 6]
@@ -108,6 +110,8 @@ class ObjectifyRepositoryFindSpec extends Specification {
 
 		where:
 		entityClass   | criteria                        | expected
+//		Company.class | company$.id$.isNull()           | []
+//		Company.class | company$.id$.eq(null)           | []
 		Company.class | company$.name$.isNull()         | [4]
 		Company.class | company$.name$.eq(null)         | [4]
 		Company.class | company$.registeredAt$.isNull() | [1, 3, 4]
@@ -122,6 +126,8 @@ class ObjectifyRepositoryFindSpec extends Specification {
 
 		where:
 		entityClass   | criteria                         | expected
+//		Company.class | company$.id$.notNull()           | [1, 2, 3, 4, 5, 6]
+//		Company.class | company$.id$.ne(null)            | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.notNull()         | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.ne(null)          | [1, 2, 3, 5, 6]
 		Company.class | company$.registeredAt$.notNull() | [2, 5, 6]
@@ -139,6 +145,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.greaterThan(4)                            | [5, 6]
 		Company.class | company$.id$.gt(6)                                     | []
 		Company.class | company$.id$.gt(10)                                    | []
+//		Company.class | company$.id$.gt(null)                                  | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.greaterThan("company")                  | [1, 2, 3]
 		Company.class | company$.name$.gt("a")                                 | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.gt("z")                                 | []
@@ -160,6 +167,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.greaterOrEqual(4)                            | [4, 5, 6]
 		Company.class | company$.id$.ge(6)                                        | [6]
 		Company.class | company$.id$.ge(10)                                       | []
+//		Company.class | company$.id$.ge(null)                                     | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.greaterOrEqual("company")                  | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.ge("a")                                    | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.ge("z")                                    | []
@@ -181,6 +189,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.lessThan(4)                            | [1, 2, 3]
 		Company.class | company$.id$.lt(1)                                  | []
 		Company.class | company$.id$.lt(10)                                 | [1, 2, 3, 4, 5, 6]
+//		Company.class | company$.id$.lt(null)                               | []
 		Company.class | company$.name$.lessThan("company")                  | [4]
 		Company.class | company$.name$.lt("a")                              | [4]
 		Company.class | company$.name$.lt("z")                              | [1, 2, 3, 4, 5, 6]
@@ -202,6 +211,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.lessOrEqual(4)                            | [1, 2, 3, 4]
 		Company.class | company$.id$.le(1)                                     | [1]
 		Company.class | company$.id$.le(10)                                    | [1, 2, 3, 4, 5, 6]
+//		Company.class | company$.id$.le(null)                                  | []
 		Company.class | company$.name$.lessOrEqual("company")                  | [4, 5, 6]
 		Company.class | company$.name$.le("a")                                 | [4]
 		Company.class | company$.name$.le("z")                                 | [1, 2, 3, 4, 5, 6]
@@ -224,6 +234,8 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.in(1)                                                                    | [1]
 		Company.class | company$.id$.in(10)                                                                   | []
 		Company.class | company$.id$.in(1, 6, 10)                                                             | [1, 6]
+//		Company.class | company$.id$.in([null])                                                               | []
+//		Company.class | company$.id$.in(1, null, 10)                                                          | [1]
 		Company.class | company$.name$.in("company", "company1")                                              | [1, 5, 6]
 		Company.class | company$.name$.in("company")                                                          | [5, 6]
 		Company.class | company$.name$.in("company8")                                                         | []
