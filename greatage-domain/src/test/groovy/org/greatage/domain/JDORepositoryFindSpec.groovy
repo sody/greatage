@@ -1,15 +1,19 @@
 package org.greatage.domain
 
-import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
-import com.google.appengine.tools.development.testing.LocalServiceTestHelper
-import com.googlecode.objectify.ObjectifyFactory
-import com.googlecode.objectify.ObjectifyOpts
+import org.dbunit.JdbcDatabaseTester
+import org.dbunit.PropertiesBasedJdbcDatabaseTester
+import org.dbunit.dataset.xml.FlatXmlDataSetBuilder
+import org.dbunit.operation.DatabaseOperation
+import org.example.jdo.CompanyImpl
+import org.example.jdo.DepartmentImpl
 import org.example.model.Company
-import org.example.objectify.CompanyImpl
-import org.greatage.domain.objectify.ObjectifyExecutor
-import org.greatage.domain.objectify.ObjectifyRepository
+import org.example.model.Department
+import org.greatage.domain.jdo.JDOExecutor
+import org.greatage.domain.jdo.JDORepository
 import spock.lang.Shared
 import spock.lang.Specification
+
+import javax.jdo.JDOHelper
 
 import static org.example.model.Entities.company$
 
@@ -17,36 +21,42 @@ import static org.example.model.Entities.company$
  * @author Ivan Khalopik
  * @since 1.0
  */
-class ObjectifyRepositoryFindSpec extends Specification {
+class JDORepositoryFindSpec extends Specification {
 
 	@Shared
-	private LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
+	private JdbcDatabaseTester tester;
 
 	@Shared
 	private EntityRepository repository;
 
 	def setupSpec() {
-		helper.setUp()
-
-		def objectifyFactory = new ObjectifyFactory()
-		objectifyFactory.register(CompanyImpl.class)
-		objectifyFactory.begin().put([
-				new CompanyImpl(id: 1, name: "company1"),
-				new CompanyImpl(id: 2, name: "company2", registeredAt: date("2010-10-10")),
-				new CompanyImpl(id: 3, name: "company3"),
-				new CompanyImpl(id: 4, name: null),
-				new CompanyImpl(id: 5, name: "company", registeredAt: date("2001-01-01")),
-				new CompanyImpl(id: 6, name: "company", registeredAt: date("2001-02-02"))
+		def factory = JDOHelper.getPersistenceManagerFactory("jdo.properties")
+		repository = new JDORepository(new JDOExecutor(factory), [
+				(Company.class): CompanyImpl.class,
+				(Department.class): DepartmentImpl.class
 		])
+		repository.find(Company.class, Pagination.ALL)
+		repository.find(Department.class, Pagination.ALL)
 
-		repository = new ObjectifyRepository(new ObjectifyExecutor(objectifyFactory, new ObjectifyOpts()), [
-				(Company.class): CompanyImpl.class
-		])
+		def properties = new Properties()
+		properties.load(getClass().getResourceAsStream("/dbunit.properties"))
+		tester = new JdbcDatabaseTester(
+				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS),
+				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL),
+				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME),
+				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD),
+				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA)
+		);
+		tester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT)
+		tester.setTearDownOperation(DatabaseOperation.DELETE_ALL)
+		tester.setDataSet(new FlatXmlDataSetBuilder().build(getClass().getResourceAsStream("/database.xml")))
+
+		tester.onSetup()
 	}
 
 	def cleanupSpec() {
-		repository = null;
-		helper.tearDown();
+		tester.onTearDown()
+		repository = null
 	}
 
 	def "all criteria should find all entities"() {
@@ -72,6 +82,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.equal(1)                            | [1]
 		Company.class | company$.id$.eq(4)                               | [4]
 		Company.class | company$.id$.eq(10)                              | []
+		Company.class | company$.id$.eq(null)                            | []
 		Company.class | company$.name$.equal("company")                  | [5, 6]
 		Company.class | company$.name$.eq("company1")                    | [1]
 		Company.class | company$.name$.eq("company8")                    | []
@@ -91,6 +102,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		entityClass   | criteria                                      | expected
 		Company.class | company$.id$.notEqual(1)                      | [2, 3, 4, 5, 6]
 		Company.class | company$.id$.ne(10)                           | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.id$.ne(null)                         | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.notEqual("company")            | [1, 2, 3, 4]
 		Company.class | company$.name$.ne("company1")                 | [2, 3, 4, 5, 6]
 		Company.class | company$.name$.ne("company8")                 | [1, 2, 3, 4, 5, 6]
@@ -108,6 +120,8 @@ class ObjectifyRepositoryFindSpec extends Specification {
 
 		where:
 		entityClass   | criteria                        | expected
+		Company.class | company$.id$.isNull()           | []
+		Company.class | company$.id$.eq(null)           | []
 		Company.class | company$.name$.isNull()         | [4]
 		Company.class | company$.name$.eq(null)         | [4]
 		Company.class | company$.registeredAt$.isNull() | [1, 3, 4]
@@ -122,6 +136,8 @@ class ObjectifyRepositoryFindSpec extends Specification {
 
 		where:
 		entityClass   | criteria                         | expected
+		Company.class | company$.id$.notNull()           | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.id$.ne(null)            | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.notNull()         | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.ne(null)          | [1, 2, 3, 5, 6]
 		Company.class | company$.registeredAt$.notNull() | [2, 5, 6]
@@ -139,6 +155,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.greaterThan(4)                            | [5, 6]
 		Company.class | company$.id$.gt(6)                                     | []
 		Company.class | company$.id$.gt(10)                                    | []
+		Company.class | company$.id$.gt(null)                                  | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.greaterThan("company")                  | [1, 2, 3]
 		Company.class | company$.name$.gt("a")                                 | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.gt("z")                                 | []
@@ -160,6 +177,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.greaterOrEqual(4)                            | [4, 5, 6]
 		Company.class | company$.id$.ge(6)                                        | [6]
 		Company.class | company$.id$.ge(10)                                       | []
+		Company.class | company$.id$.ge(null)                                     | [1, 2, 3, 4, 5, 6]
 		Company.class | company$.name$.greaterOrEqual("company")                  | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.ge("a")                                    | [1, 2, 3, 5, 6]
 		Company.class | company$.name$.ge("z")                                    | []
@@ -181,6 +199,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.lessThan(4)                            | [1, 2, 3]
 		Company.class | company$.id$.lt(1)                                  | []
 		Company.class | company$.id$.lt(10)                                 | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.id$.lt(null)                               | []
 		Company.class | company$.name$.lessThan("company")                  | [4]
 		Company.class | company$.name$.lt("a")                              | [4]
 		Company.class | company$.name$.lt("z")                              | [1, 2, 3, 4, 5, 6]
@@ -202,6 +221,7 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.lessOrEqual(4)                            | [1, 2, 3, 4]
 		Company.class | company$.id$.le(1)                                     | [1]
 		Company.class | company$.id$.le(10)                                    | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.id$.le(null)                                  | []
 		Company.class | company$.name$.lessOrEqual("company")                  | [4, 5, 6]
 		Company.class | company$.name$.le("a")                                 | [4]
 		Company.class | company$.name$.le("z")                                 | [1, 2, 3, 4, 5, 6]
@@ -224,6 +244,8 @@ class ObjectifyRepositoryFindSpec extends Specification {
 		Company.class | company$.id$.in(1)                                                                    | [1]
 		Company.class | company$.id$.in(10)                                                                   | []
 		Company.class | company$.id$.in(1, 6, 10)                                                             | [1, 6]
+		Company.class | company$.id$.in([null])                                                               | []
+		Company.class | company$.id$.in(1, null, 10)                                                          | [1]
 		Company.class | company$.name$.in("company", "company1")                                              | [1, 5, 6]
 		Company.class | company$.name$.in("company")                                                          | [5, 6]
 		Company.class | company$.name$.in("company8")                                                         | []
@@ -239,38 +261,6 @@ class ObjectifyRepositoryFindSpec extends Specification {
 
 	def "like property criteria should find only entities with property value like specified"() {
 		//todo:
-		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
-		then:
-		actual == expected
-
-		where:
-		entityClass   | criteria                        | expected
-		Company.class | company$.id$.like(1)            | [1]
-		Company.class | company$.id$.like(10)           | []
-		Company.class | company$.name$.like("company")  | [5, 6]
-		Company.class | company$.name$.like("company8") | []
-	}
-
-	def "property criteria should throw exception if it is used with key column and null value"() {
-		//todo: all this should work
-		when:
-		repository.find(entityClass, criteria, Pagination.ALL)
-		then:
-		thrown(NullPointerException.class)
-
-		where:
-		entityClass   | criteria
-		Company.class | company$.id$.isNull()
-		Company.class | company$.id$.eq(null)
-		Company.class | company$.id$.notNull()
-		Company.class | company$.id$.ne(null)
-		Company.class | company$.id$.gt(null)
-		Company.class | company$.id$.ge(null)
-		Company.class | company$.id$.lt(null)
-		Company.class | company$.id$.le(null)
-		Company.class | company$.id$.like(null)
-		Company.class | company$.id$.in([null])
 	}
 
 	private Date date(final String input) {

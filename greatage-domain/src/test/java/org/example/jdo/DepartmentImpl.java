@@ -16,29 +16,31 @@
 
 package org.example.jdo;
 
+import org.example.model.Company;
+import org.example.model.Department;
 import org.greatage.domain.AbstractEntity;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-import java.util.Date;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
-@PersistenceCapable(table = "company")
-public class Company extends AbstractEntity<Long> {
+@PersistenceCapable(table = "department")
+public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 
 	@PrimaryKey
-	@Persistent(column = "company_id", valueStrategy = IdGeneratorStrategy.INCREMENT)
+	@Persistent(column = "department_id", valueStrategy = IdGeneratorStrategy.INCREMENT)
 	private Long id;
 
 	@Persistent(column = "name")
 	private String name;
 
-	@Persistent(column = "registered_at")
-	private Date registeredAt;
+	@Persistent(column = "company_id")
+	private Company company;
 
 	public Long getId() {
 		return id;
@@ -50,5 +52,13 @@ public class Company extends AbstractEntity<Long> {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(final Company company) {
+		this.company = company;
 	}
 }

@@ -22,7 +22,6 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.JunctionCriteria;
 import org.greatage.domain.PropertyCriteria;
 import org.greatage.domain.SortCriteria;
-import org.greatage.util.StringUtils;
 
 import javax.jdo.Query;
 import java.io.Serializable;
@@ -82,58 +81,163 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 
 	@Override
 	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
-		final StringBuilder criterion = new StringBuilder();
-
-		// in expression workaround
-		if (criteria.getOperator() == PropertyCriteria.Operator.IN) {
-			final String parameterName = allocateName(criteria.getProperty());
-			criterion.append(":").append(parameterName).append(".contains(");
-			if (criteria.getPath() != null) {
-				criterion.append(criteria.getPath()).append('.');
-			}
-			criterion.append(criteria.getProperty());
-			criterion.append(")");
-
-			addCriterion(criterion.toString(), criteria.isNegative());
-			parameters.put(parameterName, criteria.getValue());
-			return;
-		}
-
-		if (criteria.getPath() != null) {
-			criterion.append(criteria.getPath()).append('.');
-		}
-		criterion.append(criteria.getProperty());
 		switch (criteria.getOperator()) {
 			case EQUAL:
-				criterion.append(" == ");
+				visitEqualOperator(criteria);
 				break;
 			case NOT_EQUAL:
-				criterion.append(" != ");
+				visitNotEqualOperator(criteria);
 				break;
 			case GREATER_THAN:
-				criterion.append(" > ");
+				visitGreaterThanOperator(criteria);
 				break;
 			case GREATER_OR_EQUAL:
-				criterion.append(" >= ");
+				visitGreaterOrEqualOperator(criteria);
 				break;
 			case LESS_THAN:
-				criterion.append(" < ");
+				visitLessThanOperator(criteria);
 				break;
 			case LESS_OR_EQUAL:
-				criterion.append(" <= ");
+				visitLessOrEqualOperator(criteria);
 				break;
 			case LIKE:
+				visitLikeOperation(criteria);
+				break;
+			case IN:
+				visitInOperator(criteria);
 				break;
 		}
-		final String parameterName = allocateName(criteria.getProperty());
-		criterion.append(":").append(parameterName);
-		addCriterion(criterion.toString(), criteria.isNegative());
-		parameters.put(parameterName, criteria.getValue());
+	}
+
+	private void visitLikeOperation(final PropertyCriteria<PK, E> criteria) {
+		//TODO:
 	}
 
 	@Override
 	protected void visitSort(final SortCriteria<PK, E> criteria) {
-		//To change body of implemented methods use File | Settings | File Templates.
+		//TODO:
+	}
+
+	private void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String parameterName = parameterName(criteria);
+		final String criterion = propertyName + " == :" + parameterName;
+
+		addParameter(parameterName, criteria.getValue());
+		addCriterion(criterion, criteria.isNegative());
+	}
+
+	private void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+
+		if (criteria.getValue() != null) {
+			final String parameterName = parameterName(criteria);
+
+			// fix for null values
+			final String criterion = "(" +
+					propertyName + " == null || " +
+					propertyName + " != :" + parameterName + ")";
+			addParameter(parameterName, criteria.getValue());
+			addCriterion(criterion, criteria.isNegative());
+		} else {
+			final String criterion = propertyName + " != null";
+			addCriterion(criterion, criteria.isNegative());
+		}
+	}
+
+	private void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+
+		if (criteria.getValue() != null) {
+			final String parameterName = parameterName(criteria);
+
+			final String criterion = propertyName + " > :" + parameterName;
+			addParameter(parameterName, criteria.getValue());
+			addCriterion(criterion, criteria.isNegative());
+		} else {
+			// all not null values is greater than null
+			final String criterion = propertyName + " != null";
+			addCriterion(criterion, criteria.isNegative());
+		}
+	}
+
+	private void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+
+		if (criteria.getValue() != null) {
+			final String parameterName = parameterName(criteria);
+
+			final String criterion = propertyName + " >= :" + parameterName;
+			addParameter(parameterName, criteria.getValue());
+			addCriterion(criterion, criteria.isNegative());
+		} else {
+			// all values is greater or equal null
+			final String criterion = "true";
+			addCriterion(criterion, criteria.isNegative());
+		}
+	}
+
+	private void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+
+		if (criteria.getValue() != null) {
+			final String parameterName = parameterName(criteria);
+
+			final String criterion = "(" + propertyName + " == null || " + propertyName + " < :" + parameterName + ")";
+			addParameter(parameterName, criteria.getValue());
+			addCriterion(criterion, criteria.isNegative());
+		} else {
+			// there are no values less than null
+			final String criterion = "false";
+			addCriterion(criterion, criteria.isNegative());
+		}
+	}
+
+	private void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+
+		if (criteria.getValue() != null) {
+			final String parameterName = parameterName(criteria);
+
+			final String criterion = "(" + propertyName + " == null || " + propertyName + " <= :" + parameterName + ")";
+			addParameter(parameterName, criteria.getValue());
+			addCriterion(criterion, criteria.isNegative());
+		} else {
+			final String criterion = propertyName + " == null";
+			addCriterion(criterion, criteria.isNegative());
+		}
+	}
+
+	private void visitInOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final List<?> value = (List<?>) criteria.getValue();
+
+		if (value == null || value.isEmpty()) {
+			addCriterion("false", criteria.isNegative());
+		} else if (value.contains(null)) {
+			final String parameterName = parameterName(criteria);
+
+			final String criterion = "(" + propertyName + " == null || :" + parameterName + ".contains(" + propertyName + "))";
+
+			final List<Object> parameterValue = new ArrayList<Object>();
+			for (Object val : value) {
+				if (val != null) {
+					parameterValue.add(val);
+				}
+			}
+			addParameter(parameterName, parameterValue);
+			addCriterion(criterion, criteria.isNegative());
+		} else {
+			final String parameterName = parameterName(criteria);
+
+			final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
+			addParameter(parameterName, value);
+			addCriterion(criterion, criteria.isNegative());
+		}
+	}
+
+	private void addParameter(final String parameterName, final Object value) {
+		parameters.put(parameterName, value);
 	}
 
 	private void addCriterion(final String criterion, final boolean negative) {
@@ -155,6 +259,16 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 			criterion.append(child);
 		}
 		return criterion.toString();
+	}
+
+	private String propertyName(final PropertyCriteria<PK, E> criteria) {
+		return criteria.getPath() != null ?
+				criteria.getPath() + "." + criteria.getProperty() :
+				criteria.getProperty();
+	}
+
+	private String parameterName(final PropertyCriteria<PK, E> criteria) {
+		return allocateName(criteria.getProperty());
 	}
 
 	private String allocateName(final String name) {
