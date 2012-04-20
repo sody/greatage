@@ -37,6 +37,13 @@ public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 
 	private CompanyImpl company;
 
+	public DepartmentImpl() {
+	}
+
+	public DepartmentImpl(final Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

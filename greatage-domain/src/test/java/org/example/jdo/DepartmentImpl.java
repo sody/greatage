@@ -42,6 +42,13 @@ public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 	@Persistent(column = "company_id")
 	private Company company;
 
+	public DepartmentImpl() {
+	}
+
+	public DepartmentImpl(final Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

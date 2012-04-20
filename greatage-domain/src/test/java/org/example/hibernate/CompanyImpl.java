@@ -45,15 +45,8 @@ public class CompanyImpl extends AbstractEntity<Long> implements Company {
 	public CompanyImpl() {
 	}
 
-	public CompanyImpl(final Long id, final String name) {
+	public CompanyImpl(final Long id) {
 		this.id = id;
-		this.name = name;
-	}
-
-	public CompanyImpl(final Long id, final String name, final Date registeredAt) {
-		this.id = id;
-		this.name = name;
-		this.registeredAt = registeredAt;
 	}
 
 	public Long getId() {

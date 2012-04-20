@@ -41,6 +41,13 @@ public class CompanyImpl extends AbstractEntity<Long> implements Company {
 	@Persistent(column = "registered_at")
 	private Date registeredAt;
 
+	public CompanyImpl() {
+	}
+
+	public CompanyImpl(final Long id) {
+		this.id = id;
+	}
+
 	public Long getId() {
 		return id;
 	}

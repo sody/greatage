@@ -49,15 +49,8 @@ public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 	public DepartmentImpl() {
 	}
 
-	public DepartmentImpl(final Long id, final String name) {
+	public DepartmentImpl(final Long id) {
 		this.id = id;
-		this.name = name;
-	}
-
-	public DepartmentImpl(final Long id, final String name, final Company company) {
-		this.id = id;
-		this.name = name;
-		this.company = company;
 	}
 
 	public Long getId() {
