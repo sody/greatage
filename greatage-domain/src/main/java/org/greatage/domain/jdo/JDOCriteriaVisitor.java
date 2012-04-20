@@ -219,13 +219,13 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 
 			final String criterion = "(" + propertyName + " == null || :" + parameterName + ".contains(" + propertyName + "))";
 
-			final List<Object> parameterValue = new ArrayList<Object>();
+			final List<Object> recalculated = new ArrayList<Object>();
 			for (Object val : value) {
 				if (val != null) {
-					parameterValue.add(val);
+					recalculated.add(val);
 				}
 			}
-			addParameter(parameterName, parameterValue);
+			addParameter(parameterName, recalculated);
 			addCriterion(criterion, criteria.isNegative());
 		} else {
 			final String parameterName = parameterName(criteria);

@@ -16,6 +16,8 @@
 
 package org.example.hibernate;
 
+import org.example.model.Company;
+import org.example.model.Department;
 import org.greatage.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -31,7 +33,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "department")
-public class Department extends AbstractEntity<Long> {
+public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 
 	@Id
 	@Column(name = "department_id")
@@ -40,19 +42,19 @@ public class Department extends AbstractEntity<Long> {
 	@Column(name = "name")
 	private String name;
 
-	@ManyToOne
+	@ManyToOne(targetEntity = CompanyImpl.class)
 	@JoinColumn(name = "company_id")
 	private Company company;
 
-	public Department() {
+	public DepartmentImpl() {
 	}
 
-	public Department(final Long id, final String name) {
+	public DepartmentImpl(final Long id, final String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public Department(final Long id, final String name, final Company company) {
+	public DepartmentImpl(final Long id, final String name, final Company company) {
 		this.id = id;
 		this.name = name;
 		this.company = company;

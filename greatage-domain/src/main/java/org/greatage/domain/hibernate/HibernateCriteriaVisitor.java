@@ -83,26 +83,71 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 				if (criteria.getValue() == null) {
 					addCriterion(property.isNotNull(), criteria.isNegative());
 				} else {
-					addCriterion(property.ne(criteria.getValue()), criteria.isNegative());
+					addCriterion(Restrictions.or(
+							property.isNull(),
+							property.ne(criteria.getValue())
+					), criteria.isNegative());
 				}
 				break;
 			case GREATER_THAN:
-				addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
+				if (criteria.getValue() == null) {
+					addCriterion(property.isNotNull(), criteria.isNegative());
+				} else {
+					addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
+				}
 				break;
 			case GREATER_OR_EQUAL:
-				addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
+				if (criteria.getValue() == null) {
+					addCriterion(Restrictions.sqlRestriction("1=1"), criteria.isNegative());
+				} else {
+					addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
+				}
 				break;
 			case LESS_THAN:
-				addCriterion(property.lt(criteria.getValue()), criteria.isNegative());
+				if (criteria.getValue() == null) {
+					addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
+				} else {
+					addCriterion(Restrictions.or(
+							property.isNull(),
+							property.lt(criteria.getValue())
+					), criteria.isNegative());
+				}
 				break;
 			case LESS_OR_EQUAL:
-				addCriterion(property.le(criteria.getValue()), criteria.isNegative());
+				if (criteria.getValue() == null) {
+					addCriterion(property.isNull(), criteria.isNegative());
+				} else {
+					addCriterion(Restrictions.or(
+							property.isNull(),
+							property.le(criteria.getValue())
+					), criteria.isNegative());
+				}
 				break;
 			case LIKE:
 				addCriterion(property.like(criteria.getValue()), criteria.isNegative());
 				break;
 			case IN:
-				addCriterion(property.in((List) criteria.getValue()), criteria.isNegative());
+				final List<?> value = (List<?>) criteria.getValue();
+				if (value == null || value.isEmpty()) {
+					addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
+				} else if (value.contains(null)) {
+					final List<Object> recalculated = new ArrayList<Object>();
+					for (Object val : value) {
+						if (val != null) {
+							recalculated.add(val);
+						}
+					}
+					if (recalculated.size() > 0) {
+						addCriterion(Restrictions.or(
+								property.isNull(),
+								property.in(recalculated)
+						), criteria.isNegative());
+					} else {
+						addCriterion(property.isNull(), criteria.isNegative());
+					}
+				} else {
+					addCriterion(property.in(value), criteria.isNegative());
+				}
 				break;
 		}
 	}

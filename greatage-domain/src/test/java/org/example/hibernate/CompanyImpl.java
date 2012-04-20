@@ -16,6 +16,7 @@
 
 package org.example.hibernate;
 
+import org.example.model.Company;
 import org.greatage.domain.AbstractEntity;
 
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "company")
-public class Company extends AbstractEntity<Long> {
+public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
 	@Id
 	@Column(name = "company_id")
@@ -41,15 +42,15 @@ public class Company extends AbstractEntity<Long> {
 	@Column(name = "registered_at")
 	private Date registeredAt;
 
-	public Company() {
+	public CompanyImpl() {
 	}
 
-	public Company(final Long id, final String name) {
+	public CompanyImpl(final Long id, final String name) {
 		this.id = id;
 		this.name = name;
 	}
 
-	public Company(final Long id, final String name, final Date registeredAt) {
+	public CompanyImpl(final Long id, final String name, final Date registeredAt) {
 		this.id = id;
 		this.name = name;
 		this.registeredAt = registeredAt;
