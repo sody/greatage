@@ -5,69 +5,77 @@ package org.greatage.db;
  */
 public interface Trick {
 
-	Insert insert(String entityName);
+//    Trick author(String author);
+//
+//    Trick location(String location);
+//
+//    Trick comment(String comment);
+//
+//    Trick context(String... context);
+//
+    Insert insert(String entityName);
 
-	Update update(String entityName);
+    Update update(String entityName);
 
-	Delete delete(String entityName);
+    Delete delete(String entityName);
 
-	Select select(String entityName);
+    Select select(String entityName);
 
-	ConditionEntry condition(String propertyName);
+    ConditionEntry condition(String propertyName);
 
-	interface Insert {
+    interface Insert {
 
-		Insert set(String propertyName, Object value);
+        Insert set(String propertyName, Object value);
 
-		Insert set(String propertyName, Select select);
+        Insert set(String propertyName, Select select);
 
-		Insert into(String... propertyNames);
+        Insert into(String... propertyNames);
 
-		Insert values(Object... values);
-	}
+        Insert values(Object... values);
+    }
 
-	interface Update {
+    interface Update {
 
-		Update set(String propertyName, Object value);
+        Update set(String propertyName, Object value);
 
-		Update set(String propertyName, Select select);
+        Update set(String propertyName, Select select);
 
-		Update where(Condition condition);
-	}
+        Update where(Condition condition);
+    }
 
-	interface Delete {
+    interface Delete {
 
-		Delete where(Condition condition);
-	}
+        Delete where(Condition condition);
+    }
 
-	interface Select {
+    interface Select {
 
-		Select unique();
+        Select unique();
 
-		Select where(Condition condition);
-	}
+        Select where(Condition condition);
+    }
 
-	interface Condition {
+    interface Condition {
 
-		Condition and(Condition condition);
+        Condition and(Condition condition);
 
-		Condition or(Condition condition);
-	}
+        Condition or(Condition condition);
+    }
 
-	interface ConditionEntry {
+    interface ConditionEntry {
 
-		Condition greaterThan(Object value);
+        Condition greaterThan(Object value);
 
-		Condition greaterOrEqual(Object value);
+        Condition greaterOrEqual(Object value);
 
-		Condition lessThan(Object value);
+        Condition lessThan(Object value);
 
-		Condition lessOrEqual(Object value);
+        Condition lessOrEqual(Object value);
 
-		Condition equal(Object value);
+        Condition equal(Object value);
 
-		Condition notEqual(Object value);
+        Condition notEqual(Object value);
 
-		Condition in(Object... values);
-	}
+        Condition in(Object... values);
+    }
 }

@@ -6,33 +6,26 @@ package org.greatage.db;
  */
 public interface ChangeLog {
 
-	void update(ChangeLogSupport changeLog, String... context);
+    void update(ChangeLogSupport changeLog, String... context);
 
-	Options options();
+    ChangeLog dropFirst();
 
-	ChangeSet changeSet(String id);
+    ChangeLog clearCheckSums();
 
-	interface Options {
+    ChangeLog context(String... context);
 
-		Options dropFirst();
+    ChangeSet changeSet(String id);
 
-		Options clearCheckSums();
+    interface ChangeSet {
 
-		Options context(String... context);
+        ChangeSet author(String author);
 
-		void update(ChangeLogSupport changeLog);
-	}
+        ChangeSet location(String location);
 
-	interface ChangeSet {
+        ChangeSet comment(String comment);
 
-		ChangeSet author(String author);
+        ChangeSet context(String... context);
 
-		ChangeSet location(String location);
-
-		ChangeSet comment(String comment);
-
-		ChangeSet context(String... context);
-
-		Trick trick();
-	}
+        Trick trick();
+    }
 }

@@ -90,7 +90,7 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 		});
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
 
-		database.options().clearCheckSums().update(new ChangeLogSupport() {
+		database.clearCheckSums().update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");
@@ -124,7 +124,7 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company2"));
 		assertExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company3"));
 
-		database.options().dropFirst().update(new ChangeLogSupport() {
+		database.dropFirst().update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");
@@ -164,7 +164,7 @@ public class TestGAEDatabaseOptions extends AbstractGAEDBTest {
 		assertCount(new Query("department"), count);
 		assertCount(new Query("employee"), count * 3);
 
-		database.options().dropFirst().update(new ChangeLogSupport() {
+		database.dropFirst().update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");

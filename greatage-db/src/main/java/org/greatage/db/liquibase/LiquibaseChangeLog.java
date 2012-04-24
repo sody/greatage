@@ -20,101 +20,91 @@ import java.util.Set;
  * @since 1.0
  */
 public class LiquibaseChangeLog implements ChangeLog {
-	private final DataSource dataSource;
-	private final ResourceAccessor resourceAccessor;
+    private final DataSource dataSource;
+    private final ResourceAccessor resourceAccessor;
 
-	public LiquibaseChangeLog(final DataSource dataSource) {
-		this(dataSource, new ClassLoaderResourceAccessor());
-	}
+    private final Set<String> context = CollectionUtils.newSet();
+    private boolean dropFirst;
+    private boolean clearCheckSums;
 
-	public LiquibaseChangeLog(final DataSource dataSource, final ResourceAccessor resourceAccessor) {
-		this.dataSource = dataSource;
-		this.resourceAccessor = resourceAccessor;
-	}
+    public LiquibaseChangeLog(final DataSource dataSource) {
+        this(dataSource, new ClassLoaderResourceAccessor());
+    }
 
-	public void update(final ChangeLogSupport changeLog, final String... context) {
-		options().context(context).update(changeLog);
-	}
+    public LiquibaseChangeLog(final DataSource dataSource, final ResourceAccessor resourceAccessor) {
+        this.dataSource = dataSource;
+        this.resourceAccessor = resourceAccessor;
+    }
 
-	public Options options() {
-		return new LiquibaseUpdateOptions();
-	}
+    public void update(final ChangeLogSupport changeLog, final String... context) {
+        context(context).update(changeLog);
+    }
 
-	public ChangeSet changeSet(final String id) {
-		throw new UnsupportedOperationException("Liquibase implementation has its own change set structure");
-	}
+    public ChangeLog dropFirst() {
+        dropFirst = true;
+        return this;
+    }
 
-	private void update(final ChangeLogSupport changeLog, final LiquibaseUpdateOptions options) {
-		Liquibase liquibase = null;
-		try {
-			liquibase = createLiquibase(((LiquibaseChangeLogSupport) changeLog).getChangeLog());
-			if (options.dropFirst) {
-				liquibase.dropAll();
-			}
-			final StringBuilder contexts = new StringBuilder();
-			for (String entry : options.context) {
-				if (contexts.length() > 0) {
-					contexts.append(',');
-				}
-				contexts.append(entry);
-			}
-			liquibase.update(contexts.toString());
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (liquibase != null) {
-				try {
-					liquibase.forceReleaseLocks();
-				} catch (LiquibaseException e) {
+    public ChangeLog clearCheckSums() {
+        clearCheckSums = true;
+        return this;
+    }
+
+    public ChangeLog context(final String... context) {
+        Collections.addAll(this.context, context);
+        return this;
+    }
+
+    public ChangeSet changeSet(final String id) {
+        throw new UnsupportedOperationException("Liquibase implementation has its own change set structure");
+    }
+
+    private void doUpdate(final ChangeLogSupport changeLog) {
+        Liquibase liquibase = null;
+        try {
+            liquibase = createLiquibase(((LiquibaseChangeLogSupport) changeLog).getChangeLog());
+            if (dropFirst) {
+                liquibase.dropAll();
+            }
+            final StringBuilder contexts = new StringBuilder();
+            for (String entry : context) {
+                if (contexts.length() > 0) {
+                    contexts.append(',');
+                }
+                contexts.append(entry);
+            }
+            liquibase.update(contexts.toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            if (liquibase != null) {
+                try {
+                    liquibase.forceReleaseLocks();
+                } catch (LiquibaseException e) {
 //					log.warning("Error releasing locks", e);
-				}
-				final liquibase.database.Database database = liquibase.getDatabase();
-				try {
-					if (!database.isAutoCommit()) {
-						database.rollback();
-					}
-					database.close();
-				} catch (Exception e) {
+                }
+                final liquibase.database.Database database = liquibase.getDatabase();
+                try {
+                    if (!database.isAutoCommit()) {
+                        database.rollback();
+                    }
+                    database.close();
+                } catch (Exception e) {
 //					log.warning("problem closing database", e);
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
 
-	protected Liquibase createLiquibase(final String changeLog) throws Exception {
-		return new Liquibase(changeLog, resourceAccessor, getDatabase());
-	}
+    protected Liquibase createLiquibase(final String changeLog) throws Exception {
+        return new Liquibase(changeLog, resourceAccessor, getDatabase());
+    }
 
-	protected liquibase.database.Database getDatabase() throws Exception {
-		return DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDatabaseConnection());
-	}
+    protected liquibase.database.Database getDatabase() throws Exception {
+        return DatabaseFactory.getInstance().findCorrectDatabaseImplementation(getDatabaseConnection());
+    }
 
-	protected DatabaseConnection getDatabaseConnection() throws Exception {
-		return new JdbcConnection(dataSource.getConnection());
-	}
-
-	class LiquibaseUpdateOptions implements Options {
-		private final Set<String> context = CollectionUtils.newSet();
-		private boolean dropFirst;
-		private boolean clearCheckSums;
-
-		public Options dropFirst() {
-			dropFirst = true;
-			return this;
-		}
-
-		public Options clearCheckSums() {
-			clearCheckSums = true;
-			return this;
-		}
-
-		public Options context(final String... context) {
-			Collections.addAll(this.context, context);
-			return this;
-		}
-
-		public void update(final ChangeLogSupport changeLog) {
-			LiquibaseChangeLog.this.update(changeLog, this);
-		}
-	}
+    protected DatabaseConnection getDatabaseConnection() throws Exception {
+        return new JdbcConnection(dataSource.getConnection());
+    }
 }
