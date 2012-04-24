@@ -7,8 +7,8 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
 import org.greatage.db.ChangeLog;
+import org.greatage.db.ChangeLogSupport;
 import org.greatage.db.CheckSumUtils;
-import org.greatage.db.Database;
 import org.greatage.db.DatabaseException;
 import org.greatage.util.CollectionUtils;
 import org.greatage.util.CompositeKey;
@@ -21,22 +21,22 @@ import java.util.Set;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEDatabase implements Database {
+public class GAEChangeLog implements ChangeLog {
 	private final Set<CompositeKey> ranChangeSets = CollectionUtils.newSet();
 	private final DatastoreService dataStore;
 
 	private GAEOptions options;
 	private GAEChangeSet lastChangeSet;
 
-	public GAEDatabase() {
+	public GAEChangeLog() {
 		this(DatastoreServiceFactory.getDatastoreService());
 	}
 
-	public GAEDatabase(final DatastoreService dataStore) {
+	public GAEChangeLog(final DatastoreService dataStore) {
 		this.dataStore = dataStore;
 	}
 
-	public void update(final ChangeLog changeLog, final String... context) {
+	public void update(final ChangeLogSupport changeLog, final String... context) {
 		options().context(context).update(changeLog);
 	}
 
@@ -48,7 +48,7 @@ public class GAEDatabase implements Database {
 		return begin(new GAEChangeSet(id));
 	}
 
-	private synchronized void update(final ChangeLog changeLog, final GAEOptions options) {
+	private synchronized void update(final ChangeLogSupport changeLog, final GAEOptions options) {
 		this.options = options;
 		lock();
 		try {
@@ -188,8 +188,8 @@ public class GAEDatabase implements Database {
 			return this;
 		}
 
-		public void update(final ChangeLog changeLog) {
-			GAEDatabase.this.update(changeLog, this);
+		public void update(final ChangeLogSupport changeLog) {
+			GAEChangeLog.this.update(changeLog, this);
 		}
 	}
 

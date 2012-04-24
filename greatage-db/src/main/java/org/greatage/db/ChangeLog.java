@@ -4,72 +4,35 @@ package org.greatage.db;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class ChangeLog {
-	private static final String DEFAULT_AUTHOR = "<unknown>";
+public interface ChangeLog {
 
-	private Database database;
-	private Database.ChangeSet changeSet;
+	void update(ChangeLogSupport changeLog, String... context);
 
-	private String author;
-	private String location;
+	Options options();
 
-	protected ChangeLog() {
-		location = getClass().getName();
-		author = DEFAULT_AUTHOR;
+	ChangeSet changeSet(String id);
+
+	interface Options {
+
+		Options dropFirst();
+
+		Options clearCheckSums();
+
+		Options context(String... context);
+
+		void update(ChangeLogSupport changeLog);
 	}
 
-	public final void execute(final Database database) {
-		this.database = database;
-		init();
-		this.database = null;
+	interface ChangeSet {
+
+		ChangeSet author(String author);
+
+		ChangeSet location(String location);
+
+		ChangeSet comment(String comment);
+
+		ChangeSet context(String... context);
+
+		Trick trick();
 	}
-
-	protected void location(final String location) {
-		assert location != null;
-
-		this.location = location;
-	}
-
-	protected void author(final String author) {
-		assert author != null;
-
-		this.author = author;
-	}
-
-	protected Database.ChangeSet begin(final String title) {
-		assert database != null;
-		assert title != null;
-
-		changeSet = database.changeSet(title).author(author).location(location);
-		return changeSet;
-	}
-
-	protected Trick.Insert insert(final String entityName) {
-		return changeSet.trick().insert(entityName);
-	}
-
-	protected Trick.Update update(final String entityName) {
-		return changeSet.trick().update(entityName);
-	}
-
-	protected Trick.Delete delete(final String entityName) {
-		return changeSet.trick().delete(entityName);
-	}
-
-	protected Trick.Select select(final String entityName) {
-		return changeSet.trick().select(entityName);
-	}
-
-	protected Trick.ConditionEntry condition(final String propertyName) {
-		return changeSet.trick().condition(propertyName);
-	}
-
-	protected void add(final ChangeLog changeLog) {
-		assert database != null;
-		assert changeLog != null;
-
-		changeLog.execute(database);
-	}
-
-	protected abstract void init();
 }

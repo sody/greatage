@@ -1,6 +1,6 @@
 package org.greatage.db.gae;
 
-import org.greatage.db.ChangeLog;
+import org.greatage.db.ChangeLogSupport;
 import org.greatage.db.DatabaseException;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -15,14 +15,14 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 	public Object[][] checksumFailingData() {
 		return new Object[][]{
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
 								begin("1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -31,14 +31,14 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
 								begin("1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -47,14 +47,14 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
 								begin("1").context("test1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -64,7 +64,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 				},
 
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -72,7 +72,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								insert("company").set("name", "company1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -82,7 +82,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -90,7 +90,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								insert("company").set("name", "company1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -100,7 +100,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -108,7 +108,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								insert("company").set("name", "company1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -118,7 +118,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -127,7 +127,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								insert("company").set("name", "company2");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -137,7 +137,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -146,7 +146,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								insert("company").set("name", "company2");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -158,7 +158,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 				},
 
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -166,7 +166,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								update("company").set("name", "company1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -176,7 +176,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -184,7 +184,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								update("company").set("name", "company1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -194,7 +194,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -202,7 +202,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								update("company").set("name", "company1");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -212,7 +212,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -221,7 +221,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										.where(condition("name").equal("company"));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -231,7 +231,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -240,7 +240,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										.where(condition("name").equal("company"));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -251,7 +251,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -260,7 +260,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										.where(condition("name").equal("company"));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -271,7 +271,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -282,7 +282,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -293,7 +293,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -304,7 +304,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -317,7 +317,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -326,7 +326,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								update("company").set("name", "company2");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -336,7 +336,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -345,7 +345,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								update("company").set("name", "company2");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -357,7 +357,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 				},
 
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -365,7 +365,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								delete("company");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -375,7 +375,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -384,7 +384,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										.where(condition("name").equal("company"));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -395,7 +395,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -404,7 +404,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										.where(condition("name").equal("company"));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -415,7 +415,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -426,7 +426,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -437,7 +437,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -448,7 +448,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 										));
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -461,7 +461,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -470,7 +470,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								delete("department");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -480,7 +480,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 						}
 				},
 				{
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -489,7 +489,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 								delete("department");
 							}
 						},
-						new ChangeLog() {
+						new ChangeLogSupport() {
 							@Override
 							protected void init() {
 								location("test");
@@ -503,7 +503,7 @@ public class TestGAEChecksums extends AbstractGAEDBTest {
 	}
 
 	@Test(dataProvider = "checksumFailingData", expectedExceptions = DatabaseException.class, expectedExceptionsMessageRegExp = "^CheckSum check failed .+$")
-	public void gae_checksum_failing(final ChangeLog first, final ChangeLog second) {
+	public void gae_checksum_failing(final ChangeLogSupport first, final ChangeLogSupport second) {
 		database.update(first);
 		database.update(second);
 	}

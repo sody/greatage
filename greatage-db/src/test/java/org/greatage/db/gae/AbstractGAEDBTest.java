@@ -6,7 +6,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-import org.greatage.db.Database;
+import org.greatage.db.ChangeLog;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -18,13 +18,13 @@ import org.testng.annotations.BeforeMethod;
 public abstract class AbstractGAEDBTest extends Assert {
 	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 	protected DatastoreService dataStore;
-	protected Database database;
+	protected ChangeLog database;
 
 	@BeforeMethod
 	public void setUp() {
 		helper.setUp();
 		dataStore = DatastoreServiceFactory.getDatastoreService();
-		database = new GAEDatabase(dataStore);
+		database = new GAEChangeLog(dataStore);
 	}
 
 	@AfterMethod

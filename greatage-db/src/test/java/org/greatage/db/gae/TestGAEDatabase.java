@@ -2,7 +2,7 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Query;
-import org.greatage.db.ChangeLog;
+import org.greatage.db.ChangeLogSupport;
 import org.greatage.db.DatabaseException;
 import org.testng.annotations.Test;
 
@@ -17,7 +17,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		assertNotExist(new Query("department"));
 		assertNotExist(new Query("employee"));
 
-		final ChangeLog changeLog = new ChangeLog() {
+		final ChangeLogSupport changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("1");
@@ -81,7 +81,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		entity.setProperty("name", "employee1");
 		dataStore.put(entity);
 
-		final ChangeLog changeLog = new ChangeLog() {
+		final ChangeLogSupport changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("1");
@@ -141,7 +141,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		entity.setProperty("name", "employee1");
 		dataStore.put(entity);
 
-		final ChangeLog changeLog = new ChangeLog() {
+		final ChangeLogSupport changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("1");
@@ -175,7 +175,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 	public void gae_twice_update() {
 		assertNotExist(new Query("company"));
 
-		final ChangeLog changeLog = new ChangeLog() {
+		final ChangeLogSupport changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("1");
@@ -217,7 +217,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 	public void gae_not_ended_statement() {
 		assertNotExist(new Query("company"));
 
-		ChangeLog changeLog = new ChangeLog() {
+		ChangeLogSupport changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("1");
@@ -231,7 +231,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		database.update(changeLog);
 		assertCount(new Query("company"), 2);
 
-		changeLog = new ChangeLog() {
+		changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("3");
@@ -248,7 +248,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 
 	@Test(expectedExceptions = DatabaseException.class, expectedExceptionsMessageRegExp = "^ChangeSet .* has already been executed")
 	public void gae_duplicate_change_set() {
-		final ChangeLog changeLog = new ChangeLog() {
+		final ChangeLogSupport changeLog = new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				begin("1");
@@ -272,7 +272,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 
 	@Test(expectedExceptions = DatabaseException.class, expectedExceptionsMessageRegExp = "^Already locked.*$")
 	public void gae_already_locked() {
-		database.update(new ChangeLog() {
+		database.update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");
@@ -287,7 +287,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 	@Test
 	public void gae_unlock_when_failed() {
 		try {
-			database.update(new ChangeLog() {
+			database.update(new ChangeLogSupport() {
 				@Override
 				protected void init() {
 					location("test");
@@ -302,7 +302,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		}
 		assertNotExist(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company1"));
 
-		database.update(new ChangeLog() {
+		database.update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");
@@ -323,7 +323,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 		assertNotExist(new Query("company"));
 
 		final int count = 3000;
-		database.update(new ChangeLog() {
+		database.update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");
@@ -336,7 +336,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 
 		assertCount(new Query("company"), count);
 
-		database.update(new ChangeLog() {
+		database.update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");
@@ -348,7 +348,7 @@ public class TestGAEDatabase extends AbstractGAEDBTest {
 
 		assertCount(new Query("company").addFilter("name", Query.FilterOperator.EQUAL, "company"), count);
 
-		database.update(new ChangeLog() {
+		database.update(new ChangeLogSupport() {
 			@Override
 			protected void init() {
 				location("test");

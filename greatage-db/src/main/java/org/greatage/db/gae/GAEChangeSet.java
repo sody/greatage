@@ -1,8 +1,8 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
+import org.greatage.db.ChangeLog;
 import org.greatage.db.CheckSumUtils;
-import org.greatage.db.Database;
 import org.greatage.db.Trick;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
@@ -15,7 +15,7 @@ import java.util.Set;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEChangeSet implements Database.ChangeSet, DataStoreCallback {
+public class GAEChangeSet implements ChangeLog.ChangeSet, DataStoreCallback {
 	private final GAETrick trick = new GAETrick();
 
 	private final String title;
@@ -30,22 +30,22 @@ public class GAEChangeSet implements Database.ChangeSet, DataStoreCallback {
 		this.title = title;
 	}
 
-	public Database.ChangeSet author(final String author) {
+	public ChangeLog.ChangeSet author(final String author) {
 		this.author = author;
 		return this;
 	}
 
-	public Database.ChangeSet location(final String location) {
+	public ChangeLog.ChangeSet location(final String location) {
 		this.location = location;
 		return this;
 	}
 
-	public Database.ChangeSet comment(final String comment) {
+	public ChangeLog.ChangeSet comment(final String comment) {
 		this.comment = comment;
 		return this;
 	}
 
-	public Database.ChangeSet context(final String... context) {
+	public ChangeLog.ChangeSet context(final String... context) {
 		Collections.addAll(this.context, context);
 		return this;
 	}
