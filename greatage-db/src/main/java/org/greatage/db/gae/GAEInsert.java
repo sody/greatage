@@ -3,7 +3,7 @@ package org.greatage.db.gae;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
-import org.greatage.db.Trick;
+import org.greatage.db.ChangeSet;
 import org.greatage.util.DescriptionBuilder;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEInsert extends GAEChange implements Trick.Insert {
+public class GAEInsert extends GAEChange implements ChangeSet.Insert {
 	private final String entityName;
 	private final Map<String, Object> properties = new HashMap<String, Object>();
 	private final List<String> into = new ArrayList<String>();
@@ -26,22 +26,22 @@ public class GAEInsert extends GAEChange implements Trick.Insert {
 		this.entityName = entityName;
 	}
 
-	public Trick.Insert set(final String propertyName, final Object value) {
+	public ChangeSet.Insert set(final String propertyName, final Object value) {
 		properties.put(propertyName, value);
 		return this;
 	}
 
-	public Trick.Insert set(final String propertyName, final Trick.Select select) {
+	public ChangeSet.Insert set(final String propertyName, final ChangeSet.Select select) {
 		properties.put(propertyName, select);
 		return this;
 	}
 
-	public Trick.Insert into(final String... propertyNames) {
+	public ChangeSet.Insert into(final String... propertyNames) {
 		into.addAll(Arrays.asList(propertyNames));
 		return this;
 	}
 
-	public Trick.Insert values(final Object... values) {
+	public ChangeSet.Insert values(final Object... values) {
 		this.values.add(Arrays.asList(values));
 		return this;
 	}

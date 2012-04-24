@@ -5,71 +5,71 @@ package org.greatage.db;
  * @since 1.0
  */
 public abstract class ChangeLogSupport {
-	private static final String DEFAULT_AUTHOR = "<unknown>";
+    private static final String DEFAULT_AUTHOR = "<unknown>";
 
-	private ChangeLog database;
-	private ChangeLog.ChangeSet changeSet;
+    private ChangeLog database;
+    private ChangeSet changeSet;
 
-	private String author;
-	private String location;
+    private String author;
+    private String location;
 
-	protected ChangeLogSupport() {
-		location = getClass().getName();
-		author = DEFAULT_AUTHOR;
-	}
+    protected ChangeLogSupport() {
+        location = getClass().getName();
+        author = DEFAULT_AUTHOR;
+    }
 
-	public final void execute(final ChangeLog database) {
-		this.database = database;
-		init();
-		this.database = null;
-	}
+    public final void execute(final ChangeLog database) {
+        this.database = database;
+        init();
+        this.database = null;
+    }
 
-	protected void location(final String location) {
-		assert location != null;
+    protected void location(final String location) {
+        assert location != null;
 
-		this.location = location;
-	}
+        this.location = location;
+    }
 
-	protected void author(final String author) {
-		assert author != null;
+    protected void author(final String author) {
+        assert author != null;
 
-		this.author = author;
-	}
+        this.author = author;
+    }
 
-	protected ChangeLog.ChangeSet begin(final String title) {
-		assert database != null;
-		assert title != null;
+    protected ChangeSet begin(final String title) {
+        assert database != null;
+        assert title != null;
 
-		changeSet = database.changeSet(title).author(author).location(location);
-		return changeSet;
-	}
+        changeSet = database.changeSet(title).author(author).location(location);
+        return changeSet;
+    }
 
-	protected Trick.Insert insert(final String entityName) {
-		return changeSet.trick().insert(entityName);
-	}
+    protected ChangeSet.Insert insert(final String entityName) {
+        return changeSet.insert(entityName);
+    }
 
-	protected Trick.Update update(final String entityName) {
-		return changeSet.trick().update(entityName);
-	}
+    protected ChangeSet.Update update(final String entityName) {
+        return changeSet.update(entityName);
+    }
 
-	protected Trick.Delete delete(final String entityName) {
-		return changeSet.trick().delete(entityName);
-	}
+    protected ChangeSet.Delete delete(final String entityName) {
+        return changeSet.delete(entityName);
+    }
 
-	protected Trick.Select select(final String entityName) {
-		return changeSet.trick().select(entityName);
-	}
+    protected ChangeSet.Select select(final String entityName) {
+        return changeSet.select(entityName);
+    }
 
-	protected Trick.ConditionEntry condition(final String propertyName) {
-		return changeSet.trick().condition(propertyName);
-	}
+    protected ChangeSet.ConditionEntry condition(final String propertyName) {
+        return changeSet.condition(propertyName);
+    }
 
-	protected void add(final ChangeLogSupport changeLog) {
-		assert database != null;
-		assert changeLog != null;
+    protected void add(final ChangeLogSupport changeLog) {
+        assert database != null;
+        assert changeLog != null;
 
-		changeLog.execute(database);
-	}
+        changeLog.execute(database);
+    }
 
-	protected abstract void init();
+    protected abstract void init();
 }

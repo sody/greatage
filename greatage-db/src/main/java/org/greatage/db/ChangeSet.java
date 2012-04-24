@@ -3,16 +3,16 @@ package org.greatage.db;
 /**
  * @author Ivan Khalopik
  */
-public interface Trick {
+public interface ChangeSet {
 
-//    Trick author(String author);
-//
-//    Trick location(String location);
-//
-//    Trick comment(String comment);
-//
-//    Trick context(String... context);
-//
+    ChangeSet author(String author);
+
+    ChangeSet location(String location);
+
+    ChangeSet comment(String comment);
+
+    ChangeSet context(String... context);
+
     Insert insert(String entityName);
 
     Update update(String entityName);

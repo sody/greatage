@@ -9,6 +9,7 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import org.greatage.db.ChangeLog;
 import org.greatage.db.ChangeLogSupport;
+import org.greatage.db.ChangeSet;
 import org.greatage.util.CollectionUtils;
 
 import javax.sql.DataSource;

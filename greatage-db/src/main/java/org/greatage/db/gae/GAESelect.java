@@ -1,14 +1,14 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.Query;
-import org.greatage.db.Trick;
+import org.greatage.db.ChangeSet;
 import org.greatage.util.DescriptionBuilder;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAESelect implements Trick.Select {
+public class GAESelect implements ChangeSet.Select {
 	private final Query query;
 	private boolean unique;
 
@@ -16,12 +16,12 @@ public class GAESelect implements Trick.Select {
 		query = new Query(entityName);
 	}
 
-	public Trick.Select unique() {
+	public ChangeSet.Select unique() {
 		unique = true;
 		return this;
 	}
 
-	public Trick.Select where(final Trick.Condition condition) {
+	public ChangeSet.Select where(final ChangeSet.Condition condition) {
 		final GAECondition gaeCondition = (GAECondition) condition;
 		for (Query.FilterPredicate predicate : gaeCondition.getFilter()) {
 			query.addFilter(predicate.getPropertyName(), predicate.getOperator(), predicate.getValue());

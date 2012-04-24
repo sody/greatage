@@ -15,17 +15,4 @@ public interface ChangeLog {
     ChangeLog context(String... context);
 
     ChangeSet changeSet(String id);
-
-    interface ChangeSet {
-
-        ChangeSet author(String author);
-
-        ChangeSet location(String location);
-
-        ChangeSet comment(String comment);
-
-        ChangeSet context(String... context);
-
-        Trick trick();
-    }
 }
