@@ -36,7 +36,50 @@ public abstract class AbstractCriteriaVisitor<PK extends Serializable, E extends
 
 	protected abstract void visitJunction(JunctionCriteria<PK, E> criteria);
 
-	protected abstract void visitProperty(PropertyCriteria<PK, E> criteria);
+	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
+		switch (criteria.getOperator()) {
+			case EQUAL:
+				visitEqualOperator(criteria);
+				break;
+			case NOT_EQUAL:
+				visitNotEqualOperator(criteria);
+				break;
+			case GREATER_THAN:
+				visitGreaterThanOperator(criteria);
+				break;
+			case GREATER_OR_EQUAL:
+				visitGreaterOrEqualOperator(criteria);
+				break;
+			case LESS_THAN:
+				visitLessThanOperator(criteria);
+				break;
+			case LESS_OR_EQUAL:
+				visitLessOrEqualOperator(criteria);
+				break;
+			case LIKE:
+				visitLikeOperator(criteria);
+				break;
+			case IN:
+				visitInOperator(criteria);
+				break;
+		}
+	}
+
+	protected abstract void visitEqualOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitNotEqualOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitGreaterThanOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitGreaterOrEqualOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitLessThanOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitLessOrEqualOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitInOperator(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitLikeOperator(PropertyCriteria<PK, E> criteria);
 
 	protected abstract void visitSort(SortCriteria<PK, E> criteria);
 }

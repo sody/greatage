@@ -80,45 +80,11 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
-		switch (criteria.getOperator()) {
-			case EQUAL:
-				visitEqualOperator(criteria);
-				break;
-			case NOT_EQUAL:
-				visitNotEqualOperator(criteria);
-				break;
-			case GREATER_THAN:
-				visitGreaterThanOperator(criteria);
-				break;
-			case GREATER_OR_EQUAL:
-				visitGreaterOrEqualOperator(criteria);
-				break;
-			case LESS_THAN:
-				visitLessThanOperator(criteria);
-				break;
-			case LESS_OR_EQUAL:
-				visitLessOrEqualOperator(criteria);
-				break;
-			case LIKE:
-				visitLikeOperation(criteria);
-				break;
-			case IN:
-				visitInOperator(criteria);
-				break;
-		}
-	}
-
-	private void visitLikeOperation(final PropertyCriteria<PK, E> criteria) {
-		//TODO:
-	}
-
-	@Override
 	protected void visitSort(final SortCriteria<PK, E> criteria) {
 		//TODO:
 	}
 
-	private void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 		final String parameterName = parameterName(criteria);
 		final String criterion = propertyName + " == :" + parameterName;
@@ -127,7 +93,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		addCriterion(criterion, criteria.isNegative());
 	}
 
-	private void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -145,7 +111,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	private void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -161,7 +127,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	private void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -177,7 +143,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	private void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -193,7 +159,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	private void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -208,7 +174,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	private void visitInOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitInOperator(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 		final List<?> value = (List<?>) criteria.getValue();
 
@@ -234,6 +200,10 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 			addParameter(parameterName, value);
 			addCriterion(criterion, criteria.isNegative());
 		}
+	}
+
+	protected void visitLikeOperator(final PropertyCriteria<PK, E> criteria) {
+		//todo: implement this
 	}
 
 	private void addParameter(final String parameterName, final Object value) {

@@ -33,38 +33,64 @@ public class ObjectifyCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
-		final StringBuilder condition = new StringBuilder();
-		if (criteria.getPath() != null) {
-			condition.append(criteria.getPath()).append('.');
-		}
-		condition.append(criteria.getProperty());
-		switch (criteria.getOperator()) {
-			case EQUAL:
-				condition.append(" =");
-				break;
-			case NOT_EQUAL:
-				condition.append(" !=");
-				break;
-			case GREATER_THAN:
-				condition.append(" >");
-				break;
-			case GREATER_OR_EQUAL:
-				condition.append(" >=");
-				break;
-			case LESS_THAN:
-				condition.append(" <");
-				break;
-			case LESS_OR_EQUAL:
-				condition.append(" <=");
-				break;
-			case LIKE:
-				break;
-			case IN:
-				condition.append(" in");
-				break;
-		}
-		query.filter(condition.toString(), criteria.getValue());
+	protected void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " =";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " !=";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " >";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " >=";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " <";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " <=";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitInOperator(final PropertyCriteria<PK, E> criteria) {
+		final String propertyName = propertyName(criteria);
+		final String criterion = propertyName + " in";
+
+		query.filter(criterion, criteria.getValue());
+	}
+
+	@Override
+	protected void visitLikeOperator(final PropertyCriteria<PK, E> criteria) {
+		//todo: implement this
 	}
 
 	@Override
@@ -78,5 +104,11 @@ public class ObjectifyCriteriaVisitor<PK extends Serializable, E extends Entity<
 		}
 		condition.append(criteria.getProperty());
 		query.order(condition.toString());
+	}
+
+	private String propertyName(final PropertyCriteria<PK, E> criteria) {
+		return criteria.getPath() != null ?
+				criteria.getPath() + "." + criteria.getProperty() :
+				criteria.getProperty();
 	}
 }

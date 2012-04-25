@@ -69,87 +69,113 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		addCriterion(temp, criteria.isNegative());
 	}
 
-	protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria.getPath(), criteria.getProperty());
-		switch (criteria.getOperator()) {
-			case EQUAL:
-				if (criteria.getValue() == null) {
-					addCriterion(property.isNull(), criteria.isNegative());
-				} else {
-					addCriterion(property.eq(criteria.getValue()), criteria.isNegative());
-				}
-				break;
-			case NOT_EQUAL:
-				if (criteria.getValue() == null) {
-					addCriterion(property.isNotNull(), criteria.isNegative());
-				} else {
-					addCriterion(Restrictions.or(
-							property.isNull(),
-							property.ne(criteria.getValue())
-					), criteria.isNegative());
-				}
-				break;
-			case GREATER_THAN:
-				if (criteria.getValue() == null) {
-					addCriterion(property.isNotNull(), criteria.isNegative());
-				} else {
-					addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
-				}
-				break;
-			case GREATER_OR_EQUAL:
-				if (criteria.getValue() == null) {
-					addCriterion(Restrictions.sqlRestriction("1=1"), criteria.isNegative());
-				} else {
-					addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
-				}
-				break;
-			case LESS_THAN:
-				if (criteria.getValue() == null) {
-					addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
-				} else {
-					addCriterion(Restrictions.or(
-							property.isNull(),
-							property.lt(criteria.getValue())
-					), criteria.isNegative());
-				}
-				break;
-			case LESS_OR_EQUAL:
-				if (criteria.getValue() == null) {
-					addCriterion(property.isNull(), criteria.isNegative());
-				} else {
-					addCriterion(Restrictions.or(
-							property.isNull(),
-							property.le(criteria.getValue())
-					), criteria.isNegative());
-				}
-				break;
-			case LIKE:
-				addCriterion(property.like(criteria.getValue()), criteria.isNegative());
-				break;
-			case IN:
-				final List<?> value = (List<?>) criteria.getValue();
-				if (value == null || value.isEmpty()) {
-					addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
-				} else if (value.contains(null)) {
-					final List<Object> recalculated = new ArrayList<Object>();
-					for (Object val : value) {
-						if (val != null) {
-							recalculated.add(val);
-						}
-					}
-					if (recalculated.size() > 0) {
-						addCriterion(Restrictions.or(
-								property.isNull(),
-								property.in(recalculated)
-						), criteria.isNegative());
-					} else {
-						addCriterion(property.isNull(), criteria.isNegative());
-					}
-				} else {
-					addCriterion(property.in(value), criteria.isNegative());
-				}
-				break;
+	@Override
+	protected void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		if (criteria.getValue() == null) {
+			addCriterion(property.isNull(), criteria.isNegative());
+		} else {
+			addCriterion(property.eq(criteria.getValue()), criteria.isNegative());
 		}
+	}
+
+	@Override
+	protected void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		if (criteria.getValue() == null) {
+			addCriterion(property.isNotNull(), criteria.isNegative());
+		} else {
+			addCriterion(Restrictions.or(
+					property.isNull(),
+					property.ne(criteria.getValue())
+			), criteria.isNegative());
+		}
+	}
+
+	@Override
+	protected void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		if (criteria.getValue() == null) {
+			addCriterion(property.isNotNull(), criteria.isNegative());
+		} else {
+			addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
+		}
+	}
+
+	@Override
+	protected void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		if (criteria.getValue() == null) {
+			addCriterion(Restrictions.sqlRestriction("1=1"), criteria.isNegative());
+		} else {
+			addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
+		}
+	}
+
+	@Override
+	protected void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		if (criteria.getValue() == null) {
+			addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
+		} else {
+			addCriterion(Restrictions.or(
+					property.isNull(),
+					property.lt(criteria.getValue())
+			), criteria.isNegative());
+		}
+	}
+
+	@Override
+	protected void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		if (criteria.getValue() == null) {
+			addCriterion(property.isNull(), criteria.isNegative());
+		} else {
+			addCriterion(Restrictions.or(
+					property.isNull(),
+					property.le(criteria.getValue())
+			), criteria.isNegative());
+		}
+	}
+
+	@Override
+	protected void visitInOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		final List<?> value = (List<?>) criteria.getValue();
+		if (value == null || value.isEmpty()) {
+			addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
+		} else if (value.contains(null)) {
+			final List<Object> recalculated = new ArrayList<Object>();
+			for (Object val : value) {
+				if (val != null) {
+					recalculated.add(val);
+				}
+			}
+			if (recalculated.size() > 0) {
+				addCriterion(Restrictions.or(
+						property.isNull(),
+						property.in(recalculated)
+				), criteria.isNegative());
+			} else {
+				addCriterion(property.isNull(), criteria.isNegative());
+			}
+		} else {
+			addCriterion(property.in(value), criteria.isNegative());
+		}
+	}
+
+	@Override
+	protected void visitLikeOperator(final PropertyCriteria<PK, E> criteria) {
+		final Property property = getProperty(criteria);
+
+		addCriterion(property.like(criteria.getValue()), criteria.isNegative());
 	}
 
 	protected void visitSort(final SortCriteria<PK, E> criteria) {
@@ -171,9 +197,9 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		}
 	}
 
-	private Property getProperty(final String path, final String property) {
-		final String alias = getCriteria(path).getAlias();
-		return Property.forName(alias + "." + property);
+	private Property getProperty(final PropertyCriteria<PK, E> criteria) {
+		final String alias = getCriteria(criteria.getPath()).getAlias();
+		return Property.forName(alias + "." + criteria.getProperty());
 	}
 
 	private org.hibernate.Criteria getCriteria(final String path) {
