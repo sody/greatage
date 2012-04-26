@@ -1,7 +1,7 @@
 package org.greatage.domain.objectify;
 
 import com.googlecode.objectify.Query;
-import org.greatage.domain.AbstractCriteriaVisitor;
+import org.greatage.domain.internal.AbstractCriteriaVisitor;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.JunctionCriteria;

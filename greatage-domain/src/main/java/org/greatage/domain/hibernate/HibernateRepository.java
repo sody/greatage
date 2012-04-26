@@ -16,9 +16,9 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.AbstractEntityRepository;
+import org.greatage.domain.internal.AbstractEntityRepository;
 import org.greatage.domain.Criteria;
-import org.greatage.domain.CriteriaVisitor;
+import org.greatage.domain.internal.CriteriaVisitor;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;
 import org.greatage.domain.SessionCallback;

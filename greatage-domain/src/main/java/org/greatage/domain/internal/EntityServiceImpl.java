@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.internal;
 
+import org.greatage.domain.AllCriteria;
+import org.greatage.domain.Criteria;
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityQuery;
+import org.greatage.domain.EntityRepository;
+import org.greatage.domain.EntityService;
+import org.greatage.domain.JunctionCriteria;
 import org.greatage.domain.annotations.Transactional;
+import org.greatage.domain.internal.EntityQueryImpl;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * This class represents default implementation of {@link EntityService}.
+ * This class represents default implementation of {@link org.greatage.domain.EntityService}.
  *
  * @param <PK> type of entities primary key
  * @param <E>  type of entities

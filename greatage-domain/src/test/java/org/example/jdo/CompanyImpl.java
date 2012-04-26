@@ -17,7 +17,7 @@
 package org.example.jdo;
 
 import org.example.model.Company;
-import org.greatage.domain.AbstractEntity;
+import org.greatage.domain.internal.AbstractEntity;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;

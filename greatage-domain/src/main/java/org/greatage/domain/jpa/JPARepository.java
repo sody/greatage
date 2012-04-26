@@ -16,7 +16,7 @@
 
 package org.greatage.domain.jpa;
 
-import org.greatage.domain.AbstractEntityRepository;
+import org.greatage.domain.internal.AbstractEntityRepository;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;

@@ -16,7 +16,7 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.AbstractCriteriaVisitor;
+import org.greatage.domain.internal.AbstractCriteriaVisitor;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.JunctionCriteria;

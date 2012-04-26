@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.internal;
+
+import org.greatage.domain.Criteria;
+import org.greatage.domain.Entity;
+import org.greatage.domain.JunctionCriteria;
+import org.greatage.domain.PropertyCriteria;
+import org.greatage.domain.SortCriteria;
 
 import java.io.Serializable;
 

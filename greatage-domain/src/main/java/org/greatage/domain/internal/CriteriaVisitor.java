@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.hibernate;
+package org.greatage.domain.internal;
 
-import org.hibernate.cfg.Configuration;
+import org.greatage.domain.Criteria;
+import org.greatage.domain.Entity;
 
-import java.util.Map;
+import java.io.Serializable;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class HibernatePropertyConfiguration implements HibernateConfiguration {
-	private final Map<String, String> properties;
+public interface CriteriaVisitor<PK extends Serializable, E extends Entity<PK>> {
 
-	public HibernatePropertyConfiguration(final Map<String, String> properties) {
-		this.properties = properties;
-	}
-
-	public void configure(final Configuration configuration) {
-		for (Map.Entry<String, String> entry : properties.entrySet()) {
-			configuration.setProperty(entry.getKey(), entry.getValue());
-		}
-	}
+	void visit(Criteria<PK, E> criteria);
 }

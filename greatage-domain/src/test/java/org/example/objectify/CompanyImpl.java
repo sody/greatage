@@ -1,7 +1,7 @@
 package org.example.objectify;
 
 import org.example.model.Company;
-import org.greatage.domain.AbstractEntity;
+import org.greatage.domain.internal.AbstractEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

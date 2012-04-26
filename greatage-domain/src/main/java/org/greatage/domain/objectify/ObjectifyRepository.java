@@ -3,7 +3,7 @@ package org.greatage.domain.objectify;
 import com.google.appengine.api.datastore.Transaction;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.Query;
-import org.greatage.domain.AbstractEntityRepository;
+import org.greatage.domain.internal.AbstractEntityRepository;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Pagination;

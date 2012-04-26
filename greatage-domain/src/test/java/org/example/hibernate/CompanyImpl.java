@@ -17,7 +17,7 @@
 package org.example.hibernate;
 
 import org.example.model.Company;
-import org.greatage.domain.AbstractEntity;
+import org.greatage.domain.internal.AbstractEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
