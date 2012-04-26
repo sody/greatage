@@ -16,12 +16,13 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.internal.AbstractCriteriaVisitor;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.JunctionCriteria;
 import org.greatage.domain.PropertyCriteria;
 import org.greatage.domain.SortCriteria;
+import org.greatage.domain.internal.AbstractCriteriaVisitor;
+import org.greatage.util.NameAllocator;
 import org.greatage.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
@@ -43,7 +44,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		extends AbstractCriteriaVisitor<PK, E> {
 
 	private final Map<String, org.hibernate.Criteria> children = new HashMap<String, org.hibernate.Criteria>();
-	private final List<String> names = new ArrayList<String>();
+	private final NameAllocator names = new NameAllocator();
 
 	private final org.hibernate.Criteria root;
 
@@ -218,16 +219,6 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 		}
 		final int i = path.lastIndexOf('.');
 		final String property = i > 0 ? path.substring(i + 1) : path;
-		return root.createCriteria(path, allocateName(property));
-	}
-
-	private String allocateName(final String name) {
-		String result = name;
-		int i = 0;
-		while (names.contains(result)) {
-			result = name + "_" + i++;
-		}
-		names.add(result);
-		return result;
+		return root.createCriteria(path, names.allocate(property));
 	}
 }

@@ -16,12 +16,13 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.internal.AbstractCriteriaVisitor;
 import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
 import org.greatage.domain.JunctionCriteria;
 import org.greatage.domain.PropertyCriteria;
 import org.greatage.domain.SortCriteria;
+import org.greatage.domain.internal.AbstractCriteriaVisitor;
+import org.greatage.util.NameAllocator;
 
 import javax.jdo.Query;
 import java.io.Serializable;
@@ -37,7 +38,7 @@ import java.util.Map;
 public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		extends AbstractCriteriaVisitor<PK, E> {
 	private final Map<String, Object> parameters = new HashMap<String, Object>();
-	private final List<String> names = new ArrayList<String>();
+	private final NameAllocator names = new NameAllocator();
 
 	private final Query query;
 	private List<String> junction = new ArrayList<String>();
@@ -238,16 +239,6 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	private String parameterName(final PropertyCriteria<PK, E> criteria) {
-		return allocateName(criteria.getProperty());
-	}
-
-	private String allocateName(final String name) {
-		String result = name + "_";
-		int i = 0;
-		while (names.contains(result)) {
-			result = name + "_" + i++;
-		}
-		names.add(result);
-		return result;
+		return names.allocate(criteria.getProperty());
 	}
 }
