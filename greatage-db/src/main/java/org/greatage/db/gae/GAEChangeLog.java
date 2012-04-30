@@ -1,194 +1,81 @@
 package org.greatage.db.gae;
 
-import com.google.appengine.api.datastore.*;
-import org.greatage.db.*;
-import org.greatage.util.CollectionUtils;
-import org.greatage.util.CompositeKey;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.KeyFactory;
+import org.greatage.db.ChangeLog;
+import org.greatage.db.DatabaseException;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.Date;
-import java.util.Set;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEChangeLog implements ChangeLog {
-    private final DatastoreService dataStore;
+public class GAEChangeLog implements ChangeLog, GAEConstants {
+    private final DatastoreService store;
+    private final boolean clearCheckSums;
+    private final Collection<String> context;
 
-    private final Set<String> context = CollectionUtils.newSet();
-    private boolean dropFirst;
-    private boolean clearCheckSums;
+    private String name = "<unknown>";
+    private String author = "<unknown>";
 
-    private final Set<CompositeKey> ranChangeSets = CollectionUtils.newSet();
-    private GAEChangeSet lastChangeSet;
+    private GAEChangeSet changeSet;
 
-    public GAEChangeLog() {
-        this(DatastoreServiceFactory.getDatastoreService());
+    GAEChangeLog(final DatastoreService store, final Collection<String> context, final boolean clearCheckSums) {
+        this.store = store;
+        this.clearCheckSums = clearCheckSums;
+        this.context = context;
     }
 
-    public GAEChangeLog(final DatastoreService dataStore) {
-        this.dataStore = dataStore;
-    }
-
-    public void update(final ChangeLogSupport changeLog, final String... context) {
-        context(context);
-        doUpdate(changeLog);
-    }
-
-    public ChangeLog dropFirst() {
-        dropFirst = true;
+    public ChangeLog name(final String name) {
+        this.name = name;
         return this;
     }
 
-    public ChangeLog clearCheckSums() {
-        clearCheckSums = true;
-        return this;
-    }
-
-    public ChangeLog context(final String... context) {
-        Collections.addAll(this.context, context);
-        return this;
-    }
-
-    public ChangeSet changeSet(final String id) {
-        return begin(new GAEChangeSet(id));
-    }
-
-    private synchronized void doUpdate(final ChangeLogSupport changeLog) {
-        lock();
-        try {
-            if (dropFirst) {
-                dropAll();
-            }
-
-            changeLog.execute(this);
-
-            commit();
-        } finally {
-            lastChangeSet = null;
-            ranChangeSets.clear();
-            unlock();
-        }
-    }
-
-    GAEChangeSet begin(final GAEChangeSet changeSet) {
-        commit();
-        this.lastChangeSet = changeSet;
+    public ChangeSet begin(final String title) {
+        end();
+        changeSet = new GAEChangeSet(title, name, author);
         return changeSet;
     }
 
-    void end(final GAEChangeSet changeSet) {
-        if (changeSet.supports(context)) {
-            final String checkSum = changeSet.getCheckSum();
-            System.out.println("Executing ChangeSet: " + changeSet.toString());
-            System.out.println("CheckSum : " + checkSum);
-
-            final CompositeKey key = new CompositeKey(changeSet.getTitle(), changeSet.getAuthor(), changeSet.getLocation());
-            if (ranChangeSets.contains(key)) {
-                throw new DatabaseException(String.format("ChangeSet '%s' has already been executed", changeSet));
-            }
-            ranChangeSets.add(key);
-
-            final Query query = new Query(SystemTables.LOG.NAME)
-                    .addFilter(SystemTables.LOG.TITLE, Query.FilterOperator.EQUAL, changeSet.getTitle())
-                    .addFilter(SystemTables.LOG.AUTHOR, Query.FilterOperator.EQUAL, changeSet.getAuthor())
-                    .addFilter(SystemTables.LOG.LOCATION, Query.FilterOperator.EQUAL, changeSet.getLocation());
-            final Entity logEntry = dataStore.prepare(query).asSingleEntity();
-            if (logEntry == null) {
-                changeSet.doInDataStore(dataStore);
-                log(changeSet, checkSum);
-            } else {
-                final String expectedCheckSum = (String) logEntry.getProperty(SystemTables.LOG.CHECKSUM);
-                if (clearCheckSums || !CheckSumUtils.isValid(expectedCheckSum)) {
-                    logEntry.setProperty(SystemTables.LOG.CHECKSUM, checkSum);
-                    dataStore.put(logEntry);
-                } else if (!expectedCheckSum.equals(checkSum)) {
-                    throw new DatabaseException(String.format("CheckSum check failed for change set '%s'. Should be '%s' but was '%s'",
-                            changeSet, expectedCheckSum, checkSum));
-                }
-            }
-            this.lastChangeSet = null;
+    public ChangeLog end() {
+        if (changeSet != null) {
+            changeSet.execute(store, context, clearCheckSums);
+            changeSet = null;
         }
+        return this;
     }
 
-    private void commit() {
-        if (lastChangeSet != null) {
-            end(lastChangeSet);
-            lastChangeSet = null;
-        }
+    public ChangeLog dropAll() {
+        addChange(new GAEDeleteAll());
+        return this;
     }
 
-    private void lock() {
-        Entity lock = null;
-        try {
-            lock = dataStore.get(KeyFactory.createKey(SystemTables.LOCK.NAME, SystemTables.LOCK.ID));
-        } catch (EntityNotFoundException e) {
-            // it doesn't exist, so we need to create one
-        }
-        if (lock == null) {
-            lock = new Entity(SystemTables.LOCK.NAME, SystemTables.LOCK.ID);
-        }
-        if (lock.hasProperty(SystemTables.LOCK.LOCKED_AT)) {
-            //noinspection MalformedFormatString
-            throw new DatabaseException(String.format("Already locked at '%1$tF %1$tT'. Skipping update.",
-                    lock.getProperty(SystemTables.LOCK.LOCKED_AT)));
-        }
-        lock.setProperty(SystemTables.LOCK.LOCKED_AT, new Date());
-        dataStore.put(lock);
+    public ChangeLog.Insert insert(final String entityName) {
+        return addChange(new GAEInsert(entityName));
     }
 
-    private void unlock() {
-        Entity lock = null;
-        try {
-            lock = dataStore.get(KeyFactory.createKey(SystemTables.LOCK.NAME, SystemTables.LOCK.ID));
-        } catch (EntityNotFoundException e) {
-            // it doesn't exist, so we need to create one
-        }
-        if (lock != null && lock.hasProperty(SystemTables.LOCK.LOCKED_AT)) {
-            lock.removeProperty(SystemTables.LOCK.LOCKED_AT);
-            dataStore.put(lock);
-        }
+    public ChangeLog.Update update(final String entityName) {
+        return addChange(new GAEUpdate(entityName));
     }
 
-    private void log(final GAEChangeSet changeSet, final String checkSum) {
-        final Entity logEntry = new Entity(SystemTables.LOG.NAME);
-        logEntry.setProperty(SystemTables.LOG.TITLE, changeSet.getTitle());
-        logEntry.setProperty(SystemTables.LOG.AUTHOR, changeSet.getAuthor());
-        logEntry.setProperty(SystemTables.LOG.LOCATION, changeSet.getLocation());
-        logEntry.setProperty(SystemTables.LOG.COMMENT, changeSet.getComment());
-        logEntry.setProperty(SystemTables.LOG.CHECKSUM, checkSum);
-        logEntry.setProperty(SystemTables.LOG.EXECUTED_AT, new Date());
-        dataStore.put(logEntry);
+    public ChangeLog.Delete delete(final String entityName) {
+        return addChange(new GAEDelete(entityName));
     }
 
-    private void dropAll() {
-        for (Entity kindMetadata : dataStore.prepare(new Query(Query.KIND_METADATA_KIND)).asIterable()) {
-            final String kind = kindMetadata.getKey().getName();
-            if (!SystemTables.LOCK.NAME.equals(kind)) {
-                for (Entity entity : dataStore.prepare(new Query(kind).setKeysOnly()).asIterable()) {
-                    dataStore.delete(entity.getKey());
-                }
-            }
-        }
+    public ChangeLog.Select select(final String entityName) {
+        return new GAESelect(entityName);
     }
 
-    interface SystemTables {
-        interface LOCK {
-            long ID = 1l;
+    public ChangeLog.ConditionEntry condition(final String propertyName) {
+        return new GAEConditionEntry(propertyName);
+    }
 
-            String NAME = "DATABASE_CHANGE_LOG_LOCK";
-            String LOCKED_AT = "lockedAt";
-        }
-
-        interface LOG {
-            String NAME = "DATABASE_CHANGE_LOG";
-            String TITLE = "title";
-            String AUTHOR = "author";
-            String LOCATION = "location";
-            String COMMENT = "comment";
-            String CHECKSUM = "checkSum";
-            String EXECUTED_AT = "executedAt";
-        }
+    private <T extends GAEChange> T addChange(final T change) {
+        changeSet.addChange(change);
+        return change;
     }
 }

@@ -1,8 +1,10 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import org.greatage.db.ChangeSet;
-import org.greatage.db.CheckSumUtils;
+import com.google.appengine.api.datastore.Entity;
+import org.greatage.db.ChangeLog;
+import org.greatage.db.internal.CheckSumUtils;
+import org.greatage.db.DatabaseException;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
 
@@ -12,104 +14,91 @@ import java.util.*;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEChangeSet implements ChangeSet, DataStoreCallback {
-    private final String title;
-    private String author = "<unknown>";
-    private String location = "<unknown>";
-
-    private final Set<String> context = new HashSet<String>();
-    private String comment;
-    private String checkSum;
-
+public class GAEChangeSet implements ChangeLog.ChangeSet, GAEConstants {
     private final List<GAEChange> changes = new ArrayList<GAEChange>();
 
-    GAEChangeSet(final String title) {
+    private final String title;
+    private final String location;
+
+    private String author;
+    private String comment;
+    private List<String> context;
+
+    GAEChangeSet(final String title, final String location, final String author) {
         this.title = title;
+        this.location = location;
+        this.author = author;
     }
 
-    public ChangeSet author(final String author) {
+    public ChangeLog.ChangeSet author(final String author) {
         this.author = author;
         return this;
     }
 
-    public ChangeSet location(final String location) {
-        this.location = location;
-        return this;
-    }
-
-    public ChangeSet comment(final String comment) {
+    public ChangeLog.ChangeSet comment(final String comment) {
         this.comment = comment;
         return this;
     }
 
-    public ChangeSet context(final String... context) {
-        Collections.addAll(this.context, context);
+    public ChangeLog.ChangeSet context(final String... context) {
+        this.context = Arrays.asList(context);
         return this;
     }
 
-    public ChangeSet.Insert insert(final String entityName) {
-        return addChange(new GAEInsert(entityName));
-    }
-
-    public ChangeSet.Update update(final String entityName) {
-        return addChange(new GAEUpdate(entityName));
-    }
-
-    public ChangeSet.Delete delete(final String entityName) {
-        return addChange(new GAEDelete(entityName));
-    }
-
-    public ChangeSet.Select select(final String entityName) {
-        return new GAESelect(entityName);
-    }
-
-    public ChangeSet.ConditionEntry condition(final String propertyName) {
-        return new GAEConditionEntry(propertyName);
-    }
-
-    public void doInDataStore(final DatastoreService dataStore) {
-        for (GAEChange change : changes) {
-            change.doInDataStore(dataStore);
-        }
-    }
-
-    String getTitle() {
-        return title;
-    }
-
-    String getAuthor() {
-        return author;
-    }
-
-    String getLocation() {
-        return location;
-    }
-
-    String getComment() {
-        return comment;
-    }
-
-    String getCheckSum() {
-        if (checkSum == null) {
-            checkSum = CheckSumUtils.compositeCheckSum(toString());
-        }
-        return checkSum;
-    }
-
-    boolean supports(final Set<String> runContext) {
-        return context.isEmpty() || context.containsAll(runContext);
-    }
-
-    private <T extends GAEChange> T addChange(final T change) {
+    void addChange(final GAEChange change) {
         changes.add(change);
-        return change;
+    }
+
+    void execute(final DatastoreService store, final Collection<String> context, final boolean clearCheckSum) {
+        if (supports(context)) {
+            final String description = toString();
+            final String checkSum = CheckSumUtils.calculateCheckSum(description);
+            System.out.println("Executing ChangeSet: " + description);
+            System.out.println("CheckSum : " + checkSum);
+
+            final Entity logEntry = (Entity) new GAESelect(LOG_TABLE)
+                    .where(new GAEConditionEntry(TITLE_COLUMN).eq(title)
+                            .and(new GAEConditionEntry(AUTHOR_COLUMN).eq(author))
+                            .and(new GAEConditionEntry(LOCATION_COLUMN).eq(location)))
+                    .unique()
+                    .get(store);
+
+            if (logEntry != null) {
+                final String expectedCheckSum = (String) logEntry.getProperty(CHECKSUM_COLUMN);
+                if (clearCheckSum || !CheckSumUtils.isValid(expectedCheckSum)) {
+                    new GAEUpdate(LOG_TABLE)
+                            .set(CHECKSUM_COLUMN, checkSum)
+                            .execute(store);
+                } else if (!expectedCheckSum.equals(checkSum)) {
+                    throw new DatabaseException(
+                            String.format("CheckSum check failed for change set '%s'. Should be '%s' but was '%s'",
+                            this, expectedCheckSum, checkSum));
+                }
+            } else {
+                for (GAEChange change : changes) {
+                    change.execute(store);
+                }
+                new GAEInsert(LOG_TABLE)
+                        .set(TITLE_COLUMN, title)
+                        .set(LOCATION_COLUMN, location)
+                        .set(AUTHOR_COLUMN, author)
+                        .set(COMMENT_COLUMN, comment)
+                        .set(CHECKSUM_COLUMN, checkSum)
+                        .set(EXECUTED_AT_COLUMN, new Date())
+                        .execute(store);
+            }
+        }
+    }
+
+    private boolean supports(final Collection<String> context) {
+        return this.context == null || this.context.isEmpty() || this.context.containsAll(context);
     }
 
     @Override
     public String toString() {
-        final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-        builder.append(title).append(author).append(location);
-        if (!context.isEmpty()) {
+        final DescriptionBuilder builder = new DescriptionBuilder(this);
+        builder.append(title).append(location).append(author);
+        if (context != null && !context.isEmpty()) {
             builder.append("context", context);
         }
         if (!StringUtils.isEmpty(comment)) {

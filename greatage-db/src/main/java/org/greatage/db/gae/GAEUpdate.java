@@ -2,82 +2,58 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.Query;
-import org.greatage.db.ChangeSet;
+import org.greatage.db.ChangeLog;
 import org.greatage.util.DescriptionBuilder;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEUpdate extends GAEChange implements ChangeSet.Update {
-	private final Map<String, ChangeSet.Select> setters = new HashMap<String, ChangeSet.Select>();
+public class GAEUpdate extends GAEChange implements ChangeLog.Update {
+    private final String name;
+    private final Map<String, Object> properties = new HashMap<String, Object>();
+    private final GAESelect select;
 
-	private final Entity entity;
-	private final Query query;
+    GAEUpdate(final String name) {
+        this.name = name;
+        select = new GAESelect(name);
+    }
 
-	GAEUpdate(final String entityName) {
-		this.entity = new Entity(entityName);
-		this.query = new Query(entityName);
-	}
+    public GAEUpdate set(final String propertyName, final Object value) {
+        properties.put(propertyName, value);
+        return this;
+    }
 
-	public ChangeSet.Update set(final String propertyName, final Object value) {
-		entity.setProperty(propertyName, value);
-		return this;
-	}
+    public GAEUpdate set(final String propertyName, final ChangeLog.Select select) {
+        properties.put(propertyName, select);
+        return this;
+    }
 
-	public ChangeSet.Update set(final String propertyName, final ChangeSet.Select select) {
-		setters.put(propertyName, select);
-		return this;
-	}
+    public GAEUpdate where(final ChangeLog.Condition condition) {
+        select.where(condition);
+        return this;
+    }
 
-	public ChangeSet.Update where(final ChangeSet.Condition condition) {
-		final GAECondition gaeCondition = (GAECondition) condition;
-		for (Query.FilterPredicate predicate : gaeCondition.getFilter()) {
-			query.addFilter(predicate.getPropertyName(), predicate.getOperator(), predicate.getValue());
-		}
-		return this;
-	}
+    protected void execute(final DatastoreService store) {
+        final Entity prototype = getPrototype(store, name, properties);
 
-	public void doInDataStore(final DatastoreService dataStore) {
-		for (Map.Entry<String, ChangeSet.Select> entry : setters.entrySet()) {
-			final GAESelect selectQuery = (GAESelect) entry.getValue();
+        for (Entity entity : select.iterate(store)) {
+            entity.setPropertiesFrom(prototype);
+            store.put(entity);
+        }
+    }
 
-			if (!selectQuery.isUnique()) {
-				final List<Key> keys = new ArrayList<Key>();
-				for (Entity selected : dataStore.prepare(selectQuery.getQuery()).asIterable()) {
-					keys.add(selected.getKey());
-				}
-				entity.setProperty(entry.getKey(), keys);
-			} else {
-				final Entity value = dataStore.prepare(selectQuery.getQuery()).asSingleEntity();
-				entity.setProperty(entry.getKey(), value != null ? value.getKey() : null);
-			}
-		}
-
-		for (Entity realEntity : dataStore.prepare(query).asIterable()) {
-			realEntity.setPropertiesFrom(entity);
-			dataStore.put(realEntity);
-		}
-	}
-
-	@Override
-	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append(query.getKind());
-		for (Map.Entry<String, Object> entry : entity.getProperties().entrySet()) {
-			builder.append(entry.getKey(), entry.getValue());
-		}
-		for (Map.Entry<String, ChangeSet.Select> entry : setters.entrySet()) {
-			builder.append(entry.getKey(), entry.getValue());
-		}
-		builder.append("query", query);
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        final DescriptionBuilder builder = new DescriptionBuilder(this);
+        builder.append(name);
+        for (Map.Entry<String, Object> entry : properties.entrySet()) {
+            builder.append(entry.getKey(), entry.getValue());
+        }
+        builder.append("select", select);
+        return builder.toString();
+    }
 }

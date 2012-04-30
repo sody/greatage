@@ -44,7 +44,14 @@
 			<artifactId>greatage-common</artifactId>
 		</dependency>
 
-		<dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>1.7.10</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
 			<groupId>org.liquibase</groupId>
 			<artifactId>liquibase-core</artifactId>
 			<optional>true</optional>

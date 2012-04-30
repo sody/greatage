@@ -2,41 +2,38 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
+import org.greatage.util.DescriptionBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class GAEChange implements DataStoreCallback {
-	public static final String PARENT_PROPERTY = "__parent__";
+public abstract class GAEChange {
+    public static final String PARENT_PROPERTY = "__parent__";
 
-	protected void setProperty(final DatastoreService dataStore, final Entity prototype, final String propertyName, final Object value) {
-		if (!PARENT_PROPERTY.equals(propertyName)) {
-			if (value instanceof GAESelect) {
-				final GAESelect selectQuery = (GAESelect) value;
-				if (!selectQuery.isUnique()) {
-					final List<Key> keys = new ArrayList<Key>();
-					for (Entity selected : dataStore.prepare(selectQuery.getQuery()).asList(FetchOptions.Builder.withDefaults())) {
-						keys.add(selected.getKey());
-					}
-					prototype.setProperty(propertyName, keys);
-				} else {
-					final Entity entity = dataStore.prepare(selectQuery.getQuery()).asSingleEntity();
-					prototype.setProperty(propertyName, entity != null ? entity.getKey() : null);
-				}
-			} else {
-				prototype.setProperty(propertyName, value);
-			}
-		}
-	}
+    protected abstract void execute(DatastoreService store);
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName();
-	}
+    protected Object resolve(final DatastoreService store, final Object value) {
+        return value != null && value instanceof GAESelect ? ((GAESelect) value).get(store) : value;
+    }
+
+    protected Entity getPrototype(final DatastoreService store, final String name, final Map<String, Object> properties) {
+        final Entity prototype = properties.containsKey(PARENT_PROPERTY) ?
+                new Entity(name, (Key) resolve(store, properties.get(PARENT_PROPERTY))) :
+                new Entity(name);
+        for (Map.Entry<String, Object> property : properties.entrySet()) {
+            if (!PARENT_PROPERTY.equals(property.getKey())) {
+                prototype.setProperty(property.getKey(), property.getValue());
+            }
+        }
+        return prototype;
+    }
+
+    @Override
+    public String toString() {
+        return new DescriptionBuilder(this).toString();
+    }
 }

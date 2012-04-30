@@ -2,40 +2,38 @@ package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.Query;
-import org.greatage.db.ChangeSet;
+import org.greatage.db.ChangeLog;
 import org.greatage.util.DescriptionBuilder;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAEDelete extends GAEChange implements ChangeSet.Delete {
-	private final Query query;
+public class GAEDelete extends GAEChange implements ChangeLog.Delete {
+    private final String name;
+    private final GAESelect select;
 
-	GAEDelete(final String entityName) {
-		this.query = new Query(entityName);
-	}
+    GAEDelete(final String name) {
+        this.name = name;
+        select = new GAESelect(name).keys();
+    }
 
-	public ChangeSet.Delete where(final ChangeSet.Condition condition) {
-		final GAECondition gaeCondition = (GAECondition) condition;
-		for (Query.FilterPredicate predicate : gaeCondition.getFilter()) {
-			query.addFilter(predicate.getPropertyName(), predicate.getOperator(), predicate.getValue());
-		}
-		return this;
-	}
+    public ChangeLog.Delete where(final ChangeLog.Condition condition) {
+        select.where(condition);
+        return this;
+    }
 
-	public void doInDataStore(final DatastoreService dataStore) {
-		for (Entity entity : dataStore.prepare(query).asIterable()) {
-			dataStore.delete(entity.getKey());
-		}
-	}
+    protected void execute(final DatastoreService store) {
+        for (Entity entity : select.iterate(store)) {
+            store.delete(entity.getKey());
+        }
+    }
 
-	@Override
-	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append(query.getKind());
-		builder.append("query", query);
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        final DescriptionBuilder builder = new DescriptionBuilder(this);
+        builder.append(name);
+        builder.append("select", select);
+        return builder.toString();
+    }
 }

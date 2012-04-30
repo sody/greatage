@@ -49,6 +49,10 @@ public class DescriptionBuilder {
 		this.entityName = entityClass.getSimpleName();
 	}
 
+    public DescriptionBuilder(final Object entity) {
+        this(entity.getClass());
+    }
+
 	/**
 	 * Appends key-value pair to entity description. They will appear in result string like <tt>(parameter=value,
 	 * parameter=value...)</tt>.

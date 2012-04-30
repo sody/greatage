@@ -1,7 +1,8 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.Query;
-import org.greatage.db.ChangeSet;
+import org.greatage.db.ChangeLog;
+import org.greatage.util.DescriptionBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,24 +11,30 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class GAECondition implements ChangeSet.Condition {
-	private final List<Query.FilterPredicate> filter = new ArrayList<Query.FilterPredicate>();
+public class GAECondition implements ChangeLog.Condition {
+    private final List<Query.FilterPredicate> filter = new ArrayList<Query.FilterPredicate>();
 
-	GAECondition(final Query.FilterPredicate filter) {
-		this.filter.add(filter);
-	}
+    GAECondition(final Query.FilterPredicate filter) {
+        this.filter.add(filter);
+    }
 
-	public ChangeSet.Condition and(final ChangeSet.Condition condition) {
-		final GAECondition gaeCondition = (GAECondition) condition;
-		this.filter.addAll(gaeCondition.getFilter());
-		return this;
-	}
+    public ChangeLog.Condition and(final ChangeLog.Condition condition) {
+        this.filter.addAll(((GAECondition) condition).filter);
+        return this;
+    }
 
-	public ChangeSet.Condition or(final ChangeSet.Condition condition) {
-		throw new UnsupportedOperationException("This operation is not supported in GAE DataStore");
-	}
+    public ChangeLog.Condition or(final ChangeLog.Condition condition) {
+        throw new UnsupportedOperationException("This operation is not supported in GAE DataStore");
+    }
 
-	public List<Query.FilterPredicate> getFilter() {
-		return filter;
-	}
+    void apply(final Query query) {
+        for (Query.FilterPredicate predicate : filter) {
+            query.addFilter(predicate.getPropertyName(), predicate.getOperator(), predicate.getValue());
+        }
+    }
+
+    @Override
+    public String toString() {
+        return new DescriptionBuilder(this).append(filter).toString();
+    }
 }

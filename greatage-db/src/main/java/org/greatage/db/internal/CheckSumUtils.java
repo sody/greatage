@@ -1,4 +1,4 @@
-package org.greatage.db;
+package org.greatage.db.internal;
 
 import org.greatage.util.EncodeUtils;
 import org.greatage.util.StringUtils;
@@ -10,7 +10,7 @@ import org.greatage.util.StringUtils;
 public class CheckSumUtils {
 	private static final String DEFAULT_ALGORITHM = "MD5";
 
-	public static String compositeCheckSum(final String compositeCheckSum) {
+	public static String calculateCheckSum(final String compositeCheckSum) {
 		final byte[] encoded = EncodeUtils.encode(compositeCheckSum.getBytes(), DEFAULT_ALGORITHM);
 		return DEFAULT_ALGORITHM + ":" + StringUtils.toHexString(encoded) + ";";
 	}
