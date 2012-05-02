@@ -27,7 +27,7 @@ import java.io.Serializable;
  * @param <PK> type of entities primary key
  * @param <E>  type of entities
  * @author Ivan Khalopik
- * @see org.greatage.domain.EntityRepository
+ * @see Repository
  * @since 1.0
  */
 public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
@@ -93,6 +93,6 @@ public interface EntityService<PK extends Serializable, E extends Entity<PK>> {
 	@Transactional
 	void delete(E entity);
 
-	EntityQuery<PK, E> query(Criteria<PK, E>... criteria);
+	Repository.Query<PK, E> query();
 
 }

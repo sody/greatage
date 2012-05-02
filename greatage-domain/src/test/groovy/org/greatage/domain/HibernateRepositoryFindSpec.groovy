@@ -57,7 +57,7 @@ class HibernateRepositoryFindSpec extends PropertyCriteriaSpecification {
 	//todo: move up
 	def "like property criteria should find only entities with property value that matches specified pattern"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 

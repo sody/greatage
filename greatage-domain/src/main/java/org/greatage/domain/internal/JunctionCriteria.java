@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.internal;
+
+import org.greatage.domain.Entity;
+import org.greatage.domain.Repository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,16 +27,16 @@ import java.util.List;
  * @since 1.0
  */
 public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
-	private final List<Criteria<PK, E>> children;
+	private final List<Repository.Criteria<PK, E>> children;
 	private final Operator operator;
 
-	public JunctionCriteria(final Operator operator, final List<Criteria<PK, E>> children) {
+	public JunctionCriteria(final Operator operator, final List<Repository.Criteria<PK, E>> children) {
 		this.operator = operator;
 		this.children = children;
 	}
 
 	@Override
-	public Criteria<PK, E> and(final Criteria<PK, E> criteria) {
+	public Repository.Criteria<PK, E> and(final Repository.Criteria<PK, E> criteria) {
 		if (operator == Operator.AND) {
 			children.add(criteria);
 			return this;
@@ -42,7 +45,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 	}
 
 	@Override
-	public Criteria<PK, E> or(final Criteria<PK, E> criteria) {
+	public Repository.Criteria<PK, E> or(final Repository.Criteria<PK, E> criteria) {
 		if (operator == Operator.OR) {
 			children.add(criteria);
 			return this;
@@ -50,7 +53,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 		return super.or(criteria);
 	}
 
-	public List<Criteria<PK, E>> getChildren() {
+	public List<Repository.Criteria<PK, E>> getChildren() {
 		return children;
 	}
 
@@ -61,7 +64,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder("(");
-		for (Criteria<PK, E> child : children) {
+		for (Repository.Criteria<PK, E> child : children) {
 			if (builder.length() > 1) {
 				builder.append(operator == Operator.AND ? " and " : " or ");
 			}

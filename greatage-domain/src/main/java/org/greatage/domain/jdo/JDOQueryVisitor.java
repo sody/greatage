@@ -16,12 +16,11 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
-import org.greatage.domain.JunctionCriteria;
-import org.greatage.domain.PropertyCriteria;
-import org.greatage.domain.SortCriteria;
-import org.greatage.domain.internal.AbstractCriteriaVisitor;
+import org.greatage.domain.Repository;
+import org.greatage.domain.internal.AbstractQueryVisitor;
+import org.greatage.domain.internal.JunctionCriteria;
+import org.greatage.domain.internal.PropertyCriteria;
 import org.greatage.util.NameAllocator;
 
 import javax.jdo.Query;
@@ -35,8 +34,8 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
-		extends AbstractCriteriaVisitor<PK, E> {
+public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
+		extends AbstractQueryVisitor<PK, E> {
 	private final Map<String, Object> parameters = new HashMap<String, Object>();
 	private final NameAllocator names = new NameAllocator();
 
@@ -44,14 +43,14 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	private List<String> junction = new ArrayList<String>();
 	private int level;
 
-	public JDOCriteriaVisitor(final Query query) {
+	public JDOQueryVisitor(final Query query) {
 		this.query = query;
 	}
 
 	@Override
-	public void visit(final Criteria<PK, E> criteria) {
+	public void visitCriteria(final Repository.Criteria<PK, E> criteria) {
 		level++;
-		super.visit(criteria);
+		super.visitCriteria(criteria);
 		level--;
 		// google-app-engine fix for empty filter
 		if (level == 0 && !junction.isEmpty()) {
@@ -68,8 +67,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		final List<String> parent = this.junction;
 		junction = new ArrayList<String>();
 
-		for (Criteria<PK, E> child : criteria.getChildren()) {
-			visit(child);
+		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
+			visitCriteria(child);
 		}
 
 		final List<String> temp = junction;
@@ -81,11 +80,7 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	protected void visitSort(final SortCriteria<PK, E> criteria) {
-		//TODO:
-	}
-
-	protected void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 		final String parameterName = parameterName(criteria);
 		final String criterion = propertyName + " == :" + parameterName;
@@ -94,7 +89,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		addCriterion(criterion, criteria.isNegative());
 	}
 
-	protected void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -112,7 +108,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	protected void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -128,7 +125,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	protected void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -144,7 +142,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	protected void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -160,7 +159,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	protected void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 
 		if (criteria.getValue() != null) {
@@ -175,7 +175,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	protected void visitInOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitIn(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 		final List<?> value = (List<?>) criteria.getValue();
 
@@ -203,7 +204,8 @@ public class JDOCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
 		}
 	}
 
-	protected void visitLikeOperator(final PropertyCriteria<PK, E> criteria) {
+	@Override
+	protected void visitLike(final PropertyCriteria<PK, E> criteria) {
 		//todo: implement this
 	}
 

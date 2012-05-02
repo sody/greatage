@@ -20,8 +20,6 @@ import com.google.appengine.api.datastore.Transaction;
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
 import com.googlecode.objectify.ObjectifyOpts;
-import org.greatage.domain.SessionCallback;
-import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
 
 /**

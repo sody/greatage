@@ -13,11 +13,11 @@ import static org.example.model.Entities.company$
 abstract class PropertyCriteriaSpecification extends Specification {
 
 	@Shared
-	protected EntityRepository repository
+	protected Repository repository
 
 	def "all criteria should find all entities"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -28,7 +28,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "equal property criteria should find only entities with property value equal to specified"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -49,7 +49,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "not equal property criteria should find only entities with property value not equal to specified"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -69,7 +69,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "is null property criteria should find only entities with property value equal to null"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -85,7 +85,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "is not null property criteria should find only entities with property value not equal to null"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -101,7 +101,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "greater than property criteria should find only entities with property value greater than specified"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -123,7 +123,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "greater or equal property criteria should find only entities with property value greater or equal to specified"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -145,7 +145,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "less than property criteria should find only entities with property value less than specified"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -167,7 +167,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "less or equal property criteria should find only entities with property value less or equal to specified"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -189,7 +189,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	def "in property criteria should find only entities with property value in specified range"() {
 		when:
-		def actual = toIds(repository.find(entityClass, criteria, Pagination.ALL))
+		def actual = findIds(entityClass, criteria)
 		then:
 		actual == expected
 
@@ -216,6 +216,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 	protected Date date(final String input) {
 		return Date.parse("yyyy-MM-dd", input)
+	}
+
+	protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Repository.Criteria<Long, E> criteria) {
+		return toIds(repository.query(entityClass).filter(criteria).list());
 	}
 
 	protected List<Long> toIds(final List<? extends Entity<Long>> entities) {

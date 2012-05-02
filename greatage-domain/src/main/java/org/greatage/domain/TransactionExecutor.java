@@ -26,4 +26,13 @@ public interface TransactionExecutor<T, S> {
 
 	<V> V execute(SessionCallback<V, S> callback);
 
+	interface TransactionCallback<V, T> {
+
+		V doInTransaction(T transaction) throws Exception;
+	}
+
+	interface SessionCallback<V, S> {
+
+		V doInSession(S session) throws Exception;
+	}
 }

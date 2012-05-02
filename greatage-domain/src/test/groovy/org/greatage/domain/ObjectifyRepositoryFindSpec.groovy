@@ -48,7 +48,7 @@ class ObjectifyRepositoryFindSpec extends PropertyCriteriaSpecification {
 	def "property criteria should throw exception if it is used with key column and null value"() {
 		//todo: all this should work
 		when:
-		repository.find(entityClass, criteria, Pagination.ALL)
+		findIds(entityClass, criteria)
 		then:
 		thrown(NullPointerException.class)
 
@@ -62,7 +62,7 @@ class ObjectifyRepositoryFindSpec extends PropertyCriteriaSpecification {
 		Company.class | company$.id$.ge(null)
 		Company.class | company$.id$.lt(null)
 		Company.class | company$.id$.le(null)
-		Company.class | company$.id$.like(null)
+//		Company.class | company$.id$.like(null)
 		Company.class | company$.id$.in([null])
 	}
 }

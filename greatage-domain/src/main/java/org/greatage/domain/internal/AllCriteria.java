@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.internal;
+
+import org.greatage.domain.Entity;
+import org.greatage.domain.Repository;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,18 +27,19 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implements Criteria<PK, E> {
+public class AllCriteria<PK extends Serializable, E extends Entity<PK>>
+		implements Repository.Criteria<PK, E> {
 	private boolean negative;
 
-	public Criteria<PK, E> and(final Criteria<PK, E> criteria) {
+	public Repository.Criteria<PK, E> and(final Repository.Criteria<PK, E> criteria) {
 		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, junction(criteria));
 	}
 
-	public Criteria<PK, E> or(final Criteria<PK, E> criteria) {
+	public Repository.Criteria<PK, E> or(final Repository.Criteria<PK, E> criteria) {
 		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR, junction(criteria));
 	}
 
-	public Criteria<PK, E> not() {
+	public Repository.Criteria<PK, E> not() {
 		negative = !negative;
 		return this;
 	}
@@ -44,8 +48,8 @@ public class AllCriteria<PK extends Serializable, E extends Entity<PK>> implemen
 		return negative;
 	}
 
-	private List<Criteria<PK, E>> junction(final Criteria<PK, E> criteria) {
-		final List<Criteria<PK, E>> group = new ArrayList<Criteria<PK, E>>();
+	private List<Repository.Criteria<PK, E>> junction(final Repository.Criteria<PK, E> criteria) {
+		final List<Repository.Criteria<PK, E>> group = new ArrayList<Repository.Criteria<PK, E>>();
 		group.add(this);
 		group.add(criteria);
 		return group;

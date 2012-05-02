@@ -16,6 +16,8 @@
 
 package org.greatage.domain;
 
+import org.greatage.domain.internal.PropertyCriteria;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,98 +28,95 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PropertyMapper<PK extends Serializable, E extends Entity<PK>, V> {
+public class PropertyMapper<PK extends Serializable, E extends Entity<PK>, V>
+		implements Repository.Property {
 	private final String path;
 	private final String property;
 
 	public PropertyMapper(final String path, final String property) {
-		this.property = property;
 		this.path = path;
+		this.property = property;
 	}
 
-	public PropertyCriteria<PK, E> isNull() {
+	public String getPath() {
+		return path;
+	}
+
+	public String getProperty() {
+		return property;
+	}
+
+	public Repository.Criteria<PK, E> isNull() {
 		return equal(null);
 	}
 
-	public PropertyCriteria<PK, E> notNull() {
+	public Repository.Criteria<PK, E> notNull() {
 		return notEqual(null);
 	}
 
-	public PropertyCriteria<PK, E> eq(final V value) {
+	public Repository.Criteria<PK, E> eq(final V value) {
 		return equal(value);
 	}
 
-	public PropertyCriteria<PK, E> equal(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.EQUAL, value);
+	public Repository.Criteria<PK, E> equal(final V value) {
+		return createCriteria(PropertyCriteria.Operator.EQUAL, value);
 	}
 
-	public PropertyCriteria<PK, E> ne(final V value) {
+	public Repository.Criteria<PK, E> ne(final V value) {
 		return notEqual(value);
 	}
 
-	public PropertyCriteria<PK, E> notEqual(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.NOT_EQUAL, value);
+	public Repository.Criteria<PK, E> notEqual(final V value) {
+		return createCriteria(PropertyCriteria.Operator.NOT_EQUAL, value);
 	}
 
-	public PropertyCriteria<PK, E> gt(final V value) {
+	public Repository.Criteria<PK, E> gt(final V value) {
 		return greaterThan(value);
 	}
 
-	public PropertyCriteria<PK, E> greaterThan(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.GREATER_THAN, value);
+	public Repository.Criteria<PK, E> greaterThan(final V value) {
+		return createCriteria(PropertyCriteria.Operator.GREATER_THAN, value);
 	}
 
-	public PropertyCriteria<PK, E> ge(final V value) {
+	public Repository.Criteria<PK, E> ge(final V value) {
 		return greaterOrEqual(value);
 	}
 
-	public PropertyCriteria<PK, E> greaterOrEqual(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.GREATER_OR_EQUAL, value);
+	public Repository.Criteria<PK, E> greaterOrEqual(final V value) {
+		return createCriteria(PropertyCriteria.Operator.GREATER_OR_EQUAL, value);
 	}
 
-	public PropertyCriteria<PK, E> lt(final V value) {
+	public Repository.Criteria<PK, E> lt(final V value) {
 		return lessThan(value);
 	}
 
-	public PropertyCriteria<PK, E> lessThan(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.LESS_THAN, value);
+	public Repository.Criteria<PK, E> lessThan(final V value) {
+		return createCriteria(PropertyCriteria.Operator.LESS_THAN, value);
 	}
 
-	public PropertyCriteria<PK, E> le(final V value) {
+	public Repository.Criteria<PK, E> le(final V value) {
 		return lessOrEqual(value);
 	}
 
-	public PropertyCriteria<PK, E> lessOrEqual(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.LESS_OR_EQUAL, value);
+	public Repository.Criteria<PK, E> lessOrEqual(final V value) {
+		return createCriteria(PropertyCriteria.Operator.LESS_OR_EQUAL, value);
 	}
 
-	public PropertyCriteria<PK, E> like(final V value) {
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.LIKE, value);
+	public Repository.Criteria<PK, E> like(final V value) {
+		return createCriteria(PropertyCriteria.Operator.LIKE, value);
 	}
 
-	public PropertyCriteria<PK, E> in(final V... values) {
+	public Repository.Criteria<PK, E> in(final V... values) {
 		final List<V> value = Arrays.asList(values);
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.IN, value);
+		return createCriteria(PropertyCriteria.Operator.IN, value);
 	}
 
-	public PropertyCriteria<PK, E> in(final Collection<V> values) {
+	public Repository.Criteria<PK, E> in(final Collection<V> values) {
 		final List<V> value = new ArrayList<V>(values);
-		return new PropertyCriteria<PK, E>(path, property, PropertyCriteria.Operator.IN, value);
+		return createCriteria(PropertyCriteria.Operator.IN, value);
 	}
 
-	public SortCriteria<PK, E> asc() {
-		return sort(true);
-	}
-
-	public SortCriteria<PK, E> desc() {
-		return sort(false);
-	}
-
-	public SortCriteria<PK, E> sort(final boolean ascending) {
-		return sort(ascending, true);
-	}
-
-	public SortCriteria<PK, E> sort(final boolean ascending, final boolean ignoreCase) {
-		return new SortCriteria<PK, E>(path, property, ascending, ignoreCase);
+	private Repository.Criteria<PK, E> createCriteria(final PropertyCriteria.Operator operator, final Object value) {
+		return new PropertyCriteria<PK, E>(path, property, operator, value);
 	}
 }

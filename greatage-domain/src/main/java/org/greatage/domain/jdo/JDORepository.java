@@ -16,17 +16,13 @@
 
 package org.greatage.domain.jdo;
 
-import org.greatage.domain.internal.AbstractEntityRepository;
-import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
-import org.greatage.domain.Pagination;
-import org.greatage.domain.SessionCallback;
 import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.util.DescriptionBuilder;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.io.Serializable;
 import java.util.List;
@@ -36,7 +32,7 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JDORepository extends AbstractEntityRepository {
+public class JDORepository extends AbstractRepository {
 	private static final String COUNT_RESULT = "count(id)";
 
 	private final TransactionExecutor<Transaction, PersistenceManager> executor;
@@ -48,52 +44,8 @@ public class JDORepository extends AbstractEntityRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	long count(final Class<E> entityClass, final Criteria<PK, E> criteria) {
-		return execute(entityClass, criteria, Pagination.ALL, new QueryCallback<Number>() {
-			public Number doInQuery(final Query query, final Map parameters) {
-				query.setResult(COUNT_RESULT);
-				query.setUnique(true);
-				return (Number) query.executeWithMap(parameters);
-			}
-		}).longValue();
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	List<E> find(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination) {
-		return execute(entityClass, criteria, pagination, new QueryCallback<List<E>>() {
-			@SuppressWarnings({"unchecked"})
-			public List<E> doInQuery(final Query query, final Map parameters) {
-				return (List<E>) query.executeWithMap(parameters);
-			}
-		});
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	List<PK> findKeys(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination) {
-		//todo: implement this
-		throw new UnsupportedOperationException("cannot find keys");
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	List<Map<String, Object>> findValueObjects(final Class<E> entityClass, final Criteria<PK, E> criteria, final Map<String, String> projection, final Pagination pagination) {
-		//todo: implement this
-		throw new UnsupportedOperationException("cannot find value objects");
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	E findUnique(final Class<E> entityClass, final Criteria<PK, E> criteria) {
-		return execute(entityClass, criteria, Pagination.UNIQUE, new QueryCallback<E>() {
-			@SuppressWarnings({"unchecked"})
-			public E doInQuery(final Query query, final Map parameters) {
-				query.setUnique(true);
-				return (E) query.executeWithMap(parameters);
-			}
-		});
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new SessionCallback<E, PersistenceManager>() {
+		return executor.execute(new TransactionExecutor.SessionCallback<E, PersistenceManager>() {
 			public E doInSession(final PersistenceManager session) throws Exception {
 				try {
 					return session.getObjectById(getImplementation(entityClass), pk);
@@ -107,7 +59,7 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new SessionCallback<Object, PersistenceManager>() {
+		executor.execute(new TransactionExecutor.SessionCallback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.makePersistent(entity);
 				return null;
@@ -117,7 +69,7 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new SessionCallback<Object, PersistenceManager>() {
+		executor.execute(new TransactionExecutor.SessionCallback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.refresh(entity);
 				return null;
@@ -127,7 +79,7 @@ public class JDORepository extends AbstractEntityRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new SessionCallback<Object, PersistenceManager>() {
+		executor.execute(new TransactionExecutor.SessionCallback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.deletePersistent(entity);
 				return null;
@@ -135,30 +87,110 @@ public class JDORepository extends AbstractEntityRepository {
 		});
 	}
 
+	public <PK extends Serializable, E extends Entity<PK>> Query<PK, E> query(final Class<E> entityClass) {
+		return new JDOQuery<PK, E>(entityClass);
+	}
+
 	private <T, PK extends Serializable, E extends Entity<PK>>
-	T execute(final Class<E> entityClass, final Criteria<PK, E> criteria, final Pagination pagination, final QueryCallback<T> callback) {
-		return executor.execute(new SessionCallback<T, PersistenceManager>() {
+	T execute(final JDOQuery<PK, E> query, final QueryCallback<T> callback) {
+		return executor.execute(new TransactionExecutor.SessionCallback<T, PersistenceManager>() {
 			public T doInSession(final PersistenceManager session) throws Exception {
-				final Extent<? extends Entity> extent = session.getExtent(getImplementation(entityClass), true);
-				final Query query = session.newQuery(extent);
+				final Extent<? extends Entity> extent = session.getExtent(getImplementation(query.entityClass), true);
+				final javax.jdo.Query signedQuery = session.newQuery(extent);
 
-				final JDOCriteriaVisitor<PK, E> visitor = new JDOCriteriaVisitor<PK, E>(query);
-				visitor.visit(criteria);
+				final JDOQueryVisitor<PK, E> visitor = new JDOQueryVisitor<PK, E>(signedQuery);
+				visitor.visitCriteria(query.criteria);
 
-				if (pagination.getCount() >= 0) {
-					final int start = pagination.getStart() > 0 ? pagination.getStart() : 0;
-					final int end = start + pagination.getCount();
-					query.setRange(start, end);
+				if (query.count >= 0) {
+					final int start = query.start > 0 ? query.start : 0;
+					final int end = start + query.count;
+					signedQuery.setRange(start, end);
 				}
 
-				return callback.doInQuery(query, visitor.getParameters());
+				return callback.doInQuery(signedQuery, visitor.getParameters());
 			}
 		});
 	}
 
-	public static interface QueryCallback<T> {
+	private static interface QueryCallback<T> {
 
-		T doInQuery(Query query, Map parameters);
+		T doInQuery(javax.jdo.Query query, Map parameters);
+	}
+
+	class JDOQuery<PK extends Serializable, E extends Entity<PK>> implements Query<PK, E> {
+		private final Class<E> entityClass;
+
+		private Criteria<PK, E> criteria;
+		private int start = 0;
+		private int count = -1;
+
+		JDOQuery(final Class<E> entityClass) {
+			this.entityClass = entityClass;
+		}
+
+		public Query<PK, E> filter(final Criteria<PK, E> criteria) {
+			this.criteria = this.criteria != null ?
+					this.criteria.and(criteria) :
+					criteria;
+
+			return this;
+		}
+
+		public Query<PK, E> fetch(final Property property) {
+			throw new UnsupportedOperationException();
+		}
+
+		public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
+			throw new UnsupportedOperationException();
+		}
+
+		public Query<PK, E> map(final Property property, final String key) {
+			throw new UnsupportedOperationException();
+		}
+
+		public Query<PK, E> paginate(final int start, final int count) {
+			this.start = start;
+			this.count = count;
+
+			return this;
+		}
+
+		public long count() {
+			return execute(this, new QueryCallback<Number>() {
+				public Number doInQuery(final javax.jdo.Query query, final Map parameters) {
+					query.setResult(COUNT_RESULT);
+					query.setUnique(true);
+					return (Number) query.executeWithMap(parameters);
+				}
+			}).longValue();
+		}
+
+		public List<E> list() {
+			return execute(this, new QueryCallback<List<E>>() {
+				@SuppressWarnings({"unchecked"})
+				public List<E> doInQuery(final javax.jdo.Query query, final Map parameters) {
+					return (List<E>) query.executeWithMap(parameters);
+				}
+			});
+		}
+
+		public E unique() {
+			return execute(this, new QueryCallback<E>() {
+				@SuppressWarnings({"unchecked"})
+				public E doInQuery(final javax.jdo.Query query, final Map parameters) {
+					query.setUnique(true);
+					return (E) query.executeWithMap(parameters);
+				}
+			});
+		}
+
+		public List<PK> keys() {
+			throw new UnsupportedOperationException();
+		}
+
+		public List<Map<String, Object>> projections() {
+			throw new UnsupportedOperationException();
+		}
 	}
 
 	@Override

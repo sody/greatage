@@ -16,19 +16,13 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.AllCriteria;
-import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
-import org.greatage.domain.EntityQuery;
-import org.greatage.domain.EntityRepository;
 import org.greatage.domain.EntityService;
-import org.greatage.domain.JunctionCriteria;
+import org.greatage.domain.Repository;
 import org.greatage.domain.annotations.Transactional;
-import org.greatage.domain.internal.EntityQueryImpl;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
-import java.util.Arrays;
 
 /**
  * This class represents default implementation of {@link org.greatage.domain.EntityService}.
@@ -41,7 +35,7 @@ import java.util.Arrays;
 public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>>
 		implements EntityService<PK, E> {
 
-	private final EntityRepository repository;
+	private final Repository repository;
 	private final Class<E> entityClass;
 	private final String entityName;
 
@@ -51,7 +45,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>>
 	 * @param repository  entity repository
 	 * @param entityClass entity class
 	 */
-	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass) {
+	public EntityServiceImpl(final Repository repository, final Class<E> entityClass) {
 		this(repository, entityClass, null);
 	}
 
@@ -62,7 +56,7 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>>
 	 * @param entityClass entity class
 	 * @param entityName  entity name
 	 */
-	public EntityServiceImpl(final EntityRepository repository, final Class<E> entityClass, final String entityName) {
+	public EntityServiceImpl(final Repository repository, final Class<E> entityClass, final String entityName) {
 		this.repository = repository;
 		this.entityClass = entityClass;
 		this.entityName = entityName != null ? entityName : entityClass.getName();
@@ -108,18 +102,8 @@ public class EntityServiceImpl<PK extends Serializable, E extends Entity<PK>>
 		return repository.get(getEntityClass(), pk);
 	}
 
-	public EntityQuery<PK, E> query(final Criteria<PK, E>... criteria) {
-		return new EntityQueryImpl<PK, E>(repository, entityClass, group(criteria));
-	}
-
-	private Criteria<PK, E> group(final Criteria<PK, E>... criteria) {
-		if (criteria == null || criteria.length == 0) {
-			return new AllCriteria<PK, E>();
-		}
-		if (criteria.length == 1) {
-			return criteria[0];
-		}
-		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, Arrays.asList(criteria));
+	public Repository.Query<PK, E> query() {
+		return repository.query(entityClass);
 	}
 
 	@Override

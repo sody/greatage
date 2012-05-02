@@ -16,17 +16,15 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.Criteria;
 import org.greatage.domain.Entity;
-import org.greatage.domain.JunctionCriteria;
-import org.greatage.domain.PropertyCriteria;
-import org.greatage.domain.SortCriteria;
-import org.greatage.domain.internal.AbstractCriteriaVisitor;
+import org.greatage.domain.Repository;
+import org.greatage.domain.internal.AbstractQueryVisitor;
+import org.greatage.domain.internal.JunctionCriteria;
+import org.greatage.domain.internal.PropertyCriteria;
 import org.greatage.util.NameAllocator;
 import org.greatage.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
-import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
@@ -40,8 +38,8 @@ import java.util.Map;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<PK>>
-		extends AbstractCriteriaVisitor<PK, E> {
+public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>>
+		extends AbstractQueryVisitor<PK, E> {
 
 	private final Map<String, org.hibernate.Criteria> children = new HashMap<String, org.hibernate.Criteria>();
 	private final NameAllocator names = new NameAllocator();
@@ -50,7 +48,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 
 	private Junction junction;
 
-	public HibernateCriteriaVisitor(final org.hibernate.Criteria root) {
+	HibernateQueryVisitor(final org.hibernate.Criteria root) {
 		this.root = root;
 	}
 
@@ -60,8 +58,8 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 				Restrictions.conjunction() :
 				Restrictions.disjunction();
 
-		for (Criteria<PK, E> child : criteria.getChildren()) {
-			visit(child);
+		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
+			visitCriteria(child);
 		}
 
 		final Junction temp = junction;
@@ -71,7 +69,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		if (criteria.getValue() == null) {
@@ -82,7 +80,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitNotEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		if (criteria.getValue() == null) {
@@ -96,7 +94,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitGreaterThanOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		if (criteria.getValue() == null) {
@@ -107,7 +105,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitGreaterOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		if (criteria.getValue() == null) {
@@ -118,7 +116,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitLessThanOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		if (criteria.getValue() == null) {
@@ -132,7 +130,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitLessOrEqualOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		if (criteria.getValue() == null) {
@@ -146,7 +144,7 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitInOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitIn(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		final List<?> value = (List<?>) criteria.getValue();
@@ -173,22 +171,22 @@ public class HibernateCriteriaVisitor<PK extends Serializable, E extends Entity<
 	}
 
 	@Override
-	protected void visitLikeOperator(final PropertyCriteria<PK, E> criteria) {
+	protected void visitLike(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
 		addCriterion(property.like(criteria.getValue()), criteria.isNegative());
 	}
 
-	protected void visitSort(final SortCriteria<PK, E> criteria) {
-		final Order order = criteria.isAscending() ?
-				Order.asc(criteria.getProperty()) :
-				Order.desc(criteria.getProperty());
-
-		if (criteria.isIgnoreCase()) {
-			order.ignoreCase();
-		}
-		getCriteria(criteria.getPath()).addOrder(order);
-	}
+//	protected void visitSort(final SortCriteria<PK, E> criteria) {
+//		final Order order = criteria.isAscending() ?
+//				Order.asc(criteria.getProperty()) :
+//				Order.desc(criteria.getProperty());
+//
+//		if (criteria.isIgnoreCase()) {
+//			order.ignoreCase();
+//		}
+//		getCriteria(criteria.getPath()).addOrder(order);
+//	}
 
 	private void addCriterion(final Criterion criterion, final boolean negative) {
 		if (junction != null) {

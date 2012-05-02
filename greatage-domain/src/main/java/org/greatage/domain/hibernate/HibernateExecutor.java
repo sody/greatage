@@ -16,8 +16,6 @@
 
 package org.greatage.domain.hibernate;
 
-import org.greatage.domain.SessionCallback;
-import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

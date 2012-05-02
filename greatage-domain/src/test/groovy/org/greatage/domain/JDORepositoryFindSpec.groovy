@@ -29,8 +29,8 @@ class JDORepositoryFindSpec extends PropertyCriteriaSpecification {
 				(Company.class): CompanyImpl.class,
 				(Department.class): DepartmentImpl.class
 		])
-		repository.find(Company.class, Pagination.ALL)
-		repository.find(Department.class, Pagination.ALL)
+		repository.query(Company.class).list()
+		repository.query(Department.class).list()
 
 		def properties = new Properties()
 		properties.load(getClass().getResourceAsStream("/dbunit.properties"))

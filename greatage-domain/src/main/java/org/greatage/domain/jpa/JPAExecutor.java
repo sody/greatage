@@ -16,8 +16,6 @@
 
 package org.greatage.domain.jpa;
 
-import org.greatage.domain.SessionCallback;
-import org.greatage.domain.TransactionCallback;
 import org.greatage.domain.TransactionExecutor;
 
 import javax.persistence.EntityManager;

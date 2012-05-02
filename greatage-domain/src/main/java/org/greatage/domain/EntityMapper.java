@@ -16,6 +16,8 @@
 
 package org.greatage.domain;
 
+import org.greatage.domain.internal.AllCriteria;
+
 import java.io.Serializable;
 
 /**

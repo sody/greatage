@@ -16,46 +16,23 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.AllCriteria;
 import org.greatage.domain.Entity;
-import org.greatage.domain.EntityRepository;
-import org.greatage.domain.Pagination;
+import org.greatage.domain.Repository;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class AbstractEntityRepository implements EntityRepository {
+public abstract class AbstractRepository implements Repository {
 	private final Map<Class, Class> entityMapping;
 
-	protected AbstractEntityRepository(final Map<Class, Class> entityMapping) {
+	protected AbstractRepository(final Map<Class, Class> entityMapping) {
 		this.entityMapping = entityMapping;
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	long count(final Class<E> entityClass) {
-		return count(entityClass, new AllCriteria<PK, E>());
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	List<E> find(final Class<E> entityClass, final Pagination pagination) {
-		return find(entityClass, new AllCriteria<PK, E>(), pagination);
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	List<PK> findKeys(final Class<E> entityClass, final Pagination pagination) {
-		return findKeys(entityClass, new AllCriteria<PK, E>(), pagination);
-	}
-
-	public <PK extends Serializable, E extends Entity<PK>>
-	List<Map<String, Object>> findValueObjects(final Class<E> entityClass, final Map<String, String> projection, final Pagination pagination) {
-		return findValueObjects(entityClass, new AllCriteria<PK, E>(), projection, pagination);
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
