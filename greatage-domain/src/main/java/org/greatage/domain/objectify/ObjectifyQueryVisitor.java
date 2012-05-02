@@ -92,6 +92,16 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		//todo: implement this
 	}
 
+	@Override
+	protected void visitPagination(final int start, final int count) {
+		if (start > 0) {
+			query.offset(start);
+		}
+		if (count >= 0) {
+			query.limit(count);
+		}
+	}
+
 //	@Override
 //	protected void visitSort(final SortCriteria<PK, E> criteria) {
 //		final StringBuilder condition = new StringBuilder();

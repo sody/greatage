@@ -18,6 +18,7 @@ package org.greatage.domain.hibernate;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Session;
@@ -109,25 +110,19 @@ public class HibernateRepository extends AbstractRepository {
 	 * @return criteria execution result
 	 */
 	private <T, PK extends Serializable, E extends Entity<PK>>
-	T execute(final HibernateQuery<PK, E> query, final CriteriaCallback<T> callback) {
+	T execute(final HibernateQuery<PK, E> query, final Callback<T> callback) {
 		return executor.execute(new TransactionExecutor.SessionCallback<T, Session>() {
 			public T doInSession(final Session session) throws Exception {
-				final org.hibernate.Criteria signedCriteria = session.createCriteria(getImplementation(query.entityClass));
-				new HibernateQueryVisitor<PK, E>(signedCriteria).visitCriteria(query.criteria);
+				final org.hibernate.Criteria signedCriteria = session.createCriteria(getImplementation(query.getEntityClass()));
+				new HibernateQueryVisitor<PK, E>(signedCriteria).visitQuery(query);
 
-				if (query.start > 0) {
-					signedCriteria.setFirstResult(query.start);
-				}
-				if (query.count >= 0) {
-					signedCriteria.setMaxResults(query.count);
-				}
 
 				return callback.doInCriteria(signedCriteria);
 			}
 		});
 	}
 
-	private static interface CriteriaCallback<T> {
+	private static interface Callback<T> {
 
 		/**
 		 * Executes some logic for returning values from criteria.
@@ -138,46 +133,14 @@ public class HibernateRepository extends AbstractRepository {
 		T doInCriteria(org.hibernate.Criteria criteria);
 	}
 
-	private class HibernateQuery<PK extends Serializable, E extends Entity<PK>> implements Query<PK, E> {
-		private final Class<E> entityClass;
+	private class HibernateQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
 
-		private Criteria<PK, E> criteria;
-		private int start = 0;
-		private int count = -1;
-
-		HibernateQuery(final Class<E> entityClass) {
-			this.entityClass = entityClass;
-		}
-
-		public Query<PK, E> filter(final Criteria<PK, E> criteria) {
-			this.criteria = this.criteria != null ?
-					this.criteria.and(criteria) :
-					criteria;
-
-			return this;
-		}
-
-		public Query<PK, E> fetch(final Property property) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> map(final Property property, final String key) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> paginate(final int start, final int count) {
-			this.start = start;
-			this.count = count;
-
-			return this;
+		private HibernateQuery(final Class<E> entityClass) {
+			super(entityClass);
 		}
 
 		public long count() {
-			return execute(this, new CriteriaCallback<Number>() {
+			return execute(this, new Callback<Number>() {
 				public Number doInCriteria(final org.hibernate.Criteria criteria) {
 					return (Number) criteria.setProjection(Projections.rowCount()).uniqueResult();
 				}
@@ -185,7 +148,7 @@ public class HibernateRepository extends AbstractRepository {
 		}
 
 		public List<E> list() {
-			return execute(this, new CriteriaCallback<List<E>>() {
+			return execute(this, new Callback<List<E>>() {
 				@SuppressWarnings({"unchecked"})
 				public List<E> doInCriteria(final org.hibernate.Criteria criteria) {
 					return criteria.list();
@@ -194,7 +157,7 @@ public class HibernateRepository extends AbstractRepository {
 		}
 
 		public E unique() {
-			return execute(this, new CriteriaCallback<E>() {
+			return execute(this, new Callback<E>() {
 				@SuppressWarnings({"unchecked"})
 				public E doInCriteria(final org.hibernate.Criteria criteria) {
 					return (E) criteria.uniqueResult();
@@ -203,7 +166,7 @@ public class HibernateRepository extends AbstractRepository {
 		}
 
 		public List<PK> keys() {
-			return execute(this, new CriteriaCallback<List<PK>>() {
+			return execute(this, new Callback<List<PK>>() {
 				@SuppressWarnings({"unchecked"})
 				public List<PK> doInCriteria(final org.hibernate.Criteria criteria) {
 					return criteria.setProjection(Projections.distinct(Projections.id())).list();

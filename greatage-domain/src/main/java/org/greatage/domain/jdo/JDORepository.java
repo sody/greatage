@@ -18,6 +18,7 @@ package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.util.DescriptionBuilder;
 
@@ -92,71 +93,33 @@ public class JDORepository extends AbstractRepository {
 	}
 
 	private <T, PK extends Serializable, E extends Entity<PK>>
-	T execute(final JDOQuery<PK, E> query, final QueryCallback<T> callback) {
+	T execute(final JDOQuery<PK, E> query, final Callback<T> callback) {
 		return executor.execute(new TransactionExecutor.SessionCallback<T, PersistenceManager>() {
 			public T doInSession(final PersistenceManager session) throws Exception {
-				final Extent<? extends Entity> extent = session.getExtent(getImplementation(query.entityClass), true);
+				final Extent<? extends Entity> extent = session.getExtent(getImplementation(query.getEntityClass()), true);
 				final javax.jdo.Query signedQuery = session.newQuery(extent);
 
 				final JDOQueryVisitor<PK, E> visitor = new JDOQueryVisitor<PK, E>(signedQuery);
-				visitor.visitCriteria(query.criteria);
-
-				if (query.count >= 0) {
-					final int start = query.start > 0 ? query.start : 0;
-					final int end = start + query.count;
-					signedQuery.setRange(start, end);
-				}
+				visitor.visitQuery(query);
 
 				return callback.doInQuery(signedQuery, visitor.getParameters());
 			}
 		});
 	}
 
-	private static interface QueryCallback<T> {
+	private static interface Callback<T> {
 
 		T doInQuery(javax.jdo.Query query, Map parameters);
 	}
 
-	class JDOQuery<PK extends Serializable, E extends Entity<PK>> implements Query<PK, E> {
-		private final Class<E> entityClass;
+	class JDOQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
 
-		private Criteria<PK, E> criteria;
-		private int start = 0;
-		private int count = -1;
-
-		JDOQuery(final Class<E> entityClass) {
-			this.entityClass = entityClass;
-		}
-
-		public Query<PK, E> filter(final Criteria<PK, E> criteria) {
-			this.criteria = this.criteria != null ?
-					this.criteria.and(criteria) :
-					criteria;
-
-			return this;
-		}
-
-		public Query<PK, E> fetch(final Property property) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> map(final Property property, final String key) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> paginate(final int start, final int count) {
-			this.start = start;
-			this.count = count;
-
-			return this;
+		private JDOQuery(final Class<E> entityClass) {
+			super(entityClass);
 		}
 
 		public long count() {
-			return execute(this, new QueryCallback<Number>() {
+			return execute(this, new Callback<Number>() {
 				public Number doInQuery(final javax.jdo.Query query, final Map parameters) {
 					query.setResult(COUNT_RESULT);
 					query.setUnique(true);
@@ -166,7 +129,7 @@ public class JDORepository extends AbstractRepository {
 		}
 
 		public List<E> list() {
-			return execute(this, new QueryCallback<List<E>>() {
+			return execute(this, new Callback<List<E>>() {
 				@SuppressWarnings({"unchecked"})
 				public List<E> doInQuery(final javax.jdo.Query query, final Map parameters) {
 					return (List<E>) query.executeWithMap(parameters);
@@ -175,7 +138,7 @@ public class JDORepository extends AbstractRepository {
 		}
 
 		public E unique() {
-			return execute(this, new QueryCallback<E>() {
+			return execute(this, new Callback<E>() {
 				@SuppressWarnings({"unchecked"})
 				public E doInQuery(final javax.jdo.Query query, final Map parameters) {
 					query.setUnique(true);

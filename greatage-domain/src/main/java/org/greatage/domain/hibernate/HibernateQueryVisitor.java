@@ -52,6 +52,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		this.root = root;
 	}
 
+	@Override
 	protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
 		final Junction parent = this.junction;
 		junction = criteria.getOperator() == JunctionCriteria.Operator.AND ?
@@ -175,6 +176,16 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final Property property = getProperty(criteria);
 
 		addCriterion(property.like(criteria.getValue()), criteria.isNegative());
+	}
+
+	@Override
+	protected void visitPagination(final int start, final int count) {
+		if (start > 0) {
+			root.setFirstResult(start);
+		}
+		if (count >= 0) {
+			root.setMaxResults(count);
+		}
 	}
 
 //	protected void visitSort(final SortCriteria<PK, E> criteria) {

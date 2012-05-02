@@ -18,6 +18,7 @@ package org.greatage.domain.jpa;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.util.DescriptionBuilder;
 
@@ -84,69 +85,37 @@ public class JPARepository extends AbstractRepository {
 	}
 
 	protected <T, PK extends Serializable, E extends Entity<PK>>
-	T execute(final String queryString, final JPAQuery<PK, E> query, final QueryCallback<T> callback) {
+	T execute(final String queryString, final JPAQuery<PK, E> query, final Callback<T> callback) {
 		return executor.execute(new TransactionExecutor.SessionCallback<T, EntityManager>() {
 			public T doInSession(final EntityManager session) throws Exception {
 				final javax.persistence.Query signedQuery =
-						session.createQuery(queryString.replaceAll("entityClass", query.entityClass.getName()));
+						session.createQuery(queryString.replaceAll("entityClass", query.getEntityClass().getName()));
 
-				if (query.start > 0) {
-					signedQuery.setFirstResult(query.start);
-				}
-				if (query.count >= 0) {
-					signedQuery.setMaxResults(query.count);
-				}
+//				if (query.start > 0) {
+//					signedQuery.setFirstResult(query.start);
+//				}
+//				if (query.count >= 0) {
+//					signedQuery.setMaxResults(query.count);
+//				}
 
 				return callback.doInQuery(signedQuery);
 			}
 		});
 	}
 
-	public interface QueryCallback<T> {
+	public interface Callback<T> {
 
 		T doInQuery(javax.persistence.Query query);
 	}
 
-	class JPAQuery<PK extends Serializable, E extends Entity<PK>> implements Query<PK, E> {
-		private final Class<E> entityClass;
+	class JPAQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
 
-		private Criteria<PK, E> criteria;
-		private int start = 0;
-		private int count = -1;
-
-		JPAQuery(final Class<E> entityClass) {
-			this.entityClass = entityClass;
-		}
-
-		public Query<PK, E> filter(final Criteria<PK, E> criteria) {
-			this.criteria = this.criteria != null ?
-					this.criteria.and(criteria) :
-					criteria;
-
-			return this;
-		}
-
-		public Query<PK, E> fetch(final Property property) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> map(final Property property, final String key) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> paginate(final int start, final int count) {
-			this.start = start;
-			this.count = count;
-
-			return this;
+		private JPAQuery(final Class<E> entityClass) {
+			super(entityClass);
 		}
 
 		public long count() {
-			return execute("select count() from entityClass", this, new QueryCallback<Number>() {
+			return execute("select count() from entityClass", this, new Callback<Number>() {
 				public Number doInQuery(final javax.persistence.Query query) {
 					return (Number) query.getSingleResult();
 				}
@@ -154,7 +123,7 @@ public class JPARepository extends AbstractRepository {
 		}
 
 		public List<E> list() {
-			return execute("select from entityClass", this, new QueryCallback<List<E>>() {
+			return execute("select from entityClass", this, new Callback<List<E>>() {
 				@SuppressWarnings({"unchecked"})
 				public List<E> doInQuery(final javax.persistence.Query query) {
 					return query.getResultList();
@@ -163,7 +132,7 @@ public class JPARepository extends AbstractRepository {
 		}
 
 		public E unique() {
-			return execute("select from entityClass", this, new QueryCallback<E>() {
+			return execute("select from entityClass", this, new Callback<E>() {
 				@SuppressWarnings({"unchecked"})
 				public E doInQuery(final javax.persistence.Query query) {
 					return (E) query.getSingleResult();

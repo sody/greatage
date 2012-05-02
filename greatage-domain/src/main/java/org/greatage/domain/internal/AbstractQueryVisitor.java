@@ -27,7 +27,12 @@ import java.io.Serializable;
  */
 public abstract class AbstractQueryVisitor<PK extends Serializable, E extends Entity<PK>> {
 
-	public void visitCriteria(final Repository.Criteria<PK, E> criteria) {
+	public void visitQuery(final AbstractQuery<PK, E> query) {
+		visitCriteria(query.getCriteria());
+		visitPagination(query.getStart(), query.getCount());
+	}
+
+	protected void visitCriteria(final Repository.Criteria<PK, E> criteria) {
 		if (criteria instanceof JunctionCriteria) {
 			visitJunction((JunctionCriteria<PK, E>) criteria);
 		} else if (criteria instanceof PropertyCriteria) {
@@ -81,4 +86,6 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 	protected abstract void visitIn(PropertyCriteria<PK, E> criteria);
 
 	protected abstract void visitLike(PropertyCriteria<PK, E> criteria);
+
+	protected abstract void visitPagination(final int start, final int count);
 }

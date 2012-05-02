@@ -4,6 +4,7 @@ import com.google.appengine.api.datastore.Transaction;
 import com.googlecode.objectify.Objectify;
 import org.greatage.domain.Entity;
 import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 
 import java.io.Serializable;
@@ -70,17 +71,10 @@ public class ObjectifyRepository extends AbstractRepository {
 	T execute(final ObjectifyQuery<PK, E> query, final QueryCallback<T, E> callback) {
 		return executor.execute(new TransactionExecutor.SessionCallback<T, Objectify>() {
 			public T doInSession(final Objectify session) throws Exception {
-				final com.googlecode.objectify.Query<? extends E> signedQuery = session.query(getImplementation(query.entityClass));
+				final com.googlecode.objectify.Query<? extends E> signedQuery = session.query(getImplementation(query.getEntityClass()));
 
 				final ObjectifyQueryVisitor<PK, E> visitor = new ObjectifyQueryVisitor<PK, E>(signedQuery);
-				visitor.visitCriteria(query.criteria);
-
-				if (query.start > 0) {
-					signedQuery.offset(query.start);
-				}
-				if (query.count >= 0) {
-					signedQuery.limit(query.count);
-				}
+				visitor.visitQuery(query);
 
 				return callback.doInQuery(signedQuery);
 			}
@@ -93,42 +87,10 @@ public class ObjectifyRepository extends AbstractRepository {
 		T doInQuery(com.googlecode.objectify.Query<? extends E> query);
 	}
 
-	class ObjectifyQuery<PK extends Serializable, E extends Entity<PK>> implements Query<PK, E> {
-		private final Class<E> entityClass;
+	class ObjectifyQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
 
-		private Criteria<PK, E> criteria;
-		private int start = 0;
-		private int count = -1;
-
-		ObjectifyQuery(final Class<E> entityClass) {
-			this.entityClass = entityClass;
-		}
-
-		public Query<PK, E> filter(final Criteria<PK, E> criteria) {
-			this.criteria = this.criteria != null ?
-					this.criteria.and(criteria) :
-					criteria;
-
-			return this;
-		}
-
-		public Query<PK, E> fetch(final Property property) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> map(final Property property, final String key) {
-			throw new UnsupportedOperationException();
-		}
-
-		public Query<PK, E> paginate(final int start, final int count) {
-			this.start = start;
-			this.count = count;
-
-			return this;
+		private ObjectifyQuery(final Class<E> entityClass) {
+			super(entityClass);
 		}
 
 		public long count() {

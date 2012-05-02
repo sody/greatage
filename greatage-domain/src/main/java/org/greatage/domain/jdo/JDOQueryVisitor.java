@@ -209,6 +209,15 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 		//todo: implement this
 	}
 
+	@Override
+	protected void visitPagination(final int start, final int count) {
+		if (count >= 0) {
+			final int from = start > 0 ? start : 0;
+			final int to = from + count;
+			query.setRange(from, to);
+		}
+	}
+
 	private void addParameter(final String parameterName, final Object value) {
 		parameters.put(parameterName, value);
 	}
