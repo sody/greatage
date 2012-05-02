@@ -8,6 +8,8 @@ import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Ivan Khalopik
@@ -36,7 +38,16 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " =";
 
-		query.filter(criterion, criteria.getValue());
+		if (criteria.getValue() == null) {
+			try {
+				query.filter(criterion, criteria.getValue());
+			} catch (NullPointerException e) {
+				//it is always false
+				query.filter("1 =", 0);
+			}
+		} else {
+			query.filter(criterion, criteria.getValue());
+		}
 	}
 
 	@Override
@@ -44,7 +55,15 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " !=";
 
-		query.filter(criterion, criteria.getValue());
+		if (criteria.getValue() == null) {
+			try {
+				query.filter(criterion, criteria.getValue());
+			} catch (NullPointerException e) {
+				//it is always true
+			}
+		} else {
+			query.filter(criterion, criteria.getValue());
+		}
 	}
 
 	@Override
@@ -52,7 +71,15 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " >";
 
-		query.filter(criterion, criteria.getValue());
+		if (criteria.getValue() == null) {
+			try {
+				query.filter(criterion, criteria.getValue());
+			} catch (NullPointerException e) {
+				//it is always true
+			}
+		} else {
+			query.filter(criterion, criteria.getValue());
+		}
 	}
 
 	@Override
@@ -60,7 +87,15 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " >=";
 
-		query.filter(criterion, criteria.getValue());
+		if (criteria.getValue() == null) {
+			try {
+				query.filter(criterion, criteria.getValue());
+			} catch (NullPointerException e) {
+				//it is always true
+			}
+		} else {
+			query.filter(criterion, criteria.getValue());
+		}
 	}
 
 	@Override
@@ -68,7 +103,16 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " <";
 
-		query.filter(criterion, criteria.getValue());
+		if (criteria.getValue() == null) {
+			try {
+				query.filter(criterion, criteria.getValue());
+			} catch (NullPointerException e) {
+				//it is always false
+				query.filter("1 =", 0);
+			}
+		} else {
+			query.filter(criterion, criteria.getValue());
+		}
 	}
 
 	@Override
@@ -76,15 +120,48 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " <=";
 
-		query.filter(criterion, criteria.getValue());
+		if (criteria.getValue() == null) {
+			try {
+				query.filter(criterion, criteria.getValue());
+			} catch (NullPointerException e) {
+				//it is always false
+				query.filter("1 =", 0);
+			}
+		} else {
+			query.filter(criterion, criteria.getValue());
+		}
 	}
 
 	@Override
 	protected void visitIn(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
 		final String criterion = propertyName + " in";
+		final List<?> values = (List<?>) criteria.getValue();
 
-		query.filter(criterion, criteria.getValue());
+		if (values == null || values.isEmpty()) {
+			//it is always false
+			query.filter("1 =", 0);
+		} else if (values.contains(null)) {
+			try {
+				query.filter(criterion, values);
+			} catch (NullPointerException e) {
+				if (values.size() == 1) {
+					//it is always false
+					query.filter("1 =", 0);
+				} else {
+					final List<Object> recalculated = new ArrayList<Object>();
+					for (Object value : values) {
+						if (value != null) {
+							recalculated.add(value);
+						}
+					}
+
+					query.filter(criterion, recalculated);
+				}
+			}
+		} else {
+			query.filter(criterion, values);
+		}
 	}
 
 	@Override
