@@ -73,8 +73,7 @@ public class ObjectifyRepository extends AbstractRepository {
 			public T doInSession(final Objectify session) throws Exception {
 				final com.googlecode.objectify.Query<? extends E> signedQuery = session.query(getImplementation(query.getEntityClass()));
 
-				final ObjectifyQueryVisitor<PK, E> visitor = new ObjectifyQueryVisitor<PK, E>(signedQuery);
-				visitor.visitQuery(query);
+				new ObjectifyQueryVisitor<PK, E>(signedQuery).visitQuery(query);
 
 				return callback.doInQuery(signedQuery);
 			}

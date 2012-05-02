@@ -93,6 +93,29 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 	}
 
 	@Override
+	protected void visitFetch(final Repository.Property fetch) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitProjection(final Repository.Property property, final String key) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+		final StringBuilder condition = new StringBuilder();
+		if (!ascending) {
+			condition.append("-");
+		}
+		if (property.getPath() != null) {
+			condition.append(property.getPath()).append('.');
+		}
+		condition.append(property.getProperty());
+		query.order(condition.toString());
+	}
+
+	@Override
 	protected void visitPagination(final int start, final int count) {
 		if (start > 0) {
 			query.offset(start);
@@ -101,19 +124,6 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 			query.limit(count);
 		}
 	}
-
-//	@Override
-//	protected void visitSort(final SortCriteria<PK, E> criteria) {
-//		final StringBuilder condition = new StringBuilder();
-//		if (!criteria.isAscending()) {
-//			condition.append("-");
-//		}
-//		if (criteria.getPath() != null) {
-//			condition.append(criteria.getPath()).append('.');
-//		}
-//		condition.append(criteria.getProperty());
-//		query.order(condition.toString());
-//	}
 
 	private String propertyName(final PropertyCriteria<PK, E> criteria) {
 		return criteria.getPath() != null ?

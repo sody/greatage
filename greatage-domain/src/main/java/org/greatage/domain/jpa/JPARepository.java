@@ -90,13 +90,7 @@ public class JPARepository extends AbstractRepository {
 			public T doInSession(final EntityManager session) throws Exception {
 				final javax.persistence.Query signedQuery =
 						session.createQuery(queryString.replaceAll("entityClass", query.getEntityClass().getName()));
-
-//				if (query.start > 0) {
-//					signedQuery.setFirstResult(query.start);
-//				}
-//				if (query.count >= 0) {
-//					signedQuery.setMaxResults(query.count);
-//				}
+				new JPAQueryVisitor<PK, E>(signedQuery).visitQuery(query);
 
 				return callback.doInQuery(signedQuery);
 			}

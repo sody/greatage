@@ -47,6 +47,10 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 		this.query = query;
 	}
 
+	public Map<String, Object> getParameters() {
+		return parameters;
+	}
+
 	@Override
 	public void visitCriteria(final Repository.Criteria<PK, E> criteria) {
 		level++;
@@ -56,10 +60,6 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 		if (level == 0 && !junction.isEmpty()) {
 			query.setFilter(getJunction(junction, " && "));
 		}
-	}
-
-	public Map<String, Object> getParameters() {
-		return parameters;
 	}
 
 	@Override
@@ -206,6 +206,21 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
 	@Override
 	protected void visitLike(final PropertyCriteria<PK, E> criteria) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitFetch(final Repository.Property fetch) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitProjection(final Repository.Property property, final String key) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
 		//todo: implement this
 	}
 

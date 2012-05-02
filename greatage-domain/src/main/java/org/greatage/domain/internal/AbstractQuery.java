@@ -5,6 +5,7 @@ import org.greatage.domain.Repository;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,8 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 
 	private Repository.Criteria<PK, E> criteria;
 	private List<Repository.Property> fetches;
+	private Map<String, Repository.Property> projections;
+	private List<Sort> sorts;
 
 	private int start = 0;
 	private int count = -1;
@@ -45,11 +48,21 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 	}
 
 	public Repository.Query<PK, E> sort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
-		throw new UnsupportedOperationException();
+		if (sorts == null) {
+			sorts = new ArrayList<Sort>();
+		}
+		sorts.add(new Sort(property, ascending, ignoreCase));
+
+		return this;
 	}
 
 	public Repository.Query<PK, E> map(final Repository.Property property, final String key) {
-		throw new UnsupportedOperationException();
+		if (projections == null) {
+			projections = new HashMap<String, Repository.Property>();
+		}
+		projections.put(key, property);
+
+		return this;
 	}
 
 	public Repository.Query<PK, E> paginate(final int start, final int count) {
@@ -71,11 +84,43 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 		return fetches;
 	}
 
+	public Map<String, Repository.Property> getProjections() {
+		return projections;
+	}
+
+	public List<Sort> getSorts() {
+		return sorts;
+	}
+
 	public int getStart() {
 		return start;
 	}
 
 	public int getCount() {
 		return count;
+	}
+
+	class Sort {
+		private final Repository.Property property;
+		private final boolean ascending;
+		private final boolean ignoreCase;
+
+		Sort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+			this.property = property;
+			this.ascending = ascending;
+			this.ignoreCase = ignoreCase;
+		}
+
+		public Repository.Property getProperty() {
+			return property;
+		}
+
+		public boolean isAscending() {
+			return ascending;
+		}
+
+		public boolean isIgnoreCase() {
+			return ignoreCase;
+		}
 	}
 }

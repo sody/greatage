@@ -20,6 +20,7 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.Repository;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author Ivan Khalopik
@@ -28,7 +29,24 @@ import java.io.Serializable;
 public abstract class AbstractQueryVisitor<PK extends Serializable, E extends Entity<PK>> {
 
 	public void visitQuery(final AbstractQuery<PK, E> query) {
-		visitCriteria(query.getCriteria());
+		if (query.getCriteria() != null) {
+			visitCriteria(query.getCriteria());
+		}
+		if (query.getFetches() != null) {
+			for (Repository.Property fetch : query.getFetches()) {
+				visitFetch(fetch);
+			}
+		}
+		if (query.getProjections() != null) {
+			for (Map.Entry<String, Repository.Property> entry : query.getProjections().entrySet()) {
+				visitProjection(entry.getValue(), entry.getKey());
+			}
+		}
+		if (query.getSorts() != null) {
+			for (AbstractQuery<PK, E>.Sort sort : query.getSorts()) {
+				visitSort(sort.getProperty(), sort.isAscending(), sort.isIgnoreCase());
+			}
+		}
 		visitPagination(query.getStart(), query.getCount());
 	}
 
@@ -87,5 +105,11 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 
 	protected abstract void visitLike(PropertyCriteria<PK, E> criteria);
 
-	protected abstract void visitPagination(final int start, final int count);
+	protected abstract void visitFetch(Repository.Property fetch);
+
+	protected abstract void visitProjection(Repository.Property property, String key);
+
+	protected abstract void visitSort(Repository.Property property, boolean ascending, boolean ignoreCase);
+
+	protected abstract void visitPagination(int start, int count);
 }

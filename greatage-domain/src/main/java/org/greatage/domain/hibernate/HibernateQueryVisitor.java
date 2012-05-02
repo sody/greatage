@@ -25,6 +25,7 @@ import org.greatage.util.NameAllocator;
 import org.greatage.util.StringUtils;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
@@ -179,6 +180,28 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 	}
 
 	@Override
+	protected void visitFetch(final Repository.Property fetch) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitProjection(final Repository.Property property, final String key) {
+		//todo: implement this
+	}
+
+	@Override
+	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+		final Order order = ascending ?
+				Order.asc(property.getProperty()) :
+				Order.desc(property.getProperty());
+
+		if (ignoreCase) {
+			order.ignoreCase();
+		}
+		getCriteria(property.getPath()).addOrder(order);
+	}
+
+	@Override
 	protected void visitPagination(final int start, final int count) {
 		if (start > 0) {
 			root.setFirstResult(start);
@@ -187,17 +210,6 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 			root.setMaxResults(count);
 		}
 	}
-
-//	protected void visitSort(final SortCriteria<PK, E> criteria) {
-//		final Order order = criteria.isAscending() ?
-//				Order.asc(criteria.getProperty()) :
-//				Order.desc(criteria.getProperty());
-//
-//		if (criteria.isIgnoreCase()) {
-//			order.ignoreCase();
-//		}
-//		getCriteria(criteria.getPath()).addOrder(order);
-//	}
 
 	private void addCriterion(final Criterion criterion, final boolean negative) {
 		if (junction != null) {
