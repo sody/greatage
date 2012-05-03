@@ -195,18 +195,21 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
 		where:
 		entityClass   | criteria                                                                              | expected
+		Company.class | company$.id$.in([])                                                                   | []
 		Company.class | company$.id$.in(1l, 2l, 3l)                                                           | [1, 2, 3]
 		Company.class | company$.id$.in(1l)                                                                   | [1]
 		Company.class | company$.id$.in(10l)                                                                  | []
 		Company.class | company$.id$.in(1l, 6l, 10l)                                                          | [1, 6]
 		Company.class | company$.id$.in([null])                                                               | []
 		Company.class | company$.id$.in(1l, null, 10l)                                                        | [1]
+		Company.class | company$.name$.in([])                                                                 | []
 		Company.class | company$.name$.in("company", "company1")                                              | [1, 5, 6]
 		Company.class | company$.name$.in("company")                                                          | [5, 6]
 		Company.class | company$.name$.in("company8")                                                         | []
 		Company.class | company$.name$.in("company2", "company8")                                             | [2]
 		Company.class | company$.name$.in([null])                                                             | [4]
 		Company.class | company$.name$.in("company2", "company8", null)                                       | [2, 4]
+		Company.class | company$.registeredAt$.in([])                                                         | []
 		Company.class | company$.registeredAt$.in(date("2001-01-01"), date("2001-02-02"))                     | [5, 6]
 		Company.class | company$.registeredAt$.in(date("2012-10-10"))                                         | []
 		Company.class | company$.registeredAt$.in(date("2001-01-01"), date("2010-10-10"), date("1999-01-01")) | [2, 5]
