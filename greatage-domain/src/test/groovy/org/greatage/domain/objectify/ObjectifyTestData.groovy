@@ -1,4 +1,4 @@
-package org.greatage.domain
+package org.greatage.domain.objectify
 
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
@@ -6,22 +6,16 @@ import com.googlecode.objectify.ObjectifyFactory
 import com.googlecode.objectify.ObjectifyOpts
 import org.example.model.Company
 import org.example.objectify.CompanyImpl
-import org.greatage.domain.objectify.ObjectifyExecutor
-import org.greatage.domain.objectify.ObjectifyRepository
-import spock.lang.Shared
-
-import static org.example.model.Entities.company$
+import org.greatage.domain.Repository
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-class ObjectifyRepositoryFindSpec extends PropertyCriteriaSpecification {
+class ObjectifyTestData {
+	private final LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
 
-	@Shared
-	private LocalServiceTestHelper helper = new LocalServiceTestHelper(new LocalDatastoreServiceTestConfig());
-
-	def setupSpec() {
+	public Repository setup() {
 		helper.setUp()
 
 		def objectifyFactory = new ObjectifyFactory()
@@ -35,13 +29,17 @@ class ObjectifyRepositoryFindSpec extends PropertyCriteriaSpecification {
 				new CompanyImpl(id: 6, name: "company", registeredAt: date("2001-02-02"))
 		])
 
-		repository = new ObjectifyRepository(new ObjectifyExecutor(objectifyFactory, new ObjectifyOpts()), [
+		return new ObjectifyRepository(new ObjectifyExecutor(objectifyFactory, new ObjectifyOpts()), [
 				(Company.class): CompanyImpl.class
 		])
 	}
 
-	def cleanupSpec() {
-		repository = null;
-		helper.tearDown();
+	public Repository cleanup() {
+		helper.tearDown()
+		return null
+	}
+
+	private Date date(final String input) {
+		return Date.parse("yyyy-MM-dd", input)
 	}
 }

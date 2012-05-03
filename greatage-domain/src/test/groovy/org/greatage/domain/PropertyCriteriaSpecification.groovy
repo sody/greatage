@@ -9,22 +9,24 @@ import static org.example.model.Entities.company$
 /**
  * @author Ivan Khalopik
  * @since 1.0
+ *
+ * +-------------------------------+
+ * |            COMPANY            |
+ * +----+----------+---------------+
+ * | ID | NAME     | REGISTERED_AT |
+ * +----+----------+---------------+
+ * | 1  | company1 |          null |
+ * | 2  | company2 |    2010-10-10 |
+ * | 3  | company3 |          null |
+ * | 4  |     null |          null |
+ * | 5  |  company |    2001-01-01 |
+ * | 6  |  company |    2010-02-02 |
+ * +----+----------+---------------+
  */
 abstract class PropertyCriteriaSpecification extends Specification {
 
 	@Shared
 	protected Repository repository
-
-	def "all criteria should find all entities"() {
-		when:
-		def actual = findIds(entityClass, criteria)
-		then:
-		actual == expected
-
-		where:
-		entityClass   | criteria       | expected
-		Company.class | company$.all() | [1, 2, 3, 4, 5, 6]
-	}
 
 	def "equal property criteria should find only entities with property value equal to specified"() {
 		when:

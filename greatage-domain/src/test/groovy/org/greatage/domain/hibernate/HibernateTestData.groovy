@@ -1,38 +1,34 @@
-package org.greatage.domain
+package org.greatage.domain.hibernate
 
 import org.dbunit.JdbcDatabaseTester
 import org.dbunit.PropertiesBasedJdbcDatabaseTester
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder
 import org.dbunit.operation.DatabaseOperation
-import org.example.jdo.CompanyImpl
-import org.example.jdo.DepartmentImpl
+import org.example.hibernate.CompanyImpl
+import org.example.hibernate.DepartmentImpl
 import org.example.model.Company
 import org.example.model.Department
-import org.greatage.domain.jdo.JDOExecutor
-import org.greatage.domain.jdo.JDORepository
-import spock.lang.Shared
-
-import javax.jdo.JDOHelper
+import org.greatage.domain.Repository
+import org.hibernate.cfg.Configuration
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-class JDORepositoryFindSpec extends PropertyCriteriaSpecification {
+class HibernateTestData {
 
-	@Shared
 	private JdbcDatabaseTester tester;
 
-	def setupSpec() {
-		def factory = JDOHelper.getPersistenceManagerFactory("jdo.properties")
-		repository = new JDORepository(new JDOExecutor(factory), [
+	public Repository setup() {
+		def configuration = new Configuration()
+		configuration.addAnnotatedClass(CompanyImpl.class)
+		configuration.addAnnotatedClass(DepartmentImpl.class)
+		def repository = new HibernateRepository(new HibernateExecutor(configuration.buildSessionFactory()), [
 				(Company.class): CompanyImpl.class,
 				(Department.class): DepartmentImpl.class
 		])
-		repository.query(Company.class).list()
-		repository.query(Department.class).list()
 
-		def properties = new Properties()
+		def properties = new Properties();
 		properties.load(getClass().getResourceAsStream("/dbunit.properties"))
 		tester = new JdbcDatabaseTester(
 				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS),
@@ -40,16 +36,19 @@ class JDORepositoryFindSpec extends PropertyCriteriaSpecification {
 				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME),
 				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD),
 				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA)
-		);
+		)
 		tester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT)
 		tester.setTearDownOperation(DatabaseOperation.DELETE_ALL)
 		tester.setDataSet(new FlatXmlDataSetBuilder().build(getClass().getResourceAsStream("/database.xml")))
 
 		tester.onSetup()
+
+		return repository
 	}
 
-	def cleanupSpec() {
+	public Repository cleanup() {
 		tester.onTearDown()
-		repository = null
+		tester = null
+		return null
 	}
 }
