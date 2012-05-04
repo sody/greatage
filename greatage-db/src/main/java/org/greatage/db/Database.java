@@ -12,7 +12,10 @@ public interface Database {
 
     Database context(String... context);
 
-    Database script(String script);
+    Database update(Script script);
 
-    Database update();
+    interface Script {
+
+        void execute(ChangeLog log);
+    }
 }

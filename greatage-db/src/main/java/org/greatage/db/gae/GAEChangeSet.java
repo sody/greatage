@@ -3,8 +3,8 @@ package org.greatage.db.gae;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
 import org.greatage.db.ChangeLog;
-import org.greatage.db.internal.CheckSumUtils;
 import org.greatage.db.DatabaseException;
+import org.greatage.db.internal.InternalUtils;
 import org.greatage.util.DescriptionBuilder;
 import org.greatage.util.StringUtils;
 
@@ -52,7 +52,7 @@ public class GAEChangeSet implements ChangeLog.ChangeSet, GAEConstants {
     void execute(final DatastoreService store, final Collection<String> context, final boolean clearCheckSum) {
         if (supports(context)) {
             final String description = toString();
-            final String checkSum = CheckSumUtils.calculateCheckSum(description);
+            final String checkSum = InternalUtils.calculateCheckSum(description);
             System.out.println("Executing ChangeSet: " + description);
             System.out.println("CheckSum : " + checkSum);
 
@@ -65,14 +65,14 @@ public class GAEChangeSet implements ChangeLog.ChangeSet, GAEConstants {
 
             if (logEntry != null) {
                 final String expectedCheckSum = (String) logEntry.getProperty(CHECKSUM_COLUMN);
-                if (clearCheckSum || !CheckSumUtils.isValid(expectedCheckSum)) {
+                if (clearCheckSum || !InternalUtils.isValidCheckSum(expectedCheckSum)) {
                     new GAEUpdate(LOG_TABLE)
                             .set(CHECKSUM_COLUMN, checkSum)
                             .execute(store);
                 } else if (!expectedCheckSum.equals(checkSum)) {
                     throw new DatabaseException(
                             String.format("CheckSum check failed for change set '%s'. Should be '%s' but was '%s'",
-                            this, expectedCheckSum, checkSum));
+                                    this, expectedCheckSum, checkSum));
                 }
             } else {
                 for (GAEChange change : changes) {

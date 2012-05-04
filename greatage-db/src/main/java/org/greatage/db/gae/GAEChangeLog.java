@@ -1,14 +1,9 @@
 package org.greatage.db.gae;
 
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.google.appengine.api.datastore.KeyFactory;
 import org.greatage.db.ChangeLog;
-import org.greatage.db.DatabaseException;
 
 import java.util.Collection;
-import java.util.Date;
 
 /**
  * @author Ivan Khalopik
