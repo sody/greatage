@@ -92,20 +92,11 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 	@Override
 	protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
 		final String propertyName = propertyName(criteria);
+		final String parameterName = parameterName(criteria);
+		final String criterion = propertyName + " != :" + parameterName;
 
-		if (criteria.getValue() != null) {
-			final String parameterName = parameterName(criteria);
-
-			// fix for null values
-			final String criterion = "(" +
-					propertyName + " == null || " +
-					propertyName + " != :" + parameterName + ")";
-			addParameter(parameterName, criteria.getValue());
-			addCriterion(criterion, criteria.isNegative());
-		} else {
-			final String criterion = propertyName + " != null";
-			addCriterion(criterion, criteria.isNegative());
-		}
+		addParameter(parameterName, criteria.getValue());
+		addCriterion(criterion, criteria.isNegative());
 	}
 
 	@Override
@@ -114,13 +105,13 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
 		if (criteria.getValue() != null) {
 			final String parameterName = parameterName(criteria);
-
 			final String criterion = propertyName + " > :" + parameterName;
+
 			addParameter(parameterName, criteria.getValue());
 			addCriterion(criterion, criteria.isNegative());
 		} else {
-			// all not null values is greater than null
-			final String criterion = propertyName + " != null";
+			final String criterion = "false";
+
 			addCriterion(criterion, criteria.isNegative());
 		}
 	}
@@ -131,13 +122,13 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
 		if (criteria.getValue() != null) {
 			final String parameterName = parameterName(criteria);
-
 			final String criterion = propertyName + " >= :" + parameterName;
+
 			addParameter(parameterName, criteria.getValue());
 			addCriterion(criterion, criteria.isNegative());
 		} else {
-			// all values is greater or equal null
-			final String criterion = "true";
+			final String criterion = "false";
+
 			addCriterion(criterion, criteria.isNegative());
 		}
 	}
@@ -148,13 +139,14 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
 		if (criteria.getValue() != null) {
 			final String parameterName = parameterName(criteria);
+			final String criterion = propertyName + " < :" + parameterName;
 
-			final String criterion = "(" + propertyName + " == null || " + propertyName + " < :" + parameterName + ")";
 			addParameter(parameterName, criteria.getValue());
 			addCriterion(criterion, criteria.isNegative());
 		} else {
 			// there are no values less than null
 			final String criterion = "false";
+
 			addCriterion(criterion, criteria.isNegative());
 		}
 	}
@@ -165,12 +157,13 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
 		if (criteria.getValue() != null) {
 			final String parameterName = parameterName(criteria);
+			final String criterion = propertyName + " <= :" + parameterName;
 
-			final String criterion = "(" + propertyName + " == null || " + propertyName + " <= :" + parameterName + ")";
 			addParameter(parameterName, criteria.getValue());
 			addCriterion(criterion, criteria.isNegative());
 		} else {
-			final String criterion = propertyName + " == null";
+			final String criterion = "false";
+
 			addCriterion(criterion, criteria.isNegative());
 		}
 	}
@@ -184,8 +177,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 			addCriterion("false", criteria.isNegative());
 		} else if (value.contains(null)) {
 			final String parameterName = parameterName(criteria);
-
-			final String criterion = "(" + propertyName + " == null || :" + parameterName + ".contains(" + propertyName + "))";
+			final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
 
 			final List<Object> recalculated = new ArrayList<Object>();
 			for (Object val : value) {
@@ -197,8 +189,8 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 			addCriterion(criterion, criteria.isNegative());
 		} else {
 			final String parameterName = parameterName(criteria);
-
 			final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
+
 			addParameter(parameterName, value);
 			addCriterion(criterion, criteria.isNegative());
 		}

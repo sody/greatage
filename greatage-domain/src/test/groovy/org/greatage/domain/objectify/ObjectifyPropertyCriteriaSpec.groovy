@@ -1,13 +1,13 @@
 package org.greatage.domain.objectify
 
-import org.greatage.domain.PropertyCriteriaSpecification
+import org.greatage.domain.IgnoreNullPropertyCriteriaSpecification
 import spock.lang.Shared
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-class ObjectifyPropertyCriteriaSpec extends PropertyCriteriaSpecification {
+class ObjectifyPropertyCriteriaSpec extends IgnoreNullPropertyCriteriaSpecification {
 
 	@Shared
 	private ObjectifyTestData data = new ObjectifyTestData();

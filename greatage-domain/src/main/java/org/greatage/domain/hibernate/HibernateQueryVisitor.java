@@ -88,10 +88,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		if (criteria.getValue() == null) {
 			addCriterion(property.isNotNull(), criteria.isNegative());
 		} else {
-			addCriterion(Restrictions.or(
-					property.isNull(),
-					property.ne(criteria.getValue())
-			), criteria.isNegative());
+			addCriterion(property.ne(criteria.getValue()), criteria.isNegative());
 		}
 	}
 
@@ -99,50 +96,28 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 	protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
-		if (criteria.getValue() == null) {
-			addCriterion(property.isNotNull(), criteria.isNegative());
-		} else {
-			addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
-		}
+		addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
 	}
 
 	@Override
 	protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
-		if (criteria.getValue() == null) {
-			addCriterion(Restrictions.sqlRestriction("1=1"), criteria.isNegative());
-		} else {
-			addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
-		}
+		addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
 	}
 
 	@Override
 	protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
-		if (criteria.getValue() == null) {
-			addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
-		} else {
-			addCriterion(Restrictions.or(
-					property.isNull(),
-					property.lt(criteria.getValue())
-			), criteria.isNegative());
-		}
+		addCriterion(property.lt(criteria.getValue()), criteria.isNegative());
 	}
 
 	@Override
 	protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
 		final Property property = getProperty(criteria);
 
-		if (criteria.getValue() == null) {
-			addCriterion(property.isNull(), criteria.isNegative());
-		} else {
-			addCriterion(Restrictions.or(
-					property.isNull(),
-					property.le(criteria.getValue())
-			), criteria.isNegative());
-		}
+		addCriterion(property.le(criteria.getValue()), criteria.isNegative());
 	}
 
 	@Override
@@ -152,21 +127,6 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 		final List<?> value = (List<?>) criteria.getValue();
 		if (value == null || value.isEmpty()) {
 			addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
-		} else if (value.contains(null)) {
-			final List<Object> recalculated = new ArrayList<Object>();
-			for (Object val : value) {
-				if (val != null) {
-					recalculated.add(val);
-				}
-			}
-			if (recalculated.size() > 0) {
-				addCriterion(Restrictions.or(
-						property.isNull(),
-						property.in(recalculated)
-				), criteria.isNegative());
-			} else {
-				addCriterion(property.isNull(), criteria.isNegative());
-			}
 		} else {
 			addCriterion(property.in(value), criteria.isNegative());
 		}
