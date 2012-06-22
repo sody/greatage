@@ -24,37 +24,46 @@ import static org.example.model.Entities.company$
  * @since 1.0
  */
 abstract class SortOptionSpecification extends Specification {
+	private static final Repository.Property ID_PROPERTY = new Repository.Property() {
+		String getPath() {
+			return null
+		}
+
+		String getProperty() {
+			return "id"
+		}
+	}
 
 	@Shared
 	protected Repository repository
 
 	def "sort option should retrieve entities sorted by defined property"() {
 		when:
-		def actual = findIds(entityClass, idProperty, property, ascending, ignoreCase)
+		def actual = findIds(entityClass, property, ascending, ignoreCase)
 		then:
 		actual == expected
 
 		where:
-		entityClass   | idProperty   | property               | ascending | ignoreCase | expected
-		Company.class | company$.id$ | company$.id$           | true      | true       | [1, 2, 3, 4, 5, 6]
-		Company.class | company$.id$ | company$.name$         | true      | true       | [4, 5, 6, 1, 2, 3]
-		Company.class | company$.id$ | company$.registeredAt$ | true      | true       | [1, 3, 4, 5, 6, 2]
+		entityClass   | property               | ascending | ignoreCase | expected
+		Company.class | company$.id$           | true      | true       | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.name$         | true      | true       | [4, 5, 6, 1, 2, 3]
+		Company.class | company$.registeredAt$ | true      | true       | [1, 3, 4, 5, 6, 2]
 	}
 
 	def "sort option should retrieve entities sorted by defined property with specified sort direction"() {
 		when:
-		def actual = findIds(entityClass, idProperty, property, ascending, ignoreCase)
+		def actual = findIds(entityClass, property, ascending, ignoreCase)
 		then:
 		actual == expected
 
 		where:
-		entityClass   | idProperty   | property               | ascending | ignoreCase | expected
-		Company.class | company$.id$ | company$.id$           | true      | true       | [1, 2, 3, 4, 5, 6]
-		Company.class | company$.id$ | company$.id$           | false     | true       | [6, 5, 4, 3, 2, 1]
-		Company.class | company$.id$ | company$.name$         | true      | true       | [4, 5, 6, 1, 2, 3]
-		Company.class | company$.id$ | company$.name$         | false     | true       | [3, 2, 1, 5, 6, 4]
-		Company.class | company$.id$ | company$.registeredAt$ | true      | true       | [1, 3, 4, 5, 6, 2]
-		Company.class | company$.id$ | company$.registeredAt$ | false     | true       | [2, 6, 5, 1, 3, 4]
+		entityClass   | property               | ascending | ignoreCase | expected
+		Company.class | company$.id$           | true      | true       | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.id$           | false     | true       | [6, 5, 4, 3, 2, 1]
+		Company.class | company$.name$         | true      | true       | [4, 5, 6, 1, 2, 3]
+		Company.class | company$.name$         | false     | true       | [3, 2, 1, 5, 6, 4]
+		Company.class | company$.registeredAt$ | true      | true       | [1, 3, 4, 5, 6, 2]
+		Company.class | company$.registeredAt$ | false     | true       | [2, 6, 5, 1, 3, 4]
 	}
 
 	protected Date date(final String input) {
@@ -62,13 +71,13 @@ abstract class SortOptionSpecification extends Specification {
 	}
 
 	protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass,
-														  final Repository.Property idProperty,
 														  final Repository.Property property,
 														  final boolean ascending,
 														  final boolean ignoreCase) {
+
 		return toIds(repository.query(entityClass)
 				.sort(property, ascending, ignoreCase)
-				.sort(idProperty, true, false)
+				.sort(ID_PROPERTY, true, false)
 				.list())
 	}
 

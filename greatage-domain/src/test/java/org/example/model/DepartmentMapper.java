@@ -25,7 +25,6 @@ import org.greatage.domain.PropertyMapper;
  * @since 1.0
  */
 public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
-	public final PropertyMapper<Long, E, Long> id$ = property("id");
 	public final PropertyMapper<Long, E, String> name$ = property("name");
 	public final CompanyMapper<E> company$ = new CompanyMapper<E>("company");
 

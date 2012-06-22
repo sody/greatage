@@ -27,7 +27,6 @@ import java.util.Date;
  * @since 1.0
  */
 public class CompanyMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
-	public final PropertyMapper<Long, E, Long> id$ = property("id");
 	public final PropertyMapper<Long, E, String> name$ = property("name");
 	public final PropertyMapper<Long, E, Date> registeredAt$ = property("registeredAt");
 
