@@ -14,25 +14,35 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.hibernate;
+
+import org.greatage.domain.internal.AbstractSessionManager;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface TransactionExecutor<T, S> {
+public class HibernateSessionManager extends AbstractSessionManager<Session> {
+	private final SessionFactory sessionFactory;
 
-	<V> V execute(TransactionCallback<V, T> callback);
-
-	<V> V execute(SessionCallback<V, S> callback);
-
-	interface TransactionCallback<V, T> {
-
-		V doInTransaction(T transaction) throws Exception;
+	public HibernateSessionManager(final SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
 	}
 
-	interface SessionCallback<V, S> {
+	@Override
+	protected Session openSession() {
+		return sessionFactory.openSession();
+	}
 
-		V doInSession(S session) throws Exception;
+	@Override
+	protected void flushSession(final Session session) {
+		session.flush();
+	}
+
+	@Override
+	protected void closeSession(final Session session) {
+		session.close();
 	}
 }

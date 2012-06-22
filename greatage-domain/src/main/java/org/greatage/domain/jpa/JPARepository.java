@@ -17,13 +17,12 @@
 package org.greatage.domain.jpa;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.TransactionExecutor;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
+import org.greatage.domain.internal.SessionManager;
 import org.greatage.util.DescriptionBuilder;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -33,17 +32,17 @@ import java.util.Map;
  * @since 1.0
  */
 public class JPARepository extends AbstractRepository {
-	private final TransactionExecutor<EntityTransaction, EntityManager> executor;
+	private final SessionManager<EntityManager> sessionManager;
 
-	public JPARepository(final TransactionExecutor<EntityTransaction, EntityManager> executor,
+	public JPARepository(final SessionManager<EntityManager> sessionManager,
 						 final Map<Class, Class> entityMapping) {
 		super(entityMapping);
-		this.executor = executor;
+		this.sessionManager = sessionManager;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new TransactionExecutor.SessionCallback<E, EntityManager>() {
+		return sessionManager.execute(new SessionManager.Callback<E, EntityManager>() {
 			public E doInSession(final EntityManager session) throws Exception {
 				return session.find(getImplementation(entityClass), pk);
 			}
@@ -52,7 +51,7 @@ public class JPARepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, EntityManager>() {
+		sessionManager.execute(new SessionManager.Callback<Object, EntityManager>() {
 			public Object doInSession(final EntityManager session) throws Exception {
 				session.persist(entity);
 				return null;
@@ -62,7 +61,7 @@ public class JPARepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, EntityManager>() {
+		sessionManager.execute(new SessionManager.Callback<Object, EntityManager>() {
 			public Object doInSession(final EntityManager session) throws Exception {
 				session.merge(entity);
 				return null;
@@ -72,7 +71,7 @@ public class JPARepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, EntityManager>() {
+		sessionManager.execute(new SessionManager.Callback<Object, EntityManager>() {
 			public Object doInSession(final EntityManager session) throws Exception {
 				session.remove(entity);
 				return null;
@@ -86,7 +85,7 @@ public class JPARepository extends AbstractRepository {
 
 	protected <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final String queryString, final JPAQuery<PK, E> query, final Callback<T> callback) {
-		return executor.execute(new TransactionExecutor.SessionCallback<T, EntityManager>() {
+		return sessionManager.execute(new SessionManager.Callback<T, EntityManager>() {
 			public T doInSession(final EntityManager session) throws Exception {
 				final javax.persistence.Query signedQuery =
 						session.createQuery(queryString.replaceAll("entityClass", query.getEntityClass().getName()));
@@ -137,16 +136,12 @@ public class JPARepository extends AbstractRepository {
 		public List<PK> keys() {
 			throw new UnsupportedOperationException();
 		}
-
-		public List<Map<String, Object>> projections() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("executor", executor);
+		builder.append("sessionManager", sessionManager);
 		return builder.toString();
 	}
 }

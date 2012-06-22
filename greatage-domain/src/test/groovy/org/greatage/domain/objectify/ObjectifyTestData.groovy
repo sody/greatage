@@ -29,7 +29,7 @@ class ObjectifyTestData {
 				new CompanyImpl(id: 6, name: "company", registeredAt: date("2001-02-02"))
 		])
 
-		return new ObjectifyRepository(new ObjectifyExecutor(objectifyFactory, new ObjectifyOpts()), [
+		return new ObjectifyRepository(new ObjectifySessionManager(objectifyFactory, new ObjectifyOpts()), [
 				(Company.class): CompanyImpl.class
 		])
 	}

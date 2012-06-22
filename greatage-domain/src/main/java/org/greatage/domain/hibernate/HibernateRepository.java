@@ -17,12 +17,11 @@
 package org.greatage.domain.hibernate;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.TransactionExecutor;
+import org.greatage.domain.internal.SessionManager;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Projections;
 
 import java.io.Serializable;
@@ -37,16 +36,16 @@ import java.util.Map;
  * @since 1.0
  */
 public class HibernateRepository extends AbstractRepository {
-	private final TransactionExecutor<Transaction, Session> executor;
+	private final SessionManager<Session> sessionManager;
 
-	public HibernateRepository(final TransactionExecutor<Transaction, Session> executor, final Map<Class, Class> entityMapping) {
+	public HibernateRepository(final SessionManager<Session> sessionManager, final Map<Class, Class> entityMapping) {
 		super(entityMapping);
-		this.executor = executor;
+		this.sessionManager = sessionManager;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new TransactionExecutor.SessionCallback<E, Session>() {
+		return sessionManager.execute(new SessionManager.Callback<E, Session>() {
 			@SuppressWarnings({"unchecked"})
 			public E doInSession(final Session session) throws Exception {
 				return (E) session.get(getImplementation(entityClass), pk);
@@ -56,7 +55,7 @@ public class HibernateRepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, Session>() {
+		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.save(entity);
 				return null;
@@ -66,7 +65,7 @@ public class HibernateRepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, Session>() {
+		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.update(entity);
 				return null;
@@ -77,7 +76,7 @@ public class HibernateRepository extends AbstractRepository {
 	@Override
 	public <PK extends Serializable, E extends Entity<PK>>
 	void saveOrUpdate(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, Session>() {
+		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.saveOrUpdate(entity);
 				return null;
@@ -87,7 +86,7 @@ public class HibernateRepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, Session>() {
+		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.delete(entity);
 				return null;
@@ -111,7 +110,7 @@ public class HibernateRepository extends AbstractRepository {
 	 */
 	private <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final HibernateQuery<PK, E> query, final Callback<T> callback) {
-		return executor.execute(new TransactionExecutor.SessionCallback<T, Session>() {
+		return sessionManager.execute(new SessionManager.Callback<T, Session>() {
 			public T doInSession(final Session session) throws Exception {
 				final org.hibernate.Criteria signedCriteria = session.createCriteria(getImplementation(query.getEntityClass()));
 				new HibernateQueryVisitor<PK, E>(signedCriteria).visitQuery(query);
@@ -173,16 +172,12 @@ public class HibernateRepository extends AbstractRepository {
 				}
 			});
 		}
-
-		public List<Map<String, Object>> projections() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	@Override
 	public String toString() {
 		final DescriptionBuilder sb = new DescriptionBuilder(getClass());
-		sb.append("executor", executor);
+		sb.append("sessionManager", sessionManager);
 		return sb.toString();
 	}
 }

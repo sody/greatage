@@ -17,14 +17,13 @@
 package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.TransactionExecutor;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
+import org.greatage.domain.internal.SessionManager;
 import org.greatage.util.DescriptionBuilder;
 
 import javax.jdo.Extent;
 import javax.jdo.PersistenceManager;
-import javax.jdo.Transaction;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -36,17 +35,17 @@ import java.util.Map;
 public class JDORepository extends AbstractRepository {
 	private static final String COUNT_RESULT = "count(id)";
 
-	private final TransactionExecutor<Transaction, PersistenceManager> executor;
+	private final SessionManager<PersistenceManager> sessionManager;
 
-	public JDORepository(final TransactionExecutor<Transaction, PersistenceManager> executor,
+	public JDORepository(final SessionManager<PersistenceManager> sessionManager,
 						 final Map<Class, Class> entityMapping) {
 		super(entityMapping);
-		this.executor = executor;
+		this.sessionManager = sessionManager;
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	E get(final Class<E> entityClass, final PK pk) {
-		return executor.execute(new TransactionExecutor.SessionCallback<E, PersistenceManager>() {
+		return sessionManager.execute(new SessionManager.Callback<E, PersistenceManager>() {
 			public E doInSession(final PersistenceManager session) throws Exception {
 				try {
 					return session.getObjectById(getImplementation(entityClass), pk);
@@ -60,7 +59,7 @@ public class JDORepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void save(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, PersistenceManager>() {
+		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.makePersistent(entity);
 				return null;
@@ -70,7 +69,7 @@ public class JDORepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void update(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, PersistenceManager>() {
+		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.refresh(entity);
 				return null;
@@ -80,7 +79,7 @@ public class JDORepository extends AbstractRepository {
 
 	public <PK extends Serializable, E extends Entity<PK>>
 	void delete(final E entity) {
-		executor.execute(new TransactionExecutor.SessionCallback<Object, PersistenceManager>() {
+		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.deletePersistent(entity);
 				return null;
@@ -94,7 +93,7 @@ public class JDORepository extends AbstractRepository {
 
 	private <T, PK extends Serializable, E extends Entity<PK>>
 	T execute(final JDOQuery<PK, E> query, final Callback<T> callback) {
-		return executor.execute(new TransactionExecutor.SessionCallback<T, PersistenceManager>() {
+		return sessionManager.execute(new SessionManager.Callback<T, PersistenceManager>() {
 			public T doInSession(final PersistenceManager session) throws Exception {
 				final Extent<? extends Entity> extent = session.getExtent(getImplementation(query.getEntityClass()), true);
 				final javax.jdo.Query signedQuery = session.newQuery(extent);
@@ -150,16 +149,12 @@ public class JDORepository extends AbstractRepository {
 		public List<PK> keys() {
 			throw new UnsupportedOperationException();
 		}
-
-		public List<Map<String, Object>> projections() {
-			throw new UnsupportedOperationException();
-		}
 	}
 
 	@Override
 	public String toString() {
 		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("executor", executor);
+		builder.append("sessionManager", sessionManager);
 		return builder.toString();
 	}
 }

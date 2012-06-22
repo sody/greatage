@@ -23,7 +23,7 @@ class HibernateTestData {
 		def configuration = new Configuration()
 		configuration.addAnnotatedClass(CompanyImpl.class)
 		configuration.addAnnotatedClass(DepartmentImpl.class)
-		def repository = new HibernateRepository(new HibernateExecutor(configuration.buildSessionFactory()), [
+		def repository = new HibernateRepository(new HibernateSessionManager(configuration.buildSessionFactory()), [
 				(Company.class): CompanyImpl.class,
 				(Department.class): DepartmentImpl.class
 		])

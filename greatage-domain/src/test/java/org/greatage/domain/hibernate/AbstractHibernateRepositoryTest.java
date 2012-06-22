@@ -36,7 +36,7 @@
 //		configuration.addAnnotatedClass(DepartmentImpl.class);
 //		final SessionFactory sessionFactory = configuration.buildSessionFactory();
 //
-//		final HibernateExecutor executor = new HibernateExecutor(sessionFactory);
+//		final HibernateSessionManager executor = new HibernateSessionManager(sessionFactory);
 //		repository = new HibernateRepository(executor, new HashMap<Class, Class>());
 //
 //		final Properties properties = new Properties();

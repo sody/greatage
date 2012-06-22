@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package org.greatage.domain.annotations;
-
-import java.lang.annotation.*;
+package org.greatage.domain.internal;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-@Documented
-public @interface Transactional {
+public interface SessionManager<S> {
+
+	<V> V execute(Callback<V, S> callback);
+
+	interface Callback<V, S> {
+
+		V doInSession(S session) throws Exception;
+	}
 }

@@ -18,13 +18,11 @@ package org.greatage.domain;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This interface represents generic repository for working with all entities.
  *
  * @author Ivan Khalopik
- * @see EntityService
  * @since 1.0
  */
 public interface Repository {
@@ -102,8 +100,6 @@ public interface Repository {
 
 		Query<PK, E> sort(Property property, boolean ascending, boolean ignoreCase);
 
-		Query<PK, E> map(Property property, String key);
-
 		Query<PK, E> paginate(int start, int count);
 
 
@@ -111,12 +107,9 @@ public interface Repository {
 
 		List<E> list();
 
-		E unique();
-
 		List<PK> keys();
 
-		List<Map<String, Object>> projections();
-
+		E unique();
 	}
 
 	interface Property {

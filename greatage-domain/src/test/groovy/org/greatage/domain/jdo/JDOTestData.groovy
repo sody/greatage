@@ -21,7 +21,7 @@ class JDOTestData {
 
 	public Repository setup() {
 		def factory = JDOHelper.getPersistenceManagerFactory("jdo.properties")
-		def repository = new JDORepository(new JDOExecutor(factory), [
+		def repository = new JDORepository(new JDOSessionManager(factory), [
 				(Company.class): CompanyImpl.class,
 				(Department.class): DepartmentImpl.class
 		])
