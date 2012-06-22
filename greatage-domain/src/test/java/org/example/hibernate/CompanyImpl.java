@@ -27,6 +27,7 @@ import java.util.Date;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 @Entity
 @Table(name = "company")

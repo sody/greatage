@@ -27,6 +27,7 @@ import java.util.Date;
 
 /**
  * @author Ivan Khalopik
+ * @since 1.0
  */
 @PersistenceCapable(table = "company")
 public class CompanyImpl extends AbstractEntity<Long> implements Company {

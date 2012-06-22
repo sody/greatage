@@ -7,9 +7,6 @@ import spock.lang.Specification
 import static org.example.model.Entities.company$
 
 /**
- * @author Ivan Khalopik
- * @since 1.0
- *
  * +-------------------------------+
  * |            COMPANY            |
  * +----+----------+---------------+
@@ -22,6 +19,9 @@ import static org.example.model.Entities.company$
  * | 5  |  company |    2001-01-01 |
  * | 6  |  company |    2010-02-02 |
  * +----+----------+---------------+
+ *
+ * @author Ivan Khalopik
+ * @since 1.0
  */
 abstract class SortOptionSpecification extends Specification {
 

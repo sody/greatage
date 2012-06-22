@@ -7,9 +7,6 @@ import spock.lang.Specification
 import static org.example.model.Entities.company$
 
 /**
- * @author Ivan Khalopik
- * @since 1.0
- *
  * +-------------------------------+
  * |            COMPANY            |
  * +----+----------+---------------+
@@ -22,6 +19,9 @@ import static org.example.model.Entities.company$
  * | 5  |  company |    2001-01-01 |
  * | 6  |  company |    2010-02-02 |
  * +----+----------+---------------+
+ *
+ * @author Ivan Khalopik
+ * @since 1.0
  */
 abstract class PropertyCriteriaSpecification extends Specification {
 
@@ -53,10 +53,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                         | expected
-		Company.class | company$.id$.eq(null)                            | []
-		Company.class | company$.name$.eq(null)                          | [4]
-		Company.class | company$.registeredAt$.eq(null)                  | [1, 3, 4]
+		entityClass   | criteria                        | expected
+		Company.class | company$.id$.eq(null)           | []
+		Company.class | company$.name$.eq(null)         | [4]
+		Company.class | company$.registeredAt$.eq(null) | [1, 3, 4]
 	}
 
 	def "not equal criteria should find only entities with property value not equal to specified and not null"() {
@@ -83,10 +83,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                      | expected
-		Company.class | company$.id$.ne(null)                         | [1, 2, 3, 4, 5, 6]
-		Company.class | company$.name$.ne(null)                       | [1, 2, 3, 5, 6]
-		Company.class | company$.registeredAt$.notEqual(null)         | [2, 5, 6]
+		entityClass   | criteria                              | expected
+		Company.class | company$.id$.ne(null)                 | [1, 2, 3, 4, 5, 6]
+		Company.class | company$.name$.ne(null)               | [1, 2, 3, 5, 6]
+		Company.class | company$.registeredAt$.notEqual(null) | [2, 5, 6]
 	}
 
 	def "is null criteria should find only entities with property value equal to null"() {
@@ -147,10 +147,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                               | expected
-		Company.class | company$.id$.gt(null)                                  | []
-		Company.class | company$.name$.gt(null)                                | []
-		Company.class | company$.registeredAt$.gt(null)                        | []
+		entityClass   | criteria                        | expected
+		Company.class | company$.id$.gt(null)           | []
+		Company.class | company$.name$.gt(null)         | []
+		Company.class | company$.registeredAt$.gt(null) | []
 	}
 
 	def "greater or equal criteria should find only entities with property value greater or equal to specified and not null"() {
@@ -179,10 +179,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                                  | expected
-		Company.class | company$.id$.ge(null)                                     | []
-		Company.class | company$.name$.ge(null)                                   | []
-		Company.class | company$.registeredAt$.ge(null)                           | []
+		entityClass   | criteria                        | expected
+		Company.class | company$.id$.ge(null)           | []
+		Company.class | company$.name$.ge(null)         | []
+		Company.class | company$.registeredAt$.ge(null) | []
 	}
 
 	def "less than criteria should find only entities with property value less than specified and not null"() {
@@ -211,10 +211,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                            | expected
-		Company.class | company$.id$.lt(null)                               | []
-		Company.class | company$.name$.lt(null)                             | []
-		Company.class | company$.registeredAt$.lt(null)                     | []
+		entityClass   | criteria                        | expected
+		Company.class | company$.id$.lt(null)           | []
+		Company.class | company$.name$.lt(null)         | []
+		Company.class | company$.registeredAt$.lt(null) | []
 	}
 
 	def "less or equal criteria should find only entities with property value less or equal to specified and not null"() {
@@ -243,10 +243,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                               | expected
-		Company.class | company$.id$.le(null)                                  | []
-		Company.class | company$.name$.le(null)                                | []
-		Company.class | company$.registeredAt$.le(null)                        | []
+		entityClass   | criteria                        | expected
+		Company.class | company$.id$.le(null)           | []
+		Company.class | company$.name$.le(null)         | []
+		Company.class | company$.registeredAt$.le(null) | []
 	}
 
 	def "in criteria should find only entities with property value in specified set and not null"() {
@@ -277,10 +277,10 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                                                              | expected
-		Company.class | company$.id$.in([])                                                                   | []
-		Company.class | company$.name$.in([])                                                                 | []
-		Company.class | company$.registeredAt$.in([])                                                         | []
+		entityClass   | criteria                      | expected
+		Company.class | company$.id$.in([])           | []
+		Company.class | company$.name$.in([])         | []
+		Company.class | company$.registeredAt$.in([]) | []
 	}
 
 	def "in criteria with null parameters should find only entities with property value in specified set and not null"() {
@@ -290,13 +290,13 @@ abstract class PropertyCriteriaSpecification extends Specification {
 		actual == expected
 
 		where:
-		entityClass   | criteria                                                                              | expected
-		Company.class | company$.id$.in([null])                                                               | []
-		Company.class | company$.id$.in(1l, null, 10l)                                                        | [1]
-		Company.class | company$.name$.in([null])                                                             | []
-		Company.class | company$.name$.in("company2", "company8", null)                                       | [2]
-		Company.class | company$.registeredAt$.in([null])                                                     | []
-		Company.class | company$.registeredAt$.in(date("2001-01-01"), null)                                   | [5]
+		entityClass   | criteria                                            | expected
+		Company.class | company$.id$.in([null])                             | []
+		Company.class | company$.id$.in(1l, null, 10l)                      | [1]
+		Company.class | company$.name$.in([null])                           | []
+		Company.class | company$.name$.in("company2", "company8", null)     | [2]
+		Company.class | company$.registeredAt$.in([null])                   | []
+		Company.class | company$.registeredAt$.in(date("2001-01-01"), null) | [5]
 	}
 
 	protected Date date(final String input) {
