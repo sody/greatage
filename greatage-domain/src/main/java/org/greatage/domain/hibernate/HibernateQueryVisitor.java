@@ -30,7 +30,6 @@ import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,11 +140,6 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 
 	@Override
 	protected void visitFetch(final Repository.Property fetch) {
-		//todo: implement this
-	}
-
-	@Override
-	protected void visitProjection(final Repository.Property property, final String key) {
 		//todo: implement this
 	}
 

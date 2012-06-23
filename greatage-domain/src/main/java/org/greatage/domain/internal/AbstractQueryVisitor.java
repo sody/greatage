@@ -37,11 +37,6 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 				visitFetch(fetch);
 			}
 		}
-		if (query.getProjections() != null) {
-			for (Map.Entry<String, Repository.Property> entry : query.getProjections().entrySet()) {
-				visitProjection(entry.getValue(), entry.getKey());
-			}
-		}
 		if (query.getSorts() != null) {
 			for (AbstractQuery<PK, E>.Sort sort : query.getSorts()) {
 				visitSort(sort.getProperty(), sort.isAscending(), sort.isIgnoreCase());
@@ -106,8 +101,6 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 	protected abstract void visitLike(PropertyCriteria<PK, E> criteria);
 
 	protected abstract void visitFetch(Repository.Property fetch);
-
-	protected abstract void visitProjection(Repository.Property property, String key);
 
 	protected abstract void visitSort(Repository.Property property, boolean ascending, boolean ignoreCase);
 

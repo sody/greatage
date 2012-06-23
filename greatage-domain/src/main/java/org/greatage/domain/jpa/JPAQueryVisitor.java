@@ -88,11 +88,6 @@ public class JPAQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	protected void visitProjection(final Repository.Property property, final String key) {
-		//todo: implement this
-	}
-
-	@Override
 	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
 		//todo: implement this
 	}

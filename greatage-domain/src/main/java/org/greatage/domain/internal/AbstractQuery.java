@@ -5,9 +5,7 @@ import org.greatage.domain.Repository;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Ivan Khalopik
@@ -20,7 +18,6 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 
 	private Repository.Criteria<PK, E> criteria;
 	private List<Repository.Property> fetches;
-	private Map<String, Repository.Property> projections;
 	private List<Sort> sorts;
 
 	private int start = 0;
@@ -56,15 +53,6 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 		return this;
 	}
 
-	public Repository.Query<PK, E> map(final Repository.Property property, final String key) {
-		if (projections == null) {
-			projections = new HashMap<String, Repository.Property>();
-		}
-		projections.put(key, property);
-
-		return this;
-	}
-
 	public Repository.Query<PK, E> paginate(final int start, final int count) {
 		this.start = start;
 		this.count = count;
@@ -82,10 +70,6 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 
 	public List<Repository.Property> getFetches() {
 		return fetches;
-	}
-
-	public Map<String, Repository.Property> getProjections() {
-		return projections;
 	}
 
 	public List<Sort> getSorts() {
