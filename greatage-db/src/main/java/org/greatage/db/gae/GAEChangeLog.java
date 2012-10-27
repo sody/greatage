@@ -44,6 +44,10 @@ public class GAEChangeLog implements ChangeLog, GAEConstants {
         return this;
     }
 
+    public ChangeLog statement(final String statement) {
+        throw new UnsupportedOperationException("GAE doesn't support native statements");
+    }
+
     public ChangeLog dropAll() {
         addChange(new GAEDeleteAll());
         return this;

@@ -8,21 +8,27 @@ public interface ChangeLog {
 
     ChangeLog name(String name);
 
+
     ChangeSet begin(String title);
 
     ChangeLog end();
 
+
+    ChangeLog statement(String statement);
+
     ChangeLog dropAll();
 
-    Insert insert(String entityName);
+    Insert insert(String table);
 
-    Update update(String entityName);
+    Update update(String table);
 
-    Delete delete(String entityName);
+    Delete delete(String table);
 
-    Select select(String entityName);
 
-    ConditionEntry condition(String propertyName);
+    Select select(String table);
+
+    ConditionEntry condition(String property);
+
 
     interface ChangeSet {
 
@@ -35,20 +41,20 @@ public interface ChangeLog {
 
     interface Insert {
 
-        Insert set(String propertyName, Object value);
+        Insert set(String property, Object value);
 
-        Insert set(String propertyName, Select select);
+        Insert set(String property, Select select);
 
-        Insert into(String... propertyNames);
+        Insert into(String... properties);
 
         Insert values(Object... values);
     }
 
     interface Update {
 
-        Update set(String propertyName, Object value);
+        Update set(String property, Object value);
 
-        Update set(String propertyName, Select select);
+        Update set(String property, Select select);
 
         Update where(Condition condition);
     }
