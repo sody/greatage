@@ -17,7 +17,6 @@
 package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
 import org.greatage.domain.internal.AbstractQueryVisitor;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
@@ -52,7 +51,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	public void visitCriteria(final Repository.Criteria<PK, E> criteria) {
+	public void visitCriteria(final org.greatage.domain.Query.Criteria<PK, E> criteria) {
 		level++;
 		super.visitCriteria(criteria);
 		level--;
@@ -67,7 +66,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 		final List<String> parent = this.junction;
 		junction = new ArrayList<String>();
 
-		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
+		for (org.greatage.domain.Query.Criteria<PK, E> child : criteria.getChildren()) {
 			visitCriteria(child);
 		}
 
@@ -202,12 +201,12 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	protected void visitFetch(final Repository.Property fetch) {
+	protected void visitFetch(final org.greatage.domain.Query.Property fetch) {
 		//todo: implement this
 	}
 
 	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+	protected void visitSort(final org.greatage.domain.Query.Property property, final boolean ascending, final boolean ignoreCase) {
 		//todo: implement this
 	}
 

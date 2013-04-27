@@ -17,7 +17,7 @@
 package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
+import org.greatage.domain.Query;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,16 +27,16 @@ import java.util.List;
  * @since 1.0
  */
 public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
-	private final List<Repository.Criteria<PK, E>> children;
+	private final List<Query.Criteria<PK, E>> children;
 	private final Operator operator;
 
-	public JunctionCriteria(final Operator operator, final List<Repository.Criteria<PK, E>> children) {
+	public JunctionCriteria(final Operator operator, final List<Query.Criteria<PK, E>> children) {
 		this.operator = operator;
 		this.children = children;
 	}
 
 	@Override
-	public Repository.Criteria<PK, E> and(final Repository.Criteria<PK, E> criteria) {
+	public Query.Criteria<PK, E> and(final Query.Criteria<PK, E> criteria) {
 		if (operator == Operator.AND) {
 			children.add(criteria);
 			return this;
@@ -45,7 +45,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 	}
 
 	@Override
-	public Repository.Criteria<PK, E> or(final Repository.Criteria<PK, E> criteria) {
+	public Query.Criteria<PK, E> or(final Query.Criteria<PK, E> criteria) {
 		if (operator == Operator.OR) {
 			children.add(criteria);
 			return this;
@@ -53,7 +53,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 		return super.or(criteria);
 	}
 
-	public List<Repository.Criteria<PK, E>> getChildren() {
+	public List<Query.Criteria<PK, E>> getChildren() {
 		return children;
 	}
 
@@ -64,7 +64,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder("(");
-		for (Repository.Criteria<PK, E> child : children) {
+		for (Query.Criteria<PK, E> child : children) {
 			if (builder.length() > 1) {
 				builder.append(operator == Operator.AND ? " and " : " or ");
 			}

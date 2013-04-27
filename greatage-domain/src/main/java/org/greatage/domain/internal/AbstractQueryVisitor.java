@@ -17,10 +17,9 @@
 package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
+import org.greatage.domain.Query;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author Ivan Khalopik
@@ -33,7 +32,7 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 			visitCriteria(query.getCriteria());
 		}
 		if (query.getFetches() != null) {
-			for (Repository.Property fetch : query.getFetches()) {
+			for (Query.Property fetch : query.getFetches()) {
 				visitFetch(fetch);
 			}
 		}
@@ -45,7 +44,7 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 		visitPagination(query.getStart(), query.getCount());
 	}
 
-	protected void visitCriteria(final Repository.Criteria<PK, E> criteria) {
+	protected void visitCriteria(final Query.Criteria<PK, E> criteria) {
 		if (criteria instanceof JunctionCriteria) {
 			visitJunction((JunctionCriteria<PK, E>) criteria);
 		} else if (criteria instanceof PropertyCriteria) {
@@ -100,9 +99,9 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 
 	protected abstract void visitLike(PropertyCriteria<PK, E> criteria);
 
-	protected abstract void visitFetch(Repository.Property fetch);
+	protected abstract void visitFetch(Query.Property fetch);
 
-	protected abstract void visitSort(Repository.Property property, boolean ascending, boolean ignoreCase);
+	protected abstract void visitSort(Query.Property property, boolean ascending, boolean ignoreCase);
 
 	protected abstract void visitPagination(int start, int count);
 }

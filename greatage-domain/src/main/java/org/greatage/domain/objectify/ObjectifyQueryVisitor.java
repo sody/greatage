@@ -2,7 +2,6 @@ package org.greatage.domain.objectify;
 
 import com.googlecode.objectify.Query;
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
 import org.greatage.domain.internal.AbstractQueryVisitor;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
@@ -28,7 +27,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 			throw new UnsupportedOperationException("OR operation is not supported by appengine queries");
 		}
 
-		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
+		for (org.greatage.domain.Query.Criteria<PK, E> child : criteria.getChildren()) {
 			visitCriteria(child);
 		}
 	}
@@ -170,12 +169,12 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
 	}
 
 	@Override
-	protected void visitFetch(final Repository.Property fetch) {
+	protected void visitFetch(final org.greatage.domain.Query.Property fetch) {
 		//todo: implement this
 	}
 
 	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+	protected void visitSort(final org.greatage.domain.Query.Property property, final boolean ascending, final boolean ignoreCase) {
 		final StringBuilder condition = new StringBuilder();
 		if (!ascending) {
 			condition.append("-");

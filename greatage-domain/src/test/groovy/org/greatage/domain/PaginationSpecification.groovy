@@ -22,7 +22,7 @@ import spock.lang.Specification
  * @since 1.0
  */
 abstract class PaginationSpecification extends Specification {
-	private static final Repository.Property ID_PROPERTY = new Repository.Property() {
+	private static final Query.Property ID_PROPERTY = new Query.Property() {
 		String getPath() {
 			return null
 		}

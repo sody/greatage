@@ -2,6 +2,7 @@ package org.greatage.domain.objectify;
 
 import com.googlecode.objectify.Objectify;
 import org.greatage.domain.Entity;
+import org.greatage.domain.Query;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.domain.internal.SessionManager;
@@ -33,7 +34,7 @@ public class ObjectifyRepository extends AbstractRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void save(final E entity) {
+	void insert(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
 			public Object doInSession(final Objectify session) throws Exception {
 				session.put(entity);
@@ -53,7 +54,7 @@ public class ObjectifyRepository extends AbstractRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void delete(final E entity) {
+	void remove(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
 			public Object doInSession(final Objectify session) throws Exception {
 				session.delete(entity);

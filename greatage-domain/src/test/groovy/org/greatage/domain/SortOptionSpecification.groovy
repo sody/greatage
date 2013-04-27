@@ -24,7 +24,7 @@ import static org.example.model.Entities.company$
  * @since 1.0
  */
 abstract class SortOptionSpecification extends Specification {
-	private static final Repository.Property ID_PROPERTY = new Repository.Property() {
+	private static final Query.Property ID_PROPERTY = new Query.Property() {
 		String getPath() {
 			return null
 		}
@@ -71,7 +71,7 @@ abstract class SortOptionSpecification extends Specification {
 	}
 
 	protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass,
-														  final Repository.Property property,
+														  final Query.Property property,
 														  final boolean ascending,
 														  final boolean ignoreCase) {
 

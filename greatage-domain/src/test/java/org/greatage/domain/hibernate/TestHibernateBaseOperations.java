@@ -68,7 +68,7 @@
 //		E actual = repository.get(entityClass, id);
 //		assertNull(actual);
 //
-//		repository.save(createEntity);
+//		repository.insert(createEntity);
 //		actual = repository.get(entityClass, id);
 //		assertNotNull(actual);
 //		assertEntities(actual, createEntity);
@@ -78,7 +78,7 @@
 //		assertNotNull(actual);
 //		assertEntities(actual, updateEntity);
 //
-//		repository.delete(updateEntity);
+//		repository.remove(updateEntity);
 //		actual = repository.get(entityClass, id);
 //		assertNull(actual);
 //	}

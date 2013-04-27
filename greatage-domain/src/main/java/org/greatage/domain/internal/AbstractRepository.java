@@ -41,9 +41,9 @@ public abstract class AbstractRepository implements Repository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void saveOrUpdate(final E entity) {
+	void save(final E entity) {
 		if (entity.isNew()) {
-			save(entity);
+			insert(entity);
 		} else {
 			update(entity);
 		}

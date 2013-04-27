@@ -17,7 +17,7 @@
 package org.greatage.domain.hibernate;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
+import org.greatage.domain.Query;
 import org.greatage.domain.internal.AbstractQueryVisitor;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
@@ -59,7 +59,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 				Restrictions.conjunction() :
 				Restrictions.disjunction();
 
-		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
+		for (Query.Criteria<PK, E> child : criteria.getChildren()) {
 			visitCriteria(child);
 		}
 
@@ -139,12 +139,12 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 	}
 
 	@Override
-	protected void visitFetch(final Repository.Property fetch) {
+	protected void visitFetch(final Query.Property fetch) {
 		//todo: implement this
 	}
 
 	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+	protected void visitSort(final Query.Property property, final boolean ascending, final boolean ignoreCase) {
 		final Order order = ascending ?
 				Order.asc(property.getProperty()) :
 				Order.desc(property.getProperty());

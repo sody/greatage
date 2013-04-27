@@ -17,6 +17,7 @@
 package org.greatage.domain.hibernate;
 
 import org.greatage.domain.Entity;
+import org.greatage.domain.Query;
 import org.greatage.domain.internal.SessionManager;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
@@ -54,7 +55,7 @@ public class HibernateRepository extends AbstractRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void save(final E entity) {
+	void insert(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.save(entity);
@@ -75,7 +76,7 @@ public class HibernateRepository extends AbstractRepository {
 
 	@Override
 	public <PK extends Serializable, E extends Entity<PK>>
-	void saveOrUpdate(final E entity) {
+	void save(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.saveOrUpdate(entity);
@@ -85,7 +86,7 @@ public class HibernateRepository extends AbstractRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void delete(final E entity) {
+	void remove(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, Session>() {
 			public Object doInSession(final Session session) throws Exception {
 				session.delete(entity);

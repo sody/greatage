@@ -1,7 +1,7 @@
 package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
+import org.greatage.domain.Query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,12 +12,12 @@ import java.util.List;
  * @since 1.0
  */
 public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK>>
-		implements Repository.Query<PK, E> {
+		implements Query<PK, E> {
 
 	private final Class<E> entityClass;
 
-	private Repository.Criteria<PK, E> criteria;
-	private List<Repository.Property> fetches;
+	private Criteria<PK, E> criteria;
+	private List<Property> fetches;
 	private List<Sort> sorts;
 
 	private int start = 0;
@@ -27,7 +27,7 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 		this.entityClass = entityClass;
 	}
 
-	public Repository.Query<PK, E> filter(final Repository.Criteria<PK, E> criteria) {
+	public Query<PK, E> filter(final Criteria<PK, E> criteria) {
 		this.criteria = this.criteria != null ?
 				this.criteria.and(criteria) :
 				criteria;
@@ -35,16 +35,16 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 		return this;
 	}
 
-	public Repository.Query<PK, E> fetch(final Repository.Property property) {
+	public Query<PK, E> fetch(final Property property) {
 		if (fetches == null) {
-			fetches = new ArrayList<Repository.Property>();
+			fetches = new ArrayList<Property>();
 		}
 		fetches.add(property);
 
 		return this;
 	}
 
-	public Repository.Query<PK, E> sort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+	public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
 		if (sorts == null) {
 			sorts = new ArrayList<Sort>();
 		}
@@ -53,7 +53,7 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 		return this;
 	}
 
-	public Repository.Query<PK, E> paginate(final int start, final int count) {
+	public Query<PK, E> paginate(final int start, final int count) {
 		this.start = start;
 		this.count = count;
 
@@ -64,11 +64,11 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 		return entityClass;
 	}
 
-	public Repository.Criteria<PK, E> getCriteria() {
+	public Criteria<PK, E> getCriteria() {
 		return criteria;
 	}
 
-	public List<Repository.Property> getFetches() {
+	public List<Property> getFetches() {
 		return fetches;
 	}
 
@@ -85,17 +85,17 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 	}
 
 	class Sort {
-		private final Repository.Property property;
+		private final Property property;
 		private final boolean ascending;
 		private final boolean ignoreCase;
 
-		Sort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+		Sort(final Property property, final boolean ascending, final boolean ignoreCase) {
 			this.property = property;
 			this.ascending = ascending;
 			this.ignoreCase = ignoreCase;
 		}
 
-		public Repository.Property getProperty() {
+		public Property getProperty() {
 			return property;
 		}
 

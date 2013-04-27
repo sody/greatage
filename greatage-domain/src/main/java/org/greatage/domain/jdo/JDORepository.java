@@ -17,6 +17,7 @@
 package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
+import org.greatage.domain.Query;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.domain.internal.SessionManager;
@@ -58,7 +59,7 @@ public class JDORepository extends AbstractRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void save(final E entity) {
+	void insert(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.makePersistent(entity);
@@ -78,7 +79,7 @@ public class JDORepository extends AbstractRepository {
 	}
 
 	public <PK extends Serializable, E extends Entity<PK>>
-	void delete(final E entity) {
+	void remove(final E entity) {
 		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
 			public Object doInSession(final PersistenceManager session) throws Exception {
 				session.deletePersistent(entity);

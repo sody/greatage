@@ -17,7 +17,6 @@
 package org.greatage.domain.jpa;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
 import org.greatage.domain.internal.AbstractQueryVisitor;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
@@ -83,12 +82,12 @@ public class JPAQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 	}
 
 	@Override
-	protected void visitFetch(final Repository.Property fetch) {
+	protected void visitFetch(final org.greatage.domain.Query.Property fetch) {
 		//todo: implement this
 	}
 
 	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
+	protected void visitSort(final org.greatage.domain.Query.Property property, final boolean ascending, final boolean ignoreCase) {
 		//todo: implement this
 	}
 

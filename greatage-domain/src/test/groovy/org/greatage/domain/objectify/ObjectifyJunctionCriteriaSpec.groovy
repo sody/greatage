@@ -1,6 +1,7 @@
 package org.greatage.domain.objectify
 
 import org.example.model.Company
+import org.greatage.domain.Query
 import spock.lang.Shared
 import spock.lang.Specification
 
@@ -77,7 +78,7 @@ class ObjectifyJunctionCriteriaSpec extends Specification {
 		return Date.parse("yyyy-MM-dd", input)
 	}
 
-	protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Repository.Criteria<Long, E> criteria) {
+	protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Query.Criteria<Long, E> criteria) {
 		return toIds(repository.query(entityClass).filter(criteria).list());
 	}
 
