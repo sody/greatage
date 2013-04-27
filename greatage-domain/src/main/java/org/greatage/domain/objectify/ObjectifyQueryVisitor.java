@@ -22,18 +22,18 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
+    protected void visitJunction(final JunctionCriteria criteria) {
         if (criteria.getOperator() == JunctionCriteria.Operator.OR) {
             throw new UnsupportedOperationException("OR operation is not supported by appengine queries");
         }
 
-        for (org.greatage.domain.Query.Criteria<PK, E> child : criteria.getChildren()) {
+        for (org.greatage.domain.Query.Criteria child : criteria.getChildren()) {
             visitCriteria(child);
         }
     }
 
     @Override
-    protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " =";
 
@@ -50,7 +50,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitNotEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " !=";
 
@@ -66,7 +66,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
+    protected void visitGreaterThan(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " >";
 
@@ -82,7 +82,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " >=";
 
@@ -98,7 +98,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLessThan(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " <";
 
@@ -115,7 +115,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLessOrEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " <=";
 
@@ -132,7 +132,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitIn(final PropertyCriteria<PK, E> criteria) {
+    protected void visitIn(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String criterion = propertyName + " in";
         final List<?> values = (List<?>) criteria.getValue();
@@ -164,7 +164,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitLike(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLike(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
@@ -196,7 +196,7 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
         }
     }
 
-    private String propertyName(final PropertyCriteria<PK, E> criteria) {
+    private String propertyName(final PropertyCriteria criteria) {
         return criteria.getPath() != null ?
                 criteria.getPath() + "." + criteria.getProperty() :
                 criteria.getProperty();

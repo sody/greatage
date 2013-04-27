@@ -16,15 +16,11 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.Entity;
-
-import java.io.Serializable;
-
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
+public class PropertyCriteria extends AllCriteria {
     private final String path;
     private final String property;
     private final Operator operator;

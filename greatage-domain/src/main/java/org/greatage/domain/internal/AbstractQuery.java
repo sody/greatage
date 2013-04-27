@@ -17,23 +17,23 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 
     private final Class<E> entityClass;
 
-    private Criteria<PK, E> criteria;
+    private Criteria criteria;
     private List<Property> fetches;
     private List<Sort> sorts;
 
     private int start = 0;
     private int count = -1;
 
-    private JunctionCriteria<PK, E> junction;
-    private final Stack<JunctionCriteria<PK, E>> junctionStack = new Stack<JunctionCriteria<PK, E>>();
+    private JunctionCriteria junction;
+    private final Stack<JunctionCriteria> junctionStack = new Stack<JunctionCriteria>();
 
     protected AbstractQuery(final Class<E> entityClass) {
         this.entityClass = entityClass;
 
-        criteria = junction = new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND);
+        criteria = junction = new JunctionCriteria(JunctionCriteria.Operator.AND);
     }
 
-    public Query<PK, E> filter(final Criteria<PK, E> criteria) {
+    public Query<PK, E> filter(final Criteria criteria) {
         junction.add(criteria);
         return this;
     }
@@ -44,22 +44,22 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
     }
 
     public Query<PK, E> and() {
+        junctionStack.push(junction);
         if (junction.getOperator() != JunctionCriteria.Operator.AND) {
-            final JunctionCriteria<PK, E> newJunction = new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND);
+            final JunctionCriteria newJunction = new JunctionCriteria(JunctionCriteria.Operator.AND);
             junction.add(newJunction);
             junction = newJunction;
         }
-        junctionStack.push(junction);
         return this;
     }
 
     public Query<PK, E> or() {
+        junctionStack.push(junction);
         if (junction.getOperator() != JunctionCriteria.Operator.OR) {
-            final JunctionCriteria<PK, E> newJunction = new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR);
+            final JunctionCriteria newJunction = new JunctionCriteria(JunctionCriteria.Operator.OR);
             junction.add(newJunction);
             junction = newJunction;
         }
-        junctionStack.push(junction);
         return this;
     }
 
@@ -132,7 +132,7 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
         return entityClass;
     }
 
-    public Criteria<PK, E> getCriteria() {
+    public Criteria getCriteria() {
         return criteria;
     }
 

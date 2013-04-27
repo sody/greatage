@@ -16,58 +16,55 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.Entity;
 import org.greatage.domain.Query;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
-    private final List<Query.Criteria<PK, E>> children;
+public class JunctionCriteria extends AllCriteria {
+    private final List<Query.Criteria> children;
     private final Operator operator;
 
     public JunctionCriteria(final Operator operator) {
-        this(operator, new ArrayList<Query.Criteria<PK, E>>());
+        this(operator, new ArrayList<Query.Criteria>());
     }
 
-    public JunctionCriteria(final Operator operator, final List<Query.Criteria<PK, E>> children) {
+    public JunctionCriteria(final Operator operator, final List<Query.Criteria> children) {
         this.operator = operator;
         this.children = children;
     }
 
-    public Query.Criteria<PK, E> add(final Query.Criteria<PK, E> criteria) {
+    public Query.Criteria add(final Query.Criteria criteria) {
         children.add(criteria);
         return this;
     }
 
-    public Query.Criteria<PK, E> add(final Collection<Query.Criteria<PK, E>> criteria) {
+    public Query.Criteria add(final List<Query.Criteria> criteria) {
         children.addAll(criteria);
         return this;
     }
 
     @Override
-    public Query.Criteria<PK, E> and(final Query.Criteria<PK, E> criteria) {
+    public Query.Criteria and(final Query.Criteria criteria) {
         if (operator == Operator.AND) {
             return add(criteria);
         }
-        return new JunctionCriteria<PK, E>(Operator.AND).add(criteria);
+        return new JunctionCriteria(Operator.AND).add(criteria);
     }
 
     @Override
-    public Query.Criteria<PK, E> or(final Query.Criteria<PK, E> criteria) {
+    public Query.Criteria or(final Query.Criteria criteria) {
         if (operator == Operator.OR) {
             return add(criteria);
         }
-        return new JunctionCriteria<PK, E>(Operator.OR).add(criteria);
+        return new JunctionCriteria(Operator.OR).add(criteria);
     }
 
-    public List<Query.Criteria<PK, E>> getChildren() {
+    public List<Query.Criteria> getChildren() {
         return children;
     }
 
@@ -78,7 +75,7 @@ public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> ext
     @Override
     public String toString() {
         final StringBuilder builder = new StringBuilder("(");
-        for (Query.Criteria<PK, E> child : children) {
+        for (Query.Criteria child : children) {
             if (builder.length() > 1) {
                 builder.append(operator == Operator.AND ? " and " : " or ");
             }

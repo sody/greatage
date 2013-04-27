@@ -79,7 +79,7 @@ class ObjectifyJunctionCriteriaSpec extends Specification {
         return Date.parse("yyyy-MM-dd", input)
     }
 
-    protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Query.Criteria<Long, E> criteria) {
+    protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Query.Criteria criteria) {
         return toIds(repository.query(entityClass).filter(criteria).list());
     }
 

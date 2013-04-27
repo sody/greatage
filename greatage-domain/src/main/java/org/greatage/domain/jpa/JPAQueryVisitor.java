@@ -37,47 +37,47 @@ public class JPAQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
+    protected void visitJunction(final JunctionCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitEqual(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitNotEqual(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
+    protected void visitGreaterThan(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLessThan(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLessOrEqual(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitIn(final PropertyCriteria<PK, E> criteria) {
+    protected void visitIn(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
     @Override
-    protected void visitLike(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLike(final PropertyCriteria criteria) {
         //todo: implement this
     }
 

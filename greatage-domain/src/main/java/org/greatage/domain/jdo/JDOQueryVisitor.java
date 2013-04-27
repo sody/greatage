@@ -51,7 +51,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    public void visitCriteria(final org.greatage.domain.Query.Criteria<PK, E> criteria) {
+    public void visitCriteria(final org.greatage.domain.Query.Criteria criteria) {
         level++;
         super.visitCriteria(criteria);
         level--;
@@ -62,11 +62,11 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
+    protected void visitJunction(final JunctionCriteria criteria) {
         final List<String> parent = this.junction;
         junction = new ArrayList<String>();
 
-        for (org.greatage.domain.Query.Criteria<PK, E> child : criteria.getChildren()) {
+        for (org.greatage.domain.Query.Criteria child : criteria.getChildren()) {
             visitCriteria(child);
         }
 
@@ -79,7 +79,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String parameterName = parameterName(criteria);
         final String criterion = propertyName + " == :" + parameterName;
@@ -89,7 +89,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitNotEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String parameterName = parameterName(criteria);
         final String criterion = propertyName + " != :" + parameterName;
@@ -99,7 +99,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
+    protected void visitGreaterThan(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
 
         if (criteria.getValue() != null) {
@@ -116,7 +116,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
 
         if (criteria.getValue() != null) {
@@ -133,7 +133,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLessThan(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
 
         if (criteria.getValue() != null) {
@@ -151,7 +151,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLessOrEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
 
         if (criteria.getValue() != null) {
@@ -168,7 +168,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitIn(final PropertyCriteria<PK, E> criteria) {
+    protected void visitIn(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final List<?> value = (List<?>) criteria.getValue();
 
@@ -196,7 +196,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitLike(final PropertyCriteria<PK, E> criteria) {
+    protected void visitLike(final PropertyCriteria criteria) {
         //todo: implement this
     }
 
@@ -244,13 +244,13 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         return criterion.toString();
     }
 
-    private String propertyName(final PropertyCriteria<PK, E> criteria) {
+    private String propertyName(final PropertyCriteria criteria) {
         return criteria.getPath() != null ?
                 criteria.getPath() + "." + criteria.getProperty() :
                 criteria.getProperty();
     }
 
-    private String parameterName(final PropertyCriteria<PK, E> criteria) {
+    private String parameterName(final PropertyCriteria criteria) {
         return names.allocate(criteria.getProperty());
     }
 }

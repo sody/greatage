@@ -16,7 +16,6 @@
 
 package org.example.model;
 
-import org.greatage.domain.Entity;
 import org.greatage.domain.EntityMapper;
 import org.greatage.domain.PropertyMapper;
 
@@ -24,9 +23,9 @@ import org.greatage.domain.PropertyMapper;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
-    public final PropertyMapper<Long, E, String> name$ = property("name");
-    public final CompanyMapper<E> company$ = new CompanyMapper<E>("company");
+public class DepartmentMapper extends EntityMapper<Long, Department> {
+    public final PropertyMapper<String> name$ = property("name");
+    public final CompanyMapper company$ = new CompanyMapper("company");
 
     DepartmentMapper(final String path) {
         super(path);

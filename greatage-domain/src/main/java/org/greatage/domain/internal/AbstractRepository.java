@@ -19,7 +19,6 @@ package org.greatage.domain.internal;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Repository;
 import org.greatage.util.DescriptionBuilder;
-import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -33,11 +32,6 @@ public abstract class AbstractRepository implements Repository {
 
     protected AbstractRepository(final Map<Class, Class> entityMapping) {
         this.entityMapping = entityMapping;
-    }
-
-    public <PK extends Serializable, E extends Entity<PK>>
-    E create(final Class<E> entityClass) {
-        return ReflectionUtils.newInstance(getImplementation(entityClass));
     }
 
     public <PK extends Serializable, E extends Entity<PK>>

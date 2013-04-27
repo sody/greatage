@@ -18,7 +18,6 @@ package org.greatage.domain;
 
 import org.greatage.domain.internal.JunctionCriteria;
 
-import java.io.Serializable;
 import java.util.Arrays;
 
 /**
@@ -27,18 +26,15 @@ import java.util.Arrays;
  */
 public class RootMapper {
 
-    public static <PK extends Serializable, E extends Entity<PK>>
-    Query.Criteria<PK, E> and(final Query.Criteria<PK, E>... criteria) {
-        return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, Arrays.asList(criteria));
+    public static Query.Criteria and(final Query.Criteria... criteria) {
+        return new JunctionCriteria(JunctionCriteria.Operator.AND, Arrays.asList(criteria));
     }
 
-    public static <PK extends Serializable, E extends Entity<PK>>
-    Query.Criteria<PK, E> or(final Query.Criteria<PK, E>... criteria) {
-        return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR, Arrays.asList(criteria));
+    public static Query.Criteria or(final Query.Criteria... criteria) {
+        return new JunctionCriteria(JunctionCriteria.Operator.OR, Arrays.asList(criteria));
     }
 
-    public static <PK extends Serializable, E extends Entity<PK>>
-    Query.Criteria<PK, E> not(final Query.Criteria<PK, E> criteria) {
+    public static Query.Criteria not(final Query.Criteria criteria) {
         return criteria.not();
     }
 }

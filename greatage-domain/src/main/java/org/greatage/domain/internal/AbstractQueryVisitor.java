@@ -44,15 +44,15 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
         visitPagination(query.getStart(), query.getCount());
     }
 
-    protected void visitCriteria(final Query.Criteria<PK, E> criteria) {
+    protected void visitCriteria(final Query.Criteria criteria) {
         if (criteria instanceof JunctionCriteria) {
-            visitJunction((JunctionCriteria<PK, E>) criteria);
+            visitJunction((JunctionCriteria) criteria);
         } else if (criteria instanceof PropertyCriteria) {
-            visitProperty((PropertyCriteria<PK, E>) criteria);
+            visitProperty((PropertyCriteria) criteria);
         }
     }
 
-    protected void visitProperty(final PropertyCriteria<PK, E> criteria) {
+    protected void visitProperty(final PropertyCriteria criteria) {
         switch (criteria.getOperator()) {
             case EQUAL:
                 visitEqual(criteria);
@@ -81,23 +81,23 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
         }
     }
 
-    protected abstract void visitJunction(JunctionCriteria<PK, E> criteria);
+    protected abstract void visitJunction(JunctionCriteria criteria);
 
-    protected abstract void visitEqual(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitEqual(PropertyCriteria criteria);
 
-    protected abstract void visitNotEqual(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitNotEqual(PropertyCriteria criteria);
 
-    protected abstract void visitGreaterThan(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitGreaterThan(PropertyCriteria criteria);
 
-    protected abstract void visitGreaterOrEqual(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitGreaterOrEqual(PropertyCriteria criteria);
 
-    protected abstract void visitLessThan(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitLessThan(PropertyCriteria criteria);
 
-    protected abstract void visitLessOrEqual(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitLessOrEqual(PropertyCriteria criteria);
 
-    protected abstract void visitIn(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitIn(PropertyCriteria criteria);
 
-    protected abstract void visitLike(PropertyCriteria<PK, E> criteria);
+    protected abstract void visitLike(PropertyCriteria criteria);
 
     protected abstract void visitFetch(Query.Property fetch);
 

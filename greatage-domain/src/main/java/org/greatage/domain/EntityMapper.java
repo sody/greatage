@@ -25,7 +25,7 @@ import java.io.Serializable;
  * @since 1.0
  */
 public class EntityMapper<PK extends Serializable, E extends Entity<PK>> {
-    public final PropertyMapper<PK, E, PK> id$;
+    public final PropertyMapper<PK> id$;
 
     private static final String DEFAULT_ID_PROPERTY = "id";
     private final String path;
@@ -40,11 +40,15 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> {
         id$ = property(idProperty);
     }
 
-    public AllCriteria<PK, E> all() {
-        return new AllCriteria<PK, E>();
+    public AllCriteria all() {
+        return new AllCriteria();
     }
 
-    protected <V> PropertyMapper<PK, E, V> property(final String property) {
-        return new PropertyMapper<PK, E, V>(path, property);
+    public Query.Criteria is(final Query.Criteria criteria) {
+        return null;
+    }
+
+    protected <V> PropertyMapper<V> property(final String property) {
+        return new PropertyMapper<V>(path, property);
     }
 }

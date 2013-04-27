@@ -25,7 +25,7 @@ import java.util.List;
  */
 public interface Query<PK extends Serializable, E extends Entity<PK>> {
 
-    Query<PK, E> filter(Criteria<PK, E> criteria);
+    Query<PK, E> filter(Criteria criteria);
 
     Query<PK, E> filter(String filter, Object value);
 
@@ -76,14 +76,14 @@ public interface Query<PK extends Serializable, E extends Entity<PK>> {
         String getProperty();
     }
 
-    interface Criteria<PK extends Serializable, E extends Entity<PK>> {
+    interface Criteria {
 
         @Deprecated
-        Criteria<PK, E> and(Criteria<PK, E> criteria);
+        Criteria and(Criteria criteria);
 
         @Deprecated
-        Criteria<PK, E> or(Criteria<PK, E> criteria);
+        Criteria or(Criteria criteria);
 
-        Criteria<PK, E> not();
+        Criteria not();
     }
 }

@@ -23,6 +23,6 @@ import org.greatage.domain.RootMapper;
  * @since 1.0
  */
 public abstract class $ extends RootMapper {
-    public static final CompanyMapper<Company> company$ = new CompanyMapper<Company>(null);
-    public static final DepartmentMapper<Department> department$ = new DepartmentMapper<Department>(null);
+    public static final CompanyMapper company$ = new CompanyMapper(null);
+    public static final DepartmentMapper department$ = new DepartmentMapper(null);
 }
