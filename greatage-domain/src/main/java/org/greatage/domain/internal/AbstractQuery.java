@@ -6,6 +6,7 @@ import org.greatage.domain.Query;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * @author Ivan Khalopik
@@ -23,15 +24,17 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
     private int start = 0;
     private int count = -1;
 
+    private JunctionCriteria<PK, E> junction;
+    private final Stack<JunctionCriteria<PK, E>> junctionStack = new Stack<JunctionCriteria<PK, E>>();
+
     protected AbstractQuery(final Class<E> entityClass) {
         this.entityClass = entityClass;
+
+        criteria = junction = new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND);
     }
 
     public Query<PK, E> filter(final Criteria<PK, E> criteria) {
-        this.criteria = this.criteria != null ?
-                this.criteria.and(criteria) :
-                criteria;
-
+        junction.add(criteria);
         return this;
     }
 
@@ -41,18 +44,28 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
     }
 
     public Query<PK, E> and() {
-        //TODO: implement this
-        throw new UnsupportedOperationException();
+        if (junction.getOperator() != JunctionCriteria.Operator.AND) {
+            final JunctionCriteria<PK, E> newJunction = new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND);
+            junction.add(newJunction);
+            junction = newJunction;
+        }
+        junctionStack.push(junction);
+        return this;
     }
 
     public Query<PK, E> or() {
-        //TODO: implement this
-        throw new UnsupportedOperationException();
+        if (junction.getOperator() != JunctionCriteria.Operator.OR) {
+            final JunctionCriteria<PK, E> newJunction = new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR);
+            junction.add(newJunction);
+            junction = newJunction;
+        }
+        junctionStack.push(junction);
+        return this;
     }
 
     public Query<PK, E> end() {
-        //TODO: implement this
-        throw new UnsupportedOperationException();
+        junction = junctionStack.pop();
+        return this;
     }
 
     public Query<PK, E> fetch(final Property property) {

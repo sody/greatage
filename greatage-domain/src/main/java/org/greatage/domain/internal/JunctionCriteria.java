@@ -20,6 +20,8 @@ import org.greatage.domain.Entity;
 import org.greatage.domain.Query;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -27,55 +29,67 @@ import java.util.List;
  * @since 1.0
  */
 public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
-	private final List<Query.Criteria<PK, E>> children;
-	private final Operator operator;
+    private final List<Query.Criteria<PK, E>> children;
+    private final Operator operator;
 
-	public JunctionCriteria(final Operator operator, final List<Query.Criteria<PK, E>> children) {
-		this.operator = operator;
-		this.children = children;
-	}
+    public JunctionCriteria(final Operator operator) {
+        this(operator, new ArrayList<Query.Criteria<PK, E>>());
+    }
 
-	@Override
-	public Query.Criteria<PK, E> and(final Query.Criteria<PK, E> criteria) {
-		if (operator == Operator.AND) {
-			children.add(criteria);
-			return this;
-		}
-		return super.and(criteria);
-	}
+    public JunctionCriteria(final Operator operator, final List<Query.Criteria<PK, E>> children) {
+        this.operator = operator;
+        this.children = children;
+    }
 
-	@Override
-	public Query.Criteria<PK, E> or(final Query.Criteria<PK, E> criteria) {
-		if (operator == Operator.OR) {
-			children.add(criteria);
-			return this;
-		}
-		return super.or(criteria);
-	}
+    public Query.Criteria<PK, E> add(final Query.Criteria<PK, E> criteria) {
+        children.add(criteria);
+        return this;
+    }
 
-	public List<Query.Criteria<PK, E>> getChildren() {
-		return children;
-	}
+    public Query.Criteria<PK, E> add(final Collection<Query.Criteria<PK, E>> criteria) {
+        children.addAll(criteria);
+        return this;
+    }
 
-	public Operator getOperator() {
-		return operator;
-	}
+    @Override
+    public Query.Criteria<PK, E> and(final Query.Criteria<PK, E> criteria) {
+        if (operator == Operator.AND) {
+            return add(criteria);
+        }
+        return new JunctionCriteria<PK, E>(Operator.AND).add(criteria);
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder("(");
-		for (Query.Criteria<PK, E> child : children) {
-			if (builder.length() > 1) {
-				builder.append(operator == Operator.AND ? " and " : " or ");
-			}
-			builder.append(child);
-		}
-		builder.append(")");
-		return isNegative() ? "not " + builder.toString() : builder.toString();
-	}
+    @Override
+    public Query.Criteria<PK, E> or(final Query.Criteria<PK, E> criteria) {
+        if (operator == Operator.OR) {
+            return add(criteria);
+        }
+        return new JunctionCriteria<PK, E>(Operator.OR).add(criteria);
+    }
 
-	public enum Operator {
-		AND,
-		OR
-	}
+    public List<Query.Criteria<PK, E>> getChildren() {
+        return children;
+    }
+
+    public Operator getOperator() {
+        return operator;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder("(");
+        for (Query.Criteria<PK, E> child : children) {
+            if (builder.length() > 1) {
+                builder.append(operator == Operator.AND ? " and " : " or ");
+            }
+            builder.append(child);
+        }
+        builder.append(")");
+        return isNegative() ? "not " + builder.toString() : builder.toString();
+    }
+
+    public enum Operator {
+        AND,
+        OR
+    }
 }
