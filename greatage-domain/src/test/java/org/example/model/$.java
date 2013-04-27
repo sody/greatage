@@ -16,11 +16,13 @@
 
 package org.example.model;
 
+import org.greatage.domain.RootMapper;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class Entities {
+public abstract class $ extends RootMapper {
     public static final CompanyMapper<Company> company$ = new CompanyMapper<Company>(null);
     public static final DepartmentMapper<Department> department$ = new DepartmentMapper<Department>(null);
 }

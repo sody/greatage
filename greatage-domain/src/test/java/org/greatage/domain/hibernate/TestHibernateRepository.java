@@ -26,8 +26,8 @@
 //
 //import java.util.List;
 //
-//import static org.example.hibernate.Entities.company;
-//import static org.example.hibernate.Entities.department;
+//import static org.example.hibernate.$.company;
+//import static org.example.hibernate.$.department;
 //
 ///**
 // * @author Ivan Khalopik

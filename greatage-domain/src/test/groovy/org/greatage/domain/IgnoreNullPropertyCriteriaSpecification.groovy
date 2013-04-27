@@ -4,7 +4,7 @@ import org.example.model.Company
 import spock.lang.Shared
 import spock.lang.Specification
 
-import static org.example.model.Entities.company$
+import static org.example.model.$.company$
 
 /**
  * +-------------------------------+
