@@ -8,11 +8,11 @@ import org.greatage.domain.Entity;
  */
 public interface Department extends Entity<Long> {
 
-	String getName();
+    String getName();
 
-	void setName(String name);
+    void setName(String name);
 
-	Company getCompany();
+    Company getCompany();
 
-	void setCompany(Company company);
+    void setCompany(Company company);
 }

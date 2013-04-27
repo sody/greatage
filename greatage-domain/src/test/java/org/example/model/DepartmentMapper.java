@@ -25,10 +25,10 @@ import org.greatage.domain.PropertyMapper;
  * @since 1.0
  */
 public class DepartmentMapper<E extends Entity<Long>> extends EntityMapper<Long, E> {
-	public final PropertyMapper<Long, E, String> name$ = property("name");
-	public final CompanyMapper<E> company$ = new CompanyMapper<E>("company");
+    public final PropertyMapper<Long, E, String> name$ = property("name");
+    public final CompanyMapper<E> company$ = new CompanyMapper<E>("company");
 
-	DepartmentMapper(final String path) {
-		super(path);
-	}
+    DepartmentMapper(final String path) {
+        super(path);
+    }
 }

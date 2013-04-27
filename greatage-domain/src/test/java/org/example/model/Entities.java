@@ -21,6 +21,6 @@ package org.example.model;
  * @since 1.0
  */
 public abstract class Entities {
-	public static final CompanyMapper<Company> company$ = new CompanyMapper<Company>(null);
-	public static final DepartmentMapper<Department> department$ = new DepartmentMapper<Department>(null);
+    public static final CompanyMapper<Company> company$ = new CompanyMapper<Company>(null);
+    public static final DepartmentMapper<Department> department$ = new DepartmentMapper<Department>(null);
 }

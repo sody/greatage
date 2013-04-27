@@ -14,40 +14,40 @@ import java.util.Date;
 @Entity(name = "company")
 public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	private String name;
-	private Date registeredAt;
+    private String name;
+    private Date registeredAt;
 
-	public CompanyImpl() {
-	}
+    public CompanyImpl() {
+    }
 
-	public CompanyImpl(final Long id) {
-		this.id = id;
-	}
+    public CompanyImpl(final Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(final Long id) {
-		this.id = id;
-	}
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(final String name) {
-		this.name = name;
-	}
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-	public Date getRegisteredAt() {
-		return registeredAt;
-	}
+    public Date getRegisteredAt() {
+        return registeredAt;
+    }
 
-	public void setRegisteredAt(final Date registeredAt) {
-		this.registeredAt = registeredAt;
-	}
+    public void setRegisteredAt(final Date registeredAt) {
+        this.registeredAt = registeredAt;
+    }
 }

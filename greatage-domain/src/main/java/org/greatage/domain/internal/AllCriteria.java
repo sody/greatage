@@ -28,35 +28,35 @@ import java.util.List;
  * @since 1.0
  */
 public class AllCriteria<PK extends Serializable, E extends Entity<PK>>
-		implements Query.Criteria<PK, E> {
-	private boolean negative;
+        implements Query.Criteria<PK, E> {
+    private boolean negative;
 
-	public Query.Criteria<PK, E> and(final Query.Criteria<PK, E> criteria) {
-		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, junction(criteria));
-	}
+    public Query.Criteria<PK, E> and(final Query.Criteria<PK, E> criteria) {
+        return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, junction(criteria));
+    }
 
-	public Query.Criteria<PK, E> or(final Query.Criteria<PK, E> criteria) {
-		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR, junction(criteria));
-	}
+    public Query.Criteria<PK, E> or(final Query.Criteria<PK, E> criteria) {
+        return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR, junction(criteria));
+    }
 
-	public Query.Criteria<PK, E> not() {
-		negative = !negative;
-		return this;
-	}
+    public Query.Criteria<PK, E> not() {
+        negative = !negative;
+        return this;
+    }
 
-	public boolean isNegative() {
-		return negative;
-	}
+    public boolean isNegative() {
+        return negative;
+    }
 
-	private List<Query.Criteria<PK, E>> junction(final Query.Criteria<PK, E> criteria) {
-		final List<Query.Criteria<PK, E>> group = new ArrayList<Query.Criteria<PK, E>>();
-		group.add(this);
-		group.add(criteria);
-		return group;
-	}
+    private List<Query.Criteria<PK, E>> junction(final Query.Criteria<PK, E> criteria) {
+        final List<Query.Criteria<PK, E>> group = new ArrayList<Query.Criteria<PK, E>>();
+        group.add(this);
+        group.add(criteria);
+        return group;
+    }
 
-	@Override
-	public String toString() {
-		return negative ? "not 1=1" : "1=1";
-	}
+    @Override
+    public String toString() {
+        return negative ? "not 1=1" : "1=1";
+    }
 }

@@ -34,128 +34,128 @@ import java.util.Map;
  * @since 1.0
  */
 public class JDORepository extends AbstractRepository {
-	private static final String COUNT_RESULT = "count(id)";
+    private static final String COUNT_RESULT = "count(id)";
 
-	private final SessionManager<PersistenceManager> sessionManager;
+    private final SessionManager<PersistenceManager> sessionManager;
 
-	public JDORepository(final SessionManager<PersistenceManager> sessionManager,
-						 final Map<Class, Class> entityMapping) {
-		super(entityMapping);
-		this.sessionManager = sessionManager;
-	}
+    public JDORepository(final SessionManager<PersistenceManager> sessionManager,
+                         final Map<Class, Class> entityMapping) {
+        super(entityMapping);
+        this.sessionManager = sessionManager;
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	E get(final Class<E> entityClass, final PK pk) {
-		return sessionManager.execute(new SessionManager.Callback<E, PersistenceManager>() {
-			public E doInSession(final PersistenceManager session) throws Exception {
-				try {
-					return session.getObjectById(getImplementation(entityClass), pk);
-				} catch (Exception e) {
-					// todo: needs to process only needed exceptions
-					return null;
-				}
-			}
-		});
-	}
+    public <PK extends Serializable, E extends Entity<PK>>
+    E get(final Class<E> entityClass, final PK pk) {
+        return sessionManager.execute(new SessionManager.Callback<E, PersistenceManager>() {
+            public E doInSession(final PersistenceManager session) throws Exception {
+                try {
+                    return session.getObjectById(getImplementation(entityClass), pk);
+                } catch (Exception e) {
+                    // todo: needs to process only needed exceptions
+                    return null;
+                }
+            }
+        });
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	void insert(final E entity) {
-		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
-			public Object doInSession(final PersistenceManager session) throws Exception {
-				session.makePersistent(entity);
-				return null;
-			}
-		});
-	}
+    public <PK extends Serializable, E extends Entity<PK>>
+    void insert(final E entity) {
+        sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
+            public Object doInSession(final PersistenceManager session) throws Exception {
+                session.makePersistent(entity);
+                return null;
+            }
+        });
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	void update(final E entity) {
-		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
-			public Object doInSession(final PersistenceManager session) throws Exception {
-				session.refresh(entity);
-				return null;
-			}
-		});
-	}
+    public <PK extends Serializable, E extends Entity<PK>>
+    void update(final E entity) {
+        sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
+            public Object doInSession(final PersistenceManager session) throws Exception {
+                session.refresh(entity);
+                return null;
+            }
+        });
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	void remove(final E entity) {
-		sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
-			public Object doInSession(final PersistenceManager session) throws Exception {
-				session.deletePersistent(entity);
-				return null;
-			}
-		});
-	}
+    public <PK extends Serializable, E extends Entity<PK>>
+    void remove(final E entity) {
+        sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
+            public Object doInSession(final PersistenceManager session) throws Exception {
+                session.deletePersistent(entity);
+                return null;
+            }
+        });
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>> Query<PK, E> query(final Class<E> entityClass) {
-		return new JDOQuery<PK, E>(entityClass);
-	}
+    public <PK extends Serializable, E extends Entity<PK>> Query<PK, E> query(final Class<E> entityClass) {
+        return new JDOQuery<PK, E>(entityClass);
+    }
 
-	private <T, PK extends Serializable, E extends Entity<PK>>
-	T execute(final JDOQuery<PK, E> query, final Callback<T> callback) {
-		return sessionManager.execute(new SessionManager.Callback<T, PersistenceManager>() {
-			public T doInSession(final PersistenceManager session) throws Exception {
-				final Extent<? extends Entity> extent = session.getExtent(getImplementation(query.getEntityClass()), true);
-				final javax.jdo.Query signedQuery = session.newQuery(extent);
+    private <T, PK extends Serializable, E extends Entity<PK>>
+    T execute(final JDOQuery<PK, E> query, final Callback<T> callback) {
+        return sessionManager.execute(new SessionManager.Callback<T, PersistenceManager>() {
+            public T doInSession(final PersistenceManager session) throws Exception {
+                final Extent<? extends Entity> extent = session.getExtent(getImplementation(query.getEntityClass()), true);
+                final javax.jdo.Query signedQuery = session.newQuery(extent);
 
-				final JDOQueryVisitor<PK, E> visitor = new JDOQueryVisitor<PK, E>(signedQuery);
-				visitor.visitQuery(query);
+                final JDOQueryVisitor<PK, E> visitor = new JDOQueryVisitor<PK, E>(signedQuery);
+                visitor.visitQuery(query);
 
-				return callback.doInQuery(signedQuery, visitor.getParameters());
-			}
-		});
-	}
+                return callback.doInQuery(signedQuery, visitor.getParameters());
+            }
+        });
+    }
 
-	private static interface Callback<T> {
+    private static interface Callback<T> {
 
-		T doInQuery(javax.jdo.Query query, Map parameters);
-	}
+        T doInQuery(javax.jdo.Query query, Map parameters);
+    }
 
-	class JDOQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
+    class JDOQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
 
-		private JDOQuery(final Class<E> entityClass) {
-			super(entityClass);
-		}
+        private JDOQuery(final Class<E> entityClass) {
+            super(entityClass);
+        }
 
-		public long count() {
-			return execute(this, new Callback<Number>() {
-				public Number doInQuery(final javax.jdo.Query query, final Map parameters) {
-					query.setResult(COUNT_RESULT);
-					query.setUnique(true);
-					return (Number) query.executeWithMap(parameters);
-				}
-			}).longValue();
-		}
+        public long count() {
+            return execute(this, new Callback<Number>() {
+                public Number doInQuery(final javax.jdo.Query query, final Map parameters) {
+                    query.setResult(COUNT_RESULT);
+                    query.setUnique(true);
+                    return (Number) query.executeWithMap(parameters);
+                }
+            }).longValue();
+        }
 
-		public List<E> list() {
-			return execute(this, new Callback<List<E>>() {
-				@SuppressWarnings({"unchecked"})
-				public List<E> doInQuery(final javax.jdo.Query query, final Map parameters) {
-					return (List<E>) query.executeWithMap(parameters);
-				}
-			});
-		}
+        public List<E> list() {
+            return execute(this, new Callback<List<E>>() {
+                @SuppressWarnings({"unchecked"})
+                public List<E> doInQuery(final javax.jdo.Query query, final Map parameters) {
+                    return (List<E>) query.executeWithMap(parameters);
+                }
+            });
+        }
 
-		public E unique() {
-			return execute(this, new Callback<E>() {
-				@SuppressWarnings({"unchecked"})
-				public E doInQuery(final javax.jdo.Query query, final Map parameters) {
-					query.setUnique(true);
-					return (E) query.executeWithMap(parameters);
-				}
-			});
-		}
+        public E unique() {
+            return execute(this, new Callback<E>() {
+                @SuppressWarnings({"unchecked"})
+                public E doInQuery(final javax.jdo.Query query, final Map parameters) {
+                    query.setUnique(true);
+                    return (E) query.executeWithMap(parameters);
+                }
+            });
+        }
 
-		public List<PK> keys() {
-			throw new UnsupportedOperationException();
-		}
-	}
+        public List<PK> keys() {
+            throw new UnsupportedOperationException();
+        }
+    }
 
-	@Override
-	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("sessionManager", sessionManager);
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+        builder.append("sessionManager", sessionManager);
+        return builder.toString();
+    }
 }

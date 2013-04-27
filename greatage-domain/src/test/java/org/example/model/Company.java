@@ -10,12 +10,12 @@ import java.util.Date;
  */
 public interface Company extends Entity<Long> {
 
-	String getName();
+    String getName();
 
-	void setName(String name);
+    void setName(String name);
 
-	Date getRegisteredAt();
+    Date getRegisteredAt();
 
-	void setRegisteredAt(Date registeredAt);
+    void setRegisteredAt(Date registeredAt);
 
 }

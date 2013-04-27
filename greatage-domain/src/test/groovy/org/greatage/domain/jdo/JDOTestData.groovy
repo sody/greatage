@@ -4,12 +4,13 @@ import org.dbunit.JdbcDatabaseTester
 import org.dbunit.PropertiesBasedJdbcDatabaseTester
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder
 import org.dbunit.operation.DatabaseOperation
+import org.example.jdo.CompanyImpl
+import org.example.jdo.DepartmentImpl
 import org.example.model.Company
 import org.example.model.Department
 import org.greatage.domain.Repository
+
 import javax.jdo.JDOHelper
-import org.example.jdo.CompanyImpl
-import org.example.jdo.DepartmentImpl
 
 /**
  * @author Ivan Khalopik
@@ -17,38 +18,38 @@ import org.example.jdo.DepartmentImpl
  */
 class JDOTestData {
 
-	private JdbcDatabaseTester tester;
+    private JdbcDatabaseTester tester;
 
-	public Repository setup() {
-		def factory = JDOHelper.getPersistenceManagerFactory("jdo.properties")
-		def repository = new JDORepository(new JDOSessionManager(factory), [
-				(Company.class): CompanyImpl.class,
-				(Department.class): DepartmentImpl.class
-		])
-		repository.query(Company.class).list()
-		repository.query(Department.class).list()
+    public Repository setup() {
+        def factory = JDOHelper.getPersistenceManagerFactory("jdo.properties")
+        def repository = new JDORepository(new JDOSessionManager(factory), [
+                (Company.class): CompanyImpl.class,
+                (Department.class): DepartmentImpl.class
+        ])
+        repository.query(Company.class).list()
+        repository.query(Department.class).list()
 
-		def properties = new Properties()
-		properties.load(getClass().getResourceAsStream("/dbunit.properties"))
-		tester = new JdbcDatabaseTester(
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD),
-				properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA)
-		);
-		tester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT)
-		tester.setTearDownOperation(DatabaseOperation.DELETE_ALL)
-		tester.setDataSet(new FlatXmlDataSetBuilder().build(getClass().getResourceAsStream("/database.xml")))
+        def properties = new Properties()
+        properties.load(getClass().getResourceAsStream("/dbunit.properties"))
+        tester = new JdbcDatabaseTester(
+                properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_DRIVER_CLASS),
+                properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_CONNECTION_URL),
+                properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_USERNAME),
+                properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_PASSWORD),
+                properties.getProperty(PropertiesBasedJdbcDatabaseTester.DBUNIT_SCHEMA)
+        );
+        tester.setSetUpOperation(DatabaseOperation.CLEAN_INSERT)
+        tester.setTearDownOperation(DatabaseOperation.DELETE_ALL)
+        tester.setDataSet(new FlatXmlDataSetBuilder().build(getClass().getResourceAsStream("/database.xml")))
 
-		tester.onSetup()
+        tester.onSetup()
 
-		return repository
-	}
+        return repository
+    }
 
-	public Repository cleanup() {
-		tester.onTearDown()
-		tester = null
-		return null
-	}
+    public Repository cleanup() {
+        tester.onTearDown()
+        tester = null
+        return null
+    }
 }

@@ -29,36 +29,36 @@ import java.util.Map;
  * @since 1.0
  */
 public abstract class AbstractRepository implements Repository {
-	private final Map<Class, Class> entityMapping;
+    private final Map<Class, Class> entityMapping;
 
-	protected AbstractRepository(final Map<Class, Class> entityMapping) {
-		this.entityMapping = entityMapping;
-	}
+    protected AbstractRepository(final Map<Class, Class> entityMapping) {
+        this.entityMapping = entityMapping;
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	E create(final Class<E> entityClass) {
-		return ReflectionUtils.newInstance(getImplementation(entityClass));
-	}
+    public <PK extends Serializable, E extends Entity<PK>>
+    E create(final Class<E> entityClass) {
+        return ReflectionUtils.newInstance(getImplementation(entityClass));
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	void save(final E entity) {
-		if (entity.isNew()) {
-			insert(entity);
-		} else {
-			update(entity);
-		}
-	}
+    public <PK extends Serializable, E extends Entity<PK>>
+    void save(final E entity) {
+        if (entity.isNew()) {
+            insert(entity);
+        } else {
+            update(entity);
+        }
+    }
 
-	@SuppressWarnings({"unchecked"})
-	protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
-		final Class implementation = entityMapping.get(entityClass);
-		return implementation != null ? implementation : entityClass;
-	}
+    @SuppressWarnings({"unchecked"})
+    protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
+        final Class implementation = entityMapping.get(entityClass);
+        return implementation != null ? implementation : entityClass;
+    }
 
-	@Override
-	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("mapping", entityMapping);
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        final DescriptionBuilder builder = new DescriptionBuilder(getClass());
+        builder.append("mapping", entityMapping);
+        return builder.toString();
+    }
 }

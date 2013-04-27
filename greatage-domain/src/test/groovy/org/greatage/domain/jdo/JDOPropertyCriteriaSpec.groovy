@@ -9,14 +9,14 @@ import spock.lang.Shared
  */
 class JDOPropertyCriteriaSpec extends PropertyCriteriaSpecification {
 
-	@Shared
-	private JDOTestData data = new JDOTestData();
+    @Shared
+    private JDOTestData data = new JDOTestData();
 
-	def setupSpec() {
-		repository = data.setup()
-	}
+    def setupSpec() {
+        repository = data.setup()
+    }
 
-	def cleanupSpec() {
-		repository = data.cleanup()
-	}
+    def cleanupSpec() {
+        repository = data.cleanup()
+    }
 }

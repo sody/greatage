@@ -26,58 +26,58 @@ import java.io.Serializable;
  */
 public interface Repository {
 
-	/**
-	 * Gets detailed entity by pk.
-	 *
-	 * @param entityClass entity class (not null)
-	 * @param pk          entity pk (not null)
-	 * @param <PK>        type of entity primary key
-	 * @param <E>         type of entity
-	 * @return detailed entity by pk or null if not found
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	E get(Class<E> entityClass, PK pk);
+    /**
+     * Gets detailed entity by pk.
+     *
+     * @param entityClass entity class (not null)
+     * @param pk          entity pk (not null)
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     * @return detailed entity by pk or null if not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    E get(Class<E> entityClass, PK pk);
 
-	/**
-	 * Makes entity persistent by saving it into repository.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void insert(E entity);
+    /**
+     * Makes entity persistent by saving it into repository.
+     *
+     * @param entity entity
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void insert(E entity);
 
-	/**
-	 * Updates entity state in repository.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void update(E entity);
+    /**
+     * Updates entity state in repository.
+     *
+     * @param entity entity
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void update(E entity);
 
-	/**
-	 * Makes entity persistent if it is not or updates entity state in repository otherwise.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void save(E entity);
+    /**
+     * Makes entity persistent if it is not or updates entity state in repository otherwise.
+     *
+     * @param entity entity
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void save(E entity);
 
-	/**
-	 * Deletes entity from repository.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void remove(E entity);
+    /**
+     * Deletes entity from repository.
+     *
+     * @param entity entity
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void remove(E entity);
 
-	<PK extends Serializable, E extends Entity<PK>>
-	Query<PK, E> query(Class<E> entityClass);
+    <PK extends Serializable, E extends Entity<PK>>
+    Query<PK, E> query(Class<E> entityClass);
 }

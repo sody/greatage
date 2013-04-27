@@ -32,40 +32,40 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(table = "department")
 public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 
-	@PrimaryKey
-	@Persistent(column = "department_id", valueStrategy = IdGeneratorStrategy.INCREMENT)
-	private Long id;
+    @PrimaryKey
+    @Persistent(column = "department_id", valueStrategy = IdGeneratorStrategy.INCREMENT)
+    private Long id;
 
-	@Persistent(column = "name")
-	private String name;
+    @Persistent(column = "name")
+    private String name;
 
-	@Persistent(column = "company_id")
-	private Company company;
+    @Persistent(column = "company_id")
+    private Company company;
 
-	public DepartmentImpl() {
-	}
+    public DepartmentImpl() {
+    }
 
-	public DepartmentImpl(final Long id) {
-		this.id = id;
-	}
+    public DepartmentImpl(final Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Company getCompany() {
-		return company;
-	}
+    public Company getCompany() {
+        return company;
+    }
 
-	public void setCompany(final Company company) {
-		this.company = company;
-	}
+    public void setCompany(final Company company) {
+        this.company = company;
+    }
 }

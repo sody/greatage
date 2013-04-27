@@ -30,41 +30,41 @@ import javax.persistence.Id;
 @Entity(name = "department")
 public class DepartmentImpl extends AbstractEntity<Long> implements Department {
 
-	@Id
-	private Long id;
+    @Id
+    private Long id;
 
-	private String name;
+    private String name;
 
-	private CompanyImpl company;
+    private CompanyImpl company;
 
-	public DepartmentImpl() {
-	}
+    public DepartmentImpl() {
+    }
 
-	public DepartmentImpl(final Long id) {
-		this.id = id;
-	}
+    public DepartmentImpl(final Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Company getCompany() {
-		return company;
-	}
+    public Company getCompany() {
+        return company;
+    }
 
-	public void setCompany(final Company company) {
-		this.company = (CompanyImpl) company;
-	}
+    public void setCompany(final Company company) {
+        this.company = (CompanyImpl) company;
+    }
 
-	public void setCompany(final CompanyImpl company) {
-		this.company = company;
-	}
+    public void setCompany(final CompanyImpl company) {
+        this.company = company;
+    }
 }

@@ -25,68 +25,68 @@ import static org.example.model.Entities.company$
  */
 abstract class JunctionCriteriaSpecification extends Specification {
 
-	@Shared
-	protected Repository repository
+    @Shared
+    protected Repository repository
 
-	def "all criteria should find all entities"() {
-		when:
-		def actual = findIds(entityClass, criteria)
-		then:
-		actual == expected
+    def "all criteria should find all entities"() {
+        when:
+        def actual = findIds(entityClass, criteria)
+        then:
+        actual == expected
 
-		where:
-		entityClass   | criteria       | expected
-		Company.class | company$.all() | [1, 2, 3, 4, 5, 6]
-	}
+        where:
+        entityClass   | criteria       | expected
+        Company.class | company$.all() | [1, 2, 3, 4, 5, 6]
+    }
 
-	def "and criteria should find only entities than match each child criteria"() {
-		when:
-		def actual = findIds(entityClass, criteria)
-		then:
-		actual == expected
+    def "and criteria should find only entities than match each child criteria"() {
+        when:
+        def actual = findIds(entityClass, criteria)
+        then:
+        actual == expected
 
-		where:
-		entityClass   | criteria                                                                                                 | expected
-		Company.class | company$.name$.eq("company1").and(company$.id$.eq(1l))                                                   | [1]
-		Company.class | company$.name$.eq("company1").and(company$.id$.eq(2l))                                                   | []
-		Company.class | company$.name$.eq("company").and(company$.id$.le(6l))                                                    | [5, 6]
-		Company.class | company$.name$.eq("company").and(company$.id$.lt(5l))                                                    | []
-		Company.class | company$.name$.notNull().and(company$.id$.eq(4l))                                                        | []
-		Company.class | company$.name$.eq("company").and(company$.id$.gt(2l)).and(company$.registeredAt$.eq(date("2001-01-01"))) | [5]
-		Company.class | company$.name$.eq("company").and(company$.id$.gt(2l)).and(company$.registeredAt$.eq(date("2001-02-02"))) | [6]
-		Company.class | company$.name$.eq("company").and(company$.id$.gt(2l)).and(company$.registeredAt$.eq(date("2011-02-02"))) | []
-	}
+        where:
+        entityClass   | criteria                                                                                                 | expected
+        Company.class | company$.name$.eq("company1").and(company$.id$.eq(1l))                                                   | [1]
+        Company.class | company$.name$.eq("company1").and(company$.id$.eq(2l))                                                   | []
+        Company.class | company$.name$.eq("company").and(company$.id$.le(6l))                                                    | [5, 6]
+        Company.class | company$.name$.eq("company").and(company$.id$.lt(5l))                                                    | []
+        Company.class | company$.name$.notNull().and(company$.id$.eq(4l))                                                        | []
+        Company.class | company$.name$.eq("company").and(company$.id$.gt(2l)).and(company$.registeredAt$.eq(date("2001-01-01"))) | [5]
+        Company.class | company$.name$.eq("company").and(company$.id$.gt(2l)).and(company$.registeredAt$.eq(date("2001-02-02"))) | [6]
+        Company.class | company$.name$.eq("company").and(company$.id$.gt(2l)).and(company$.registeredAt$.eq(date("2011-02-02"))) | []
+    }
 
-	def "or criteria should find only entities than match at least one child criteria"() {
-		when:
-		def actual = findIds(entityClass, criteria)
-		then:
-		actual == expected
+    def "or criteria should find only entities than match at least one child criteria"() {
+        when:
+        def actual = findIds(entityClass, criteria)
+        then:
+        actual == expected
 
-		where:
-		entityClass   | criteria                                                                                               | expected
-		Company.class | company$.name$.eq("company1").or(company$.id$.eq(1l))                                                  | [1]
-		Company.class | company$.name$.eq("company1").or(company$.id$.eq(2l))                                                  | [1, 2]
-		Company.class | company$.name$.eq("company").or(company$.id$.le(6l))                                                   | [1, 2, 3, 4, 5, 6]
-		Company.class | company$.name$.eq("company").or(company$.id$.lt(5l))                                                   | [1, 2, 3, 4, 5, 6]
-		Company.class | company$.name$.notNull().or(company$.id$.eq(4l))                                                       | [1, 2, 3, 4, 5, 6]
-		Company.class | company$.name$.eq("company").or(company$.id$.eq(1l)).or(company$.registeredAt$.eq(date("2010-10-10"))) | [1, 2, 5, 6]
-	}
+        where:
+        entityClass   | criteria                                                                                               | expected
+        Company.class | company$.name$.eq("company1").or(company$.id$.eq(1l))                                                  | [1]
+        Company.class | company$.name$.eq("company1").or(company$.id$.eq(2l))                                                  | [1, 2]
+        Company.class | company$.name$.eq("company").or(company$.id$.le(6l))                                                   | [1, 2, 3, 4, 5, 6]
+        Company.class | company$.name$.eq("company").or(company$.id$.lt(5l))                                                   | [1, 2, 3, 4, 5, 6]
+        Company.class | company$.name$.notNull().or(company$.id$.eq(4l))                                                       | [1, 2, 3, 4, 5, 6]
+        Company.class | company$.name$.eq("company").or(company$.id$.eq(1l)).or(company$.registeredAt$.eq(date("2010-10-10"))) | [1, 2, 5, 6]
+    }
 
-	protected Date date(final String input) {
-		return Date.parse("yyyy-MM-dd", input)
-	}
+    protected Date date(final String input) {
+        return Date.parse("yyyy-MM-dd", input)
+    }
 
-	protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Query.Criteria<Long, E> criteria) {
-		return toIds(repository.query(entityClass).filter(criteria).list());
-	}
+    protected <E extends Entity<Long>> List<Long> findIds(final Class<E> entityClass, final Query.Criteria<Long, E> criteria) {
+        return toIds(repository.query(entityClass).filter(criteria).list());
+    }
 
-	protected List<Long> toIds(final List<? extends Entity<Long>> entities) {
-		def result = new ArrayList<Long>()
-		for (Entity<Long> entity : entities) {
-			result.add(entity.id)
-		}
-		Collections.sort(result)
-		return result
-	}
+    protected List<Long> toIds(final List<? extends Entity<Long>> entities) {
+        def result = new ArrayList<Long>()
+        for (Entity<Long> entity : entities) {
+            result.add(entity.id)
+        }
+        Collections.sort(result)
+        return result
+    }
 }

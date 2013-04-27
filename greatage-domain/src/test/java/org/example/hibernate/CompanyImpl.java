@@ -33,40 +33,40 @@ import java.util.Date;
 @Table(name = "company")
 public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
-	@Id
-	@Column(name = "company_id")
-	private Long id;
+    @Id
+    @Column(name = "company_id")
+    private Long id;
 
-	@Column(name = "name")
-	private String name;
+    @Column(name = "name")
+    private String name;
 
-	@Column(name = "registered_at")
-	private Date registeredAt;
+    @Column(name = "registered_at")
+    private Date registeredAt;
 
-	public CompanyImpl() {
-	}
+    public CompanyImpl() {
+    }
 
-	public CompanyImpl(final Long id) {
-		this.id = id;
-	}
+    public CompanyImpl(final Long id) {
+        this.id = id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Date getRegisteredAt() {
-		return registeredAt;
-	}
+    public Date getRegisteredAt() {
+        return registeredAt;
+    }
 
-	public void setRegisteredAt(final Date registeredAt) {
-		this.registeredAt = registeredAt;
-	}
+    public void setRegisteredAt(final Date registeredAt) {
+        this.registeredAt = registeredAt;
+    }
 }
