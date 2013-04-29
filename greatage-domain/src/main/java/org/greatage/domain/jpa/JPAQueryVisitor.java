@@ -18,6 +18,7 @@ package org.greatage.domain.jpa;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.internal.AbstractQueryVisitor;
+import org.greatage.domain.internal.ChildCriteria;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
 
@@ -38,6 +39,11 @@ public class JPAQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
     @Override
     protected void visitJunction(final JunctionCriteria criteria) {
+        //todo: implement this
+    }
+
+    @Override
+    protected void visitChild(final ChildCriteria criteria) {
         //todo: implement this
     }
 

@@ -47,6 +47,8 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
     protected void visitCriteria(final Query.Criteria criteria) {
         if (criteria instanceof JunctionCriteria) {
             visitJunction((JunctionCriteria) criteria);
+        } else if (criteria instanceof ChildCriteria) {
+            visitChild((ChildCriteria) criteria);
         } else if (criteria instanceof PropertyCriteria) {
             visitProperty((PropertyCriteria) criteria);
         }
@@ -82,6 +84,8 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
     }
 
     protected abstract void visitJunction(JunctionCriteria criteria);
+
+    protected abstract void visitChild(ChildCriteria criteria);
 
     protected abstract void visitEqual(PropertyCriteria criteria);
 

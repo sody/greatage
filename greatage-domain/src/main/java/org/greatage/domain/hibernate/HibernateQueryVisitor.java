@@ -19,6 +19,7 @@ package org.greatage.domain.hibernate;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Query;
 import org.greatage.domain.internal.AbstractQueryVisitor;
+import org.greatage.domain.internal.ChildCriteria;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
 import org.greatage.util.NameAllocator;
@@ -47,6 +48,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     private final org.hibernate.Criteria root;
 
     private Junction junction;
+    private String path;
 
     HibernateQueryVisitor(final org.hibernate.Criteria root) {
         this.root = root;
@@ -54,19 +56,37 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 
     @Override
     protected void visitJunction(final JunctionCriteria criteria) {
-        final Junction parent = this.junction;
-        junction = criteria.getOperator() == JunctionCriteria.Operator.AND ?
+        // backup previous junction
+        final Junction parent = junction;
+        // create new junction
+        final Junction current = criteria.getOperator() == JunctionCriteria.Operator.AND ?
                 Restrictions.conjunction() :
                 Restrictions.disjunction();
 
+        // replace current junction
+        junction = current;
+        // process child criteria
         for (Query.Criteria child : criteria.getChildren()) {
             visitCriteria(child);
         }
-
-        final Junction temp = junction;
+        // restore previous junction
         junction = parent;
 
-        addCriterion(temp, criteria.isNegative());
+        // add junction to the criteria
+        addCriterion(current, criteria.isNegative());
+    }
+
+    @Override
+    protected void visitChild(final ChildCriteria criteria) {
+        // backup previous path
+        final String parentPath = path;
+
+        // replace current path
+        path = criteria.getPath();
+        // visit child criteria
+        visitCriteria(criteria.getCriteria());
+        // restore previous path
+        path = parentPath;
     }
 
     @Override
@@ -174,8 +194,17 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     private Property getProperty(final PropertyCriteria criteria) {
-        final String alias = getCriteria(criteria.getPath()).getAlias();
+        final String path = getPath(criteria);
+        final String alias = getCriteria(path).getAlias();
         return Property.forName(alias + "." + criteria.getProperty());
+    }
+
+    private String getPath(final PropertyCriteria criteria) {
+        return this.path != null ?
+                    criteria.getPath() != null ?
+                            this.path + "." + criteria.getPath() :
+                            this.path :
+                    criteria.getPath();
     }
 
     private org.hibernate.Criteria getCriteria(final String path) {

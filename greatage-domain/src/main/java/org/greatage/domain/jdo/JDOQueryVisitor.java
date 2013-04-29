@@ -18,6 +18,7 @@ package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.internal.AbstractQueryVisitor;
+import org.greatage.domain.internal.ChildCriteria;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
 import org.greatage.util.NameAllocator;
@@ -41,6 +42,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     private final Query query;
     private List<String> junction = new ArrayList<String>();
     private int level;
+    private String path;
 
     public JDOQueryVisitor(final Query query) {
         this.query = query;
@@ -76,6 +78,15 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         final String function = criteria.getOperator() == JunctionCriteria.Operator.AND ? " && " : " || ";
         final String filter = getJunction(temp, function);
         addCriterion(filter, criteria.isNegative());
+    }
+
+    @Override
+    protected void visitChild(final ChildCriteria criteria) {
+        final String parentPath = path;
+
+        path = criteria.getPath();
+        visitCriteria(criteria.getCriteria());
+        path = parentPath;
     }
 
     @Override
@@ -245,12 +256,21 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     private String propertyName(final PropertyCriteria criteria) {
-        return criteria.getPath() != null ?
-                criteria.getPath() + "." + criteria.getProperty() :
+        final String path = getPath(criteria);
+        return path != null ?
+                path + "." + criteria.getProperty() :
                 criteria.getProperty();
     }
 
     private String parameterName(final PropertyCriteria criteria) {
         return names.allocate(criteria.getProperty());
+    }
+
+    private String getPath(final PropertyCriteria criteria) {
+        return this.path != null ?
+                criteria.getPath() != null ?
+                        this.path + "." + criteria.getPath() :
+                        this.path :
+                criteria.getPath();
     }
 }

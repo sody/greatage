@@ -17,27 +17,46 @@
 package org.greatage.domain;
 
 import org.greatage.domain.internal.AllCriteria;
+import org.greatage.domain.internal.ChildCriteria;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class EntityMapper<PK extends Serializable, E extends Entity<PK>> {
+public class EntityMapper<PK extends Serializable, E extends Entity<PK>> implements Query.Property {
+    private static final String DEFAULT_ID_PROPERTY = "id";
+
     public final PropertyMapper<PK> id$;
 
-    private static final String DEFAULT_ID_PROPERTY = "id";
     private final String path;
+    private final String property;
 
     public EntityMapper(final String path) {
         this(path, DEFAULT_ID_PROPERTY);
     }
 
     public EntityMapper(final String path, final String idProperty) {
+        this(path, idProperty, idProperty);
+    }
+
+    public EntityMapper(final String path, final String idProperty, final String sortProperty) {
         this.path = path;
+        this.property = sortProperty;
 
         id$ = property(idProperty);
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public String getProperty() {
+        return property;
     }
 
     public AllCriteria all() {
@@ -45,10 +64,54 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> {
     }
 
     public Query.Criteria is(final Query.Criteria criteria) {
-        return null;
+        return new ChildCriteria(path, criteria);
+    }
+
+    public Query.Criteria isNull() {
+        return equal(null);
+    }
+
+    public Query.Criteria notNull() {
+        return notEqual(null);
+    }
+
+    public Query.Criteria eq(final E entity) {
+        return equal(entity);
+    }
+
+    public Query.Criteria equal(final E entity) {
+        return id$.equal(toId(entity));
+    }
+
+    public Query.Criteria ne(final E entity) {
+        return notEqual(entity);
+    }
+
+    public Query.Criteria notEqual(final E entity) {
+        return id$.notEqual(toId(entity));
+    }
+
+    public Query.Criteria in(final E... entities) {
+        final List<PK> pks = new ArrayList<PK>(entities.length);
+        for (E entity : entities) {
+            pks.add(toId(entity));
+        }
+        return id$.in(pks);
+    }
+
+    public Query.Criteria in(final Collection<E> entities) {
+        final List<PK> pks = new ArrayList<PK>(entities.size());
+        for (E entity : entities) {
+            pks.add(toId(entity));
+        }
+        return id$.in(pks);
     }
 
     protected <V> PropertyMapper<V> property(final String property) {
         return new PropertyMapper<V>(path, property);
+    }
+
+    private PK toId(final E entity) {
+        return entity != null ? entity.getId() : null;
     }
 }

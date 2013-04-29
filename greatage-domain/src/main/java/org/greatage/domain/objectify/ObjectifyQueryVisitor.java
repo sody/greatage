@@ -3,6 +3,7 @@ package org.greatage.domain.objectify;
 import com.googlecode.objectify.Query;
 import org.greatage.domain.Entity;
 import org.greatage.domain.internal.AbstractQueryVisitor;
+import org.greatage.domain.internal.ChildCriteria;
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
 
@@ -30,6 +31,11 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
         for (org.greatage.domain.Query.Criteria child : criteria.getChildren()) {
             visitCriteria(child);
         }
+    }
+
+    @Override
+    protected void visitChild(ChildCriteria criteria) {
+        throw new UnsupportedOperationException("External criteria is not supported by appengine queries");
     }
 
     @Override
