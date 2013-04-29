@@ -15,159 +15,159 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.greatage</groupId>
-		<artifactId>greatage-parent</artifactId>
-		<version>1.0-SNAPSHOT</version>
-	</parent>
+  <parent>
+    <groupId>org.greatage</groupId>
+    <artifactId>greatage-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
 
-	<groupId>org.greatage</groupId>
-	<artifactId>greatage-domain</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+  <groupId>org.greatage</groupId>
+  <artifactId>greatage-domain</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
 
-	<name>GreatAge Domain Library</name>
-	<description>GreatAge Domain Library</description>
+  <name>GreatAge Domain Library</name>
+  <description>GreatAge Domain Library</description>
 
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
+  <build>
+    <sourceDirectory>src/main/java</sourceDirectory>
 
-		<testSourceDirectory>src/test/java</testSourceDirectory>
-		<testResources>
-			<testResource>
-				<directory>src/test/resources</directory>
-			</testResource>
-		</testResources>
-	</build>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
+  </build>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.greatage</groupId>
-			<artifactId>greatage-common</artifactId>
-		</dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.greatage</groupId>
+      <artifactId>greatage-common</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>persistence-api</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>javax.jdo</groupId>
-			<artifactId>jdo2-api</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>javax.jdo</groupId>
+      <artifactId>jdo2-api</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>com.googlecode.objectify</groupId>
-			<artifactId>objectify</artifactId>
-			<version>3.0</version>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>com.googlecode.objectify</groupId>
+      <artifactId>objectify</artifactId>
+      <version>3.0</version>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>com.vercer.engine.persist</groupId>
-			<artifactId>twig-persist</artifactId>
-			<version>1.0.4</version>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>com.vercer.engine.persist</groupId>
+      <artifactId>twig-persist</artifactId>
+      <version>1.0.4</version>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-1.0-sdk</artifactId>
-			<optional>true</optional>
-		</dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-1.0-sdk</artifactId>
+      <optional>true</optional>
+    </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-all</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.spockframework</groupId>
-			<artifactId>spock-core</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.spockframework</groupId>
+      <artifactId>spock-core</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.dbunit</groupId>
+      <artifactId>dbunit</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-core</artifactId>
-			<version>3.0.2</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-core</artifactId>
+      <version>3.0.2</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-api-jdo</artifactId>
-			<version>3.0.2</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-api-jdo</artifactId>
+      <version>3.0.2</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-rdbms</artifactId>
-			<version>3.0.2</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-rdbms</artifactId>
+      <version>3.0.2</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-enhancer</artifactId>
-			<version>3.0.1</version>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>org.datanucleus</groupId>
+      <artifactId>datanucleus-enhancer</artifactId>
+      <version>3.0.1</version>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-labs</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-labs</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-api-stubs</artifactId>
-			<scope>test</scope>
-		</dependency>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-api-stubs</artifactId>
+      <scope>test</scope>
+    </dependency>
 
-		<dependency>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-testing</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+    <dependency>
+      <groupId>com.google.appengine</groupId>
+      <artifactId>appengine-testing</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
 </project>
