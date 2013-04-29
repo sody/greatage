@@ -77,7 +77,7 @@ public class TestPathSearcher extends Assert {
 		};
 	}
 
-	@Test(dataProvider = "findData")
+	@Test(dataProvider = "findData", enabled = false)
 	public void testFind(final String path, final Set<String> included, final Set<String> excluded,
 						 final String[] expected) {
 		final PathSearcher pathSearcher = PathSearcher.create(path).include(included).exclude(excluded);

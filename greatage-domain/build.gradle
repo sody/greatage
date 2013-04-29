@@ -1,0 +1,22 @@
+description = "GreatAge Domain API Module"
+
+dependencies {
+    compile project(':greatage-common')
+
+    provided "org.hibernate:hibernate-core:${versions.hibernate}"
+    provided "javax.jdo:jdo2-api:${versions.jdo}"
+    provided "javax.persistence:persistence-api:${versions.jpa}"
+    provided "com.googlecode.objectify:objectify:${versions.objectify}"
+    provided "com.google.appengine:appengine-api-1.0-sdk:${versions.appengine}"
+
+    testCompile "org.spockframework:spock-core:${versions.spock}"
+    testCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
+    testCompile "org.dbunit:dbunit:${versions.dbunit}"
+    testCompile "hsqldb:hsqldb:${versions.hsqldb}"
+    testCompile "com.google.appengine:appengine-testing:${versions.appengine}"
+    testCompile "com.google.appengine:appengine-api-stubs:${versions.appengine}"
+}
+
+test {
+    useJUnit()
+}

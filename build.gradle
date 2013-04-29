@@ -1,0 +1,65 @@
+description = "GreatAge Project"
+
+ext {
+    stagingUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+    snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+
+    versions = [
+            javassist: "3.17.0-GA",
+            hibernate: "4.0.0.CR5",
+            jdo: "2.3-eb",
+            jpa: "1.0",
+            objectify: "3.0",
+            appengine: "1.5.2",
+
+            testng: "6.2",
+            groovy: "2.0.5",
+            spock: "0.7-groovy-2.0",
+            slf4j: "1.6.2",
+            dbunit: "2.4.7",
+            hsqldb: "1.8.0.10"
+    ]
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        // All things JBoss/Hibernate
+        mavenRepo name: "JBoss", url: "https://repository.jboss.org/nexus/content/repositories/releases/"
+    }
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "groovy" // mostly for testing
+
+    group = "org.greatage"
+    version = "1.0-SNAPSHOT"
+
+    configurations {
+        provided
+    }
+
+    sourceCompatibility = "1.6"
+    targetCompatibility = "1.6"
+
+    sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+        test {
+            compileClasspath += configurations.provided
+            runtimeClasspath += configurations.provided
+        }
+    }
+
+    dependencies {
+        groovy "org.codehaus.groovy:groovy-all:${versions.groovy}"
+    }
+
+    test {
+        useJUnit()
+    }
+}

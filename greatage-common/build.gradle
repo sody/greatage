@@ -1,0 +1,12 @@
+description = "GreatAge Common Utilities"
+
+dependencies {
+    provided "org.hibernate:hibernate-core:${versions.hibernate}"
+    provided "org.javassist:javassist:${versions.javassist}"
+
+    testCompile "org.testng:testng:${versions.testng}"
+}
+
+test {
+    useTestNG()
+}
