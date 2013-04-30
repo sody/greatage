@@ -7,21 +7,25 @@ ext {
     versions = [
             javassist: "3.17.0-GA",
             hibernate: "4.0.0.CR5",
-            jdo: "2.3-eb",
+            jdo: "3.0.1",
             jpa: "1.0",
             objectify: "3.0",
-            appengine: "1.5.2",
+            appengine: "1.7.5",
 
             testng: "6.2",
             groovy: "2.0.5",
             spock: "0.7-groovy-2.0",
             slf4j: "1.6.2",
             dbunit: "2.4.7",
-            hsqldb: "1.8.0.10"
+            hsqldb: "1.8.0.10",
+            datanucleus: "3.1.3",
+            datanucleus_enhancer: "3.1.1"
     ]
 }
 
 allprojects {
+    apply plugin: "idea"
+
     repositories {
         mavenCentral()
         mavenLocal()
@@ -33,17 +37,17 @@ allprojects {
 
 subprojects {
     apply plugin: "java"
-    apply plugin: "groovy" // mostly for testing
+    apply plugin: "groovy"
 
     group = "org.greatage"
     version = "1.0-SNAPSHOT"
 
+    sourceCompatibility = "1.6"
+    targetCompatibility = "1.6"
+
     configurations {
         provided
     }
-
-    sourceCompatibility = "1.6"
-    targetCompatibility = "1.6"
 
     sourceSets {
         main {
@@ -56,10 +60,17 @@ subprojects {
     }
 
     dependencies {
-        groovy "org.codehaus.groovy:groovy-all:${versions.groovy}"
+        testCompile "org.codehaus.groovy:groovy-all:${versions.groovy}"
+        testCompile "org.spockframework:spock-core:${versions.spock}"
+
+        testRuntime "org.slf4j:slf4j-simple:${versions.slf4j}"
     }
 
     test {
         useJUnit()
+    }
+
+    idea.module {
+        scopes.PROVIDED.plus += configurations.provided
     }
 }

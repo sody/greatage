@@ -7,7 +7,7 @@ import spock.lang.Shared
  * @author Ivan Khalopik
  * @since 1.0
  */
-class JDOPropertyCriteriaSpec extends PropertyCriteriaSpecification {
+class JDOPropertyCriteriaSpec {
 
     @Shared
     private JDOTestData data = new JDOTestData();

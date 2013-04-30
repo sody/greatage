@@ -7,7 +7,7 @@ import spock.lang.Shared
  * @author Ivan Khalopik
  * @since 1.0
  */
-class JDOJunctionCriteriaSpec extends JunctionCriteriaSpecification {
+class JDOJunctionCriteriaSpec {
 
     @Shared
     private JDOTestData data = new JDOTestData();
