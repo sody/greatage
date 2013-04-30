@@ -15,7 +15,7 @@ import spock.lang.Specification
  * | 3  | company3 |          null |
  * | 4  |     null |          null |
  * | 5  |  company |    2001-01-01 |
- * | 6  |  company |    2010-02-02 |
+ * | 6  |  company |    2001-02-02 |
  * +----+----------+---------------+
  *
  * @author Ivan Khalopik

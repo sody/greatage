@@ -18,7 +18,7 @@ import static org.example.model.$.company$
  * | 3  | company3 |          null |
  * | 4  |     null |          null |
  * | 5  |  company |    2001-01-01 |
- * | 6  |  company |    2010-02-02 |
+ * | 6  |  company |    2001-02-02 |
  * +----+----------+---------------+
  *
  * @author Ivan Khalopik
@@ -31,47 +31,116 @@ abstract class JunctionCriteriaSpecification extends Specification {
 
     def "all criteria should find all entities"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria       | expected
-        Company.class | company$.all() | [1, 2, 3, 4, 5, 6]
+        criteria       | expected
+        company$.all() | [1, 2, 3, 4, 5, 6]
     }
 
-    def "and criteria should find only entities than match each child criteria"() {
+    def "empty junction criteria should find all entities"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                                                                                | expected
-        Company.class | $.and(company$.name$.eq("company1"), company$.id$.eq(1l))                                               | [1]
-        Company.class | $.and(company$.name$.eq("company1"), company$.id$.eq(2l))                                               | []
-        Company.class | $.and(company$.name$.eq("company"), company$.id$.le(6l))                                                | [5, 6]
-        Company.class | $.and(company$.name$.eq("company"), company$.id$.lt(5l))                                                | []
-        Company.class | $.and(company$.name$.notNull(), company$.id$.eq(4l))                                                    | []
-        Company.class | $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-01-01"))) | [5]
-        Company.class | $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-02-02"))) | [6]
-        Company.class | $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02"))) | []
+        criteria       | expected
+        $.and()        | [1, 2, 3, 4, 5, 6]
+        $.or()         | [1, 2, 3, 4, 5, 6]
+        $.and($.and()) | [1, 2, 3, 4, 5, 6]
+        $.or($.or())   | [1, 2, 3, 4, 5, 6]
+        $.and($.or())  | [1, 2, 3, 4, 5, 6]
+        $.or($.and())  | [1, 2, 3, 4, 5, 6]
     }
 
-    def "or criteria should find only entities than match at least one child criteria"() {
+    def "and criteria should find only entities that match each child criteria"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                                                                               | expected
-        Company.class | $.or(company$.name$.eq("company1"), company$.id$.eq(1l))                                               | [1]
-        Company.class | $.or(company$.name$.eq("company1"), company$.id$.eq(2l))                                               | [1, 2]
-        Company.class | $.or(company$.name$.eq("company"), company$.id$.le(6l))                                                | [1, 2, 3, 4, 5, 6]
-        Company.class | $.or(company$.name$.eq("company"), company$.id$.lt(5l))                                                | [1, 2, 3, 4, 5, 6]
-        Company.class | $.or(company$.name$.notNull(), company$.id$.eq(4l))                                                    | [1, 2, 3, 4, 5, 6]
-        Company.class | $.or(company$.name$.eq("company"), company$.id$.eq(1l), company$.registeredAt$.eq(date("2010-10-10"))) | [1, 2, 5, 6]
+        criteria                                                                                                | expected
+        $.and(company$.name$.eq("company1"), company$.id$.eq(1l))                                               | [1]
+        $.and(company$.name$.eq("company1"), company$.id$.eq(2l))                                               | []
+        $.and(company$.name$.eq("company"), company$.id$.le(6l))                                                | [5, 6]
+        $.and(company$.name$.eq("company"), company$.id$.lt(5l))                                                | []
+        $.and(company$.name$.notNull(), company$.id$.eq(4l))                                                    | []
+        $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-01-01"))) | [5]
+        $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-02-02"))) | [6]
+        $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02"))) | []
+    }
+
+    def "and criteria inside another and criteria should find only entities that match each criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                                                       | expected
+        $.and(company$.name$.eq("company"), $.and(company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-01-01")))) | [5]
+        $.and($.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-02-02")))) | [6]
+        $.and(company$.name$.eq("company"), $.and(company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02")))) | []
+    }
+
+    def "or criteria should find only entities that match at least one child criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                                               | expected
+        $.or(company$.name$.eq("company1"), company$.id$.eq(1l))                                               | [1]
+        $.or(company$.name$.eq("company1"), company$.id$.eq(2l))                                               | [1, 2]
+        $.or(company$.name$.eq("company"), company$.id$.le(6l))                                                | [1, 2, 3, 4, 5, 6]
+        $.or(company$.name$.eq("company"), company$.id$.lt(5l))                                                | [1, 2, 3, 4, 5, 6]
+        $.or(company$.name$.notNull(), company$.id$.eq(4l))                                                    | [1, 2, 3, 4, 5, 6]
+        $.or(company$.name$.eq("company"), company$.id$.eq(1l), company$.registeredAt$.eq(date("2010-10-10"))) | [1, 2, 5, 6]
+    }
+
+    def "or criteria inside another or criteria should find only entities that match at least one criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                                                     | expected
+        $.or(company$.name$.eq("company"), $.or(company$.id$.gt(2l), company$.registeredAt$.eq(date("2001-01-01")))) | [3, 4, 5, 6]
+        $.or($.or(company$.name$.eq("company"), company$.id$.eq(2l), company$.registeredAt$.eq(date("2001-02-02")))) | [2, 5, 6]
+        $.or(company$.name$.ne("company"), $.or(company$.id$.eq(2l), company$.registeredAt$.eq(date("2001-02-02")))) | [1, 2, 3, 6]
+    }
+
+    def "and criteria inside or criteria should find only entities that match each child criteria or at least one sibling criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                                                      | expected
+        $.or(company$.name$.eq("company"), $.and(company$.id$.eq(2l), company$.registeredAt$.eq(date("2010-10-10")))) | [2, 5, 6]
+        $.or($.and(company$.name$.eq("company"), company$.id$.gt(5l)), company$.registeredAt$.eq(date("2010-10-10"))) | [2, 6]
+        $.or(company$.name$.eq("company"), $.and(company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02")))) | [5, 6]
+        $.or($.and(company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02"))))                               | []
+    }
+
+    def "or criteria inside and criteria should find only entities that match at least one child criteria and each sibling criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                                                      | expected
+        $.and(company$.name$.eq("company"), $.or(company$.id$.eq(2l), company$.registeredAt$.eq(date("2010-10-10")))) | []
+        $.and($.or(company$.name$.eq("company"), company$.id$.gt(5l), company$.registeredAt$.eq(date("2010-10-10")))) | [2, 5, 6]
+        $.and(company$.name$.eq("company"), $.or(company$.id$.gt(5l), company$.id$.lt(5l)))                           | [6]
     }
 
     protected Date date(final String input) {

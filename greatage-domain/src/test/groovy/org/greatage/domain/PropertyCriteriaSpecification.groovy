@@ -17,7 +17,7 @@ import static org.example.model.$.company$
  * | 3  | company3 |          null |
  * | 4  |     null |          null |
  * | 5  |  company |    2001-01-01 |
- * | 6  |  company |    2010-02-02 |
+ * | 6  |  company |    2001-02-02 |
  * +----+----------+---------------+
  *
  * @author Ivan Khalopik
@@ -30,273 +30,285 @@ abstract class PropertyCriteriaSpecification extends Specification {
 
     def "equal criteria should find only entities with property value equal to specified"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                         | expected
-        Company.class | company$.id$.equal(1l)                           | [1]
-        Company.class | company$.id$.eq(4l)                              | [4]
-        Company.class | company$.id$.eq(10l)                             | []
-        Company.class | company$.name$.equal("company")                  | [5, 6]
-        Company.class | company$.name$.eq("company1")                    | [1]
-        Company.class | company$.name$.eq("company8")                    | []
-        Company.class | company$.registeredAt$.equal(date("2001-01-01")) | [5]
-        Company.class | company$.registeredAt$.eq(date("2001-01-02"))    | []
+        criteria                                         | expected
+        company$.id$.equal(1l)                           | [1]
+        company$.id$.eq(4l)                              | [4]
+        company$.id$.eq(10l)                             | []
+        company$.name$.equal("company")                  | [5, 6]
+        company$.name$.eq("company1")                    | [1]
+        company$.name$.eq("company8")                    | []
+        company$.registeredAt$.equal(date("2001-01-01")) | [5]
+        company$.registeredAt$.eq(date("2001-01-02"))    | []
     }
 
     def "equal criteria with null parameter should find only entities with property value equal to null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                        | expected
-        Company.class | company$.id$.eq(null)           | []
-        Company.class | company$.name$.eq(null)         | [4]
-        Company.class | company$.registeredAt$.eq(null) | [1, 3, 4]
+        criteria                           | expected
+        company$.id$.eq(null)              | []
+        company$.id$.equal(null)           | []
+        company$.name$.eq(null)            | [4]
+        company$.name$.equal(null)         | [4]
+        company$.registeredAt$.eq(null)    | [1, 3, 4]
+        company$.registeredAt$.equal(null) | [1, 3, 4]
     }
 
     def "not equal criteria should find only entities with property value not equal to specified and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                      | expected
-        Company.class | company$.id$.notEqual(1l)                     | [2, 3, 4, 5, 6]
-        Company.class | company$.id$.ne(10l)                          | [1, 2, 3, 4, 5, 6]
-        Company.class | company$.name$.notEqual("company")            | [1, 2, 3]
-        Company.class | company$.name$.ne("company1")                 | [2, 3, 5, 6]
-        Company.class | company$.name$.ne("company8")                 | [1, 2, 3, 5, 6]
-        Company.class | company$.registeredAt$.ne(date("2001-01-01")) | [2, 6]
-        Company.class | company$.registeredAt$.ne(date("2001-01-02")) | [2, 5, 6]
+        criteria                                      | expected
+        company$.id$.notEqual(1l)                     | [2, 3, 4, 5, 6]
+        company$.id$.ne(10l)                          | [1, 2, 3, 4, 5, 6]
+        company$.name$.notEqual("company")            | [1, 2, 3]
+        company$.name$.ne("company1")                 | [2, 3, 5, 6]
+        company$.name$.ne("company8")                 | [1, 2, 3, 5, 6]
+        company$.registeredAt$.ne(date("2001-01-01")) | [2, 6]
+        company$.registeredAt$.ne(date("2001-01-02")) | [2, 5, 6]
     }
 
     def "not equal criteria with null parameter should find only entities with not null property value"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                              | expected
-        Company.class | company$.id$.ne(null)                 | [1, 2, 3, 4, 5, 6]
-        Company.class | company$.name$.ne(null)               | [1, 2, 3, 5, 6]
-        Company.class | company$.registeredAt$.notEqual(null) | [2, 5, 6]
+        criteria                              | expected
+        company$.id$.ne(null)                 | [1, 2, 3, 4, 5, 6]
+        company$.id$.notEqual(null)           | [1, 2, 3, 4, 5, 6]
+        company$.name$.ne(null)               | [1, 2, 3, 5, 6]
+        company$.name$.notEqual(null)         | [1, 2, 3, 5, 6]
+        company$.registeredAt$.ne(null)       | [2, 5, 6]
+        company$.registeredAt$.notEqual(null) | [2, 5, 6]
     }
 
     def "is null criteria should find only entities with property value equal to null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                        | expected
-        Company.class | company$.id$.isNull()           | []
-        Company.class | company$.id$.eq(null)           | []
-        Company.class | company$.name$.isNull()         | [4]
-        Company.class | company$.name$.eq(null)         | [4]
-        Company.class | company$.registeredAt$.isNull() | [1, 3, 4]
-        Company.class | company$.registeredAt$.eq(null) | [1, 3, 4]
+        criteria                        | expected
+        company$.id$.isNull()           | []
+        company$.name$.isNull()         | [4]
+        company$.registeredAt$.isNull() | [1, 3, 4]
     }
 
     def "is not null criteria should find only entities with property value not equal to null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                         | expected
-        Company.class | company$.id$.notNull()           | [1, 2, 3, 4, 5, 6]
-        Company.class | company$.id$.ne(null)            | [1, 2, 3, 4, 5, 6]
-        Company.class | company$.name$.notNull()         | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.ne(null)          | [1, 2, 3, 5, 6]
-        Company.class | company$.registeredAt$.notNull() | [2, 5, 6]
-        Company.class | company$.registeredAt$.ne(null)  | [2, 5, 6]
+        criteria                         | expected
+        company$.id$.notNull()           | [1, 2, 3, 4, 5, 6]
+        company$.name$.notNull()         | [1, 2, 3, 5, 6]
+        company$.registeredAt$.notNull() | [2, 5, 6]
     }
 
     def "greater than criteria should find only entities with property value greater than specified and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                               | expected
-        Company.class | company$.id$.greaterThan(4l)                           | [5, 6]
-        Company.class | company$.id$.gt(6l)                                    | []
-        Company.class | company$.id$.gt(10l)                                   | []
-        Company.class | company$.name$.greaterThan("company")                  | [1, 2, 3]
-        Company.class | company$.name$.gt("a")                                 | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.gt("z")                                 | []
-        Company.class | company$.registeredAt$.greaterThan(date("2001-01-01")) | [2, 6]
-        Company.class | company$.registeredAt$.gt(date("2010-10-10"))          | []
-        Company.class | company$.registeredAt$.gt(date("2012-10-10"))          | []
+        criteria                                               | expected
+        company$.id$.greaterThan(4l)                           | [5, 6]
+        company$.id$.gt(6l)                                    | []
+        company$.id$.gt(10l)                                   | []
+        company$.name$.greaterThan("company")                  | [1, 2, 3]
+        company$.name$.gt("a")                                 | [1, 2, 3, 5, 6]
+        company$.name$.gt("z")                                 | []
+        company$.registeredAt$.greaterThan(date("2001-01-01")) | [2, 6]
+        company$.registeredAt$.gt(date("2010-10-10"))          | []
+        company$.registeredAt$.gt(date("2012-10-10"))          | []
     }
 
     def "greater than criteria with null parameter should not find anything"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                        | expected
-        Company.class | company$.id$.gt(null)           | []
-        Company.class | company$.name$.gt(null)         | []
-        Company.class | company$.registeredAt$.gt(null) | []
+        criteria                                 | expected
+        company$.id$.gt(null)                    | []
+        company$.id$.greaterThan(null)           | []
+        company$.name$.gt(null)                  | []
+        company$.name$.greaterThan(null)         | []
+        company$.registeredAt$.gt(null)          | []
+        company$.registeredAt$.greaterThan(null) | []
     }
 
     def "greater or equal criteria should find only entities with property value greater or equal to specified and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                                  | expected
-        Company.class | company$.id$.greaterOrEqual(4l)                           | [4, 5, 6]
-        Company.class | company$.id$.ge(6l)                                       | [6]
-        Company.class | company$.id$.ge(10l)                                      | []
-        Company.class | company$.name$.greaterOrEqual("company")                  | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.ge("a")                                    | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.ge("z")                                    | []
-        Company.class | company$.registeredAt$.greaterOrEqual(date("2001-01-01")) | [2, 5, 6]
-        Company.class | company$.registeredAt$.ge(date("2010-10-10"))             | [2]
-        Company.class | company$.registeredAt$.ge(date("2012-10-10"))             | []
+        criteria                                                  | expected
+        company$.id$.greaterOrEqual(4l)                           | [4, 5, 6]
+        company$.id$.ge(6l)                                       | [6]
+        company$.id$.ge(10l)                                      | []
+        company$.name$.greaterOrEqual("company")                  | [1, 2, 3, 5, 6]
+        company$.name$.ge("a")                                    | [1, 2, 3, 5, 6]
+        company$.name$.ge("z")                                    | []
+        company$.registeredAt$.greaterOrEqual(date("2001-01-01")) | [2, 5, 6]
+        company$.registeredAt$.ge(date("2010-10-10"))             | [2]
+        company$.registeredAt$.ge(date("2012-10-10"))             | []
     }
 
     def "greater or equal criteria with null parameter should not find anything"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                        | expected
-        Company.class | company$.id$.ge(null)           | []
-        Company.class | company$.name$.ge(null)         | []
-        Company.class | company$.registeredAt$.ge(null) | []
+        criteria                                    | expected
+        company$.id$.ge(null)                       | []
+        company$.id$.greaterOrEqual(null)           | []
+        company$.name$.ge(null)                     | []
+        company$.name$.greaterOrEqual(null)         | []
+        company$.registeredAt$.ge(null)             | []
+        company$.registeredAt$.greaterOrEqual(null) | []
     }
 
     def "less than criteria should find only entities with property value less than specified and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                            | expected
-        Company.class | company$.id$.lessThan(4l)                           | [1, 2, 3]
-        Company.class | company$.id$.lt(1l)                                 | []
-        Company.class | company$.id$.lt(10l)                                | [1, 2, 3, 4, 5, 6]
-        Company.class | company$.name$.lessThan("company")                  | []
-        Company.class | company$.name$.lt("a")                              | []
-        Company.class | company$.name$.lt("z")                              | [1, 2, 3, 5, 6]
-        Company.class | company$.registeredAt$.lessThan(date("2001-01-01")) | []
-        Company.class | company$.registeredAt$.lt(date("2010-10-10"))       | [5, 6]
-        Company.class | company$.registeredAt$.lt(date("2012-10-10"))       | [2, 5, 6]
+        criteria                                            | expected
+        company$.id$.lessThan(4l)                           | [1, 2, 3]
+        company$.id$.lt(1l)                                 | []
+        company$.id$.lt(10l)                                | [1, 2, 3, 4, 5, 6]
+        company$.name$.lessThan("company")                  | []
+        company$.name$.lt("a")                              | []
+        company$.name$.lt("z")                              | [1, 2, 3, 5, 6]
+        company$.registeredAt$.lessThan(date("2001-01-01")) | []
+        company$.registeredAt$.lt(date("2010-10-10"))       | [5, 6]
+        company$.registeredAt$.lt(date("2012-10-10"))       | [2, 5, 6]
     }
 
     def "less than criteria with null parameter should not find anything"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                        | expected
-        Company.class | company$.id$.lt(null)           | []
-        Company.class | company$.name$.lt(null)         | []
-        Company.class | company$.registeredAt$.lt(null) | []
+        criteria                              | expected
+        company$.id$.lt(null)                 | []
+        company$.id$.lessThan(null)           | []
+        company$.name$.lt(null)               | []
+        company$.name$.lessThan(null)         | []
+        company$.registeredAt$.lt(null)       | []
+        company$.registeredAt$.lessThan(null) | []
     }
 
     def "less or equal criteria should find only entities with property value less or equal to specified and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                               | expected
-        Company.class | company$.id$.lessOrEqual(4l)                           | [1, 2, 3, 4]
-        Company.class | company$.id$.le(1l)                                    | [1]
-        Company.class | company$.id$.le(10l)                                   | [1, 2, 3, 4, 5, 6]
-        Company.class | company$.name$.lessOrEqual("company")                  | [5, 6]
-        Company.class | company$.name$.le("a")                                 | []
-        Company.class | company$.name$.le("z")                                 | [1, 2, 3, 5, 6]
-        Company.class | company$.registeredAt$.lessOrEqual(date("2001-01-01")) | [5]
-        Company.class | company$.registeredAt$.le(date("2010-10-10"))          | [2, 5, 6]
-        Company.class | company$.registeredAt$.le(date("2012-10-10"))          | [2, 5, 6]
+        criteria                                               | expected
+        company$.id$.lessOrEqual(4l)                           | [1, 2, 3, 4]
+        company$.id$.le(1l)                                    | [1]
+        company$.id$.le(10l)                                   | [1, 2, 3, 4, 5, 6]
+        company$.name$.lessOrEqual("company")                  | [5, 6]
+        company$.name$.le("a")                                 | []
+        company$.name$.le("z")                                 | [1, 2, 3, 5, 6]
+        company$.registeredAt$.lessOrEqual(date("2001-01-01")) | [5]
+        company$.registeredAt$.le(date("2010-10-10"))          | [2, 5, 6]
+        company$.registeredAt$.le(date("2012-10-10"))          | [2, 5, 6]
     }
 
-    def "less or equal criteria should not find anything"() {
+    def "less or equal with null parameter criteria should not find anything"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                        | expected
-        Company.class | company$.id$.le(null)           | []
-        Company.class | company$.name$.le(null)         | []
-        Company.class | company$.registeredAt$.le(null) | []
+        criteria                                 | expected
+        company$.id$.le(null)                    | []
+        company$.id$.lessOrEqual(null)           | []
+        company$.name$.le(null)                  | []
+        company$.name$.lessOrEqual(null)         | []
+        company$.registeredAt$.le(null)          | []
+        company$.registeredAt$.lessOrEqual(null) | []
     }
 
     def "in criteria should find only entities with property value in specified set and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                                                              | expected
-        Company.class | company$.id$.in(1l, 2l, 3l)                                                           | [1, 2, 3]
-        Company.class | company$.id$.in(1l)                                                                   | [1]
-        Company.class | company$.id$.in(10l)                                                                  | []
-        Company.class | company$.id$.in(1l, 6l, 10l)                                                          | [1, 6]
-        Company.class | company$.name$.in("company", "company1")                                              | [1, 5, 6]
-        Company.class | company$.name$.in("company")                                                          | [5, 6]
-        Company.class | company$.name$.in("company8")                                                         | []
-        Company.class | company$.name$.in("company2", "company8")                                             | [2]
-        Company.class | company$.registeredAt$.in(date("2001-01-01"), date("2001-02-02"))                     | [5, 6]
-        Company.class | company$.registeredAt$.in(date("2012-10-10"))                                         | []
-        Company.class | company$.registeredAt$.in(date("2001-01-01"), date("2010-10-10"), date("1999-01-01")) | [2, 5]
+        criteria                                                                              | expected
+        company$.id$.in(1l, 2l, 3l)                                                           | [1, 2, 3]
+        company$.id$.in(1l)                                                                   | [1]
+        company$.id$.in(10l)                                                                  | []
+        company$.id$.in(1l, 6l, 10l)                                                          | [1, 6]
+        company$.name$.in("company", "company1")                                              | [1, 5, 6]
+        company$.name$.in("company")                                                          | [5, 6]
+        company$.name$.in("company8")                                                         | []
+        company$.name$.in("company2", "company8")                                             | [2]
+        company$.registeredAt$.in(date("2001-01-01"), date("2001-02-02"))                     | [5, 6]
+        company$.registeredAt$.in(date("2012-10-10"))                                         | []
+        company$.registeredAt$.in(date("2001-01-01"), date("2010-10-10"), date("1999-01-01")) | [2, 5]
     }
 
     def "in criteria with empty parameter should not find anything"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                      | expected
-        Company.class | company$.id$.in([])           | []
-        Company.class | company$.name$.in([])         | []
-        Company.class | company$.registeredAt$.in([]) | []
+        criteria                      | expected
+        company$.id$.in([])           | []
+        company$.name$.in([])         | []
+        company$.registeredAt$.in([]) | []
     }
 
     def "in criteria with null parameters should find only entities with property value in specified set and not null"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                                            | expected
-        Company.class | company$.id$.in([null])                             | []
-        Company.class | company$.id$.in(1l, null, 10l)                      | [1]
-        Company.class | company$.name$.in([null])                           | []
-        Company.class | company$.name$.in("company2", "company8", null)     | [2]
-        Company.class | company$.registeredAt$.in([null])                   | []
-        Company.class | company$.registeredAt$.in(date("2001-01-01"), null) | [5]
+        criteria                                            | expected
+        company$.id$.in([null])                             | []
+        company$.id$.in(1l, null, 10l)                      | [1]
+        company$.name$.in([null])                           | []
+        company$.name$.in("company2", "company8", null)     | [2]
+        company$.registeredAt$.in([null])                   | []
+        company$.registeredAt$.in(date("2001-01-01"), null) | [5]
     }
 
     protected Date date(final String input) {
