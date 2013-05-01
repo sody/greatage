@@ -49,6 +49,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 
     private Junction junction;
     private String path;
+    private String property;
 
     HibernateQueryVisitor(final org.hibernate.Criteria root) {
         this.root = root;
@@ -80,13 +81,16 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     protected void visitChild(final ChildCriteria criteria) {
         // backup previous path
         final String parentPath = path;
+        final String parentProperty = property;
 
         // replace current path
         path = criteria.getPath();
+        property = criteria.getProperty();
         // visit child criteria
         visitCriteria(criteria.getCriteria());
         // restore previous path
         path = parentPath;
+        property = parentProperty;
     }
 
     @Override
@@ -194,17 +198,18 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     private Property getProperty(final PropertyCriteria criteria) {
-        final String path = getPath(criteria);
+        final String path = toPath(this.path, criteria.getPath());
+        final String property = toPath(this.property, criteria.getProperty());
         final String alias = getCriteria(path).getAlias();
-        return Property.forName(alias + "." + criteria.getProperty());
+        return Property.forName(alias + "." + property);
     }
 
-    private String getPath(final PropertyCriteria criteria) {
-        return this.path != null ?
-                    criteria.getPath() != null ?
-                            this.path + "." + criteria.getPath() :
-                            this.path :
-                    criteria.getPath();
+    private String toPath(final String path, final String property) {
+        return path != null ?
+                property != null ?
+                        path + "." + property :
+                        path :
+                property;
     }
 
     private org.hibernate.Criteria getCriteria(final String path) {

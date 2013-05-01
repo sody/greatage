@@ -24,11 +24,21 @@ import org.greatage.domain.Query;
  */
 public class ChildCriteria extends AllCriteria {
     private final String path;
+    private final String property;
     private final Query.Criteria criteria;
 
     public ChildCriteria(final String path, final Query.Criteria criteria) {
+        this(path, null, criteria);
+    }
+
+    public ChildCriteria(final String path, final String property, final Query.Criteria criteria) {
         this.path = path;
+        this.property = property;
         this.criteria = criteria;
+    }
+
+    public String getProperty() {
+        return property;
     }
 
     public String getPath() {

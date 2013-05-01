@@ -43,6 +43,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     private List<String> junction = new ArrayList<String>();
     private int level;
     private String path;
+    private String property;
 
     public JDOQueryVisitor(final Query query) {
         this.query = query;
@@ -83,10 +84,13 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     @Override
     protected void visitChild(final ChildCriteria criteria) {
         final String parentPath = path;
+        final String parentProperty = property;
 
         path = criteria.getPath();
+        property = criteria.getProperty();
         visitCriteria(criteria.getCriteria());
         path = parentPath;
+        property = parentProperty;
     }
 
     @Override
@@ -256,21 +260,20 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     private String propertyName(final PropertyCriteria criteria) {
-        final String path = getPath(criteria);
-        return path != null ?
-                path + "." + criteria.getProperty() :
-                criteria.getProperty();
+        final String path = toPath(this.path, criteria.getPath());
+        final String property = toPath(this.property, criteria.getProperty());
+        return toPath(path, property);
     }
 
     private String parameterName(final PropertyCriteria criteria) {
         return names.allocate(criteria.getProperty());
     }
 
-    private String getPath(final PropertyCriteria criteria) {
-        return this.path != null ?
-                criteria.getPath() != null ?
-                        this.path + "." + criteria.getPath() :
-                        this.path :
-                criteria.getPath();
+    private String toPath(final String path, final String property) {
+        return path != null ?
+                property != null ?
+                        path + "." + property :
+                        path :
+                property;
     }
 }

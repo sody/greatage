@@ -35,18 +35,20 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> impleme
 
     private final String path;
     private final String property;
+    private final String cachedPath;
 
-    public EntityMapper(final String path) {
-        this(path, DEFAULT_ID_PROPERTY);
+    public EntityMapper(final String property) {
+        this(null, property);
     }
 
-    public EntityMapper(final String path, final String idProperty) {
-        this(path, idProperty, idProperty);
+    public EntityMapper(final String path, final String property) {
+        this(path, property, DEFAULT_ID_PROPERTY);
     }
 
-    public EntityMapper(final String path, final String idProperty, final String sortProperty) {
+    public EntityMapper(final String path, final String property, final String idProperty) {
         this.path = path;
-        this.property = sortProperty;
+        this.property = property;
+        this.cachedPath = toPath(path, property);
 
         id$ = property(idProperty);
     }
@@ -64,7 +66,7 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> impleme
     }
 
     public Query.Criteria is(final Query.Criteria criteria) {
-        return new ChildCriteria(path, criteria);
+        return new ChildCriteria(cachedPath, null, criteria);
     }
 
     public Query.Criteria isNull() {
@@ -108,7 +110,24 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> impleme
     }
 
     protected <V> PropertyMapper<V> property(final String property) {
-        return new PropertyMapper<V>(path, property);
+        return new PropertyMapper<V>(cachedPath, property);
+    }
+
+    protected <V> EmbedMapper<V> embed(final String property) {
+        return new EmbedMapper<V>(cachedPath, property);
+    }
+
+    protected <VPK extends Serializable, V extends Entity<VPK>>
+    EntityMapper<VPK, V> entity(final String property) {
+        return new EntityMapper<VPK, V>(cachedPath, property);
+    }
+
+    private String toPath(final String path, final String property) {
+        return path != null ?
+                property != null ?
+                        path + "." + property :
+                        path :
+                property;
     }
 
     private PK toId(final E entity) {

@@ -18,6 +18,8 @@ import java.util.List;
 public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>> extends AbstractQueryVisitor<PK, E> {
     private final Query<? extends E> query;
 
+    private String property;
+
     public ObjectifyQueryVisitor(final Query<? extends E> query) {
         this.query = query;
     }
@@ -34,8 +36,24 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitChild(ChildCriteria criteria) {
-        throw new UnsupportedOperationException("External criteria is not supported by appengine queries");
+    protected void visitChild(final ChildCriteria criteria) {
+        if (criteria.getPath() != null) {
+            throw new UnsupportedOperationException("External criteria is not supported by appengine queries");
+        }
+
+        final String parentProperty = property;
+        property = criteria.getProperty();
+        visitCriteria(criteria.getCriteria());
+        property = parentProperty;
+    }
+
+    @Override
+    protected void visitProperty(final PropertyCriteria criteria) {
+        if (criteria.getPath() != null) {
+            throw new UnsupportedOperationException("External criteria is not supported by appengine queries");
+        }
+
+        super.visitProperty(criteria);
     }
 
     @Override
@@ -203,8 +221,14 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     private String propertyName(final PropertyCriteria criteria) {
-        return criteria.getPath() != null ?
-                criteria.getPath() + "." + criteria.getProperty() :
-                criteria.getProperty();
+        return toPath(this.property, criteria.getProperty());
+    }
+
+    private String toPath(final String path, final String property) {
+        return path != null ?
+                property != null ?
+                        path + "." + property :
+                        path :
+                property;
     }
 }
