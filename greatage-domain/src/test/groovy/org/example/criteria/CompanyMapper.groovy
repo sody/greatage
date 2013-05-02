@@ -44,6 +44,6 @@ public class CompanyMapper extends EntityMapper<Long, Company> {
 
         name$ = this.property("name");
         registeredAt$ = this.property("registeredAt");
-        info$ = new CompanyInfoMapper(getCachedPath(), "info");
+        info$ = new CompanyInfoMapper(calculatePath(), calculateProperty("info"));
     }
 }

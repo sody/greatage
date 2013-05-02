@@ -16,58 +16,16 @@
 
 package org.greatage.domain;
 
-import org.greatage.domain.internal.AllCriteria;
-import org.greatage.domain.internal.ChildCriteria;
-
-import java.io.Serializable;
-
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class EmbedMapper<V> implements Query.Property {
-    private final String path;
-    private final String property;
-
+public class EmbedMapper<V> extends CompositeMapper implements Query.Property {
     public EmbedMapper(final String path, final String property) {
-        this.path = path;
-        this.property = property;
+        super(path, property);
     }
 
-    public String getPath() {
-        return path;
-    }
-
-    public String getProperty() {
-        return property;
-    }
-
-    public AllCriteria all() {
-        return new AllCriteria();
-    }
-
-    public Query.Criteria is(final Query.Criteria criteria) {
-        return new ChildCriteria(path, property, criteria);
-    }
-
-    protected <V> PropertyMapper<V> property(final String property) {
-        return new PropertyMapper<V>(path, toPath(this.property, property));
-    }
-
-    protected <V> EmbedMapper<V> embed(final String property) {
-        return new EmbedMapper<V>(path, toPath(this.property, property));
-    }
-
-    protected <VPK extends Serializable, V extends Entity<VPK>>
-    EntityMapper<VPK, V> entity(final String property) {
-        return new EntityMapper<VPK, V>(path, toPath(this.property, property));
-    }
-
-    private String toPath(final String path, final String property) {
-        return path != null ?
-                property != null ?
-                        path + "." + property :
-                        path :
-                property;
+    protected String calculateProperty(final String property) {
+        return join(getProperty(), property);
     }
 }

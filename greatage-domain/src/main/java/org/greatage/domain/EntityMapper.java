@@ -16,9 +16,6 @@
 
 package org.greatage.domain;
 
-import org.greatage.domain.internal.AllCriteria;
-import org.greatage.domain.internal.ChildCriteria;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,13 +25,11 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class EntityMapper<PK extends Serializable, E extends Entity<PK>> implements Query.Property {
+public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends CompositeMapper {
     private static final String DEFAULT_ID_PROPERTY = "id";
 
     public final PropertyMapper<PK> id$;
 
-    private final String path;
-    private final String property;
     private final String cachedPath;
 
     public EntityMapper(final String property) {
@@ -46,27 +41,10 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> impleme
     }
 
     public EntityMapper(final String path, final String property, final String idProperty) {
-        this.path = path;
-        this.property = property;
-        this.cachedPath = toPath(path, property);
+        super(path, property);
+        cachedPath = join(path, property);
 
         id$ = property(idProperty);
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public String getProperty() {
-        return property;
-    }
-
-    public AllCriteria all() {
-        return new AllCriteria();
-    }
-
-    public Query.Criteria is(final Query.Criteria criteria) {
-        return new ChildCriteria(cachedPath, null, criteria);
     }
 
     public Query.Criteria isNull() {
@@ -109,29 +87,8 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> impleme
         return id$.in(pks);
     }
 
-    protected <V> PropertyMapper<V> property(final String property) {
-        return new PropertyMapper<V>(cachedPath, property);
-    }
-
-    protected <V> EmbedMapper<V> embed(final String property) {
-        return new EmbedMapper<V>(cachedPath, property);
-    }
-
-    protected <VPK extends Serializable, V extends Entity<VPK>>
-    EntityMapper<VPK, V> entity(final String property) {
-        return new EntityMapper<VPK, V>(cachedPath, property);
-    }
-
-    protected String getCachedPath() {
+    protected String calculatePath() {
         return cachedPath;
-    }
-
-    private String toPath(final String path, final String property) {
-        return path != null ?
-                property != null ?
-                        path + "." + property :
-                        path :
-                property;
     }
 
     private PK toId(final E entity) {

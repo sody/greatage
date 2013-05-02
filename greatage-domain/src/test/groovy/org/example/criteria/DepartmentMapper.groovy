@@ -42,6 +42,6 @@ public class DepartmentMapper extends EntityMapper<Long, Department> {
         super(path, property);
 
         name$ = this.property("name");
-        company$ = new CompanyMapper(getCachedPath(), "company");
+        company$ = new CompanyMapper(calculatePath(), calculateProperty("company"));
     }
 }
