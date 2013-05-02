@@ -1,6 +1,6 @@
 package org.greatage.domain.objectify
 
-import org.example.model.$
+import org.example.criteria.$
 import org.example.model.Company
 import org.greatage.domain.Entity
 import org.greatage.domain.Query
@@ -8,7 +8,7 @@ import org.greatage.domain.Repository
 import spock.lang.Shared
 import spock.lang.Specification
 
-import static org.example.model.$.company$
+import static org.example.criteria.$.company$
 
 /**
  * @author Ivan Khalopik

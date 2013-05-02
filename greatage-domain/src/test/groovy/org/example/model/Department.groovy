@@ -1,12 +1,10 @@
-package org.example.model;
-
-import org.greatage.domain.Entity;
+package org.example.model
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface Department extends Entity<Long> {
+public interface Department extends BaseEntity {
 
     String getName();
 

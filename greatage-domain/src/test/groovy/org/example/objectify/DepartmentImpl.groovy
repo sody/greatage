@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.example.objectify;
+package org.example.objectify
 
-import org.example.model.Company;
-import org.example.model.Department;
-import org.greatage.domain.internal.AbstractEntity;
+import org.example.model.Company
+import org.example.model.Department
+import org.greatage.domain.internal.AbstractEntity
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.Entity
+import javax.persistence.Id
 
 /**
  * @author Ivan Khalopik

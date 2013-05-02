@@ -14,20 +14,40 @@
  * limitations under the License.
  */
 
-package org.example.model;
+package org.example.hibernate
 
-import org.greatage.domain.EntityMapper;
-import org.greatage.domain.PropertyMapper;
+import org.example.model.Country
+
+import javax.persistence.AttributeOverride
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.Table
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class DepartmentMapper extends EntityMapper<Long, Department> {
-    public final PropertyMapper<String> name$ = property("name");
-    public final CompanyMapper company$ = new CompanyMapper("company");
+@Entity
+@Table(name = "country")
+@AttributeOverride(name = "id", column = @Column(name = "country_id"))
+public class CountryImpl extends BaseEntityImpl implements Country {
 
-    DepartmentMapper(final String path) {
-        super(path);
+    @Column(name = "name")
+    private String name;
+
+    public CountryImpl() {
+    }
+
+    public CountryImpl(final Long id) {
+        super(id);
+    }
+
+    @Override
+    public String getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
     }
 }

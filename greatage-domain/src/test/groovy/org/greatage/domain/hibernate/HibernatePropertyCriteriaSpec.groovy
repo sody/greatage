@@ -4,7 +4,7 @@ import org.example.model.Company
 import org.greatage.domain.PropertyCriteriaSpecification
 import spock.lang.Shared
 
-import static org.example.model.$.company$
+import static org.example.criteria.$.company$
 
 /**
  * +-------------------------------+

@@ -1,11 +1,11 @@
 package org.greatage.domain
 
-import org.example.model.$
+import org.example.criteria.$
 import org.example.model.Company
 import spock.lang.Shared
 import spock.lang.Specification
 
-import static org.example.model.$.company$
+import static org.example.criteria.$.company$
 
 /**
  * +-------------------------------+

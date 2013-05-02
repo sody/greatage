@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
-package org.example.hibernate;
+package org.example.hibernate
 
-import org.example.model.Company;
-import org.example.model.Department;
-import org.greatage.domain.internal.AbstractEntity;
+import org.example.model.Company
+import org.example.model.Department
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*
 
 /**
  * @author Ivan Khalopik
@@ -33,11 +27,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "department")
-public class DepartmentImpl extends AbstractEntity<Long> implements Department {
-
-    @Id
-    @Column(name = "department_id")
-    private Long id;
+@AttributeOverride(name = "id", column = @Column(name = "department_id"))
+public class DepartmentImpl extends BaseEntityImpl implements Department {
 
     @Column(name = "name")
     private String name;
@@ -50,11 +41,7 @@ public class DepartmentImpl extends AbstractEntity<Long> implements Department {
     }
 
     public DepartmentImpl(final Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
+        super(id);
     }
 
     public String getName() {

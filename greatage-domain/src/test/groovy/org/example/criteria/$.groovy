@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package org.example.model;
+package org.example.criteria;
 
-import org.greatage.domain.EntityMapper;
-import org.greatage.domain.PropertyMapper;
-
-import java.util.Date;
+import org.greatage.domain.RootMapper;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class CompanyMapper extends EntityMapper<Long, Company> {
-    public final PropertyMapper<String> name$ = property("name");
-    public final PropertyMapper<Date> registeredAt$ = property("registeredAt");
-
-    CompanyMapper(final String path) {
-        super(path);
-    }
+public abstract class $ extends RootMapper {
+    public static final CompanyMapper company$ = new CompanyMapper();
+    public static final DepartmentMapper department$ = new DepartmentMapper();
+    public static final CompanyInfoMapper companyInfo$ = new CompanyInfoMapper();
 }

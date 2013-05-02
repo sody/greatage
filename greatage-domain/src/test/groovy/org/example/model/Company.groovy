@@ -1,14 +1,10 @@
-package org.example.model;
-
-import org.greatage.domain.Entity;
-
-import java.util.Date;
+package org.example.model
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public interface Company extends Entity<Long> {
+public interface Company extends BaseEntity {
 
     String getName();
 
@@ -18,4 +14,5 @@ public interface Company extends Entity<Long> {
 
     void setRegisteredAt(Date registeredAt);
 
+    CompanyInfo getInfo();
 }

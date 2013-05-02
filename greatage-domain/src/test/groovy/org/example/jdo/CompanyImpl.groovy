@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package org.example.jdo;
+package org.example.jdo
 
-import org.example.model.Company;
-import org.greatage.domain.internal.AbstractEntity;
+import org.example.model.Company
+import org.example.model.CompanyInfo
+import org.greatage.domain.internal.AbstractEntity
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-import java.util.Date;
+import javax.jdo.annotations.IdGeneratorStrategy
+import javax.jdo.annotations.PersistenceCapable
+import javax.jdo.annotations.Persistent
+import javax.jdo.annotations.PrimaryKey
 
 /**
  * @author Ivan Khalopik
@@ -67,5 +67,10 @@ public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
     public void setRegisteredAt(final Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    @Override
+    public CompanyInfo getInfo() {
+        return null;
     }
 }

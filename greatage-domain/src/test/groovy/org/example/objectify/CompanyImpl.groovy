@@ -1,11 +1,11 @@
-package org.example.objectify;
+package org.example.objectify
 
-import org.example.model.Company;
-import org.greatage.domain.internal.AbstractEntity;
+import org.example.model.Company
+import org.example.model.CompanyInfo
+import org.greatage.domain.internal.AbstractEntity
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.Entity
+import javax.persistence.Id
 
 /**
  * @author Ivan Khalopik
@@ -49,5 +49,10 @@ public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
     public void setRegisteredAt(final Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    @Override
+    public CompanyInfo getInfo() {
+        return null;
     }
 }

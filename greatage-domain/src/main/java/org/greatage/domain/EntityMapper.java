@@ -122,6 +122,10 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> impleme
         return new EntityMapper<VPK, V>(cachedPath, property);
     }
 
+    protected String getCachedPath() {
+        return cachedPath;
+    }
+
     private String toPath(final String path, final String property) {
         return path != null ?
                 property != null ?

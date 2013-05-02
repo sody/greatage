@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package org.example.hibernate;
+package org.example.hibernate
 
-import org.example.model.Company;
-import org.greatage.domain.internal.AbstractEntity;
+import org.example.model.Company
+import org.example.model.CompanyInfo
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Date;
+import javax.persistence.*
 
 /**
  * @author Ivan Khalopik
@@ -31,11 +27,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "company")
-public class CompanyImpl extends AbstractEntity<Long> implements Company {
-
-    @Id
-    @Column(name = "company_id")
-    private Long id;
+@AttributeOverride(name = "id", column = @Column(name = "company_id"))
+public class CompanyImpl extends BaseEntityImpl implements Company {
 
     @Column(name = "name")
     private String name;
@@ -43,15 +36,14 @@ public class CompanyImpl extends AbstractEntity<Long> implements Company {
     @Column(name = "registered_at")
     private Date registeredAt;
 
+    @Embedded
+    private CompanyInfo info = new CompanyInfoImpl();
+
     public CompanyImpl() {
     }
 
     public CompanyImpl(final Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
+        super(id);
     }
 
     public String getName() {
@@ -68,5 +60,9 @@ public class CompanyImpl extends AbstractEntity<Long> implements Company {
 
     public void setRegisteredAt(final Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public CompanyInfo getInfo() {
+        return info;
     }
 }

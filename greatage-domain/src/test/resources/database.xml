@@ -17,18 +17,18 @@
   -->
 
 <dataset>
-	<company company_id="2" name="company2" registered_at="2010-10-10"/>
-	<company company_id="1" name="company1"/>
-	<company company_id="3" name="company3"/>
-	<company company_id="4"/>
-	<company company_id="5" name="company" registered_at="2001-01-01"/>
-	<company company_id="6" name="company" registered_at="2001-02-02"/>
+  <company company_id="2" name="company2" registered_at="2010-10-10"/>
+  <company company_id="1" name="company1"/>
+  <company company_id="3" name="company3"/>
+  <company company_id="4"/>
+  <company company_id="5" name="company" registered_at="2001-01-01"/>
+  <company company_id="6" name="company" registered_at="2001-02-02"/>
 
-	<department department_id="1" name="department1" company_id="1"/>
-	<department department_id="2" name="department2" company_id="1"/>
-	<department department_id="3" name="department3" company_id="1"/>
+  <department department_id="1" name="department1" company_id="1"/>
+  <department department_id="2" name="department2" company_id="1"/>
+  <department department_id="3" name="department3" company_id="1"/>
 
-	<department department_id="4" name="department4" company_id="3"/>
-	<department department_id="5" name="department5" company_id="3"/>
+  <department department_id="4" name="department4" company_id="3"/>
+  <department department_id="5" name="department5" company_id="3"/>
 
 </dataset>

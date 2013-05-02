@@ -14,15 +14,34 @@
  * limitations under the License.
  */
 
-package org.example.model;
+package org.example.criteria
 
-import org.greatage.domain.RootMapper;
+import org.example.model.Department
+import org.greatage.domain.EntityMapper
+import org.greatage.domain.PropertyMapper
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class $ extends RootMapper {
-    public static final CompanyMapper company$ = new CompanyMapper(null);
-    public static final DepartmentMapper department$ = new DepartmentMapper(null);
+public class DepartmentMapper extends EntityMapper<Long, Department> {
+    public final PropertyMapper<String> name$;
+    public final CompanyMapper company$;
+
+    /**
+     * Root criteria.
+     */
+    DepartmentMapper() {
+        this(null, null);
+    }
+
+    /**
+     * Embed criteria
+     */
+    DepartmentMapper(final String path, final String property) {
+        super(path, property);
+
+        name$ = this.property("name");
+        company$ = new CompanyMapper(getCachedPath(), "company");
+    }
 }
