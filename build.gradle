@@ -5,7 +5,7 @@ ext {
     snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
 
     versions = [
-            javassist: "3.17.0-GA",
+            javassist: "3.17.1-GA",
             hibernate: "4.0.0.CR5",
             jdo: "3.0.1",
             jpa: "1.0",
