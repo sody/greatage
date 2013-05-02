@@ -30,8 +30,11 @@ allprojects {
         mavenCentral()
         mavenLocal()
 
-        // All things JBoss/Hibernate
+        // for hibernate
         mavenRepo name: "JBoss", url: "https://repository.jboss.org/nexus/content/repositories/releases/"
+
+        // for objectify
+        mavenRepo name: "Objectify", url: "http://maven.objectify-appengine.googlecode.com/git/"
     }
 }
 
