@@ -37,7 +37,7 @@ public class CompanyImpl extends BaseEntityImpl implements Company {
     private Date registeredAt;
 
     @Embedded
-    private CompanyInfo info = new CompanyInfoImpl();
+    private CompanyInfoImpl info = new CompanyInfoImpl();
 
     public CompanyImpl() {
     }

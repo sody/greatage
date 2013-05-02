@@ -17,10 +17,10 @@
   -->
 
 <dataset>
-  <company company_id="2" name="company2" registered_at="2010-10-10"/>
+  <company company_id="2" name="company2" registered_at="2010-10-10" info_code="C2"/>
   <company company_id="1" name="company1"/>
-  <company company_id="3" name="company3"/>
-  <company company_id="4"/>
+  <company company_id="3" name="company3" info_code="C3"/>
+  <company company_id="4" info_code="C4"/>
   <company company_id="5" name="company" registered_at="2001-01-01"/>
   <company company_id="6" name="company" registered_at="2001-02-02"/>
 
