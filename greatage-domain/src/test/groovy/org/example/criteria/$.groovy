@@ -23,7 +23,19 @@ import org.greatage.domain.RootMapper;
  * @since 1.0
  */
 public abstract class $ extends RootMapper {
+
+    /**
+     * Embeddable mappers
+     */
     public static final CompanyMapper company$ = new CompanyMapper();
-    public static final DepartmentMapper department$ = new DepartmentMapper();
     public static final CompanyInfoMapper companyInfo$ = new CompanyInfoMapper();
+    public static final DepartmentMapper department$ = new DepartmentMapper();
+
+    /**
+     * Simple mappers
+     */
+    public static final SimpleCompanyMapper simpleCompany$ = new SimpleCompanyMapper();
+    public static final SimpleCompanyInfoMapper simpleCompanyInfo$ = new SimpleCompanyInfoMapper();
+    public static final SimpleDepartmentMapper simpleDepartment$ = new SimpleDepartmentMapper();
+
 }
