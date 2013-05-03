@@ -84,8 +84,8 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
         final String parentProperty = property;
 
         // replace current path
-        path = criteria.getPath();
-        property = criteria.getProperty();
+        path = toPath(parentPath, criteria.getPath());
+        property = toPath(parentProperty, criteria.getProperty());//TODO: ?????
         // visit child criteria
         visitCriteria(criteria.getCriteria());
         // restore previous path

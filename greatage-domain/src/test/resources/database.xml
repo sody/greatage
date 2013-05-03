@@ -24,11 +24,14 @@
   <company company_id="5" name="company" registered_at="2001-01-01"/>
   <company company_id="6" name="company" registered_at="2001-02-02"/>
 
-  <department department_id="1" name="department1" company_id="1"/>
-  <department department_id="2" name="department2" company_id="1"/>
-  <department department_id="3" name="department3" company_id="1"/>
+  <department department_id="11" name="department1_1" company_id="1"/>
+  <department department_id="12" name="department1_2" company_id="1"/>
+  <department department_id="13" name="department1_3" company_id="1"/>
 
-  <department department_id="4" name="department4" company_id="3"/>
-  <department department_id="5" name="department5" company_id="3"/>
+  <department department_id="41" name="department4_1" company_id="4"/>
+  <department department_id="42" name="department4_2" company_id="4"/>
+
+  <department department_id="7" name="department7"/>
+  <department department_id="9"/>
 
 </dataset>
