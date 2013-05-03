@@ -5,8 +5,10 @@ import org.dbunit.PropertiesBasedJdbcDatabaseTester
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder
 import org.dbunit.operation.DatabaseOperation
 import org.example.hibernate.CompanyImpl
+import org.example.hibernate.CountryImpl
 import org.example.hibernate.DepartmentImpl
 import org.example.model.Company
+import org.example.model.Country
 import org.example.model.Department
 import org.greatage.domain.Repository
 import org.hibernate.cfg.Configuration
@@ -21,9 +23,11 @@ class HibernateTestData {
 
     public Repository setup() {
         def configuration = new Configuration()
+        configuration.addAnnotatedClass(CountryImpl.class)
         configuration.addAnnotatedClass(CompanyImpl.class)
         configuration.addAnnotatedClass(DepartmentImpl.class)
         def repository = new HibernateRepository(new HibernateSessionManager(configuration.buildSessionFactory()), [
+                (Country.class): CountryImpl.class,
                 (Company.class): CompanyImpl.class,
                 (Department.class): DepartmentImpl.class
         ])

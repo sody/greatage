@@ -24,11 +24,7 @@ import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.PropertyCriteria;
 import org.greatage.util.NameAllocator;
 import org.greatage.util.StringUtils;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Junction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -84,8 +80,8 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
         final String parentProperty = property;
 
         // replace current path
-        path = toPath(parentPath, criteria.getPath());
-        property = toPath(parentProperty, criteria.getProperty());//TODO: ?????
+        path = resolvePath(criteria.getPath());
+        property = resolveProperty(criteria.getPath(), criteria.getProperty());
         // visit child criteria
         visitCriteria(criteria.getCriteria());
         // restore previous path
@@ -198,13 +194,21 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     private Property getProperty(final PropertyCriteria criteria) {
-        final String path = toPath(this.path, criteria.getPath());
-        final String property = toPath(this.property, criteria.getProperty());
+        final String path = resolvePath(criteria.getPath());
+        final String property = resolveProperty(criteria.getPath(), criteria.getProperty());
         final String alias = getCriteria(path).getAlias();
         return Property.forName(alias + "." + property);
     }
 
-    private String toPath(final String path, final String property) {
+    private String resolvePath(final String path) {
+        return path != null ? join(join(this.path, this.property), path) : this.path;
+    }
+
+    private String resolveProperty(final String path, final String property) {
+        return path != null ? property : join(this.property, property);
+    }
+
+    private String join(final String path, final String property) {
         return path != null ?
                 property != null ?
                         path + "." + property :

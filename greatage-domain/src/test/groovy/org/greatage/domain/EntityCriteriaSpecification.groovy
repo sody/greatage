@@ -7,18 +7,18 @@ import spock.lang.Specification
 import static org.example.criteria.$.*
 
 /**
- * +-------------------------------+----------------+
- * |            COMPANY            |  COMPANY_INFO  |
- * +----+----------+---------------+----------------+
- * | ID |   NAME   | REGISTERED_AT |    INFO_CODE   |
- * +----+----------+---------------+----------------+
- * | 1  | company1 |          null |           null |
- * | 2  | company2 |    2010-10-10 |             C2 |
- * | 3  | company3 |          null |             C3 |
- * | 4  |     null |          null |             C4 |
- * | 5  |  company |    2001-01-01 |           null |
- * | 6  |  company |    2001-02-02 |           null |
- * +----+----------+---------------+----------------+
+ * +-------------------------------+-----------------------------+
+ * |            COMPANY            |         COMPANY_INFO        |
+ * +----+----------+---------------+-----------+-----------------+
+ * | ID |   NAME   | REGISTERED_AT | INFO_CODE | INFO_COUNTRY_ID |
+ * +----+----------+---------------+-----------+-----------------+
+ * | 1  | company1 |          null |      null |               1 |
+ * | 2  | company2 |    2010-10-10 |        C2 |            null |
+ * | 3  | company3 |          null |        C3 |            null |
+ * | 4  |     null |          null |        C4 |               3 |
+ * | 5  |  company |    2001-01-01 |      null |            null |
+ * | 6  |  company |    2001-02-02 |      null |            null |
+ * +----+----------+---------------+-----------+-----------------+
  *
  * +---------------------------------+
  * |            DEPARTMENT           |
@@ -112,12 +112,41 @@ abstract class EntityCriteriaSpecification extends Specification {
         department$.company$.is(company$.info$.code$.eq("C4"))                                     | [41, 42]
         department$.company$.is(company$.info$.code$.isNull())                                     | [11, 12, 13]
         department$.company$.is(company$.info$.code$.notNull())                                    | [41, 42]
+        department$.company$.info$.is(companyInfo$.code$.eq("C4"))                                 | [41, 42]
+        department$.company$.info$.is(companyInfo$.code$.isNull())                                 | [11, 12, 13]
+        department$.company$.info$.is(companyInfo$.code$.notNull())                                | [41, 42]
         department$.company$.is(company$.info$.is(companyInfo$.code$.eq("C4")))                    | [41, 42]
         department$.company$.is(company$.info$.is(companyInfo$.code$.isNull()))                    | [11, 12, 13]
         department$.company$.is(company$.info$.is(companyInfo$.code$.notNull()))                   | [41, 42]
         simpleDepartment$.company$.is(simpleCompany$.info$.is(simpleCompanyInfo$.code$.eq("C4")))  | [41, 42]
         simpleDepartment$.company$.is(simpleCompany$.info$.is(simpleCompanyInfo$.code$.isNull()))  | [11, 12, 13]
         simpleDepartment$.company$.is(simpleCompany$.info$.is(simpleCompanyInfo$.code$.notNull())) | [41, 42]
+    }
+
+    def "entity criteria inside embed criteria should find only entities that has not null association and match child criteria"() {
+        when:
+        def actual = findIds(Department.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                                                               | expected
+        department$.company$.info$.country$.code$.eq("by")                                                                     | [41, 42]
+        department$.company$.info$.country$.code$.notNull()                                                                    | [41, 42]
+        department$.company$.info$.country$.is(country$.code$.eq("by"))                                                        | [41, 42]
+        department$.company$.info$.country$.is(country$.code$.notNull())                                                       | [41, 42]
+        department$.company$.info$.is(companyInfo$.country$.code$.eq("by"))                                                    | [41, 42]
+        department$.company$.info$.is(companyInfo$.country$.code$.notNull())                                                   | [41, 42]
+        department$.company$.info$.is(companyInfo$.country$.is(country$.code$.eq("by")))                                       | [41, 42]
+        department$.company$.info$.is(companyInfo$.country$.is(country$.code$.notNull()))                                      | [41, 42]
+        department$.company$.is(company$.info$.country$.code$.eq("by"))                                                        | [41, 42]
+        department$.company$.is(company$.info$.country$.code$.notNull())                                                       | [41, 42]
+        department$.company$.is(company$.info$.is(companyInfo$.country$.code$.eq("by")))                                       | [41, 42]
+        department$.company$.is(company$.info$.is(companyInfo$.country$.code$.notNull()))                                      | [41, 42]
+        department$.company$.is(company$.info$.is(companyInfo$.country$.is(country$.code$.eq("by"))))                          | [41, 42]
+        department$.company$.is(company$.info$.is(companyInfo$.country$.is(country$.code$.notNull())))                         | [41, 42]
+        simpleDepartment$.company$.is(simpleCompany$.info$.is(simpleCompanyInfo$.country$.is(simpleCountry$.code$.eq("by"))))  | [41, 42]
+        simpleDepartment$.company$.is(simpleCompany$.info$.is(simpleCompanyInfo$.country$.is(simpleCountry$.code$.notNull()))) | [41, 42]
     }
 
     protected Date date(final String input) {

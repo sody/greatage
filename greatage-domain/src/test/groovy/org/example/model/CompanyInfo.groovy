@@ -9,4 +9,7 @@ public interface CompanyInfo {
 
     void setCode(final String code);
 
+    Country getCountry();
+
+    void setCountry(Country country);
 }

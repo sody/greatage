@@ -17,10 +17,14 @@
   -->
 
 <dataset>
-  <company company_id="2" name="company2" registered_at="2010-10-10" info_code="C2"/>
+  <country country_id="1" code="us" name="USA"/>
+  <country country_id="2" code="ru" name="Russia"/>
+  <country country_id="3" code="by" name="Belarus"/>
+
+  <company company_id="2" name="company2" registered_at="2010-10-10" info_code="C2" info_country_id="1"/>
   <company company_id="1" name="company1"/>
   <company company_id="3" name="company3" info_code="C3"/>
-  <company company_id="4" info_code="C4"/>
+  <company company_id="4" info_code="C4" info_country_id="3"/>
   <company company_id="5" name="company" registered_at="2001-01-01"/>
   <company company_id="6" name="company" registered_at="2001-02-02"/>
 

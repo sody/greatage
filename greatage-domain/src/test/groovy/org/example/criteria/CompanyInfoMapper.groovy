@@ -9,6 +9,7 @@ import org.greatage.domain.PropertyMapper
  */
 public class CompanyInfoMapper extends EmbedMapper<CompanyInfo> {
     public final PropertyMapper<String> code$;
+    public final CountryMapper country$;
 
     /**
      * Root criteria.
@@ -24,5 +25,6 @@ public class CompanyInfoMapper extends EmbedMapper<CompanyInfo> {
         super(path, property)
 
         code$ = this.property("code");
+        country$ = new CountryMapper(calculatePath(), calculateProperty("country"))
     }
 }

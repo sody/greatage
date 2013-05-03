@@ -14,43 +14,24 @@
  * limitations under the License.
  */
 
-package org.example.hibernate
+package org.example.criteria
 
 import org.example.model.Country
-
-import javax.persistence.AttributeOverride
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Table
+import org.greatage.domain.EntityMapper
+import org.greatage.domain.PropertyMapper
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-@Entity
-@Table(name = "country")
-@AttributeOverride(name = "id", column = @Column(name = "country_id"))
-public class CountryImpl extends BaseEntityImpl implements Country {
+public class SimpleCountryMapper extends EntityMapper<Long, Country> {
+    public final PropertyMapper<String> code$ = property("code");
+    public final PropertyMapper<String> name$ = property("name");
 
-    @Column(name = "code")
-    private String code;
-
-    @Column(name = "name")
-    private String name;
-
-    public CountryImpl() {
-    }
-
-    public CountryImpl(final Long id) {
-        super(id);
-    }
-
-    @Override
-    public String getCode() {
-        return code;
-    }
-
-    public String getName() {
-        return name;
+    /**
+     * Root criteria.
+     */
+    SimpleCountryMapper() {
+        super(null, null);
     }
 }
