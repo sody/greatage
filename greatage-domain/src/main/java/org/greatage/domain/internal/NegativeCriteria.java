@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.internal;
 
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.NegativeCriteria;
-
-import java.util.Arrays;
+import org.greatage.domain.Query;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class RootMapper {
+public class NegativeCriteria extends AllCriteria {
+    private final Query.Criteria criteria;
 
-    public static Query.Criteria and(final Query.Criteria... criteria) {
-        return new JunctionCriteria(JunctionCriteria.Operator.AND, Arrays.asList(criteria));
+    public NegativeCriteria(final Query.Criteria criteria) {
+        this.criteria = criteria;
     }
 
-    public static Query.Criteria or(final Query.Criteria... criteria) {
-        return new JunctionCriteria(JunctionCriteria.Operator.OR, Arrays.asList(criteria));
-    }
-
-    public static Query.Criteria not(final Query.Criteria criteria) {
-        return new NegativeCriteria(criteria);
+    public Query.Criteria getCriteria() {
+        return criteria;
     }
 }

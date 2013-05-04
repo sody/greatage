@@ -2,10 +2,7 @@ package org.greatage.domain.objectify;
 
 import com.googlecode.objectify.Query;
 import org.greatage.domain.Entity;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.ChildCriteria;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
+import org.greatage.domain.internal.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,6 +30,12 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
         for (org.greatage.domain.Query.Criteria child : criteria.getChildren()) {
             visitCriteria(child);
         }
+    }
+
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        //TODO: implement it
+        throw new UnsupportedOperationException();
     }
 
     @Override

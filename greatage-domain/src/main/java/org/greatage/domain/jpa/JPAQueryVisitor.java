@@ -17,10 +17,7 @@
 package org.greatage.domain.jpa;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.ChildCriteria;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
+import org.greatage.domain.internal.*;
 
 import javax.persistence.Query;
 import java.io.Serializable;
@@ -40,6 +37,12 @@ public class JPAQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     @Override
     protected void visitJunction(final JunctionCriteria criteria) {
         //todo: implement this
+    }
+
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        //TODO: implement it
+        throw new UnsupportedOperationException();
     }
 
     @Override

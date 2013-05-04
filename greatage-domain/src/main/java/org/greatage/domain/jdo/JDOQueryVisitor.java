@@ -17,10 +17,7 @@
 package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.ChildCriteria;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
+import org.greatage.domain.internal.*;
 import org.greatage.util.NameAllocator;
 
 import javax.jdo.Query;
@@ -79,6 +76,12 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         final String function = criteria.getOperator() == JunctionCriteria.Operator.AND ? " && " : " || ";
         final String filter = getJunction(temp, function);
         addCriterion(filter, criteria.isNegative());
+    }
+
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        //TODO: implement it
+        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -18,10 +18,7 @@ package org.greatage.domain.hibernate;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Query;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.ChildCriteria;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
+import org.greatage.domain.internal.*;
 import org.greatage.util.NameAllocator;
 import org.greatage.util.StringUtils;
 import org.hibernate.criterion.*;
@@ -44,6 +41,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     private final org.hibernate.Criteria root;
 
     private Junction junction;
+    private boolean negative;
     private String path;
     private String property;
 
@@ -55,6 +53,8 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     protected void visitJunction(final JunctionCriteria criteria) {
         // backup previous junction
         final Junction parent = junction;
+        // backup previous negative flag
+        final boolean parentNegative = negative;
         // create new junction
         final Junction current = criteria.getOperator() == JunctionCriteria.Operator.AND ?
                 Restrictions.conjunction() :
@@ -62,15 +62,31 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 
         // replace current junction
         junction = current;
+        // reset negative flag
+        negative = false;
         // process child criteria
         for (Query.Criteria child : criteria.getChildren()) {
             visitCriteria(child);
         }
         // restore previous junction
         junction = parent;
+        // restore previous negative flag
+        negative = parentNegative;
 
         // add junction to the criteria
-        addCriterion(current, criteria.isNegative());
+        addCriterion(current);
+    }
+
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        // backup previous negative flag
+        final boolean parentNegative = negative;
+        // setup negative flag
+        negative = true;
+        // process child criteria
+        visitCriteria(criteria.getCriteria());
+        // restore previous negative flag
+        negative = parentNegative;
     }
 
     @Override
@@ -94,9 +110,9 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
         final Property property = getProperty(criteria);
 
         if (criteria.getValue() == null) {
-            addCriterion(property.isNull(), criteria.isNegative());
+            addCriterion(property.isNull());
         } else {
-            addCriterion(property.eq(criteria.getValue()), criteria.isNegative());
+            addCriterion(property.eq(criteria.getValue()));
         }
     }
 
@@ -105,9 +121,9 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
         final Property property = getProperty(criteria);
 
         if (criteria.getValue() == null) {
-            addCriterion(property.isNotNull(), criteria.isNegative());
+            addCriterion(property.isNotNull());
         } else {
-            addCriterion(property.ne(criteria.getValue()), criteria.isNegative());
+            addCriterion(property.ne(criteria.getValue()));
         }
     }
 
@@ -115,28 +131,28 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     protected void visitGreaterThan(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 
-        addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
+        addCriterion(property.gt(criteria.getValue()));
     }
 
     @Override
     protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 
-        addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
+        addCriterion(property.ge(criteria.getValue()));
     }
 
     @Override
     protected void visitLessThan(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 
-        addCriterion(property.lt(criteria.getValue()), criteria.isNegative());
+        addCriterion(property.lt(criteria.getValue()));
     }
 
     @Override
     protected void visitLessOrEqual(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 
-        addCriterion(property.le(criteria.getValue()), criteria.isNegative());
+        addCriterion(property.le(criteria.getValue()));
     }
 
     @Override
@@ -145,9 +161,9 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
 
         final List<?> value = (List<?>) criteria.getValue();
         if (value == null || value.isEmpty()) {
-            addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
+            addCriterion(Restrictions.sqlRestriction("1=2"));
         } else {
-            addCriterion(property.in(value), criteria.isNegative());
+            addCriterion(property.in(value));
         }
     }
 
@@ -155,7 +171,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     protected void visitLike(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 
-        addCriterion(property.like(criteria.getValue()), criteria.isNegative());
+        addCriterion(property.like(criteria.getValue()));
     }
 
     @Override
@@ -185,7 +201,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
         }
     }
 
-    private void addCriterion(final Criterion criterion, final boolean negative) {
+    private void addCriterion(final Criterion criterion) {
         if (junction != null) {
             junction.add(negative ? Restrictions.not(criterion) : criterion);
         } else {
