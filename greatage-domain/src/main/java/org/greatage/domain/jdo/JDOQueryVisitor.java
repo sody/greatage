@@ -98,6 +98,11 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
+    protected void visitAll(final AllCriteria criteria) {
+        //TODO: implement it
+    }
+
+    @Override
     protected void visitEqual(final PropertyCriteria criteria) {
         final String propertyName = propertyName(criteria);
         final String parameterName = parameterName(criteria);

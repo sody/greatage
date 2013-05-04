@@ -106,6 +106,11 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
+    protected void visitAll(final AllCriteria criteria) {
+        addCriterion(Restrictions.sqlRestriction("1=1"));
+    }
+
+    @Override
     protected void visitEqual(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 
