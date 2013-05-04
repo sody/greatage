@@ -19,15 +19,16 @@ package org.example.criteria;
 import org.greatage.domain.RootMapper;
 
 /**
- * Embeddable mappers.
+ * Simple mappers.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
-public abstract class $ extends RootMapper {
-    public static final CountryMapper country$ = new CountryMapper();
-    public static final CompanyMapper company$ = new CompanyMapper();
-    public static final CompanyInfoMapper companyInfo$ = new CompanyInfoMapper();
-    public static final AddressMapper address$ = new AddressMapper();
-    public static final DepartmentMapper department$ = new DepartmentMapper();
+public abstract class _$ extends RootMapper {
+    public static final SimpleCountryMapper country$ = new SimpleCountryMapper();
+    public static final SimpleCompanyMapper company$ = new SimpleCompanyMapper();
+    public static final SimpleCompanyInfoMapper companyInfo$ = new SimpleCompanyInfoMapper();
+    public static final SimpleAddressMapper address$ = new SimpleAddressMapper();
+    public static final SimpleDepartmentMapper department$ = new SimpleDepartmentMapper();
+
 }

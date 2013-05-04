@@ -7,18 +7,18 @@ import spock.lang.Shared
 import static org.example.criteria.$.company$
 
 /**
- * +-------------------------------+
- * |            COMPANY            |
- * +----+----------+---------------+
- * | ID | NAME     | REGISTERED_AT |
- * +----+----------+---------------+
- * | 1  | company1 |          null |
- * | 2  | company2 |    2010-10-10 |
- * | 3  | company3 |          null |
- * | 4  |     null |          null |
- * | 5  |  company |    2001-01-01 |
- * | 6  |  company |    2001-02-02 |
- * +----+----------+---------------+
+ * +-------------------------------+--------------+-------------------------------------------------+
+ * |            COMPANY            | COMPANY_INFO |                     ADDRESS                     |
+ * +----+----------+---------------+--------------+-------------+-------------+--------+------------+
+ * | ID |   NAME   | REGISTERED_AT |   INFO_CODE  |   ADDRESS1  |   ADDRESS2  | CITY   | COUNTRY_ID |
+ * +----+----------+---------------+--------------+-------------+-------------+--------+------------+
+ * | 1  | company1 |          null |         null |        null |        null |   null |       null |
+ * | 2  | company2 |    2010-10-10 |           C2 | address_2_1 | address_2_2 | city_2 |          1 |
+ * | 3  | company3 |          null |           C3 | address_3_1 | address_3_2 |   null |       null |
+ * | 4  |     null |          null |           C4 |        null |        null |   null |          3 |
+ * | 5  |  company |    2001-01-01 |         null |        null |        null |   null |       null |
+ * | 6  |  company |    2001-02-02 |         null |        null |        null |   null |       null |
+ * +----+----------+---------------+--------------+-------------+-------------+--------+------------+
  *
  * @author Ivan Khalopik
  * @since 1.0
