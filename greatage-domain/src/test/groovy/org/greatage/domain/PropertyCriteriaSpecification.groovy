@@ -261,7 +261,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.lessOrEqual(null) | []
     }
 
-    def "in criteria should filter entities to those that have property value in specified set and not null"() {
+    def "in criteria should filter entities to those that have property value in specified set"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -309,6 +309,56 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.name$.in("company2", "company8", null)     | [2]
         company$.registeredAt$.in([null])                   | []
         company$.registeredAt$.in(date("2001-01-01"), null) | [5]
+    }
+
+    def "not in criteria should filter entities to those that have property value not in specified set and not null"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                               | expected
+        company$.id$.nin([1l, 2l, 3l])                                                         | [4, 5, 6]
+        company$.id$.notIn(1l)                                                                 | [2, 3, 4, 5, 6]
+        company$.id$.notIn(10l)                                                                | [1, 2, 3, 4, 5, 6]
+        company$.id$.nin(1l, 6l, 10l)                                                          | [2, 3, 4, 5]
+        company$.name$.notIn("company", "company1")                                            | [2, 3]
+        company$.name$.nin("company")                                                          | [1, 2, 3]
+        company$.name$.nin("company8")                                                         | [1, 2, 3, 5, 6]
+        company$.name$.notIn(["company2", "company8"])                                         | [1, 3, 5, 6]
+        company$.registeredAt$.nin(date("2001-01-01"), date("2001-02-02"))                     | [2]
+        company$.registeredAt$.nin(date("2012-10-10"))                                         | [2, 5, 6]
+        company$.registeredAt$.nin(date("2001-01-01"), date("2010-10-10"), date("1999-01-01")) | [6]
+    }
+
+    def "not in criteria with empty parameter should not filter entities"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                       | expected
+        company$.id$.nin([])           | [1, 2, 3, 4, 5, 6]
+        company$.name$.nin([])         | [1, 2, 3, 4, 5, 6]
+        company$.registeredAt$.nin([]) | [1, 2, 3, 4, 5, 6]
+    }
+
+    def "not in criteria with null parameters should filter entities to those that have property value not in specified set and not null"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                            | expected
+        company$.id$.nin([null])                             | [1, 2, 3, 4, 5, 6]
+        company$.id$.nin(1l, null, 10l)                      | [2, 3, 4, 5, 6]
+        company$.name$.nin([null])                           | [1, 2, 3, 5, 6]
+        company$.name$.nin("company2", "company8", null)     | [1, 3, 5, 6]
+        company$.registeredAt$.nin([null])                   | [2, 5, 6]
+        company$.registeredAt$.nin(date("2001-01-01"), null) | [2, 6]
     }
 
     protected Date date(final String input) {

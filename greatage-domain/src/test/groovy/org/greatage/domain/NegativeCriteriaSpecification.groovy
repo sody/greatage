@@ -250,6 +250,45 @@ abstract class NegativeCriteriaSpecification extends Specification {
         $.not(company$.registeredAt$.in(date("2001-01-01"), null)) | [2, 6]
     }
 
+    def "negative not in criteria should filter entities to those that have property value in specified set"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                                  | expected
+        $.not(company$.id$.nin(1l, 6l, 10l))                                      | [1, 6]
+        $.not(company$.name$.nin(["company", "company2", "company8"]))            | [2, 5, 6]
+        $.not(company$.registeredAt$.nin(date("2001-01-01"), date("2001-02-02"))) | [5, 6]
+    }
+
+    def "negative not in criteria with empty parameter should filter all entities to empty result"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                              | expected
+        $.not(company$.id$.nin([]))           | []
+        $.not(company$.name$.nin([]))         | []
+        $.not(company$.registeredAt$.nin([])) | []
+    }
+
+    def "negative not in criteria with null parameters should filter entities to those that have property value in specified set and not null"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                                    | expected
+        $.not(company$.id$.nin(1l, null, 10l))                      | [1]
+        $.not(company$.name$.nin("company2", "company8", null))     | [2]
+        $.not(company$.registeredAt$.nin(date("2001-01-01"), null)) | [5]
+    }
+
     protected Date date(final String input) {
         return Date.parse("yyyy-MM-dd", input)
     }
