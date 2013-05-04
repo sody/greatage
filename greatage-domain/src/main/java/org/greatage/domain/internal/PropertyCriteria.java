@@ -16,11 +16,13 @@
 
 package org.greatage.domain.internal;
 
+import org.greatage.domain.Query;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PropertyCriteria extends AllCriteria {
+public class PropertyCriteria implements Query.Criteria {
     private final String path;
     private final String property;
     private final Operator operator;
@@ -83,7 +85,8 @@ public class PropertyCriteria extends AllCriteria {
                 break;
         }
         builder.append(value);
-        return isNegative() ? "not " + builder.toString() : builder.toString();
+
+        return builder.toString();
     }
 
     public enum Operator {

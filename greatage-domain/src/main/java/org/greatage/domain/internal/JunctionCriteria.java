@@ -25,7 +25,7 @@ import java.util.List;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JunctionCriteria extends AllCriteria {
+public class JunctionCriteria implements Query.Criteria {
     private final List<Query.Criteria> children;
     private final Operator operator;
 
@@ -66,7 +66,8 @@ public class JunctionCriteria extends AllCriteria {
             builder.append(child);
         }
         builder.append(")");
-        return isNegative() ? "not " + builder.toString() : builder.toString();
+
+        return builder.toString();
     }
 
     public enum Operator {

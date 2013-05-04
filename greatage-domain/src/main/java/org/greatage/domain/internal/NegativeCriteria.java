@@ -22,7 +22,7 @@ import org.greatage.domain.Query;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class NegativeCriteria extends AllCriteria {
+public class NegativeCriteria implements Query.Criteria {
     private final Query.Criteria criteria;
 
     public NegativeCriteria(final Query.Criteria criteria) {
@@ -31,5 +31,10 @@ public class NegativeCriteria extends AllCriteria {
 
     public Query.Criteria getCriteria() {
         return criteria;
+    }
+
+    @Override
+    public String toString() {
+        return "(not " + criteria + ")";
     }
 }

@@ -23,19 +23,9 @@ import org.greatage.domain.Query;
  * @since 1.0
  */
 public class AllCriteria implements Query.Criteria {
-    private boolean negative;
-
-    public Query.Criteria not() {
-        negative = !negative;
-        return this;
-    }
-
-    public boolean isNegative() {
-        return negative;
-    }
 
     @Override
     public String toString() {
-        return negative ? "not 1=1" : "1=1";
+        return "1=1";
     }
 }

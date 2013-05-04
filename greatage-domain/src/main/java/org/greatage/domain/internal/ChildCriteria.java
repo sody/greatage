@@ -22,7 +22,7 @@ import org.greatage.domain.Query;
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class ChildCriteria extends AllCriteria {
+public class ChildCriteria implements Query.Criteria {
     private final String path;
     private final String property;
     private final Query.Criteria criteria;

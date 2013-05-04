@@ -39,6 +39,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     private final Query query;
     private List<String> junction = new ArrayList<String>();
     private int level;
+    private boolean negative;
     private String path;
     private String property;
 
@@ -75,7 +76,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
 
         final String function = criteria.getOperator() == JunctionCriteria.Operator.AND ? " && " : " || ";
         final String filter = getJunction(temp, function);
-        addCriterion(filter, criteria.isNegative());
+        addCriterion(filter);
     }
 
     @Override
@@ -103,7 +104,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         final String criterion = propertyName + " == :" + parameterName;
 
         addParameter(parameterName, criteria.getValue());
-        addCriterion(criterion, criteria.isNegative());
+        addCriterion(criterion);
     }
 
     @Override
@@ -113,7 +114,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         final String criterion = propertyName + " != :" + parameterName;
 
         addParameter(parameterName, criteria.getValue());
-        addCriterion(criterion, criteria.isNegative());
+        addCriterion(criterion);
     }
 
     @Override
@@ -125,11 +126,11 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
             final String criterion = propertyName + " > :" + parameterName;
 
             addParameter(parameterName, criteria.getValue());
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         } else {
             final String criterion = "false";
 
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         }
     }
 
@@ -142,11 +143,11 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
             final String criterion = propertyName + " >= :" + parameterName;
 
             addParameter(parameterName, criteria.getValue());
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         } else {
             final String criterion = "false";
 
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         }
     }
 
@@ -159,12 +160,12 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
             final String criterion = propertyName + " < :" + parameterName;
 
             addParameter(parameterName, criteria.getValue());
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         } else {
             // there are no values less than null
             final String criterion = "false";
 
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         }
     }
 
@@ -177,11 +178,11 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
             final String criterion = propertyName + " <= :" + parameterName;
 
             addParameter(parameterName, criteria.getValue());
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         } else {
             final String criterion = "false";
 
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         }
     }
 
@@ -191,7 +192,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         final List<?> value = (List<?>) criteria.getValue();
 
         if (value == null || value.isEmpty()) {
-            addCriterion("false", criteria.isNegative());
+            addCriterion("false");
         } else if (value.contains(null)) {
             final String parameterName = parameterName(criteria);
             final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
@@ -203,13 +204,13 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
                 }
             }
             addParameter(parameterName, recalculated);
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         } else {
             final String parameterName = parameterName(criteria);
             final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
 
             addParameter(parameterName, value);
-            addCriterion(criterion, criteria.isNegative());
+            addCriterion(criterion);
         }
     }
 
@@ -241,7 +242,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
         parameters.put(parameterName, value);
     }
 
-    private void addCriterion(final String criterion, final boolean negative) {
+    private void addCriterion(final String criterion) {
         junction.add(negative ? "!(" + criterion + ")" : criterion);
     }
 
