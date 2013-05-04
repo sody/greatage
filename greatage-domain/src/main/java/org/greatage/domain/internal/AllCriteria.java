@@ -18,23 +18,12 @@ package org.greatage.domain.internal;
 
 import org.greatage.domain.Query;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
 public class AllCriteria implements Query.Criteria {
     private boolean negative;
-
-    public Query.Criteria and(final Query.Criteria criteria) {
-        return new JunctionCriteria(JunctionCriteria.Operator.AND, junction(criteria));
-    }
-
-    public Query.Criteria or(final Query.Criteria criteria) {
-        return new JunctionCriteria(JunctionCriteria.Operator.OR, junction(criteria));
-    }
 
     public Query.Criteria not() {
         negative = !negative;
@@ -43,13 +32,6 @@ public class AllCriteria implements Query.Criteria {
 
     public boolean isNegative() {
         return negative;
-    }
-
-    private List<Query.Criteria> junction(final Query.Criteria criteria) {
-        final List<Query.Criteria> group = new ArrayList<Query.Criteria>();
-        group.add(this);
-        group.add(criteria);
-        return group;
     }
 
     @Override

@@ -32,10 +32,6 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends
 
     private final String cachedPath;
 
-    public EntityMapper(final String property) {
-        this(null, property);
-    }
-
     public EntityMapper(final String path, final String property) {
         this(path, property, DEFAULT_ID_PROPERTY);
     }

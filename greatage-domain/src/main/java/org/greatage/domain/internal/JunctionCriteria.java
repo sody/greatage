@@ -48,22 +48,6 @@ public class JunctionCriteria extends AllCriteria {
         return this;
     }
 
-    @Override
-    public Query.Criteria and(final Query.Criteria criteria) {
-        if (operator == Operator.AND) {
-            return add(criteria);
-        }
-        return new JunctionCriteria(Operator.AND).add(criteria);
-    }
-
-    @Override
-    public Query.Criteria or(final Query.Criteria criteria) {
-        if (operator == Operator.OR) {
-            return add(criteria);
-        }
-        return new JunctionCriteria(Operator.OR).add(criteria);
-    }
-
     public List<Query.Criteria> getChildren() {
         return children;
     }

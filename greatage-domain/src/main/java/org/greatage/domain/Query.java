@@ -79,11 +79,6 @@ public interface Query<PK extends Serializable, E extends Entity<PK>> {
     interface Criteria {
 
         @Deprecated
-        Criteria and(Criteria criteria);
-
-        @Deprecated
-        Criteria or(Criteria criteria);
-
         Criteria not();
     }
 }
