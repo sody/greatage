@@ -173,6 +173,18 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
+    protected void visitNotIn(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
+
+        final List<?> value = (List<?>) criteria.getValue();
+        if (value == null || value.isEmpty()) {
+            addCriterion(Restrictions.sqlRestriction("1=1"));
+        } else {
+            addCriterion(Restrictions.not(property.in(value)));
+        }
+    }
+
+    @Override
     protected void visitLike(final PropertyCriteria criteria) {
         final Property property = getProperty(criteria);
 

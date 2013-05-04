@@ -196,6 +196,11 @@ public class ObjectifyQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
+    protected void visitNotIn(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
+
+    @Override
     protected void visitLike(final PropertyCriteria criteria) {
         //todo: implement this
     }

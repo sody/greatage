@@ -77,11 +77,14 @@ public class PropertyCriteria implements Query.Criteria {
             case LESS_OR_EQUAL:
                 builder.append(" <= ");
                 break;
-            case LIKE:
-                builder.append(" like ");
-                break;
             case IN:
                 builder.append(" in ");
+                break;
+            case NOT_IN:
+                builder.append(" nin ");
+                break;
+            case LIKE:
+                builder.append(" like ");
                 break;
         }
         builder.append(value);
@@ -96,7 +99,8 @@ public class PropertyCriteria implements Query.Criteria {
         GREATER_OR_EQUAL,
         LESS_THAN,
         LESS_OR_EQUAL,
-        LIKE,
-        IN
+        IN,
+        NOT_IN,
+        LIKE
     }
 }

@@ -78,11 +78,14 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
             case LESS_OR_EQUAL:
                 visitLessOrEqual(criteria);
                 break;
-            case LIKE:
-                visitLike(criteria);
-                break;
             case IN:
                 visitIn(criteria);
+                break;
+            case NOT_IN:
+                visitNotIn(criteria);
+                break;
+            case LIKE:
+                visitLike(criteria);
                 break;
         }
     }
@@ -108,6 +111,8 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
     protected abstract void visitLessOrEqual(PropertyCriteria criteria);
 
     protected abstract void visitIn(PropertyCriteria criteria);
+
+    protected abstract void visitNotIn(PropertyCriteria criteria);
 
     protected abstract void visitLike(PropertyCriteria criteria);
 

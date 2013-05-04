@@ -114,6 +114,24 @@ public class PropertyMapper<V> implements Query.Property {
         return createCriteria(PropertyCriteria.Operator.IN, value);
     }
 
+    public Query.Criteria nin(final V... values) {
+        return notIn(values);
+    }
+
+    public Query.Criteria nin(final Collection<V> values) {
+        return notIn(values);
+    }
+
+    public Query.Criteria notIn(final V... values) {
+        final List<V> value = Arrays.asList(values);
+        return createCriteria(PropertyCriteria.Operator.NOT_IN, value);
+    }
+
+    public Query.Criteria notIn(final Collection<V> values) {
+        final List<V> value = new ArrayList<V>(values);
+        return createCriteria(PropertyCriteria.Operator.NOT_IN, value);
+    }
+
     private Query.Criteria createCriteria(final PropertyCriteria.Operator operator, final Object value) {
         return new PropertyCriteria(path, property, operator, value);
     }
