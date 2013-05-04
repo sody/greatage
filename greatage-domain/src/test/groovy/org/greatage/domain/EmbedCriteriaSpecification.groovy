@@ -57,7 +57,7 @@ abstract class EmbedCriteriaSpecification extends Specification {
         _$.company$.info$.is(_$.companyInfo$.address$.is(_$.address$.all())) | [1, 2, 3, 4, 5, 6]
     }
 
-    def "property criteria inside embed criteria should filter entities with those that match property expression for embed object"() {
+    def "property criteria inside embed criteria should filter entities to those that match property expression for embed object"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -79,7 +79,7 @@ abstract class EmbedCriteriaSpecification extends Specification {
         _$.company$.info$.is(_$.companyInfo$.code$.in("C2", "C4", "C8")) | [2, 4]
     }
 
-    def "property criteria inside multiple levels of embed criteria should filter entities with those that match property expression for embed object"() {
+    def "property criteria inside multiple levels of embed criteria should filter entities to those that match property expression for hierarchy of embed objects"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:

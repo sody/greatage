@@ -68,7 +68,7 @@ abstract class EntityCriteriaSpecification extends Specification {
         _$.department$.company$.is(_$.company$.all()) | [2, 7, 9, 11, 12, 13, 41, 42]
     }
 
-    def "property criteria inside entity criteria should filter entities with those that has not null association and match property expression for it"() {
+    def "property criteria inside entity criteria should filter entities to those that have not null association and match property expression for it"() {
         when:
         def actual = findIds(Department.class, criteria)
         then:
@@ -87,7 +87,7 @@ abstract class EntityCriteriaSpecification extends Specification {
         _$.department$.company$.is(_$.company$.name$.in(["company0", "company1", "company2"])) | [2, 11, 12, 13]
     }
 
-    def "embed criteria inside entity criteria should filter entities with those that has not null association and match embed criteria for it"() {
+    def "embed criteria inside entity criteria should filter entities to those that have not null association and match embed criteria for it"() {
         when:
         def actual = findIds(Department.class, criteria)
         then:
@@ -112,7 +112,7 @@ abstract class EntityCriteriaSpecification extends Specification {
         _$.department$.company$.is(_$.company$.info$.is(_$.companyInfo$.code$.notNull())) | [2, 41, 42]
     }
 
-    def "multi-level embed criteria inside entity criteria should filter entities with those that has not null association and match embed criteria for it"() {
+    def "multi-level embed criteria inside entity criteria should filter entities to those that have not null association and match embed criteria for it"() {
         when:
         def actual = findIds(Department.class, criteria)
         then:
@@ -140,11 +140,11 @@ abstract class EntityCriteriaSpecification extends Specification {
         _$.department$.company$.is(_$.company$.info$.is(_$.companyInfo$.address$.is(_$.address$.city$.eq("city_2")))) | [2]
     }
 
-    def "entity criteria inside embed criteria should filter entities with those that has not null association and match child criteria for embed object"() {
+    def "entity criteria inside embed criteria should filter entities to those that have not null association and match child criteria for embed object"() {
         //TODO: add this one
     }
 
-    def "entity criteria inside multi-level embed criteria should filter entities with those that has not null association and match child criteria for embed object"() {
+    def "entity criteria inside multi-level embed criteria should filter entities to those that have not null association and match child criteria for hierarchy of embed objects"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:

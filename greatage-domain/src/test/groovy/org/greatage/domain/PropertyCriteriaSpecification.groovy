@@ -28,7 +28,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
     @Shared
     protected Repository repository
 
-    def "equal criteria should find only entities with property value equal to specified"() {
+    def "equal criteria should filter entities to those that have property value equal to specified"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -46,7 +46,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.eq(date("2001-01-02"))    | []
     }
 
-    def "equal criteria with null parameter should find only entities with property value equal to null"() {
+    def "equal criteria with null parameter should filter entities to those that have property value equal to null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -62,7 +62,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.equal(null) | [1, 3, 4]
     }
 
-    def "not equal criteria should find only entities with property value not equal to specified and not null"() {
+    def "not equal criteria should filter entities to those that have property value not equal to specified and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -79,7 +79,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.ne(date("2001-01-02")) | [2, 5, 6]
     }
 
-    def "not equal criteria with null parameter should find only entities with not null property value"() {
+    def "not equal criteria with null parameter should filter entities to those that have not null property value"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -95,7 +95,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.notEqual(null) | [2, 5, 6]
     }
 
-    def "is null criteria should find only entities with property value equal to null"() {
+    def "is null criteria should filter entities to those that have property value equal to null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -108,7 +108,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.isNull() | [1, 3, 4]
     }
 
-    def "is not null criteria should find only entities with property value not equal to null"() {
+    def "is not null criteria should filter entities to those that have property value not equal to null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -121,7 +121,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.notNull() | [2, 5, 6]
     }
 
-    def "greater than criteria should find only entities with property value greater than specified and not null"() {
+    def "greater than criteria should filter entities to those that have property value greater than specified and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -140,7 +140,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.gt(date("2012-10-10"))          | []
     }
 
-    def "greater than criteria with null parameter should not find anything"() {
+    def "greater than criteria with null parameter should filter all entities to empty result"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -156,7 +156,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.greaterThan(null) | []
     }
 
-    def "greater or equal criteria should find only entities with property value greater or equal to specified and not null"() {
+    def "greater or equal criteria should filter entities to those that have property value greater or equal to specified and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -175,7 +175,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.ge(date("2012-10-10"))             | []
     }
 
-    def "greater or equal criteria with null parameter should not find anything"() {
+    def "greater or equal criteria with null parameter should filter all entities to empty result"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -191,7 +191,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.greaterOrEqual(null) | []
     }
 
-    def "less than criteria should find only entities with property value less than specified and not null"() {
+    def "less than criteria should filter entities to those that have property value less than specified and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -210,7 +210,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.lt(date("2012-10-10"))       | [2, 5, 6]
     }
 
-    def "less than criteria with null parameter should not find anything"() {
+    def "less than criteria with null parameter should filter all entities to empty result"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -226,7 +226,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.lessThan(null) | []
     }
 
-    def "less or equal criteria should find only entities with property value less or equal to specified and not null"() {
+    def "less or equal criteria should filter entities to those that have property value less or equal to specified and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -245,7 +245,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.le(date("2012-10-10"))          | [2, 5, 6]
     }
 
-    def "less or equal with null parameter criteria should not find anything"() {
+    def "less or equal with null parameter criteria should filter all entities to empty result"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -261,7 +261,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.lessOrEqual(null) | []
     }
 
-    def "in criteria should find only entities with property value in specified set and not null"() {
+    def "in criteria should filter entities to those that have property value in specified set and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -282,7 +282,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.in(date("2001-01-01"), date("2010-10-10"), date("1999-01-01")) | [2, 5]
     }
 
-    def "in criteria with empty parameter should not find anything"() {
+    def "in criteria with empty parameter should filter all entities to empty result"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -295,7 +295,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.in([]) | []
     }
 
-    def "in criteria with null parameters should find only entities with property value in specified set and not null"() {
+    def "in criteria with null parameters should filter entities to those that have property value in specified set and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:

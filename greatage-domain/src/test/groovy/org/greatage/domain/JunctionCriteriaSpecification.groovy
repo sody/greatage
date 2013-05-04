@@ -29,7 +29,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
     @Shared
     protected Repository repository
 
-    def "all criteria should find all entities"() {
+    def "all criteria should not filter entities"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -40,7 +40,31 @@ abstract class JunctionCriteriaSpecification extends Specification {
         company$.all() | [1, 2, 3, 4, 5, 6]
     }
 
-    def "empty junction criteria should find all entities"() {
+    def "all criteria inside and criteria should not filter entities in addition to each sibling criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                            | expected
+        $.and(company$.all())                               | [1, 2, 3, 4, 5, 6]
+        $.and(company$.all(), company$.name$.eq("company")) | [5, 6]
+    }
+
+    def "all criteria inside or criteria should clear entities filtering from each sibling criteria"() {
+        when:
+        def actual = findIds(Company.class, criteria)
+        then:
+        actual == expected
+
+        where:
+        criteria                                           | expected
+        $.or(company$.all())                               | [1, 2, 3, 4, 5, 6]
+        $.or(company$.all(), company$.name$.eq("company")) | [1, 2, 3, 4, 5, 6]
+    }
+
+    def "empty junction criteria should not filter entities"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -56,7 +80,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
         $.or($.and())  | [1, 2, 3, 4, 5, 6]
     }
 
-    def "and criteria should find only entities that match each child criteria"() {
+    def "and criteria should filter entities to those that match each child criteria"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -74,7 +98,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
         $.and(company$.name$.eq("company"), company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02"))) | []
     }
 
-    def "and criteria inside another and criteria should find only entities that match each criteria"() {
+    def "and criteria inside another and criteria should filter entities to those that match each criteria"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -87,7 +111,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
         $.and(company$.name$.eq("company"), $.and(company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02")))) | []
     }
 
-    def "or criteria should find only entities that match at least one child criteria"() {
+    def "or criteria should filter entities to those that match at least one child criteria"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -103,7 +127,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
         $.or(company$.name$.eq("company"), company$.id$.eq(1l), company$.registeredAt$.eq(date("2010-10-10"))) | [1, 2, 5, 6]
     }
 
-    def "or criteria inside another or criteria should find only entities that match at least one criteria"() {
+    def "or criteria inside another or criteria should filter entities to those that match at least one criteria"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -116,7 +140,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
         $.or(company$.name$.ne("company"), $.or(company$.id$.eq(2l), company$.registeredAt$.eq(date("2001-02-02")))) | [1, 2, 3, 6]
     }
 
-    def "and criteria inside or criteria should find only entities that match each child criteria or at least one sibling criteria"() {
+    def "and criteria inside or criteria should filter entities to those that match each child criteria or at least one sibling criteria"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:
@@ -130,7 +154,7 @@ abstract class JunctionCriteriaSpecification extends Specification {
         $.or($.and(company$.id$.gt(2l), company$.registeredAt$.eq(date("2011-02-02"))))                               | []
     }
 
-    def "or criteria inside and criteria should find only entities that match at least one child criteria and each sibling criteria"() {
+    def "or criteria inside and criteria should filter entities to those that match at least one child criteria and each sibling criteria"() {
         when:
         def actual = findIds(Company.class, criteria)
         then:

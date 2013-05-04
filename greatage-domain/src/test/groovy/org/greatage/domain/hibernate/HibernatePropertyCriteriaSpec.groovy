@@ -37,30 +37,30 @@ class HibernatePropertyCriteriaSpec extends PropertyCriteriaSpecification {
     }
 
     //todo: move up
-    def "like property criteria should find only entities with property value that matches specified pattern"() {
+    def "like property criteria should filter entities to those that have property value matched against specified pattern"() {
         when:
-        def actual = findIds(entityClass, criteria)
+        def actual = findIds(Company.class, criteria)
         then:
         actual == expected
 
         where:
-        entityClass   | criteria                            | expected
-        Company.class | company$.name$.like("________")     | [1, 2, 3]
-        Company.class | company$.name$.like("company")      | [5, 6]
-        Company.class | company$.name$.like("company_")     | [1, 2, 3]
-        Company.class | company$.name$.like("_company")     | []
-        Company.class | company$.name$.like("_ompany_")     | [1, 2, 3]
-        Company.class | company$.name$.like("%")            | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.like("%pany2")       | [2]
-        Company.class | company$.name$.like("%company2")    | [2]
-        Company.class | company$.name$.like("%pany")        | [5, 6]
-        Company.class | company$.name$.like("company%")     | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.like("company2%")    | [2]
-        Company.class | company$.name$.like("somecompany%") | []
-        Company.class | company$.name$.like("%company%")    | [1, 2, 3, 5, 6]
-        Company.class | company$.name$.like("%pany2%")      | [2]
-        Company.class | company$.name$.like("%pany8%")      | []
-        Company.class | company$.name$.like("%pany8%")      | []
-        Company.class | company$.name$.like("%com%any%")    | [1, 2, 3, 5, 6]
+        criteria                            | expected
+        company$.name$.like("________")     | [1, 2, 3]
+        company$.name$.like("company")      | [5, 6]
+        company$.name$.like("company_")     | [1, 2, 3]
+        company$.name$.like("_company")     | []
+        company$.name$.like("_ompany_")     | [1, 2, 3]
+        company$.name$.like("%")            | [1, 2, 3, 5, 6]
+        company$.name$.like("%pany2")       | [2]
+        company$.name$.like("%company2")    | [2]
+        company$.name$.like("%pany")        | [5, 6]
+        company$.name$.like("company%")     | [1, 2, 3, 5, 6]
+        company$.name$.like("company2%")    | [2]
+        company$.name$.like("somecompany%") | []
+        company$.name$.like("%company%")    | [1, 2, 3, 5, 6]
+        company$.name$.like("%pany2%")      | [2]
+        company$.name$.like("%pany8%")      | []
+        company$.name$.like("%pany8%")      | []
+        company$.name$.like("%com%any%")    | [1, 2, 3, 5, 6]
     }
 }
