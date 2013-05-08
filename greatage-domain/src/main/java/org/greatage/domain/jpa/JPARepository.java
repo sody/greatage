@@ -51,7 +51,7 @@ public class JPARepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void insert(final E entity) {
+    void create(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, EntityManager>() {
             public Object doInSession(final EntityManager session) throws Exception {
                 session.persist(entity);
@@ -71,7 +71,7 @@ public class JPARepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void remove(final E entity) {
+    void delete(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, EntityManager>() {
             public Object doInSession(final EntityManager session) throws Exception {
                 session.remove(entity);

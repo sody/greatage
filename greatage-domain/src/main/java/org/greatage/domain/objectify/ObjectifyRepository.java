@@ -34,7 +34,7 @@ public class ObjectifyRepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void insert(final E entity) {
+    void create(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
             public Object doInSession(final Objectify session) throws Exception {
                 session.put(entity);
@@ -54,7 +54,7 @@ public class ObjectifyRepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void remove(final E entity) {
+    void delete(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
             public Object doInSession(final Objectify session) throws Exception {
                 session.delete(entity);

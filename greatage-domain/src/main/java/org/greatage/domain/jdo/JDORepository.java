@@ -59,7 +59,7 @@ public class JDORepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void insert(final E entity) {
+    void create(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
             public Object doInSession(final PersistenceManager session) throws Exception {
                 session.makePersistent(entity);
@@ -79,7 +79,7 @@ public class JDORepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void remove(final E entity) {
+    void delete(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, PersistenceManager>() {
             public Object doInSession(final PersistenceManager session) throws Exception {
                 session.deletePersistent(entity);

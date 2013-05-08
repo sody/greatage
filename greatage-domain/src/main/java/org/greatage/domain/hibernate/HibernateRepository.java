@@ -55,7 +55,7 @@ public class HibernateRepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void insert(final E entity) {
+    void create(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Session>() {
             public Object doInSession(final Session session) throws Exception {
                 session.save(entity);
@@ -86,7 +86,7 @@ public class HibernateRepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    void remove(final E entity) {
+    void delete(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Session>() {
             public Object doInSession(final Session session) throws Exception {
                 session.delete(entity);

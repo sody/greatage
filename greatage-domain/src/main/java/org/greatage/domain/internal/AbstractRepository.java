@@ -21,7 +21,9 @@ import org.greatage.domain.Repository;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ivan Khalopik
@@ -34,6 +36,29 @@ public abstract class AbstractRepository implements Repository {
         this.entityMapping = entityMapping;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    E read(E entity) {
+        return (E) read(entity.getClass(), entity.getId());
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final E... entities) {
+        return readAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final Iterable<E> entities) {
+        final Map<PK, E> entitiesByKey = new HashMap<PK, E>();
+        for (E entity : entities) {
+            entitiesByKey.put(entity.getId(), read(entity));
+        }
+        return entitiesByKey;
+    }
+
     @Override
     public <PK extends Serializable, E extends Entity<PK>>
     Map<PK, E> readAll(final Class<E> entityClass, final PK... keys) {
@@ -42,21 +67,98 @@ public abstract class AbstractRepository implements Repository {
 
     @Override
     public <PK extends Serializable, E extends Entity<PK>>
-    Map<PK, E> readAll(final Class<E> entityClass, final Collection<PK> keys) {
-        final Map<PK, E> entities = new HashMap<PK, E>(keys.size());
+    Map<PK, E> readAll(final Class<E> entityClass, final Iterable<PK> keys) {
+        final Map<PK, E> entitiesByKey = new HashMap<PK, E>();
         for (PK key : keys) {
-            entities.put(key, read(entityClass, key));
+            entitiesByKey.put(key, read(entityClass, key));
         }
-        return entities;
+        return entitiesByKey;
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void createAll(final E... entities) {
+        createAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void createAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            create(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void updateAll(final E... entities) {
+        updateAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void updateAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            update(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final E... entities) {
+        deleteAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            delete(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void delete(final Class<E> entityClass, final PK key) {
+        // dirty hack
+        delete(read(entityClass, key));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final Class<E> entityClass, final PK... keys) {
+        deleteAll(entityClass, Arrays.asList(keys));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final Class<E> entityClass, final Iterable<PK> keys) {
+        for (PK key : keys) {
+            delete(entityClass, key);
+        }
     }
 
     @Override
     public <PK extends Serializable, E extends Entity<PK>>
     void save(final E entity) {
         if (entity.isNew()) {
-            insert(entity);
+            create(entity);
         } else {
             update(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void saveAll(final E... entities) {
+        saveAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void saveAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            save(entity);
         }
     }
 
