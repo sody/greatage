@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 
 <dataset>
+  <account account_id="1" name="account1" registered_at="2010-10-10"/>
+  <account account_id="2" name="account2"/>
+  <account account_id="3" name="account3" registered_at="2012-12-12"/>
+
   <country country_id="1" code="us" name="USA"/>
   <country country_id="2" code="ru" name="Russia"/>
   <country country_id="3" code="by"/>
