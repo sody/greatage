@@ -17,9 +17,12 @@
 package org.greatage.domain;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * This interface represents generic repository for working with all entities.
+ * This interface represents a main access point for Domain API which function is to offer
+ * create, read, update and delete operations (CRUD) for persistable domain objects.
  *
  * @author Ivan Khalopik
  * @since 1.0
@@ -27,16 +30,43 @@ import java.io.Serializable;
 public interface Repository {
 
     /**
-     * Gets detailed entity by pk.
+     * Reads single entity data by its primary key.
      *
-     * @param entityClass entity class (not null)
-     * @param pk          entity pk (not null)
+     * @param entityClass entity class, not {@code null}
+     * @param key         entity primary key, not {@code null}
      * @param <PK>        type of entity primary key
      * @param <E>         type of entity
-     * @return detailed entity by pk or null if not found
+     * @return single entity data by primary key or {@code null} if not found
+     * @throws NullPointerException if specified key is null
      */
     <PK extends Serializable, E extends Entity<PK>>
-    E get(Class<E> entityClass, PK pk);
+    E read(Class<E> entityClass, PK key);
+
+    /**
+     * Reads multiple entities data by their primary keys.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param keys        entities primary keys, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     * @return detailed entity data mapped by primary keys or {@code null}s for entities that are not found
+     * @throws NullPointerException if specified keys or one of the keys is {@code null}
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(Class<E> entityClass, PK... keys);
+
+    /**
+     * Reads multiple entities data by their primary keys.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param keys        entities primary keys, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     * @return detailed entity data mapped by primary keys or {@code null}s for entities that are not found
+     * @throws NullPointerException if specified keys or one of the keys is {@code null}
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(Class<E> entityClass, Collection<PK> keys);
 
     /**
      * Makes entity persistent by saving it into repository.

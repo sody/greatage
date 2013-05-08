@@ -21,7 +21,7 @@ import org.greatage.domain.Repository;
 import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Ivan Khalopik
@@ -34,6 +34,23 @@ public abstract class AbstractRepository implements Repository {
         this.entityMapping = entityMapping;
     }
 
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final Class<E> entityClass, final PK... keys) {
+        return readAll(entityClass, Arrays.asList(keys));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final Class<E> entityClass, final Collection<PK> keys) {
+        final Map<PK, E> entities = new HashMap<PK, E>(keys.size());
+        for (PK key : keys) {
+            entities.put(key, read(entityClass, key));
+        }
+        return entities;
+    }
+
+    @Override
     public <PK extends Serializable, E extends Entity<PK>>
     void save(final E entity) {
         if (entity.isNew()) {

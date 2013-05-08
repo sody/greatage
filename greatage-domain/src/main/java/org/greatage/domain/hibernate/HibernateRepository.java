@@ -45,11 +45,11 @@ public class HibernateRepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    E get(final Class<E> entityClass, final PK pk) {
+    E read(final Class<E> entityClass, final PK key) {
         return sessionManager.execute(new SessionManager.Callback<E, Session>() {
             @SuppressWarnings({"unchecked"})
             public E doInSession(final Session session) throws Exception {
-                return (E) session.get(getImplementation(entityClass), pk);
+                return (E) session.get(getImplementation(entityClass), key);
             }
         });
     }

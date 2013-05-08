@@ -45,11 +45,11 @@ public class JDORepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    E get(final Class<E> entityClass, final PK pk) {
+    E read(final Class<E> entityClass, final PK key) {
         return sessionManager.execute(new SessionManager.Callback<E, PersistenceManager>() {
             public E doInSession(final PersistenceManager session) throws Exception {
                 try {
-                    return session.getObjectById(getImplementation(entityClass), pk);
+                    return session.getObjectById(getImplementation(entityClass), key);
                 } catch (Exception e) {
                     // todo: needs to process only needed exceptions
                     return null;

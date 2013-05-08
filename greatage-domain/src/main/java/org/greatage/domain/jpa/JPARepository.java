@@ -42,10 +42,10 @@ public class JPARepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    E get(final Class<E> entityClass, final PK pk) {
+    E read(final Class<E> entityClass, final PK key) {
         return sessionManager.execute(new SessionManager.Callback<E, EntityManager>() {
             public E doInSession(final EntityManager session) throws Exception {
-                return session.find(getImplementation(entityClass), pk);
+                return session.find(getImplementation(entityClass), key);
             }
         });
     }

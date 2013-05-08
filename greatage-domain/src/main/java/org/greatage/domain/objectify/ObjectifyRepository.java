@@ -25,10 +25,10 @@ public class ObjectifyRepository extends AbstractRepository {
     }
 
     public <PK extends Serializable, E extends Entity<PK>>
-    E get(final Class<E> entityClass, final PK pk) {
+    E read(final Class<E> entityClass, final PK key) {
         return sessionManager.execute(new SessionManager.Callback<E, Objectify>() {
             public E doInSession(final Objectify session) throws Exception {
-                return session.get(getImplementation(entityClass), (Long) pk);
+                return session.get(getImplementation(entityClass), (Long) key);
             }
         });
     }
