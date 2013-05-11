@@ -1,5 +1,7 @@
 package org.greatage.domain.hibernate
 
+import org.example.hibernate.AccountImpl
+import org.example.model.Account
 import org.greatage.domain.RepositorySpecification
 import spock.lang.Shared
 
@@ -18,5 +20,10 @@ class HibernateRepositorySpec extends RepositorySpecification {
 
     def cleanupSpec() {
         repository = data.cleanup()
+    }
+
+    @Override
+    protected Account createAccount(final long id) {
+        return new AccountImpl(id);
     }
 }

@@ -1,9 +1,26 @@
 <?xml version="1.0"?>
 
 <dataset>
-  <account account_id="1" name="account1" registered_at="2010-10-10"/>
-  <account account_id="2" name="account2"/>
-  <account account_id="3" name="account3" registered_at="2012-12-12"/>
+  <account account_id="1" name="account_for_read_1" registered_at="2010-10-10"/>
+  <account account_id="2" name="account_for_read_2"/>
+  <account account_id="3" name="account_for_read_3" registered_at="2012-12-12"/>
+  <account account_id="10" name="account_for_update" registered_at="2012-11-10"/>
+  <account account_id="11" name="account_for_update_1" registered_at="2012-11-01"/>
+  <account account_id="12" name="account_for_update_2" registered_at="2012-11-02"/>
+  <account account_id="13" name="account_for_update_3" registered_at="2012-11-03"/>
+  <account account_id="14" name="account_for_update_4" registered_at="2012-11-04"/>
+  <account account_id="15" name="account_for_update_5" registered_at="2012-11-05"/>
+  <account account_id="16" name="account_for_update_6" registered_at="2012-11-06"/>
+  <account account_id="20" name="account_for_delete" registered_at="2012-12-20"/>
+  <account account_id="21" name="account_for_delete_1" registered_at="2012-12-01"/>
+  <account account_id="22" name="account_for_delete_2" registered_at="2012-12-02"/>
+  <account account_id="23" name="account_for_delete_3" registered_at="2012-12-03"/>
+  <account account_id="24" name="account_for_delete_4" registered_at="2012-12-04"/>
+  <account account_id="25" name="account_for_delete_by_pk" registered_at="2012-12-25"/>
+  <account account_id="26" name="account_for_delete_by_pk_1" registered_at="2012-12-06"/>
+  <account account_id="27" name="account_for_delete_by_pk_2" registered_at="2012-12-07"/>
+  <account account_id="28" name="account_for_delete_by_pk_3" registered_at="2012-12-08"/>
+  <account account_id="29" name="account_for_delete_by_pk_4" registered_at="2012-12-09"/>
 
   <country country_id="1" code="us" name="USA"/>
   <country country_id="2" code="ru" name="Russia"/>
