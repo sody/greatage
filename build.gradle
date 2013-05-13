@@ -1,3 +1,5 @@
+apply plugin: "base"
+
 description = "GreatAge Project"
 
 ext {
@@ -41,6 +43,7 @@ allprojects {
 subprojects {
     apply plugin: "java"
     apply plugin: "groovy"
+    apply plugin: 'maven-publish'
 
     group = "org.greatage"
     version = "1.0-SNAPSHOT"
@@ -71,6 +74,24 @@ subprojects {
 
     test {
         useJUnit()
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+
+        repositories {
+            maven {
+                url "https://oss.sonatype.org/content/repositories/snapshots"
+                credentials {
+                    username sonatypeOssUsername
+                    password sonatypeOssPassword
+                }
+            }
+        }
     }
 
     idea.module {
