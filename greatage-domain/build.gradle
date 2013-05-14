@@ -1,7 +1,7 @@
-description = "GreatAge Domain API Module"
+description = 'GreatAge Domain API Module'
 
 dependencies {
-    compile project(":greatage-common")
+    compile project(':greatage-common')
 
     provided "org.hibernate:hibernate-core:${versions.hibernate}"
     provided "javax.jdo:jdo-api:${versions.jdo}"

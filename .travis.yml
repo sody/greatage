@@ -1,3 +1,6 @@
+install: ./gradlew assemble
+script: ./gradlew check
+
 language: java
 jdk:
   - openjdk7

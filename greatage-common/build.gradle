@@ -1,4 +1,4 @@
-description = "GreatAge Common Utilities"
+description = 'GreatAge Common Utilities'
 
 dependencies {
     provided "org.hibernate:hibernate-core:${versions.hibernate}"

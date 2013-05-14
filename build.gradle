@@ -1,55 +1,64 @@
-apply plugin: "base"
-
-description = "GreatAge Project"
+group = 'org.greatage'
+version = '1.0-SNAPSHOT'
+description = 'GreatAge Project'
 
 ext {
-    stagingUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-    snapshotUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+    isSnapshot = version.endsWith('-SNAPSHOT')
+
+    snapshotUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+    stagingUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
 
     versions = [
-            javassist: "3.17.1-GA",
-            hibernate: "4.0.0.CR5",
-            jdo: "3.0.1",
-            jpa: "1.0",
-            objectify: "3.0",
-            appengine: "1.7.5",
+            java: '1.6',
+            groovy: '2.0.6',
+            gradle: '1.6',
 
-            testng: "6.2",
-            groovy: "2.0.6",
-            spock: "0.7-groovy-2.0",
-            slf4j: "1.6.2",
-            dbunit: "2.4.7",
-            hsqldb: "1.8.0.10",
-            datanucleus: "3.1.3",
-            datanucleus_enhancer: "3.1.1"
+            javassist: '3.17.1-GA',
+            hibernate: '4.0.0.CR5',
+            jdo: '3.0.1',
+            jpa: '1.0',
+            objectify: '3.0',
+            appengine: '1.7.5',
+
+            testng: '6.2',
+            spock: '0.7-groovy-2.0',
+            slf4j: '1.6.2',
+            dbunit: '2.4.7',
+            hsqldb: '1.8.0.10',
+            datanucleus: '3.1.3',
+            datanucleus_enhancer: '3.1.1'
     ]
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = versions.gradle
+}
+
 allprojects {
-    apply plugin: "idea"
+    apply plugin: 'idea'
 
     repositories {
         mavenCentral()
         mavenLocal()
 
         // for hibernate
-        mavenRepo name: "JBoss", url: "https://repository.jboss.org/nexus/content/repositories/releases/"
+        mavenRepo name: 'JBoss', url: 'https://repository.jboss.org/nexus/content/repositories/releases/'
 
         // for objectify
-        mavenRepo name: "Objectify", url: "http://maven.objectify-appengine.googlecode.com/git/"
+        mavenRepo name: 'Objectify', url: 'http://maven.objectify-appengine.googlecode.com/git/'
     }
 }
 
 subprojects {
-    apply plugin: "java"
-    apply plugin: "groovy"
+    apply plugin: 'java'
+    apply plugin: 'groovy'
     apply plugin: 'maven-publish'
 
-    group = "org.greatage"
-    version = "1.0-SNAPSHOT"
+    group = rootProject.group
+    version = rootProject.version
 
-    sourceCompatibility = "1.6"
-    targetCompatibility = "1.6"
+    sourceCompatibility = versions.java
+    targetCompatibility = versions.java
 
     configurations {
         provided
@@ -76,19 +85,74 @@ subprojects {
         useJUnit()
     }
 
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        classifier 'sources'
+    }
+
     publishing {
         publications {
-            mavenJava(MavenPublication) {
+            maven(MavenPublication) {
                 from components.java
+                artifact sourcesJar {
+                    classifier 'source'
+                }
+
+                pom.withXml {
+                    asNode().children().last() + {
+                        resolveStrategy = Closure.DELEGATE_FIRST
+
+                        name project.description
+                        url 'http://sody.github.io/greatage'
+                        issueManagement {
+                            system 'GitHub'
+                            url 'https://github.com/sody/greatage/issues/'
+                        }
+                        scm {
+                            url 'http://github.com/sody/greatage'
+                            connection 'scm:git:http://github.com/sody/greatage.git'
+                            developerConnection 'scm:git:git@github.com:sody/greatage.git'
+                        }
+                        licenses {
+                            license {
+                                name 'Apache Software License 2.0'
+                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                distribution 'repo'
+                            }
+                        }
+                        developers {
+                            developer {
+                                id 'sody'
+                                name 'Ivan Khalopik'
+                                email 'ikhalopik@gmail.com'
+                                timezone '+3'
+                                roles {
+                                    role 'Architect'
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
 
         repositories {
             maven {
-                url "https://oss.sonatype.org/content/repositories/snapshots"
-                credentials {
-                    username sonatypeOssUsername
-                    password sonatypeOssPassword
+                if (hasProperty('sonatypeOssUsername')) {
+                    if (isSnapshot) {
+                        name 'Sonatype Snapshot'
+                        url snapshotUrl
+                    } else {
+                        name 'Sonatype Staging'
+                        url stagingUrl
+                    }
+                    credentials {
+                        username sonatypeOssUsername
+                        password sonatypeOssPassword
+                    }
+                } else {
+                    name 'Temporary'
+                    url "file://${rootProject.buildDir}/repo"
                 }
             }
         }
