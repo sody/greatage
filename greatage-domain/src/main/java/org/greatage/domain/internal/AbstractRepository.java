@@ -18,7 +18,6 @@ package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Repository;
-import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -166,12 +165,5 @@ public abstract class AbstractRepository implements Repository {
     protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
         final Class implementation = entityMapping.get(entityClass);
         return implementation != null ? implementation : entityClass;
-    }
-
-    @Override
-    public String toString() {
-        final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-        builder.append("mapping", entityMapping);
-        return builder.toString();
     }
 }

@@ -1,8 +1,6 @@
-description = 'GreatAge Domain API Module'
+description = 'GreatAge Domain API'
 
 dependencies {
-    compile project(':greatage-common')
-
     provided "org.hibernate:hibernate-core:${versions.hibernate}"
     provided "javax.jdo:jdo-api:${versions.jdo}"
     provided "javax.persistence:persistence-api:${versions.jpa}"

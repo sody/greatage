@@ -17,7 +17,6 @@
 package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
-import org.greatage.util.DescriptionBuilder;
 
 import java.io.Serializable;
 
@@ -53,9 +52,6 @@ public abstract class AbstractEntity<PK extends Serializable> implements Entity<
 
     @Override
     public String toString() {
-        final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-        builder.append("id", isNew() ? "new" : getId());
-        return builder.toString();
+        return getClass().getSimpleName() + "#" + (isNew() ? "new" : getId());
     }
-
 }

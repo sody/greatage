@@ -18,7 +18,7 @@ package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.internal.*;
-import org.greatage.util.NameAllocator;
+import org.greatage.domain.internal.NameAllocator;
 
 import javax.jdo.Query;
 import java.io.Serializable;

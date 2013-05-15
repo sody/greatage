@@ -1,4 +1,4 @@
-package org.greatage.util;
+package org.greatage.domain.internal;
 
 import java.util.ArrayList;
 import java.util.List;

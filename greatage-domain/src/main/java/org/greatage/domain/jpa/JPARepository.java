@@ -21,7 +21,6 @@ import org.greatage.domain.Query;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.domain.internal.SessionManager;
-import org.greatage.util.DescriptionBuilder;
 
 import javax.persistence.EntityManager;
 import java.io.Serializable;
@@ -137,12 +136,5 @@ public class JPARepository extends AbstractRepository {
         public List<PK> keys() {
             throw new UnsupportedOperationException();
         }
-    }
-
-    @Override
-    public String toString() {
-        final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-        builder.append("sessionManager", sessionManager);
-        return builder.toString();
     }
 }

@@ -1,2 +1,2 @@
-include 'greatage-common', 'greatage-domain'
+include 'greatage-domain'
 

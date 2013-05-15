@@ -21,7 +21,6 @@ import org.greatage.domain.Query;
 import org.greatage.domain.internal.AbstractQuery;
 import org.greatage.domain.internal.AbstractRepository;
 import org.greatage.domain.internal.SessionManager;
-import org.greatage.util.DescriptionBuilder;
 import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 
@@ -173,12 +172,5 @@ public class HibernateRepository extends AbstractRepository {
                 }
             });
         }
-    }
-
-    @Override
-    public String toString() {
-        final DescriptionBuilder sb = new DescriptionBuilder(getClass());
-        sb.append("sessionManager", sessionManager);
-        return sb.toString();
     }
 }

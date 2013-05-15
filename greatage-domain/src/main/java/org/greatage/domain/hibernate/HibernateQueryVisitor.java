@@ -19,8 +19,7 @@ package org.greatage.domain.hibernate;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Query;
 import org.greatage.domain.internal.*;
-import org.greatage.util.NameAllocator;
-import org.greatage.util.StringUtils;
+import org.greatage.domain.internal.NameAllocator;
 import org.hibernate.criterion.*;
 
 import java.io.Serializable;
@@ -260,7 +259,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     private org.hibernate.Criteria createCriteria(final String path) {
-        if (StringUtils.isEmpty(path)) {
+        if (path == null || path.isEmpty()) {
             throw new IllegalArgumentException("Empty path");
         }
         final int i = path.lastIndexOf('.');
