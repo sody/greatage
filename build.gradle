@@ -84,27 +84,55 @@ subprojects {
     test {
         useJUnit()
 
-        maxHeapSize "512m"
+        maxHeapSize '512m'
+    }
+
+    javadoc {
+        classpath = sourceSets.main.compileClasspath
+        options {
+            links 'http://download.oracle.com/javase/6/docs/api/'
+            links 'http://download.oracle.com/javaee/6/api/'
+        }
+    }
+
+    jar {
+        from(rootProject.projectDir) {
+            include '*.md'
+            into 'META-INF'
+        }
     }
 
     task sourcesJar(type: Jar) {
         from sourceSets.main.allSource
+        from(rootProject.projectDir) {
+            include '*.md'
+            into 'META-INF'
+        }
         classifier 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier 'javadoc'
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
     }
 
     publishing {
         publications {
             maven(MavenPublication) {
                 from components.java
-                artifact sourcesJar {
-                    classifier 'source'
-                }
+                artifact sourcesJar
+                artifact javadocJar
 
                 pom.withXml {
                     asNode().children().last() + {
                         resolveStrategy = Closure.DELEGATE_FIRST
 
                         name project.description
+                        description project.description
                         url 'http://sody.github.io/greatage'
                         issueManagement {
                             system 'GitHub'
@@ -140,12 +168,12 @@ subprojects {
 
         repositories {
             maven {
-                if (hasProperty('sonatypeOssUsername')) {
+                if (project.hasProperty('sonatypeOssUsername')) {
                     if (isSnapshot) {
-                        name 'Sonatype Snapshot'
+                        name 'Snapshot'
                         url snapshotUrl
                     } else {
-                        name 'Sonatype Staging'
+                        name 'Staging'
                         url stagingUrl
                     }
                     credentials {
