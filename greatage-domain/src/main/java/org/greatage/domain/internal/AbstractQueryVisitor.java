@@ -32,8 +32,8 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
             visitCriteria(query.getCriteria());
         }
         if (query.getFetches() != null) {
-            for (Query.Property fetch : query.getFetches()) {
-                visitFetch(fetch);
+            for (AbstractQuery<PK, E>.Fetch fetch : query.getFetches()) {
+                visitFetch(fetch.getProperty(), fetch.isFetch());
             }
         }
         if (query.getSorts() != null) {
@@ -116,7 +116,7 @@ public abstract class AbstractQueryVisitor<PK extends Serializable, E extends En
 
     protected abstract void visitLike(PropertyCriteria criteria);
 
-    protected abstract void visitFetch(Query.Property fetch);
+    protected abstract void visitFetch(Query.Property property, boolean fetch);
 
     protected abstract void visitSort(Query.Property property, boolean ascending, boolean ignoreCase);
 

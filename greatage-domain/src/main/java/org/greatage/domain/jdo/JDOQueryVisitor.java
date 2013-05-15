@@ -230,7 +230,7 @@ public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
     }
 
     @Override
-    protected void visitFetch(final org.greatage.domain.Query.Property fetch) {
+    protected void visitFetch(final org.greatage.domain.Query.Property property, boolean fetch) {
         //todo: implement this
     }
 

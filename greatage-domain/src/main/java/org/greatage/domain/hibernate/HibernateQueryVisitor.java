@@ -191,7 +191,7 @@ public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>
     }
 
     @Override
-    protected void visitFetch(final Query.Property fetch) {
+    protected void visitFetch(final Query.Property property, boolean fetch) {
         //todo: implement this
     }
 

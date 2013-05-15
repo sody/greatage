@@ -18,7 +18,7 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
     private final Class<E> entityClass;
 
     private Criteria criteria;
-    private List<Property> fetches;
+    private List<Fetch> fetches;
     private List<Sort> sorts;
 
     private int start = 0;
@@ -69,11 +69,7 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
     }
 
     public Query<PK, E> fetch(final Property property) {
-        if (fetches == null) {
-            fetches = new ArrayList<Property>();
-        }
-        fetches.add(property);
-        return this;
+        return fetch(property, true);
     }
 
     @Override
@@ -82,8 +78,11 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
     }
 
     public Query<PK, E> fetch(final Property property, final boolean fetch) {
-        //TODO: implement this logic
-        return fetch(property);
+        if (fetches == null) {
+            fetches = new ArrayList<Fetch>();
+        }
+        fetches.add(new Fetch(property, fetch));
+        return this;
     }
 
     @Override
@@ -161,7 +160,7 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
         return criteria;
     }
 
-    public List<Property> getFetches() {
+    public List<Fetch> getFetches() {
         return fetches;
     }
 
@@ -198,6 +197,24 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
         @Override
         public String getProperty() {
             return property;
+        }
+    }
+
+    class Fetch {
+        private final Property property;
+        private final boolean fetch;
+
+        Fetch(final Property property, final boolean fetch) {
+            this.property = property;
+            this.fetch = fetch;
+        }
+
+        Property getProperty() {
+            return property;
+        }
+
+        boolean isFetch() {
+            return fetch;
         }
     }
 
