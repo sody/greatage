@@ -76,17 +76,37 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
         return this;
     }
 
+    @Override
+    public Query<PK, E> fetch(final String property) {
+        return fetch(property(property));
+    }
+
     public Query<PK, E> fetch(final Property property, final boolean fetch) {
         //TODO: implement this logic
         return fetch(property);
+    }
+
+    @Override
+    public Query<PK, E> fetch(final String property, final boolean fetch) {
+        return fetch(property(property), fetch);
     }
 
     public Query<PK, E> sort(final Property property) {
         return sort(property, true);
     }
 
+    @Override
+    public Query<PK, E> sort(final String property) {
+        return sort(property(property));
+    }
+
     public Query<PK, E> sort(final Property property, final boolean ascending) {
         return sort(property, ascending, false);
+    }
+
+    @Override
+    public Query<PK, E> sort(final String property, final boolean ascending) {
+        return sort(property(property), ascending);
     }
 
     public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
@@ -95,6 +115,11 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
         }
         sorts.add(new Sort(property, ascending, ignoreCase));
         return this;
+    }
+
+    @Override
+    public Query<PK, E> sort(final String property, final boolean ascending, final boolean ignoreCase) {
+        return sort(property(property), ascending, ignoreCase);
     }
 
     public Query<PK, E> skip(final int count) {
@@ -150,6 +175,30 @@ public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK
 
     public int getCount() {
         return count;
+    }
+
+    protected Property property(final String property) {
+        return new DefaultProperty(property);
+    }
+
+    class DefaultProperty implements Property {
+        private final String path;
+        private final String property;
+
+        DefaultProperty(final String property) {
+            this.path = null;
+            this.property = property;
+        }
+
+        @Override
+        public String getPath() {
+            return path;
+        }
+
+        @Override
+        public String getProperty() {
+            return property;
+        }
     }
 
     class Sort {

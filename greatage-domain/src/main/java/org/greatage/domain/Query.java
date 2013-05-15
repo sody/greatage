@@ -38,14 +38,24 @@ public interface Query<PK extends Serializable, E extends Entity<PK>> {
 
     Query<PK, E> fetch(Property property);
 
+    Query<PK, E> fetch(String property);
+
     Query<PK, E> fetch(Property property, boolean fetch);
+
+    Query<PK, E> fetch(String property, boolean fetch);
 
 
     Query<PK, E> sort(Property property);
 
+    Query<PK, E> sort(String property);
+
     Query<PK, E> sort(Property property, boolean ascending);
 
+    Query<PK, E> sort(String property, boolean ascending);
+
     Query<PK, E> sort(Property property, boolean ascending, boolean ignoreCase);
+
+    Query<PK, E> sort(String property, boolean ascending, boolean ignoreCase);
 
 
     Query<PK, E> skip(int count);
