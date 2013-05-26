@@ -295,6 +295,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.in([]) | []
     }
 
+    //todo: is that correct? should any exception be thrown?
     def "in criteria with null parameters should filter entities to those that have property value in specified set and not null"() {
         when:
         def actual = findIds(Company.class, criteria)
@@ -345,6 +346,7 @@ abstract class PropertyCriteriaSpecification extends Specification {
         company$.registeredAt$.nin([]) | [1, 2, 3, 4, 5, 6]
     }
 
+    //todo: is that correct? should any exception be thrown?
     def "not in criteria with null parameters should filter entities to those that have property value not in specified set and not null"() {
         when:
         def actual = findIds(Company.class, criteria)

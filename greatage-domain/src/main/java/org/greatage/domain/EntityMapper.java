@@ -30,6 +30,7 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends
 
     public final PropertyMapper<PK> id$;
 
+    private final PropertyMapper<E> entity$;
     private final String cachedPath;
 
     public EntityMapper(final String path, final String property) {
@@ -41,6 +42,7 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends
         cachedPath = join(path, property);
 
         id$ = property(idProperty);
+        entity$ = new PropertyMapper<E>(path, property);
     }
 
     public Query.Criteria isNull() {
@@ -56,7 +58,8 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends
     }
 
     public Query.Criteria equal(final E entity) {
-        return id$.equal(toId(entity));
+        final PK pk = toId(entity);
+        return pk != null ? id$.equal(pk) : entity$.isNull();
     }
 
     public Query.Criteria ne(final E entity) {
@@ -64,7 +67,8 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends
     }
 
     public Query.Criteria notEqual(final E entity) {
-        return id$.notEqual(toId(entity));
+        final PK pk = toId(entity);
+        return pk != null ? id$.notEqual(toId(entity)) : entity$.notNull();
     }
 
     public Query.Criteria in(final E... entities) {
@@ -81,6 +85,30 @@ public class EntityMapper<PK extends Serializable, E extends Entity<PK>> extends
             pks.add(toId(entity));
         }
         return id$.in(pks);
+    }
+
+    public Query.Criteria nin(final E... entities) {
+        return notIn(entities);
+    }
+
+    public Query.Criteria nin(final Collection<E> entities) {
+        return notIn(entities);
+    }
+
+    public Query.Criteria notIn(final E... entities) {
+        final List<PK> pks = new ArrayList<PK>(entities.length);
+        for (E entity : entities) {
+            pks.add(toId(entity));
+        }
+        return id$.notIn(pks);
+    }
+
+    public Query.Criteria notIn(final Collection<E> entities) {
+        final List<PK> pks = new ArrayList<PK>(entities.size());
+        for (E entity : entities) {
+            pks.add(toId(entity));
+        }
+        return id$.notIn(pks);
     }
 
     protected String calculatePath() {

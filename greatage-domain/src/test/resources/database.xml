@@ -27,14 +27,14 @@
   <country country_id="3" code="by"/>
 
   <company company_id="2" name="company2" registered_at="2010-10-10"
-           info_code="C2"
+           info_code="C2" info_country_id="1"
            address_country_id="1" address_city="city_2" address1="address_2_1" address2="address_2_2"/>
   <company company_id="1" name="company1"/>
   <company company_id="3" name="company3"
            info_code="C3"
            address1="address_3_1" address2="address_3_2"/>
   <company company_id="4"
-           info_code="C4"
+           info_code="C4" info_country_id="3"
            address_country_id="3"/>
   <company company_id="5" name="company" registered_at="2001-01-01"/>
   <company company_id="6" name="company" registered_at="2001-02-02"/>
