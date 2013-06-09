@@ -18,14 +18,21 @@ package org.greatage.domain;
 
 import org.greatage.domain.internal.JunctionCriteria;
 import org.greatage.domain.internal.NegativeCriteria;
+import org.greatage.domain.internal.RepositorySupport;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class RootMapper {
+public class RootMapper extends RepositorySupport {
+
+    public static <PK extends Serializable, E extends Entity<PK>>
+    Query<PK, E> $(final Class<E> entityClass) {
+        return query(entityClass);
+    }
 
     public static Query.Criteria and(final Query.Criteria... criteria) {
         return new JunctionCriteria(JunctionCriteria.Operator.AND, Arrays.asList(criteria));

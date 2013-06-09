@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-package org.greatage.domain;
+package org.greatage.domain.internal;
 
-import org.greatage.domain.internal.AllCriteria;
-import org.greatage.domain.internal.ChildCriteria;
+import org.greatage.domain.EmbedMapper;
+import org.greatage.domain.Entity;
+import org.greatage.domain.EntityMapper;
+import org.greatage.domain.PropertyMapper;
+import org.greatage.domain.Query;
 
 import java.io.Serializable;
 

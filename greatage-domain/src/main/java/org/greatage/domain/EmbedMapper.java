@@ -16,6 +16,8 @@
 
 package org.greatage.domain;
 
+import org.greatage.domain.internal.CompositeMapper;
+
 /**
  * @author Ivan Khalopik
  * @since 1.0

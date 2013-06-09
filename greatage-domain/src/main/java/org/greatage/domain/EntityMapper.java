@@ -16,6 +16,8 @@
 
 package org.greatage.domain;
 
+import org.greatage.domain.internal.CompositeMapper;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
