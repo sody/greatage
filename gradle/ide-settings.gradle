@@ -1,0 +1,62 @@
+apply plugin: 'idea'
+
+idea {
+    project {
+        ipr {
+            withXml { provider ->
+                def replaceComponent = { Map attr, Closure content ->
+                    def node = provider.node.component.find { it.@name == attr.name } ?: provider.node.appendNode('component')
+                    node.replaceNode {
+                        component(attr, content)
+                    }
+                };
+
+                replaceComponent(name: 'VcsDirectoryMappings') {
+                    mapping(vcs: 'Git', directory: '$PROJECT_DIR$')
+                }
+
+                replaceComponent(name: 'CodeStyleSettingsManager') {
+                    option(name: 'PER_PROJECT_SETTINGS') {
+                        value new XmlParser().parse("${rootProject.projectDir}/gradle/config/idea-codestyle.xml").children()
+                    }
+                    option(name: 'USE_PER_PROJECT_SETTINGS', value: true)
+                }
+
+                replaceComponent(name: 'CopyrightManager', default: 'apache-2') {
+                    copyright new XmlParser().parse("${rootProject.projectDir}/gradle/config/idea-copyright.xml").copyright.get(0).children()
+                    module2copyright {
+                        element(module: 'Project Files', copyright: 'apache-2')
+                    }
+                    LanguageOptions(name: 'LESS') {
+                        option(name: 'fileTypeOverride', value: 3)
+                        option(name: 'block', value: false)
+                        option(name: 'prefixLines', value: false)
+                    }
+                }
+            }
+        }
+    }
+}
+
+subprojects {
+    apply plugin: 'idea'
+
+    afterEvaluate {
+        idea {
+            module {
+                inheritOutputDirs false
+                outputDir sourceSets.main.output.classesDir
+                testOutputDir sourceSets.test.output.classesDir
+
+                if (configurations.find { it.name == 'providedCompile' }) {
+                    scopes.COMPILE.plus -= configurations.providedCompile
+                    scopes.PROVIDED.plus += configurations.providedCompile
+                }
+                if (configurations.find { it.name == 'providedRuntime' }) {
+                    scopes.RUNTIME.plus -= configurations.providedRuntime
+                    scopes.PROVIDED.plus += configurations.providedRuntime
+                }
+            }
+        }
+    }
+}

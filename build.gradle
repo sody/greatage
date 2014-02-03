@@ -1,3 +1,6 @@
+apply plugin: 'base'
+apply from: 'gradle/ide-settings.gradle'
+
 group = 'org.greatage'
 version = '1.0-SNAPSHOT'
 description = 'GreatAge Project'
@@ -19,6 +22,7 @@ ext {
             jpa: '1.0',
             objectify: '3.0',
             appengine: '1.7.5',
+            mongo: '2.11.3',
 
             testng: '6.2',
             spock: '0.7-groovy-2.0',
@@ -35,17 +39,14 @@ task wrapper(type: Wrapper) {
 }
 
 allprojects {
-    apply plugin: 'idea'
-
     repositories {
         mavenCentral()
         mavenLocal()
 
         // for hibernate
-        mavenRepo name: 'JBoss', url: 'https://repository.jboss.org/nexus/content/repositories/releases/'
-
+        maven { url 'https://repository.jboss.org/nexus/content/repositories/releases/' }
         // for objectify
-        mavenRepo name: 'Objectify', url: 'http://maven.objectify-appengine.googlecode.com/git/'
+        maven { url 'http://maven.objectify-appengine.googlecode.com/git/' }
     }
 }
 

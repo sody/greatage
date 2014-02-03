@@ -1,2 +1,2 @@
-include 'greatage-domain'
+include 'greatage-domain', 'greatage-db'
 
