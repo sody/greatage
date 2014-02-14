@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package org.greatage.db;
+package org.greatage.db.internal;
 
 import com.mongodb.MongoClientURI;
 import org.greatage.common.ProcessExecutor;
-import org.greatage.common.SimpleProcessExecutor;
+import org.greatage.db.Evaluator;
 
 import java.util.List;
 
@@ -30,8 +30,12 @@ public class MongoEvaluator implements Evaluator {
     private final MongoClientURI uri;
 
     public MongoEvaluator(final ProcessExecutor executor, final String uri) {
+        this(executor, new MongoClientURI(uri));
+    }
+
+    public MongoEvaluator(final ProcessExecutor executor, final MongoClientURI uri) {
         this.executor = executor;
-        this.uri = new MongoClientURI(uri);
+        this.uri = uri;
     }
 
     @Override
@@ -56,10 +60,9 @@ public class MongoEvaluator implements Evaluator {
                     public void error(final Throwable e) {
                     }
                 }).execute();
-    }
 
-    public static void main(final String[] args) {
-        final Evaluator evaluator = new MongoEvaluator(new SimpleProcessExecutor(), "mongodb://localhost/test");
-        evaluator.evaluate("db.test_users.insert({ _id: 'Test' });");
+        if (exitCode != 0) {
+            throw new RuntimeException(String.format("Could not evaluate script: exit code is %d.", exitCode));
+        }
     }
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.greatage.db;
+package org.greatage.db.internal;
 
 import org.greatage.common.EncodeUtils;
 import org.greatage.common.StringUtils;
@@ -22,15 +22,11 @@ import org.greatage.common.StringUtils;
 /**
  * @author Ivan Khalopik
  */
-public class CheckSumUtils {
+public class InternalUtils {
     private static final String DEFAULT_ALGORITHM = "MD5";
 
     public static String calculateCheckSum(final String text) {
         final byte[] encoded = EncodeUtils.encode(text.getBytes(), DEFAULT_ALGORITHM);
         return DEFAULT_ALGORITHM + ":" + StringUtils.toHexString(encoded) + ";";
-    }
-
-    public static boolean isValid(final String checkSum) {
-        return checkSum != null && checkSum.startsWith(DEFAULT_ALGORITHM);
     }
 }
