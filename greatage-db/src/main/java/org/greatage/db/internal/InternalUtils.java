@@ -25,8 +25,12 @@ import org.greatage.common.StringUtils;
 public class InternalUtils {
     private static final String DEFAULT_ALGORITHM = "MD5";
 
-    public static String calculateCheckSum(final String text) {
-        final byte[] encoded = EncodeUtils.encode(text.getBytes(), DEFAULT_ALGORITHM);
+    public static String calculateCheckSum(final String... parts) {
+        final StringBuilder text = new StringBuilder();
+        for (String part : parts) {
+            text.append(part).append('\n');
+        }
+        final byte[] encoded = EncodeUtils.encode(text.toString().getBytes(), DEFAULT_ALGORITHM);
         return DEFAULT_ALGORITHM + ":" + StringUtils.toHexString(encoded) + ";";
     }
 }

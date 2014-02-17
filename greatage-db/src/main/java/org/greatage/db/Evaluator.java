@@ -21,5 +21,12 @@ package org.greatage.db;
  */
 public interface Evaluator {
 
-    void evaluate(String script);
+    ChangeSet changeSet(String id);
+
+    public interface ChangeSet {
+
+        ChangeSet append(String script);
+
+        Evaluator apply();
+    }
 }

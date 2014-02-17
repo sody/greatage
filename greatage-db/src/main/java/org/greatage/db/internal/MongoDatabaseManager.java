@@ -16,49 +16,66 @@
 
 package org.greatage.db.internal;
 
-import com.mongodb.MongoClientURI;
 import org.greatage.common.SimpleProcessExecutor;
 import org.greatage.db.DatabaseManager;
 import org.greatage.db.Evaluator;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.io.StringReader;
 
 /**
  * @author Ivan Khalopik
  */
 public class MongoDatabaseManager implements DatabaseManager {
-    private static final String DEFAULT_COLLECTION = "changelog";
-    private static final String SCRIPT_FORMAT = "// start change set #%2$s\n" +
-            "var changeSet = db.%1$s.findOne({_id: '%2$s'});\n" +
-            "if (!changeSet) {\n" +
-            "  %3$s\n" +
-            "}\n" +
-            "if (!changeSet || !changeSet.checkSum) {\n" +
-            "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s'});\n" +
-            "}";
-
     private final Evaluator evaluator;
-    private final String collection;
 
     public MongoDatabaseManager(final String uri) {
-        final MongoClientURI clientUri = new MongoClientURI(uri);
-
-        this.evaluator = new MongoEvaluator(new SimpleProcessExecutor(), clientUri);
-        this.collection = clientUri.getCollection() != null ? clientUri.getCollection() : DEFAULT_COLLECTION;
+        this.evaluator = new MongoEvaluator(new SimpleProcessExecutor(), uri);
     }
 
     @Override
     public void update(final String script) {
-        evaluate("1", script);
-    }
+        final LineNumberReader reader = new LineNumberReader(new BufferedReader(new StringReader(script)));
+        try {
+            Evaluator.ChangeSet changeSet = null;
 
-    private void evaluate(final String id, final String script) {
-        final String checkSum = InternalUtils.calculateCheckSum(id + "," + script);
-        final String fullScript = String.format(SCRIPT_FORMAT, collection, id, script, checkSum);
+            String line = reader.readLine();
+            while (line != null) {
+                if (line.startsWith("//!")) {
+                    // apply previous change
+                    if (changeSet != null) {
+                        changeSet.apply();
+                    }
+                    // create new change
+                    changeSet = evaluator.changeSet(line.substring(3).trim());
+                } else if (changeSet != null) {
+                    // build script for current change
+                    changeSet.append(line);
+                }
+                // next line
+                line = reader.readLine();
+            }
 
-        evaluator.evaluate(fullScript);
+            // apply very last change
+            if (changeSet != null) {
+                changeSet.apply();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Cannot parse script.", e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                // do nothing
+            }
+        }
     }
 
     public static void main(String[] args) {
         final DatabaseManager manager = new MongoDatabaseManager("mongodb://localhost/test.changes");
-        manager.update("db.test_users111.insert({ name: 'Test 3' });");
+        manager.update("//! my-first-change\ndb.users.insert({ name: 'Test 3' });\n" +
+                "//! second-change\ndb.users.insert({_id: 'Ded-Moroz'});\n");
     }
 }
