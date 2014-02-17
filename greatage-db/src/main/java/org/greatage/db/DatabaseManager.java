@@ -16,10 +16,20 @@
 
 package org.greatage.db;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
+
 /**
  * @author Ivan Khalopik
  */
 public interface DatabaseManager {
 
     void update(String script);
+
+    void update(File script);
+
+    void update(InputStream script);
+
+    void update(Reader script);
 }

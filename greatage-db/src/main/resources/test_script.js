@@ -1,4 +1,4 @@
-//! change-set-id
+//! GA-1
 //@ Vasya Pupkin
 //# Sets address for all companies
 var cursor = db.companies.find();

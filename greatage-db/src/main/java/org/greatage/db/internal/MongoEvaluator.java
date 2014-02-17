@@ -29,8 +29,10 @@ public class MongoEvaluator implements Evaluator {
     private static final String DEFAULT_COLLECTION = "changelog";
     private static final String SCRIPT = "// start change set #%2$s\n" +
             "var changeSet = db.%1$s.findOne({_id: '%2$s'});\n" +
-            "if (!changeSet) {\n" +
-            "  %3$s\n" +
+            "if (!changeSet) {\n\n" +
+            "// BEGIN\n" +
+            "%3$s" +
+            "// END\n\n" +
             "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s', author: '%5$s', comment: '%6$s'});\n" +
             "} else if (!changeSet.checkSum) {\n" +
             "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s', author: '%5$s', comment: '%6$s'});\n" +
@@ -75,6 +77,7 @@ public class MongoEvaluator implements Evaluator {
 
                     @Override
                     public void error(final Throwable e) {
+                        System.err.println(e.getMessage());
                     }
                 }).execute();
 
