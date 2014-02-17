@@ -25,6 +25,10 @@ public interface Evaluator {
 
     public interface ChangeSet {
 
+        ChangeSet author(String author);
+
+        ChangeSet comment(String comment);
+
         ChangeSet append(String script);
 
         Evaluator apply();

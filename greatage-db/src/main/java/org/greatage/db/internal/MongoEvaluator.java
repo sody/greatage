@@ -31,9 +31,9 @@ public class MongoEvaluator implements Evaluator {
             "var changeSet = db.%1$s.findOne({_id: '%2$s'});\n" +
             "if (!changeSet) {\n" +
             "  %3$s\n" +
-            "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s'});\n" +
+            "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s', author: '%5$s', comment: '%6$s'});\n" +
             "} else if (!changeSet.checkSum) {\n" +
-            "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s'});\n" +
+            "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s', author: '%5$s', comment: '%6$s'});\n" +
             "} else if (changeSet.checkSum !== '%4$s') {\n" +
             "  throw new Error('Invalid checksum for changeset \\'%2$s\\'. (actual: \\'%4$s\\', expected: \\'' + changeSet.checkSum + '\\')');\n" +
             "}";
@@ -87,8 +87,23 @@ public class MongoEvaluator implements Evaluator {
         private final String id;
         private final StringBuilder scriptBuilder = new StringBuilder();
 
+        private String author = "";
+        private String comment = "";
+
         private MongoChangeSet(final String id) {
             this.id = id;
+        }
+
+        @Override
+        public MongoChangeSet author(final String author) {
+            this.author = author;
+            return this;
+        }
+
+        @Override
+        public MongoChangeSet comment(final String comment) {
+            this.comment = comment;
+            return this;
         }
 
         public MongoChangeSet append(final String script) {
@@ -99,7 +114,8 @@ public class MongoEvaluator implements Evaluator {
         public MongoEvaluator apply() {
             final String script = scriptBuilder.toString();
             final String checkSum = InternalUtils.calculateCheckSum(id, script);
-            final String fullScript = String.format(SCRIPT, collection, id, script, checkSum);
+            final String fullScript = String.format(SCRIPT,
+                    collection, id, script, checkSum, author, comment);
             evaluate(fullScript);
 
             return MongoEvaluator.this;

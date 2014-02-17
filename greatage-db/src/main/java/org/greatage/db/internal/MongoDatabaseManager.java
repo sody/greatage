@@ -43,16 +43,26 @@ public class MongoDatabaseManager implements DatabaseManager {
 
             String line = reader.readLine();
             while (line != null) {
-                if (line.startsWith("//!")) {
-                    // apply previous change
-                    if (changeSet != null) {
-                        changeSet.apply();
+                if (!line.trim().isEmpty()) {
+                    if (line.startsWith("//!")) {
+                        // apply previous change
+                        if (changeSet != null) {
+                            changeSet.apply();
+                        }
+                        // create new change
+                        changeSet = evaluator.changeSet(line.substring(3).trim());
+                    } else if (changeSet == null) {
+                        throw new RuntimeException("Script should start with '//! id-of-change-set'.");
+                    } else if (line.startsWith("//@")) {
+                        // setup author
+                        changeSet.author(line.substring(3).trim());
+                    } else if (line.startsWith("//#")) {
+                        // setup comment
+                        changeSet.comment(line.substring(3).trim());
+                    } else {
+                        // build script for current change
+                        changeSet.append(line);
                     }
-                    // create new change
-                    changeSet = evaluator.changeSet(line.substring(3).trim());
-                } else if (changeSet != null) {
-                    // build script for current change
-                    changeSet.append(line);
                 }
                 // next line
                 line = reader.readLine();
@@ -75,7 +85,15 @@ public class MongoDatabaseManager implements DatabaseManager {
 
     public static void main(String[] args) {
         final DatabaseManager manager = new MongoDatabaseManager("mongodb://localhost/test.changes");
-        manager.update("//! my-first-change\ndb.users.insert({ name: 'Test 3' });\n" +
-                "//! second-change\ndb.users.insert({_id: 'Ded-Moroz'});\n");
+        manager.update(
+                "//! my-first-change\n" +
+                        "//@Ivan\n" +
+                        "//# Adds test user \n" +
+                        "db.users.insert({ name: 'Test 3' });\n" +
+                "//! second-change\n" +
+                        "db.users.insert({_id: 'Ded-Moroz'});\n" +
+                "//! third-change\n" +
+                        "//@\n" +
+                        "db.users.insert({_id: 'adm'});\n");
     }
 }
