@@ -53,9 +53,11 @@ class MongoEvaluatorSpec extends Specification {
     def companies = client.getDB(uri.database).getCollection("companies")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({_id: 'company1'});")
             .apply()
+            .flush()
     then:
     companies.count(new BasicDBObject("_id", "company1")) == 1
   }
@@ -65,16 +67,20 @@ class MongoEvaluatorSpec extends Specification {
     def companies = client.getDB(uri.database).getCollection("companies")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({name: 'company1'});")
             .apply()
+            .flush()
     then:
     companies.count(new BasicDBObject("name", "company1")) == 1
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({name: 'company1'});")
             .apply()
+            .flush()
     then:
     companies.count(new BasicDBObject("name", "company1")) == 1
   }
@@ -84,16 +90,20 @@ class MongoEvaluatorSpec extends Specification {
     def companies = client.getDB(uri.database).getCollection("companies")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({name: 'company1'});")
             .apply()
+            .flush()
     then:
     companies.count(new BasicDBObject("name", "company1")) == 1
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({name: 'company2'});")
             .apply()
+            .flush()
     then:
     thrown(RuntimeException)
   }
@@ -103,25 +113,31 @@ class MongoEvaluatorSpec extends Specification {
     def companies = client.getDB(uri.database).getCollection("companies")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({name: 'company1'});")
             .apply()
+            .flush()
     then:
     companies.count(new BasicDBObject("name", "company1")) == 1
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .author("Test User")
             .append("db.companies.insert({name: 'company1'});")
             .apply()
+            .flush()
     then:
     noExceptionThrown()
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .comment("Add Company1")
             .append("db.companies.insert({name: 'company1'});")
             .apply()
+            .flush()
     then:
     noExceptionThrown()
   }
@@ -131,7 +147,8 @@ class MongoEvaluatorSpec extends Specification {
     def companies = client.getDB(uri.database).getCollection("companies")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({_id: 'company1'});")
             .apply()
             .changeSet("GA-2")
@@ -140,6 +157,7 @@ class MongoEvaluatorSpec extends Specification {
             .changeSet("GA-3")
             .append("db.companies.insert({_id: 'company3'});")
             .apply()
+            .flush()
     then:
     companies.count(new BasicDBObject("_id", "company1")) == 1
     companies.count(new BasicDBObject("_id", "company2")) == 1
@@ -151,9 +169,11 @@ class MongoEvaluatorSpec extends Specification {
     def changelog = client.getDB(uri.database).getCollection("changelog")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({_id: 'company1'});")
             .apply()
+            .flush()
     then:
     changelog.count(new BasicDBObject("_id", "GA-1")) == 1
   }
@@ -163,7 +183,8 @@ class MongoEvaluatorSpec extends Specification {
     def changelog = client.getDB(uri.database).getCollection("changelog")
 
     when:
-    evaluator.changeSet("GA-1")
+    evaluator.changeLog()
+            .changeSet("GA-1")
             .append("db.companies.insert({_id: 'company1'});")
             .apply()
             .changeSet("GA-2")
@@ -172,6 +193,7 @@ class MongoEvaluatorSpec extends Specification {
             .changeSet("GA-3")
             .append("db.companies.insert({_id: 'company3'});")
             .apply()
+            .flush()
     then:
     changelog.count(new BasicDBObject("_id", "GA-1")) == 1
     changelog.count(new BasicDBObject("_id", "GA-2")) == 1

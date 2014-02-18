@@ -93,6 +93,7 @@ public class MongoDatabaseManager implements DatabaseManager {
     }
 
     private void process(final Reader reader) throws IOException {
+        final Evaluator.ChangeLog changeLog = evaluator.changeLog();
         final LineNumberReader lineReader = new LineNumberReader(new BufferedReader(reader));
 
         Evaluator.ChangeSet changeSet = null;
@@ -106,7 +107,7 @@ public class MongoDatabaseManager implements DatabaseManager {
                         changeSet.apply();
                     }
                     // create new change
-                    changeSet = evaluator.changeSet(line.substring(ID_PREFIX.length()).trim());
+                    changeSet = changeLog.changeSet(line.substring(ID_PREFIX.length()).trim());
                 } else if (changeSet == null) {
                     throw new RuntimeException("Script should start with '//! id-of-change-set'.");
                 } else if (line.startsWith(AUTHOR_PREFIX)) {
@@ -128,6 +129,8 @@ public class MongoDatabaseManager implements DatabaseManager {
         if (changeSet != null) {
             changeSet.apply();
         }
+        // flush changes
+        changeLog.flush();
     }
 
     private void close(final Closeable closeable) {

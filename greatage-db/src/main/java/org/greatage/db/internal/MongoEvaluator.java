@@ -27,8 +27,11 @@ import java.util.List;
  */
 public class MongoEvaluator implements Evaluator {
     private static final String DEFAULT_COLLECTION = "changelog";
-    private static final String SCRIPT = "// start change set #%2$s\n" +
-            "var changeSet = db.%1$s.findOne({_id: '%2$s'});\n" +
+    private static final int DEFAULT_BATCH_SIZE = 10;
+
+    private static final String SCRIPT_HEADER = "var changeSet;\n";
+    private static final String SCRIPT_BODY = "// start change set #%2$s\n" +
+            "changeSet = db.%1$s.findOne({_id: '%2$s'});\n" +
             "if (!changeSet) {\n\n" +
             "// BEGIN\n" +
             "%3$s" +
@@ -54,8 +57,9 @@ public class MongoEvaluator implements Evaluator {
         this.collection = uri.getCollection() != null ? uri.getCollection() : DEFAULT_COLLECTION;
     }
 
-    public MongoChangeSet changeSet(final String id) {
-        return new MongoChangeSet(id);
+    @Override
+    public ChangeLog changeLog() {
+        return new MongoChangeLog(DEFAULT_BATCH_SIZE);
     }
 
     private void evaluate(final String script) {
@@ -86,14 +90,52 @@ public class MongoEvaluator implements Evaluator {
         }
     }
 
+    public class MongoChangeLog implements ChangeLog {
+        private final int batchSize;
+        private StringBuilder batch = new StringBuilder(SCRIPT_HEADER);
+
+        private int size;
+
+        public MongoChangeLog(final int batchSize) {
+            this.batchSize = batchSize;
+
+            size = batchSize;
+        }
+
+        @Override
+        public ChangeSet changeSet(final String id) {
+            return new MongoChangeSet(this, id);
+        }
+
+        @Override
+        public ChangeLog flush() {
+            evaluate(batch.toString());
+            batch = new StringBuilder(SCRIPT_HEADER);
+            size = batchSize;
+            return this;
+        }
+
+        private MongoChangeLog apply(final String script) {
+            batch.append('\n').append(script);
+            size--;
+            if (size <= 0) {
+                flush();
+            }
+            return this;
+        }
+    }
+
     public class MongoChangeSet implements ChangeSet {
+        private final MongoChangeLog changeLog;
+
         private final String id;
         private final StringBuilder scriptBuilder = new StringBuilder();
 
         private String author = "";
         private String comment = "";
 
-        private MongoChangeSet(final String id) {
+        private MongoChangeSet(final MongoChangeLog changeLog, final String id) {
+            this.changeLog = changeLog;
             this.id = id;
         }
 
@@ -109,19 +151,20 @@ public class MongoEvaluator implements Evaluator {
             return this;
         }
 
+        @Override
         public MongoChangeSet append(final String script) {
             this.scriptBuilder.append(script);
             return this;
         }
 
-        public MongoEvaluator apply() {
+        @Override
+        public MongoChangeLog apply() {
             final String script = scriptBuilder.toString();
             final String checkSum = InternalUtils.calculateCheckSum(id, script);
-            final String fullScript = String.format(SCRIPT,
+            final String fullScript = String.format(SCRIPT_BODY,
                     collection, id, script, checkSum, author, comment);
-            evaluate(fullScript);
 
-            return MongoEvaluator.this;
+            return changeLog.apply(fullScript);
         }
     }
 }

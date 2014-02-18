@@ -21,7 +21,14 @@ package org.greatage.db;
  */
 public interface Evaluator {
 
-    ChangeSet changeSet(String id);
+    ChangeLog changeLog();
+
+    public interface ChangeLog {
+
+        ChangeSet changeSet(String id);
+
+        ChangeLog flush();
+    }
 
     public interface ChangeSet {
 
@@ -31,6 +38,6 @@ public interface Evaluator {
 
         ChangeSet append(String script);
 
-        Evaluator apply();
+        ChangeLog apply();
     }
 }
