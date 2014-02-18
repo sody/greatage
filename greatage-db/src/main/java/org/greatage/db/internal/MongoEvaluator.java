@@ -17,7 +17,7 @@
 package org.greatage.db.internal;
 
 import com.mongodb.MongoClientURI;
-import org.greatage.common.ProcessExecutor;
+import org.greatage.db.ProcessExecutor;
 import org.greatage.db.Evaluator;
 
 import java.util.List;

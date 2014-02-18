@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.greatage.common;
+package org.greatage.db;
 
 import java.util.List;
 import java.util.concurrent.Future;

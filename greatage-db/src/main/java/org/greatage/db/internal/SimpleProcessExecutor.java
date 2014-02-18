@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.greatage.common;
+package org.greatage.db.internal;
+
+import org.greatage.db.ProcessExecutor;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -26,7 +28,7 @@ import java.util.concurrent.Future;
  *
  * @author Ivan Khalopik
  * @see AbstractProcessExecutor
- * @see ProcessExecutor
+ * @see org.greatage.db.ProcessExecutor
  */
 public class SimpleProcessExecutor extends AbstractProcessExecutor {
     private static final int MAX_EXECUTORS = 10;

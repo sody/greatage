@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.greatage.common;
+package org.greatage.db.internal;
 
+import org.greatage.db.ProcessExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

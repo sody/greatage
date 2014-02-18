@@ -16,7 +16,6 @@
 
 package org.greatage.db.internal;
 
-import org.greatage.common.SimpleProcessExecutor;
 import org.greatage.db.DatabaseManager;
 import org.greatage.db.Evaluator;
 
