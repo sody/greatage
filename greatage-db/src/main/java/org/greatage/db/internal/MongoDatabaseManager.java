@@ -139,10 +139,4 @@ public class MongoDatabaseManager implements DatabaseManager {
             }
         }
     }
-
-    public static void main(String[] args) {
-        final InputStream stream = DatabaseManager.class.getClassLoader().getResourceAsStream("test_script.js");
-        final DatabaseManager manager = new MongoDatabaseManager("mongodb://localhost/test.changes");
-        manager.update(stream);
-    }
 }
