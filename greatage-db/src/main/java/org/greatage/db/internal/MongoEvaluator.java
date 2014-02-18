@@ -37,8 +37,10 @@ public class MongoEvaluator implements Evaluator {
             "%3$s" +
             "// END\n\n" +
             "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s', author: '%5$s', comment: '%6$s'});\n" +
+            "  db.getLastError();\n" +
             "} else if (!changeSet.checkSum) {\n" +
             "  db.%1$s.save({_id: '%2$s', checkSum: '%4$s', author: '%5$s', comment: '%6$s'});\n" +
+            "  db.getLastError();\n" +
             "} else if (changeSet.checkSum !== '%4$s') {\n" +
             "  throw new Error('Invalid checksum for changeset \\'%2$s\\'. (actual: \\'%4$s\\', expected: \\'' + changeSet.checkSum + '\\')');\n" +
             "}";
