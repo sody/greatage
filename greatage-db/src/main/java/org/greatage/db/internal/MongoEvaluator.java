@@ -62,6 +62,7 @@ public class MongoEvaluator implements Evaluator {
 
     private final ProcessExecutor executor;
     private final MongoClientURI uri;
+    private final int batchSize;
     private final String collection;
 
     public MongoEvaluator(final ProcessExecutor executor, final String uri) {
@@ -69,14 +70,19 @@ public class MongoEvaluator implements Evaluator {
     }
 
     public MongoEvaluator(final ProcessExecutor executor, final MongoClientURI uri) {
+        this(executor, uri, DEFAULT_BATCH_SIZE);
+    }
+
+    public MongoEvaluator(final ProcessExecutor executor, final MongoClientURI uri, final int batchSize) {
         this.executor = executor;
         this.uri = uri;
+        this.batchSize = batchSize;
         this.collection = uri.getCollection() != null ? uri.getCollection() : DEFAULT_COLLECTION;
     }
 
     @Override
     public ChangeLog changeLog() {
-        return new MongoChangeLog(DEFAULT_BATCH_SIZE);
+        return new MongoChangeLog(batchSize);
     }
 
     private void evaluate(final List<String> ids, final String script) {

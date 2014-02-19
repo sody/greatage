@@ -41,10 +41,14 @@ class MongoEvaluatorSpec extends Specification {
   void setupSpec() {
     uri = new MongoClientURI("mongodb://localhost/test")
     client = new MongoClient(uri)
-    evaluator = new MongoEvaluator(new SimpleProcessExecutor(1), uri)
+    evaluator = new MongoEvaluator(new SimpleProcessExecutor(1), uri, 3)
+
+    // clear db before tests
+    client.getDB(uri.database).dropDatabase()
   }
 
   void cleanup() {
+    // clear db after each test
     client.getDB(uri.database).dropDatabase()
   }
 
@@ -187,6 +191,62 @@ class MongoEvaluatorSpec extends Specification {
     companies.count(new BasicDBObject("_id", "company3")) == 1
   }
 
+  def "should apply changesets only if batch size is reached"() {
+    given:
+    def companies = client.getDB(uri.database).getCollection("companies")
+    def changeLog = evaluator.changeLog()
+
+    when:
+    changeLog
+            .changeSet("GA-1")
+            .append("db.companies.insert({_id: 'company1'});")
+            .apply()
+            .changeSet("GA-2")
+            .append("db.companies.insert({_id: 'company2'});")
+            .apply()
+    then:
+    companies.count(new BasicDBObject("_id", "company1")) == 0
+    companies.count(new BasicDBObject("_id", "company2")) == 0
+
+    when:
+    changeLog
+            .changeSet("GA-3")
+            .append("db.companies.insert({_id: 'company3'});")
+            .apply()
+            .changeSet("GA-4")
+            .append("db.companies.insert({_id: 'company4'});")
+            .apply()
+    then:
+    companies.count(new BasicDBObject("_id", "company1")) == 1
+    companies.count(new BasicDBObject("_id", "company2")) == 1
+    companies.count(new BasicDBObject("_id", "company3")) == 1
+    companies.count(new BasicDBObject("_id", "company4")) == 0
+  }
+
+  def "should apply changesets if flush is forced"() {
+    given:
+    def companies = client.getDB(uri.database).getCollection("companies")
+    def changeLog = evaluator.changeLog()
+
+    when:
+    changeLog
+            .changeSet("GA-1")
+            .append("db.companies.insert({_id: 'company1'});")
+            .apply()
+            .changeSet("GA-2")
+            .append("db.companies.insert({_id: 'company2'});")
+            .apply()
+    then:
+    companies.count(new BasicDBObject("_id", "company1")) == 0
+    companies.count(new BasicDBObject("_id", "company2")) == 0
+
+    when:
+    changeLog.flush()
+    then:
+    companies.count(new BasicDBObject("_id", "company1")) == 1
+    companies.count(new BasicDBObject("_id", "company2")) == 1
+  }
+
   def "should add record in changelog collection for single changeset"() {
     given:
     def changelog = client.getDB(uri.database).getCollection("changelog")
@@ -201,7 +261,22 @@ class MongoEvaluatorSpec extends Specification {
     changelog.count(new BasicDBObject("_id", "GA-1")) == 1
   }
 
-  def "should add record in changelog collection for each changeset"() {
+  def "should not add record in changelog collection when changeset fails"() {
+    given:
+    def changelog = client.getDB(uri.database).getCollection("changelog")
+
+    when:
+    evaluator.changeLog()
+            .changeSet("GA-1")
+            .append("dbcompanies.insert({_id: 'company1'});")
+            .apply()
+            .flush()
+    then:
+    thrown(RuntimeException)
+    changelog.count(new BasicDBObject("_id", "GA-1")) == 0
+  }
+
+  def "should add records in changelog collection for each changeset"() {
     given:
     def changelog = client.getDB(uri.database).getCollection("changelog")
 
@@ -221,5 +296,28 @@ class MongoEvaluatorSpec extends Specification {
     changelog.count(new BasicDBObject("_id", "GA-1")) == 1
     changelog.count(new BasicDBObject("_id", "GA-2")) == 1
     changelog.count(new BasicDBObject("_id", "GA-3")) == 1
+  }
+
+  def "should not add records in changelog collection after some changeset fails"() {
+    given:
+    def changelog = client.getDB(uri.database).getCollection("changelog")
+
+    when:
+    evaluator.changeLog()
+            .changeSet("GA-1")
+            .append("db.companies.insert({_id: 'company1'});")
+            .apply()
+            .changeSet("GA-2")
+            .append("dbcompanies.insert({_id: 'company2'});")
+            .apply()
+            .changeSet("GA-3")
+            .append("db.companies.insert({_id: 'company3'});")
+            .apply()
+            .flush()
+    then:
+    thrown(RuntimeException)
+    changelog.count(new BasicDBObject("_id", "GA-1")) == 1
+    changelog.count(new BasicDBObject("_id", "GA-2")) == 0
+    changelog.count(new BasicDBObject("_id", "GA-3")) == 0
   }
 }
