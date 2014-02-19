@@ -142,6 +142,29 @@ class MongoEvaluatorSpec extends Specification {
     noExceptionThrown()
   }
 
+  def "should fail if internal error occurs during update"() {
+    when:
+    evaluator.changeLog()
+            .changeSet("GA-1")
+            .append("db.companies.insert({_id: 'company1'});")
+            .apply()
+            .changeSet("GA-2")
+            .append("db.companies.insert({_id: 'company1'});")
+            .apply()
+            .flush()
+    then:
+    thrown(RuntimeException)
+
+    when:
+    evaluator.changeLog()
+            .changeSet("GA-3")
+            .append("dbcompanies.insert({_id: 'company3'});")
+            .apply()
+            .flush()
+    then:
+    thrown(RuntimeException)
+  }
+
   def "should apply multiple changesets"() {
     given:
     def companies = client.getDB(uri.database).getCollection("companies")

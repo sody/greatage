@@ -36,7 +36,7 @@ import java.util.concurrent.Future;
  * @author Ivan Khalopik
  */
 public abstract class AbstractProcessExecutor implements ProcessExecutor {
-    private final static Logger logger = LoggerFactory.getLogger(AbstractProcessExecutor.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
     public ProcessExecutor.Options create() {
@@ -140,7 +140,7 @@ public abstract class AbstractProcessExecutor implements ProcessExecutor {
         }
 
         int execute() {
-            logger.info("Starting process: {}", this);
+            logger.debug("Starting process: {}", this);
             // report handler about command execution
             if (handler != null) {
                 handler.start(command);
@@ -200,7 +200,7 @@ public abstract class AbstractProcessExecutor implements ProcessExecutor {
             if (handler != null) {
                 handler.end(returnCode);
             }
-            logger.info("Finished process (exitcode={}): {}", returnCode, this);
+            logger.debug("Finished process (exitcode={}): {}", returnCode, this);
 
             return returnCode;
         }
@@ -214,7 +214,7 @@ public abstract class AbstractProcessExecutor implements ProcessExecutor {
                     builder.append(iterator.next());
 
                     while (iterator.hasNext()) {
-                        builder.append(',').append(iterator.next());
+                        builder.append(' ').append(iterator.next());
                     }
                 }
                 cachedToString = builder.toString();
