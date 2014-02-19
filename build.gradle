@@ -14,7 +14,7 @@ ext {
     versions = [
             java: '1.6',
             groovy: '2.0.6',
-            gradle: '1.6',
+            gradle: '1.11',
 
             javassist: '3.17.1-GA',
             hibernate: '4.0.0.CR5',
