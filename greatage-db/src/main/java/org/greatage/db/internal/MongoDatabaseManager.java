@@ -41,7 +41,11 @@ public class MongoDatabaseManager implements DatabaseManager {
     private final Evaluator evaluator;
 
     public MongoDatabaseManager(final String uri) {
-        this.evaluator = new MongoEvaluator(new SimpleProcessExecutor(), uri);
+        this(new MongoEvaluator(new SimpleProcessExecutor(), uri));
+    }
+
+    public MongoDatabaseManager(final Evaluator evaluator) {
+        this.evaluator = evaluator;
     }
 
     @Override
