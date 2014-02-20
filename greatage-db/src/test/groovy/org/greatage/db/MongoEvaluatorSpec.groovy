@@ -19,7 +19,7 @@ package org.greatage.db
 import com.mongodb.BasicDBObject
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
-import org.greatage.db.internal.MongoEvaluator
+import org.greatage.db.internal.MongoDatabaseManager
 import org.greatage.db.internal.SimpleProcessExecutor
 import spock.lang.Shared
 import spock.lang.Specification
@@ -36,12 +36,12 @@ class MongoEvaluatorSpec extends Specification {
   private MongoClientURI uri
 
   @Shared
-  private MongoEvaluator evaluator
+  private MongoDatabaseManager evaluator
 
   void setupSpec() {
-    uri = new MongoClientURI("mongodb://localhost/test")
+    uri = new MongoClientURI("mongodb://localhost/test.changes")
     client = new MongoClient(uri)
-    evaluator = new MongoEvaluator(new SimpleProcessExecutor(1), uri, 3)
+    evaluator = new MongoDatabaseManager(new SimpleProcessExecutor(1), uri, 3)
 
     // clear db before tests
     client.getDB(uri.database).dropDatabase()
@@ -52,272 +52,81 @@ class MongoEvaluatorSpec extends Specification {
     client.getDB(uri.database).dropDatabase()
   }
 
-  def "should apply single changeset"() {
+  def "//! should be parsed as changeset id"() {
     given:
-    def companies = client.getDB(uri.database).getCollection("companies")
+    def changes = client.getDB(uri.database).getCollection(uri.collection)
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/1.js"))
     then:
-    companies.count(new BasicDBObject("_id", "company1")) == 1
+    changes.count(new BasicDBObject("_id", "GA-1")) == 1
+
+    when:
+    evaluator.update(open("/scripts/2.js"))
+    then:
+    changes.count(new BasicDBObject("_id", "GA-2")) == 1
+    changes.count(new BasicDBObject("_id", "GA-3")) == 1
+    changes.count(new BasicDBObject("_id", "GA-4")) == 1
+    changes.count(new BasicDBObject("_id", "GA-5")) == 1
   }
 
-  def "should not apply changeset if it has already been applied"() {
+  def "//@ should be parsed as changeset author"() {
     given:
-    def companies = client.getDB(uri.database).getCollection("companies")
+    def changes = client.getDB(uri.database).getCollection(uri.collection)
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({name: 'company1'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/1.js"))
     then:
-    companies.count(new BasicDBObject("name", "company1")) == 1
+    changes.findOne(new BasicDBObject("_id", "GA-1"))["author"] == "Vasya Pupkin"
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({name: 'company1'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/2.js"))
     then:
-    companies.count(new BasicDBObject("name", "company1")) == 1
+    changes.findOne(new BasicDBObject("_id", "GA-2"))["author"] == "Vasya Pupkin"
+    changes.findOne(new BasicDBObject("_id", "GA-3"))["author"] == ""
+    changes.findOne(new BasicDBObject("_id", "GA-4"))["author"] == "Vasya"
+    changes.findOne(new BasicDBObject("_id", "GA-5"))["author"] == "Pupkin"
   }
 
-  def "should fail if changeset checksum changed"() {
+  def "//# should be parsed as changeset comment"() {
     given:
-    def companies = client.getDB(uri.database).getCollection("companies")
+    def changes = client.getDB(uri.database).getCollection(uri.collection)
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({name: 'company1'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/1.js"))
     then:
-    companies.count(new BasicDBObject("name", "company1")) == 1
+    changes.findOne(new BasicDBObject("_id", "GA-1"))["comment"] == "Sets address for all companies"
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({name: 'company2'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/2.js"))
     then:
-    thrown(RuntimeException)
+    changes.findOne(new BasicDBObject("_id", "GA-2"))["comment"] == "Fake change"
+    changes.findOne(new BasicDBObject("_id", "GA-3"))["comment"] == "Change 3"
+    changes.findOne(new BasicDBObject("_id", "GA-4"))["comment"] == ""
+    changes.findOne(new BasicDBObject("_id", "GA-5"))["comment"] == ""
   }
 
-  def "should not fail if changeset checksum doesn't changed"() {
+  def "all other content should be parsed as changeset script"() {
     given:
-    def companies = client.getDB(uri.database).getCollection("companies")
+    def compamies = client.getDB(uri.database).getCollection("companies")
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({name: 'company1'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/1.js"))
     then:
-    companies.count(new BasicDBObject("name", "company1")) == 1
+    compamies.count(new BasicDBObject("_id", "company1")) == 1
 
     when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .author("Test User")
-            .append("db.companies.insert({name: 'company1'});")
-            .apply()
-            .flush()
+    evaluator.update(open("/scripts/2.js"))
     then:
-    noExceptionThrown()
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .comment("Add Company1")
-            .append("db.companies.insert({name: 'company1'});")
-            .apply()
-            .flush()
-    then:
-    noExceptionThrown()
+    compamies.count(new BasicDBObject("_id", "company1")) == 1
+    compamies.count(new BasicDBObject("_id", "company3")) == 1
+    compamies.count(new BasicDBObject("_id", "company5")) == 1
+    compamies.findOne(new BasicDBObject("_id", "company1"))["address"] == "Belarus"
+    compamies.findOne(new BasicDBObject("_id", "company3"))["address"] == "Belarus"
+    compamies.findOne(new BasicDBObject("_id", "company5"))["address"] == null
   }
 
-  def "should fail if internal error occurs during update"() {
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .changeSet("GA-2")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .flush()
-    then:
-    thrown(RuntimeException)
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-3")
-            .append("dbcompanies.insert({_id: 'company3'});")
-            .apply()
-            .flush()
-    then:
-    thrown(RuntimeException)
-  }
-
-  def "should apply multiple changesets"() {
-    given:
-    def companies = client.getDB(uri.database).getCollection("companies")
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .changeSet("GA-2")
-            .append("db.companies.insert({_id: 'company2'});")
-            .apply()
-            .changeSet("GA-3")
-            .append("db.companies.insert({_id: 'company3'});")
-            .apply()
-            .flush()
-    then:
-    companies.count(new BasicDBObject("_id", "company1")) == 1
-    companies.count(new BasicDBObject("_id", "company2")) == 1
-    companies.count(new BasicDBObject("_id", "company3")) == 1
-  }
-
-  def "should apply changesets only if batch size is reached"() {
-    given:
-    def companies = client.getDB(uri.database).getCollection("companies")
-    def changeLog = evaluator.changeLog()
-
-    when:
-    changeLog
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .changeSet("GA-2")
-            .append("db.companies.insert({_id: 'company2'});")
-            .apply()
-    then:
-    companies.count(new BasicDBObject("_id", "company1")) == 0
-    companies.count(new BasicDBObject("_id", "company2")) == 0
-
-    when:
-    changeLog
-            .changeSet("GA-3")
-            .append("db.companies.insert({_id: 'company3'});")
-            .apply()
-            .changeSet("GA-4")
-            .append("db.companies.insert({_id: 'company4'});")
-            .apply()
-    then:
-    companies.count(new BasicDBObject("_id", "company1")) == 1
-    companies.count(new BasicDBObject("_id", "company2")) == 1
-    companies.count(new BasicDBObject("_id", "company3")) == 1
-    companies.count(new BasicDBObject("_id", "company4")) == 0
-  }
-
-  def "should apply changesets if flush is forced"() {
-    given:
-    def companies = client.getDB(uri.database).getCollection("companies")
-    def changeLog = evaluator.changeLog()
-
-    when:
-    changeLog
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .changeSet("GA-2")
-            .append("db.companies.insert({_id: 'company2'});")
-            .apply()
-    then:
-    companies.count(new BasicDBObject("_id", "company1")) == 0
-    companies.count(new BasicDBObject("_id", "company2")) == 0
-
-    when:
-    changeLog.flush()
-    then:
-    companies.count(new BasicDBObject("_id", "company1")) == 1
-    companies.count(new BasicDBObject("_id", "company2")) == 1
-  }
-
-  def "should add record in changelog collection for single changeset"() {
-    given:
-    def changelog = client.getDB(uri.database).getCollection("changelog")
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .flush()
-    then:
-    changelog.count(new BasicDBObject("_id", "GA-1")) == 1
-  }
-
-  def "should not add record in changelog collection when changeset fails"() {
-    given:
-    def changelog = client.getDB(uri.database).getCollection("changelog")
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("dbcompanies.insert({_id: 'company1'});")
-            .apply()
-            .flush()
-    then:
-    thrown(RuntimeException)
-    changelog.count(new BasicDBObject("_id", "GA-1")) == 0
-  }
-
-  def "should add records in changelog collection for each changeset"() {
-    given:
-    def changelog = client.getDB(uri.database).getCollection("changelog")
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .changeSet("GA-2")
-            .append("db.companies.insert({_id: 'company2'});")
-            .apply()
-            .changeSet("GA-3")
-            .append("db.companies.insert({_id: 'company3'});")
-            .apply()
-            .flush()
-    then:
-    changelog.count(new BasicDBObject("_id", "GA-1")) == 1
-    changelog.count(new BasicDBObject("_id", "GA-2")) == 1
-    changelog.count(new BasicDBObject("_id", "GA-3")) == 1
-  }
-
-  def "should not add records in changelog collection after some changeset fails"() {
-    given:
-    def changelog = client.getDB(uri.database).getCollection("changelog")
-
-    when:
-    evaluator.changeLog()
-            .changeSet("GA-1")
-            .append("db.companies.insert({_id: 'company1'});")
-            .apply()
-            .changeSet("GA-2")
-            .append("dbcompanies.insert({_id: 'company2'});")
-            .apply()
-            .changeSet("GA-3")
-            .append("db.companies.insert({_id: 'company3'});")
-            .apply()
-            .flush()
-    then:
-    thrown(RuntimeException)
-    changelog.count(new BasicDBObject("_id", "GA-1")) == 1
-    changelog.count(new BasicDBObject("_id", "GA-2")) == 0
-    changelog.count(new BasicDBObject("_id", "GA-3")) == 0
+  private InputStream open(final String resource) {
+    return getClass().getResourceAsStream(resource)
   }
 }

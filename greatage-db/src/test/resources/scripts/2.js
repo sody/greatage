@@ -10,7 +10,12 @@ db.companies.insert({_id: 'company3'});
 
 //! GA-4
 //@ Vasya
-db.companies.insert({_id: 'company4'});
+var cursor = db.companies.find();
+while (cursor.hasNext()) {
+    var company = cursor.next();
+    company.address = 'Belarus';
+    db.companies.save(company);
+}
 
 //! GA-5
 //@ Pupkin

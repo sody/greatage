@@ -17,8 +17,8 @@
 package org.greatage.db.internal;
 
 import com.mongodb.MongoClientURI;
-import org.greatage.db.ProcessExecutor;
 import org.greatage.db.Evaluator;
+import org.greatage.db.ProcessExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +28,8 @@ import java.util.List;
 /**
  * @author Ivan Khalopik
  */
-public class MongoEvaluator implements Evaluator {
+public class MongoChangeLog implements Evaluator.ChangeLog {
     private static final String DEFAULT_COLLECTION = "changelog";
-    private static final int DEFAULT_BATCH_SIZE = 10;
 
     private static final String SCRIPT_HEADER = "// header\n" +
             "function processError(error) {\n" +
@@ -60,29 +59,50 @@ public class MongoEvaluator implements Evaluator {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    // change log settings
     private final ProcessExecutor executor;
     private final MongoClientURI uri;
     private final int batchSize;
     private final String collection;
 
-    public MongoEvaluator(final ProcessExecutor executor, final String uri) {
-        this(executor, new MongoClientURI(uri));
-    }
+    // change log runtime state
+    private final List<String> ids;
+    private StringBuilder batch = new StringBuilder(SCRIPT_HEADER);
+    private int size;
 
-    public MongoEvaluator(final ProcessExecutor executor, final MongoClientURI uri) {
-        this(executor, uri, DEFAULT_BATCH_SIZE);
-    }
-
-    public MongoEvaluator(final ProcessExecutor executor, final MongoClientURI uri, final int batchSize) {
+    public MongoChangeLog(final ProcessExecutor executor, final MongoClientURI uri, final int batchSize) {
         this.executor = executor;
         this.uri = uri;
         this.batchSize = batchSize;
-        this.collection = uri.getCollection() != null ? uri.getCollection() : DEFAULT_COLLECTION;
+
+        collection = uri.getCollection() != null ? uri.getCollection() : DEFAULT_COLLECTION;
+        ids = new ArrayList<String>(batchSize);
+        batch = new StringBuilder(SCRIPT_HEADER);
+        size = batchSize;
     }
 
     @Override
-    public ChangeLog changeLog() {
-        return new MongoChangeLog(batchSize);
+    public MongoChangeSet changeSet(final String id) {
+        return new MongoChangeSet(this, id);
+    }
+
+    @Override
+    public MongoChangeLog flush() {
+        evaluate(ids, batch.toString());
+        // reset
+        ids.clear();
+        batch = new StringBuilder(SCRIPT_HEADER);
+        size = batchSize;
+        return this;
+    }
+
+    private void apply(final String id, final String script) {
+        ids.add(id);
+        batch.append('\n').append(script);
+        size--;
+        if (size <= 0) {
+            flush();
+        }
     }
 
     private void evaluate(final List<String> ids, final String script) {
@@ -118,47 +138,7 @@ public class MongoEvaluator implements Evaluator {
         }
     }
 
-    public class MongoChangeLog implements ChangeLog {
-        private final int batchSize;
-        private final List<String> ids;
-
-        private StringBuilder batch = new StringBuilder(SCRIPT_HEADER);
-        private int size;
-
-        public MongoChangeLog(final int batchSize) {
-            this.batchSize = batchSize;
-
-            ids = new ArrayList<String>(batchSize);
-            batch = new StringBuilder(SCRIPT_HEADER);
-            size = batchSize;
-        }
-
-        @Override
-        public ChangeSet changeSet(final String id) {
-            return new MongoChangeSet(this, id);
-        }
-
-        @Override
-        public ChangeLog flush() {
-            evaluate(ids, batch.toString());
-            // reset
-            ids.clear();
-            batch = new StringBuilder(SCRIPT_HEADER);
-            size = batchSize;
-            return this;
-        }
-
-        private void apply(final String id, final String script) {
-            ids.add(id);
-            batch.append('\n').append(script);
-            size--;
-            if (size <= 0) {
-                flush();
-            }
-        }
-    }
-
-    public class MongoChangeSet implements ChangeSet {
+    public class MongoChangeSet implements Evaluator.ChangeSet {
         private final MongoChangeLog changeLog;
 
         private final String id;

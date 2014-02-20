@@ -16,10 +16,22 @@
 
 package org.greatage.db;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.Reader;
+
 /**
  * @author Ivan Khalopik
  */
 public interface Evaluator {
+
+    Evaluator update(String script);
+
+    Evaluator update(File script);
+
+    Evaluator update(InputStream stream);
+
+    Evaluator update(Reader reader);
 
     ChangeLog changeLog();
 

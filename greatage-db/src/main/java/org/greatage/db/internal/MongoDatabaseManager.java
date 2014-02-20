@@ -16,8 +16,9 @@
 
 package org.greatage.db.internal;
 
-import org.greatage.db.DatabaseManager;
+import com.mongodb.MongoClientURI;
 import org.greatage.db.Evaluator;
+import org.greatage.db.ProcessExecutor;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
@@ -33,26 +34,37 @@ import java.io.StringReader;
 /**
  * @author Ivan Khalopik
  */
-public class MongoDatabaseManager implements DatabaseManager {
+public class MongoDatabaseManager implements Evaluator {
+    private static final int DEFAULT_BATCH_SIZE = 10;
+
     private static final String ID_PREFIX = "//!";
     private static final String AUTHOR_PREFIX = "//@";
     private static final String COMMENT_PREFIX = "//#";
 
-    private final Evaluator evaluator;
+    private final ProcessExecutor executor;
+    private final MongoClientURI uri;
+    private final int batchSize;
 
     public MongoDatabaseManager(final String uri) {
-        this(new MongoEvaluator(new SimpleProcessExecutor(), uri));
+        this(new SimpleProcessExecutor(), uri);
     }
 
-    public MongoDatabaseManager(final Evaluator evaluator) {
-        this.evaluator = evaluator;
+    public MongoDatabaseManager(final ProcessExecutor executor, final String uri) {
+        this(executor, new MongoClientURI(uri), DEFAULT_BATCH_SIZE);
+    }
+
+    public MongoDatabaseManager(final ProcessExecutor executor, final MongoClientURI uri, final int batchSize) {
+        this.executor = executor;
+        this.uri = uri;
+        this.batchSize = batchSize;
     }
 
     @Override
-    public void update(final String script) {
+    public MongoDatabaseManager update(final String script) {
         final StringReader reader = new StringReader(script);
         try {
             process(reader);
+            return this;
         } catch (IOException e) {
             throw new RuntimeException("Cannot parse script.", e);
         } finally {
@@ -61,11 +73,12 @@ public class MongoDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(final File file) {
+    public MongoDatabaseManager update(final File file) {
         InputStreamReader reader = null;
         try {
             reader = new FileReader(file);
             process(reader);
+            return this;
         } catch (IOException e) {
             throw new RuntimeException("Cannot parse script.", e);
         } finally {
@@ -74,10 +87,11 @@ public class MongoDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(final InputStream stream) {
+    public MongoDatabaseManager update(final InputStream stream) {
         final InputStreamReader reader = new InputStreamReader(stream);
         try {
             process(reader);
+            return this;
         } catch (IOException e) {
             throw new RuntimeException("Cannot parse script.", e);
         } finally {
@@ -86,9 +100,10 @@ public class MongoDatabaseManager implements DatabaseManager {
     }
 
     @Override
-    public void update(final Reader reader) {
+    public MongoDatabaseManager update(final Reader reader) {
         try {
             process(reader);
+            return this;
         } catch (IOException e) {
             throw new RuntimeException("Cannot parse script.", e);
         } finally {
@@ -96,8 +111,13 @@ public class MongoDatabaseManager implements DatabaseManager {
         }
     }
 
+    @Override
+    public MongoChangeLog changeLog() {
+        return new MongoChangeLog(executor, uri, batchSize);
+    }
+
     private void process(final Reader reader) throws IOException {
-        final Evaluator.ChangeLog changeLog = evaluator.changeLog();
+        final Evaluator.ChangeLog changeLog = changeLog();
         final LineNumberReader lineReader = new LineNumberReader(new BufferedReader(reader));
 
         Evaluator.ChangeSet changeSet = null;
