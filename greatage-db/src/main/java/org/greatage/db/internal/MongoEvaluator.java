@@ -34,7 +34,7 @@ import java.io.StringReader;
 /**
  * @author Ivan Khalopik
  */
-public class MongoDatabaseManager implements Evaluator {
+public class MongoEvaluator implements Evaluator {
     private static final int DEFAULT_BATCH_SIZE = 10;
 
     private static final String ID_PREFIX = "//!";
@@ -45,22 +45,22 @@ public class MongoDatabaseManager implements Evaluator {
     private final MongoClientURI uri;
     private final int batchSize;
 
-    public MongoDatabaseManager(final String uri) {
+    public MongoEvaluator(final String uri) {
         this(new SimpleProcessExecutor(), uri);
     }
 
-    public MongoDatabaseManager(final ProcessExecutor executor, final String uri) {
+    public MongoEvaluator(final ProcessExecutor executor, final String uri) {
         this(executor, new MongoClientURI(uri), DEFAULT_BATCH_SIZE);
     }
 
-    public MongoDatabaseManager(final ProcessExecutor executor, final MongoClientURI uri, final int batchSize) {
+    public MongoEvaluator(final ProcessExecutor executor, final MongoClientURI uri, final int batchSize) {
         this.executor = executor;
         this.uri = uri;
         this.batchSize = batchSize;
     }
 
     @Override
-    public MongoDatabaseManager update(final String script) {
+    public MongoEvaluator update(final String script) {
         final StringReader reader = new StringReader(script);
         try {
             process(reader);
@@ -73,7 +73,7 @@ public class MongoDatabaseManager implements Evaluator {
     }
 
     @Override
-    public MongoDatabaseManager update(final File file) {
+    public MongoEvaluator update(final File file) {
         InputStreamReader reader = null;
         try {
             reader = new FileReader(file);
@@ -87,7 +87,7 @@ public class MongoDatabaseManager implements Evaluator {
     }
 
     @Override
-    public MongoDatabaseManager update(final InputStream stream) {
+    public MongoEvaluator update(final InputStream stream) {
         final InputStreamReader reader = new InputStreamReader(stream);
         try {
             process(reader);
@@ -100,7 +100,7 @@ public class MongoDatabaseManager implements Evaluator {
     }
 
     @Override
-    public MongoDatabaseManager update(final Reader reader) {
+    public MongoEvaluator update(final Reader reader) {
         try {
             process(reader);
             return this;

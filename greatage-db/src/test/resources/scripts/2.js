@@ -5,6 +5,8 @@
 
 //! GA-3
 //# Change 3
+// some script comments
+
 db.companies.insert({_id: 'company3'});
 
 

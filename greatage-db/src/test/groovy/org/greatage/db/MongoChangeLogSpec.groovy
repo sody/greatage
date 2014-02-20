@@ -20,7 +20,7 @@ import com.mongodb.BasicDBObject
 import com.mongodb.MongoClient
 import com.mongodb.MongoClientURI
 import org.greatage.db.internal.MongoChangeLog
-import org.greatage.db.internal.MongoDatabaseManager
+import org.greatage.db.internal.MongoEvaluator
 import org.greatage.db.internal.SimpleProcessExecutor
 import spock.lang.Shared
 import spock.lang.Specification
@@ -37,7 +37,7 @@ class MongoChangeLogSpec extends Specification {
   private MongoClientURI uri
 
   @Shared
-  private MongoDatabaseManager evaluator
+  private MongoEvaluator evaluator
 
   @Shared
   private MongoChangeLog changeLog
@@ -45,7 +45,7 @@ class MongoChangeLogSpec extends Specification {
   void setupSpec() {
     uri = new MongoClientURI("mongodb://localhost/test")
     client = new MongoClient(uri)
-    evaluator = new MongoDatabaseManager(new SimpleProcessExecutor(1), uri, 3)
+    evaluator = new MongoEvaluator(new SimpleProcessExecutor(1), uri, 3)
 
     // clear db before tests
     client.getDB(uri.database).dropDatabase()
