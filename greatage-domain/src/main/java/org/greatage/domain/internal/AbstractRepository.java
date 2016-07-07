@@ -18,10 +18,10 @@ package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
 import org.greatage.domain.Repository;
-import org.greatage.util.DescriptionBuilder;
-import org.greatage.util.ReflectionUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,36 +29,141 @@ import java.util.Map;
  * @since 1.0
  */
 public abstract class AbstractRepository implements Repository {
-	private final Map<Class, Class> entityMapping;
+    private final Map<Class, Class> entityMapping;
 
-	protected AbstractRepository(final Map<Class, Class> entityMapping) {
-		this.entityMapping = entityMapping;
-	}
+    protected AbstractRepository(final Map<Class, Class> entityMapping) {
+        this.entityMapping = entityMapping;
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	E create(final Class<E> entityClass) {
-		return ReflectionUtils.newInstance(getImplementation(entityClass));
-	}
+    @SuppressWarnings("unchecked")
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    E read(E entity) {
+        return (E) read(entity.getClass(), entity.getId());
+    }
 
-	public <PK extends Serializable, E extends Entity<PK>>
-	void saveOrUpdate(final E entity) {
-		if (entity.isNew()) {
-			save(entity);
-		} else {
-			update(entity);
-		}
-	}
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final E... entities) {
+        return readAll(Arrays.asList(entities));
+    }
 
-	@SuppressWarnings({"unchecked"})
-	protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
-		final Class implementation = entityMapping.get(entityClass);
-		return implementation != null ? implementation : entityClass;
-	}
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final Iterable<E> entities) {
+        final Map<PK, E> entitiesByKey = new HashMap<PK, E>();
+        for (E entity : entities) {
+            entitiesByKey.put(entity.getId(), read(entity));
+        }
+        return entitiesByKey;
+    }
 
-	@Override
-	public String toString() {
-		final DescriptionBuilder builder = new DescriptionBuilder(getClass());
-		builder.append("mapping", entityMapping);
-		return builder.toString();
-	}
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final Class<E> entityClass, final PK... keys) {
+        return readAll(entityClass, Arrays.asList(keys));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(final Class<E> entityClass, final Iterable<PK> keys) {
+        final Map<PK, E> entitiesByKey = new HashMap<PK, E>();
+        for (PK key : keys) {
+            entitiesByKey.put(key, read(entityClass, key));
+        }
+        return entitiesByKey;
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void createAll(final E... entities) {
+        createAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void createAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            create(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void updateAll(final E... entities) {
+        updateAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void updateAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            update(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final E... entities) {
+        deleteAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            delete(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void delete(final Class<E> entityClass, final PK key) {
+        // dirty hack
+        delete(read(entityClass, key));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final Class<E> entityClass, final PK... keys) {
+        deleteAll(entityClass, Arrays.asList(keys));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(final Class<E> entityClass, final Iterable<PK> keys) {
+        for (PK key : keys) {
+            delete(entityClass, key);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void save(final E entity) {
+        if (entity.isNew()) {
+            create(entity);
+        } else {
+            update(entity);
+        }
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void saveAll(final E... entities) {
+        saveAll(Arrays.asList(entities));
+    }
+
+    @Override
+    public <PK extends Serializable, E extends Entity<PK>>
+    void saveAll(final Iterable<E> entities) {
+        for (E entity : entities) {
+            save(entity);
+        }
+    }
+
+    @SuppressWarnings({"unchecked"})
+    protected <T> Class<? extends T> getImplementation(final Class<T> entityClass) {
+        final Class implementation = entityMapping.get(entityClass);
+        return implementation != null ? implementation : entityClass;
+    }
 }

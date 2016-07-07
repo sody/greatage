@@ -26,24 +26,24 @@ import javax.jdo.PersistenceManagerFactory;
  * @since 1.0
  */
 public class JDOSessionManager extends AbstractSessionManager<PersistenceManager> {
-	private final PersistenceManagerFactory persistenceManagerFactory;
+    private final PersistenceManagerFactory persistenceManagerFactory;
 
-	public JDOSessionManager(final PersistenceManagerFactory persistenceManagerFactory) {
-		this.persistenceManagerFactory = persistenceManagerFactory;
-	}
+    public JDOSessionManager(final PersistenceManagerFactory persistenceManagerFactory) {
+        this.persistenceManagerFactory = persistenceManagerFactory;
+    }
 
-	@Override
-	protected PersistenceManager openSession() {
-		return persistenceManagerFactory.getPersistenceManager();
-	}
+    @Override
+    protected PersistenceManager openSession() {
+        return persistenceManagerFactory.getPersistenceManager();
+    }
 
-	@Override
-	protected void flushSession(final PersistenceManager session) {
-		session.flush();
-	}
+    @Override
+    protected void flushSession(final PersistenceManager session) {
+        session.flush();
+    }
 
-	@Override
-	protected void closeSession(final PersistenceManager session) {
-		session.close();
-	}
+    @Override
+    protected void closeSession(final PersistenceManager session) {
+        session.close();
+    }
 }

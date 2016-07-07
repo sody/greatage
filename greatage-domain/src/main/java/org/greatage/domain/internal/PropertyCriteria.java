@@ -16,88 +16,91 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.Entity;
-
-import java.io.Serializable;
+import org.greatage.domain.Query;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class PropertyCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
-	private final String path;
-	private final String property;
-	private final Operator operator;
-	private final Object value;
+public class PropertyCriteria implements Query.Criteria {
+    private final String path;
+    private final String property;
+    private final Operator operator;
+    private final Object value;
 
-	public PropertyCriteria(final String path, final String property, final Operator operator, final Object value) {
-		this.path = path;
-		this.property = property;
-		this.operator = operator;
-		this.value = value;
-	}
+    public PropertyCriteria(final String path, final String property, final Operator operator, final Object value) {
+        this.path = path;
+        this.property = property;
+        this.operator = operator;
+        this.value = value;
+    }
 
-	public String getPath() {
-		return path;
-	}
+    public String getPath() {
+        return path;
+    }
 
-	public String getProperty() {
-		return property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public Operator getOperator() {
-		return operator;
-	}
+    public Operator getOperator() {
+        return operator;
+    }
 
-	public Object getValue() {
-		return value;
-	}
+    public Object getValue() {
+        return value;
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		if (path != null) {
-			builder.append(path).append('.');
-		}
-		builder.append(property);
-		switch (operator) {
-			case EQUAL:
-				builder.append(" = ");
-				break;
-			case NOT_EQUAL:
-				builder.append(" <> ");
-				break;
-			case GREATER_THAN:
-				builder.append(" > ");
-				break;
-			case GREATER_OR_EQUAL:
-				builder.append(" >= ");
-				break;
-			case LESS_THAN:
-				builder.append(" < ");
-				break;
-			case LESS_OR_EQUAL:
-				builder.append(" <= ");
-				break;
-			case LIKE:
-				builder.append(" like ");
-				break;
-			case IN:
-				builder.append(" in ");
-				break;
-		}
-		builder.append(value);
-		return isNegative() ? "not " + builder.toString() : builder.toString();
-	}
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder();
+        if (path != null) {
+            builder.append(path).append('.');
+        }
+        builder.append(property);
+        switch (operator) {
+            case EQUAL:
+                builder.append(" = ");
+                break;
+            case NOT_EQUAL:
+                builder.append(" <> ");
+                break;
+            case GREATER_THAN:
+                builder.append(" > ");
+                break;
+            case GREATER_OR_EQUAL:
+                builder.append(" >= ");
+                break;
+            case LESS_THAN:
+                builder.append(" < ");
+                break;
+            case LESS_OR_EQUAL:
+                builder.append(" <= ");
+                break;
+            case IN:
+                builder.append(" in ");
+                break;
+            case NOT_IN:
+                builder.append(" nin ");
+                break;
+            case LIKE:
+                builder.append(" like ");
+                break;
+        }
+        builder.append(value);
 
-	public enum Operator {
-		EQUAL,
-		NOT_EQUAL,
-		GREATER_THAN,
-		GREATER_OR_EQUAL,
-		LESS_THAN,
-		LESS_OR_EQUAL,
-		LIKE,
-		IN
-	}
+        return builder.toString();
+    }
+
+    public enum Operator {
+        EQUAL,
+        NOT_EQUAL,
+        GREATER_THAN,
+        GREATER_OR_EQUAL,
+        LESS_THAN,
+        LESS_OR_EQUAL,
+        IN,
+        NOT_IN,
+        LIKE
+    }
 }

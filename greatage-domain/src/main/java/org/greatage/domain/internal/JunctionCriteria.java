@@ -16,66 +16,62 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
+import org.greatage.domain.Query;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class JunctionCriteria<PK extends Serializable, E extends Entity<PK>> extends AllCriteria<PK, E> {
-	private final List<Repository.Criteria<PK, E>> children;
-	private final Operator operator;
+public class JunctionCriteria implements Query.Criteria {
+    private final List<Query.Criteria> children;
+    private final Operator operator;
 
-	public JunctionCriteria(final Operator operator, final List<Repository.Criteria<PK, E>> children) {
-		this.operator = operator;
-		this.children = children;
-	}
+    public JunctionCriteria(final Operator operator) {
+        this(operator, new ArrayList<Query.Criteria>());
+    }
 
-	@Override
-	public Repository.Criteria<PK, E> and(final Repository.Criteria<PK, E> criteria) {
-		if (operator == Operator.AND) {
-			children.add(criteria);
-			return this;
-		}
-		return super.and(criteria);
-	}
+    public JunctionCriteria(final Operator operator, final List<Query.Criteria> children) {
+        this.operator = operator;
+        this.children = children;
+    }
 
-	@Override
-	public Repository.Criteria<PK, E> or(final Repository.Criteria<PK, E> criteria) {
-		if (operator == Operator.OR) {
-			children.add(criteria);
-			return this;
-		}
-		return super.or(criteria);
-	}
+    public Query.Criteria add(final Query.Criteria criteria) {
+        children.add(criteria);
+        return this;
+    }
 
-	public List<Repository.Criteria<PK, E>> getChildren() {
-		return children;
-	}
+    public Query.Criteria add(final List<Query.Criteria> criteria) {
+        children.addAll(criteria);
+        return this;
+    }
 
-	public Operator getOperator() {
-		return operator;
-	}
+    public List<Query.Criteria> getChildren() {
+        return children;
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder("(");
-		for (Repository.Criteria<PK, E> child : children) {
-			if (builder.length() > 1) {
-				builder.append(operator == Operator.AND ? " and " : " or ");
-			}
-			builder.append(child);
-		}
-		builder.append(")");
-		return isNegative() ? "not " + builder.toString() : builder.toString();
-	}
+    public Operator getOperator() {
+        return operator;
+    }
 
-	public enum Operator {
-		AND,
-		OR
-	}
+    @Override
+    public String toString() {
+        final StringBuilder builder = new StringBuilder("(");
+        for (Query.Criteria child : children) {
+            if (builder.length() > 1) {
+                builder.append(operator == Operator.AND ? " and " : " or ");
+            }
+            builder.append(child);
+        }
+        builder.append(")");
+
+        return builder.toString();
+    }
+
+    public enum Operator {
+        AND,
+        OR
+    }
 }

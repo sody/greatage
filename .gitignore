@@ -1,7 +1,5 @@
-.hg
 .git
-.svn
 .idea
+.gradle
+build
 *.iml
-target
-atlassian-ide-plugin.xml

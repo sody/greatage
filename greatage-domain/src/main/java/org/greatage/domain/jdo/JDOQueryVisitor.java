@@ -17,11 +17,8 @@
 package org.greatage.domain.jdo;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
-import org.greatage.util.NameAllocator;
+import org.greatage.domain.internal.*;
+import org.greatage.domain.internal.NameAllocator;
 
 import javax.jdo.Query;
 import java.io.Serializable;
@@ -35,228 +32,262 @@ import java.util.Map;
  * @since 1.0
  */
 public class JDOQueryVisitor<PK extends Serializable, E extends Entity<PK>>
-		extends AbstractQueryVisitor<PK, E> {
-	private final Map<String, Object> parameters = new HashMap<String, Object>();
-	private final NameAllocator names = new NameAllocator();
+        extends AbstractQueryVisitor<PK, E> {
+    private final Map<String, Object> parameters = new HashMap<String, Object>();
+    private final NameAllocator names = new NameAllocator();
 
-	private final Query query;
-	private List<String> junction = new ArrayList<String>();
-	private int level;
+    private final Query query;
+    private List<String> junction = new ArrayList<String>();
+    private int level;
+    private boolean negative;
+    private String path;
+    private String property;
 
-	public JDOQueryVisitor(final Query query) {
-		this.query = query;
-	}
+    public JDOQueryVisitor(final Query query) {
+        this.query = query;
+    }
 
-	public Map<String, Object> getParameters() {
-		return parameters;
-	}
+    public Map<String, Object> getParameters() {
+        return parameters;
+    }
 
-	@Override
-	public void visitCriteria(final Repository.Criteria<PK, E> criteria) {
-		level++;
-		super.visitCriteria(criteria);
-		level--;
-		// google-app-engine fix for empty filter
-		if (level == 0 && !junction.isEmpty()) {
-			query.setFilter(getJunction(junction, " && "));
-		}
-	}
+    @Override
+    public void visitCriteria(final org.greatage.domain.Query.Criteria criteria) {
+        level++;
+        super.visitCriteria(criteria);
+        level--;
+        // google-app-engine fix for empty filter
+        if (level == 0 && !junction.isEmpty()) {
+            query.setFilter(getJunction(junction, " && "));
+        }
+    }
 
-	@Override
-	protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
-		final List<String> parent = this.junction;
-		junction = new ArrayList<String>();
+    @Override
+    protected void visitJunction(final JunctionCriteria criteria) {
+        final List<String> parent = this.junction;
+        junction = new ArrayList<String>();
 
-		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
-			visitCriteria(child);
-		}
+        for (org.greatage.domain.Query.Criteria child : criteria.getChildren()) {
+            visitCriteria(child);
+        }
 
-		final List<String> temp = junction;
-		junction = parent;
+        final List<String> temp = junction;
+        junction = parent;
 
-		final String function = criteria.getOperator() == JunctionCriteria.Operator.AND ? " && " : " || ";
-		final String filter = getJunction(temp, function);
-		addCriterion(filter, criteria.isNegative());
-	}
+        final String function = criteria.getOperator() == JunctionCriteria.Operator.AND ? " && " : " || ";
+        final String filter = getJunction(temp, function);
+        addCriterion(filter);
+    }
 
-	@Override
-	protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
-		final String parameterName = parameterName(criteria);
-		final String criterion = propertyName + " == :" + parameterName;
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        //TODO: implement it
+        throw new UnsupportedOperationException();
+    }
 
-		addParameter(parameterName, criteria.getValue());
-		addCriterion(criterion, criteria.isNegative());
-	}
+    @Override
+    protected void visitChild(final ChildCriteria criteria) {
+        final String parentPath = path;
+        final String parentProperty = property;
 
-	@Override
-	protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
-		final String parameterName = parameterName(criteria);
-		final String criterion = propertyName + " != :" + parameterName;
+        path = criteria.getPath();
+        property = criteria.getProperty();
+        visitCriteria(criteria.getCriteria());
+        path = parentPath;
+        property = parentProperty;
+    }
 
-		addParameter(parameterName, criteria.getValue());
-		addCriterion(criterion, criteria.isNegative());
-	}
+    @Override
+    protected void visitAll(final AllCriteria criteria) {
+        //TODO: implement it
+    }
 
-	@Override
-	protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
+    @Override
+    protected void visitEqual(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
+        final String parameterName = parameterName(criteria);
+        final String criterion = propertyName + " == :" + parameterName;
 
-		if (criteria.getValue() != null) {
-			final String parameterName = parameterName(criteria);
-			final String criterion = propertyName + " > :" + parameterName;
+        addParameter(parameterName, criteria.getValue());
+        addCriterion(criterion);
+    }
 
-			addParameter(parameterName, criteria.getValue());
-			addCriterion(criterion, criteria.isNegative());
-		} else {
-			final String criterion = "false";
+    @Override
+    protected void visitNotEqual(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
+        final String parameterName = parameterName(criteria);
+        final String criterion = propertyName + " != :" + parameterName;
 
-			addCriterion(criterion, criteria.isNegative());
-		}
-	}
+        addParameter(parameterName, criteria.getValue());
+        addCriterion(criterion);
+    }
 
-	@Override
-	protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
+    @Override
+    protected void visitGreaterThan(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
 
-		if (criteria.getValue() != null) {
-			final String parameterName = parameterName(criteria);
-			final String criterion = propertyName + " >= :" + parameterName;
+        if (criteria.getValue() != null) {
+            final String parameterName = parameterName(criteria);
+            final String criterion = propertyName + " > :" + parameterName;
 
-			addParameter(parameterName, criteria.getValue());
-			addCriterion(criterion, criteria.isNegative());
-		} else {
-			final String criterion = "false";
+            addParameter(parameterName, criteria.getValue());
+            addCriterion(criterion);
+        } else {
+            final String criterion = "false";
 
-			addCriterion(criterion, criteria.isNegative());
-		}
-	}
+            addCriterion(criterion);
+        }
+    }
 
-	@Override
-	protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
+    @Override
+    protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
 
-		if (criteria.getValue() != null) {
-			final String parameterName = parameterName(criteria);
-			final String criterion = propertyName + " < :" + parameterName;
+        if (criteria.getValue() != null) {
+            final String parameterName = parameterName(criteria);
+            final String criterion = propertyName + " >= :" + parameterName;
 
-			addParameter(parameterName, criteria.getValue());
-			addCriterion(criterion, criteria.isNegative());
-		} else {
-			// there are no values less than null
-			final String criterion = "false";
+            addParameter(parameterName, criteria.getValue());
+            addCriterion(criterion);
+        } else {
+            final String criterion = "false";
 
-			addCriterion(criterion, criteria.isNegative());
-		}
-	}
+            addCriterion(criterion);
+        }
+    }
 
-	@Override
-	protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
+    @Override
+    protected void visitLessThan(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
 
-		if (criteria.getValue() != null) {
-			final String parameterName = parameterName(criteria);
-			final String criterion = propertyName + " <= :" + parameterName;
+        if (criteria.getValue() != null) {
+            final String parameterName = parameterName(criteria);
+            final String criterion = propertyName + " < :" + parameterName;
 
-			addParameter(parameterName, criteria.getValue());
-			addCriterion(criterion, criteria.isNegative());
-		} else {
-			final String criterion = "false";
+            addParameter(parameterName, criteria.getValue());
+            addCriterion(criterion);
+        } else {
+            // there are no values less than null
+            final String criterion = "false";
 
-			addCriterion(criterion, criteria.isNegative());
-		}
-	}
+            addCriterion(criterion);
+        }
+    }
 
-	@Override
-	protected void visitIn(final PropertyCriteria<PK, E> criteria) {
-		final String propertyName = propertyName(criteria);
-		final List<?> value = (List<?>) criteria.getValue();
+    @Override
+    protected void visitLessOrEqual(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
 
-		if (value == null || value.isEmpty()) {
-			addCriterion("false", criteria.isNegative());
-		} else if (value.contains(null)) {
-			final String parameterName = parameterName(criteria);
-			final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
+        if (criteria.getValue() != null) {
+            final String parameterName = parameterName(criteria);
+            final String criterion = propertyName + " <= :" + parameterName;
 
-			final List<Object> recalculated = new ArrayList<Object>();
-			for (Object val : value) {
-				if (val != null) {
-					recalculated.add(val);
-				}
-			}
-			addParameter(parameterName, recalculated);
-			addCriterion(criterion, criteria.isNegative());
-		} else {
-			final String parameterName = parameterName(criteria);
-			final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
+            addParameter(parameterName, criteria.getValue());
+            addCriterion(criterion);
+        } else {
+            final String criterion = "false";
 
-			addParameter(parameterName, value);
-			addCriterion(criterion, criteria.isNegative());
-		}
-	}
+            addCriterion(criterion);
+        }
+    }
 
-	@Override
-	protected void visitLike(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitIn(final PropertyCriteria criteria) {
+        final String propertyName = propertyName(criteria);
+        final List<?> value = (List<?>) criteria.getValue();
 
-	@Override
-	protected void visitFetch(final Repository.Property fetch) {
-		//todo: implement this
-	}
+        if (value == null || value.isEmpty()) {
+            addCriterion("false");
+        } else if (value.contains(null)) {
+            final String parameterName = parameterName(criteria);
+            final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
 
-	@Override
-	protected void visitProjection(final Repository.Property property, final String key) {
-		//todo: implement this
-	}
+            final List<Object> recalculated = new ArrayList<Object>();
+            for (Object val : value) {
+                if (val != null) {
+                    recalculated.add(val);
+                }
+            }
+            addParameter(parameterName, recalculated);
+            addCriterion(criterion);
+        } else {
+            final String parameterName = parameterName(criteria);
+            final String criterion = ":" + parameterName + ".contains(" + propertyName + ")";
 
-	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
-		//todo: implement this
-	}
+            addParameter(parameterName, value);
+            addCriterion(criterion);
+        }
+    }
 
-	@Override
-	protected void visitPagination(final int start, final int count) {
-		if (count >= 0) {
-			final int from = start > 0 ? start : 0;
-			final int to = from + count;
-			query.setRange(from, to);
-		}
-	}
+    @Override
+    protected void visitNotIn(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	private void addParameter(final String parameterName, final Object value) {
-		parameters.put(parameterName, value);
-	}
+    @Override
+    protected void visitLike(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	private void addCriterion(final String criterion, final boolean negative) {
-		junction.add(negative ? "!(" + criterion + ")" : criterion);
-	}
+    @Override
+    protected void visitFetch(final org.greatage.domain.Query.Property fetch) {
+        //todo: implement this
+    }
 
-	private String getJunction(final List<String> children, final String function) {
-		if (children.isEmpty()) {
-			return "";
-		}
-		if (children.size() == 1) {
-			return children.get(0);
-		}
-		final StringBuilder criterion = new StringBuilder();
-		for (String child : children) {
-			if (criterion.length() > 0) {
-				criterion.append(function);
-			}
-			criterion.append(child);
-		}
-		return criterion.toString();
-	}
+    @Override
+    protected void visitSort(final org.greatage.domain.Query.Property property, final boolean ascending, final boolean ignoreCase) {
+        //todo: implement this
+    }
 
-	private String propertyName(final PropertyCriteria<PK, E> criteria) {
-		return criteria.getPath() != null ?
-				criteria.getPath() + "." + criteria.getProperty() :
-				criteria.getProperty();
-	}
+    @Override
+    protected void visitPagination(final int start, final int count) {
+        if (count >= 0) {
+            final int from = start > 0 ? start : 0;
+            final int to = from + count;
+            query.setRange(from, to);
+        }
+    }
 
-	private String parameterName(final PropertyCriteria<PK, E> criteria) {
-		return names.allocate(criteria.getProperty());
-	}
+    private void addParameter(final String parameterName, final Object value) {
+        parameters.put(parameterName, value);
+    }
+
+    private void addCriterion(final String criterion) {
+        junction.add(negative ? "!(" + criterion + ")" : criterion);
+    }
+
+    private String getJunction(final List<String> children, final String function) {
+        if (children.isEmpty()) {
+            return "";
+        }
+        if (children.size() == 1) {
+            return children.get(0);
+        }
+        final StringBuilder criterion = new StringBuilder();
+        for (String child : children) {
+            if (criterion.length() > 0) {
+                criterion.append(function);
+            }
+            criterion.append(child);
+        }
+        return criterion.toString();
+    }
+
+    private String propertyName(final PropertyCriteria criteria) {
+        final String path = toPath(this.path, criteria.getPath());
+        final String property = toPath(this.property, criteria.getProperty());
+        return toPath(path, property);
+    }
+
+    private String parameterName(final PropertyCriteria criteria) {
+        return names.allocate(criteria.getProperty());
+    }
+
+    private String toPath(final String path, final String property) {
+        return path != null ?
+                property != null ?
+                        path + "." + property :
+                        path :
+                property;
+    }
 }

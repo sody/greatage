@@ -22,10 +22,10 @@ package org.greatage.domain.internal;
  */
 public interface SessionManager<S> {
 
-	<V> V execute(Callback<V, S> callback);
+    <V> V execute(Callback<V, S> callback);
 
-	interface Callback<V, S> {
+    interface Callback<V, S> {
 
-		V doInSession(S session) throws Exception;
-	}
+        V doInSession(S session) throws Exception;
+    }
 }

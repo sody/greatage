@@ -17,114 +17,239 @@
 package org.greatage.domain;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Map;
 
 /**
- * This interface represents generic repository for working with all entities.
+ * This interface represents a main access point for Domain API which function is to offer
+ * create, read, update and delete operations (CRUD) for persistable domain objects.
  *
  * @author Ivan Khalopik
  * @since 1.0
  */
 public interface Repository {
 
-	/**
-	 * Gets detailed entity by pk.
-	 *
-	 * @param entityClass entity class (not null)
-	 * @param pk          entity pk (not null)
-	 * @param <PK>        type of entity primary key
-	 * @param <E>         type of entity
-	 * @return detailed entity by pk or null if not found
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	E get(Class<E> entityClass, PK pk);
+    /**
+     * Reads entity state from repository. It will read entity state by primary key.
+     *
+     * @param entity entity, not {@code null}
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     * @return entity state or {@code null} if not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    E read(E entity);
 
-	/**
-	 * Creates entity instance.
-	 *
-	 * @param entityClass entity class (not null)
-	 * @return entity instance
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	E create(Class<E> entityClass);
+    /**
+     * Reads entities states from repository. It will read entities states by their primary keys.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     * @return entities states mapped by primary keys or {@code null}s for those that are not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(E... entities);
 
-	/**
-	 * Makes entity persistent by saving it into repository.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void save(E entity);
+    /**
+     * Reads entities states from repository. It will read entities states by their primary keys.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     * @return entities states mapped by primary keys or {@code null}s for those that are not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(Iterable<E> entities);
 
-	/**
-	 * Updates entity state in repository.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void update(E entity);
+    /**
+     * Reads entity state from repository by its primary key.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param key         entity primary key, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     * @return entity state or {@code null} if not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    E read(Class<E> entityClass, PK key);
 
-	/**
-	 * Makes entity persistent if it is not or updates entity state in repository otherwise.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void saveOrUpdate(E entity);
+    /**
+     * Reads entities states from repository by their primary keys.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param keys        entities primary keys, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     * @return entities states mapped by primary keys or {@code null}s for those that are not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(Class<E> entityClass, PK... keys);
 
-	/**
-	 * Deletes entity from repository.
-	 *
-	 * @param entity entity
-	 * @param <PK>   type of entity primary key
-	 * @param <E>    type of entity
-	 */
-	<PK extends Serializable, E extends Entity<PK>>
-	void delete(E entity);
+    /**
+     * Reads entities states from repository by their primary keys.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param keys        entities primary keys, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     * @return entities states mapped by primary keys or {@code null}s for those that are not found
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    Map<PK, E> readAll(Class<E> entityClass, Iterable<PK> keys);
 
-	<PK extends Serializable, E extends Entity<PK>>
-	Query<PK, E> query(Class<E> entityClass);
+    /**
+     * Creates new entity state in repository.
+     *
+     * @param entity entity, not {@code null}
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void create(E entity);
 
+    /**
+     * Creates new entities states in repository.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void createAll(E... entities);
 
-	interface Query<PK extends Serializable, E extends Entity<PK>> {
+    /**
+     * Creates new entities states in repository.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void createAll(Iterable<E> entities);
 
-		Query<PK, E> filter(Criteria<PK, E> criteria);
+    /**
+     * Updates entity state in repository.
+     *
+     * @param entity entity, not {@code null}
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void update(E entity);
 
-		Query<PK, E> fetch(Property property);
+    /**
+     * Updates entities states in repository.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void updateAll(E... entities);
 
-		Query<PK, E> sort(Property property, boolean ascending, boolean ignoreCase);
+    /**
+     * Updates entities states in repository.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void updateAll(Iterable<E> entities);
 
-		Query<PK, E> paginate(int start, int count);
+    /**
+     * Deletes entity state from repository.
+     *
+     * @param entity entity, not {@code null}
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void delete(E entity);
 
+    /**
+     * Deletes entities states from repository.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(E... entities);
 
-		long count();
+    /**
+     * Deletes entities states from repository.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(Iterable<E> entities);
 
-		List<E> list();
+    /**
+     * Deletes entity state from repository by its primary key.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param key         entity primary key, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void delete(Class<E> entityClass, PK key);
 
-		List<PK> keys();
+    /**
+     * Deletes entities states from repository by their primary keys.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param keys        entities primary keys, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(Class<E> entityClass, PK... keys);
 
-		E unique();
-	}
+    /**
+     * Deletes entities states from repository by their primary keys.
+     *
+     * @param entityClass entity class, not {@code null}
+     * @param keys        entities primary keys, not {@code null}
+     * @param <PK>        type of entity primary key
+     * @param <E>         type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void deleteAll(Class<E> entityClass, Iterable<PK> keys);
 
-	interface Property {
+    /**
+     * Creates new entity state if it is new or updates entity state in repository otherwise.
+     *
+     * @param entity entity, not {@code null}
+     * @param <PK>   type of entity primary key
+     * @param <E>    type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void save(E entity);
 
-		String getPath();
+    /**
+     * Creates new entity state if it is new or updates entity state in repository otherwise.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void saveAll(E... entities);
 
-		String getProperty();
-	}
+    /**
+     * Creates new entity state if it is new or updates entity state in repository otherwise.
+     *
+     * @param entities entities, not {@code null}
+     * @param <PK>     type of entity primary key
+     * @param <E>      type of entity
+     */
+    <PK extends Serializable, E extends Entity<PK>>
+    void saveAll(Iterable<E> entities);
 
-	interface Criteria<PK extends Serializable, E extends Entity<PK>> {
-
-		Criteria<PK, E> and(Criteria<PK, E> criteria);
-
-		Criteria<PK, E> or(Criteria<PK, E> criteria);
-
-		Criteria<PK, E> not();
-	}
+    <PK extends Serializable, E extends Entity<PK>>
+    Query<PK, E> query(Class<E> entityClass);
 }

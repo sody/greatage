@@ -1,0 +1,194 @@
+group = 'org.greatage'
+version = '1.0-SNAPSHOT'
+description = 'GreatAge Project'
+
+ext {
+    isSnapshot = version.endsWith('-SNAPSHOT')
+
+    snapshotUrl = 'https://oss.sonatype.org/content/repositories/snapshots'
+    stagingUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2'
+
+    versions = [
+            java: '1.6',
+            groovy: '2.0.6',
+            gradle: '1.6',
+
+            javassist: '3.17.1-GA',
+            hibernate: '4.0.0.CR5',
+            jdo: '3.0.1',
+            jpa: '1.0',
+            objectify: '5.1.13',
+            appengine: '1.7.5',
+
+            testng: '6.2',
+            spock: '0.7-groovy-2.0',
+            slf4j: '1.6.2',
+            dbunit: '2.4.7',
+            hsqldb: '1.8.0.10',
+            datanucleus: '3.1.3',
+            datanucleus_enhancer: '3.1.1'
+    ]
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = versions.gradle
+}
+
+allprojects {
+    apply plugin: 'idea'
+
+    repositories {
+        mavenCentral()
+        mavenLocal()
+
+        // for hibernate
+        mavenRepo name: 'JBoss', url: 'https://repository.jboss.org/nexus/content/repositories/releases/'
+
+        // for objectify
+        mavenRepo name: 'Objectify', url: 'http://maven.objectify-appengine.googlecode.com/git/'
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'groovy'
+    apply plugin: 'maven-publish'
+
+    group = rootProject.group
+    version = rootProject.version
+
+    sourceCompatibility = versions.java
+    targetCompatibility = versions.java
+
+    configurations {
+        provided
+    }
+
+    sourceSets {
+        main {
+            compileClasspath += configurations.provided
+        }
+        test {
+            compileClasspath += configurations.provided
+            runtimeClasspath += configurations.provided
+        }
+    }
+
+    dependencies {
+        testCompile "org.codehaus.groovy:groovy-all:${versions.groovy}"
+        testCompile "org.spockframework:spock-core:${versions.spock}"
+
+        testRuntime "org.slf4j:slf4j-simple:${versions.slf4j}"
+    }
+
+    test {
+        useJUnit()
+
+        maxHeapSize '512m'
+    }
+
+    javadoc {
+        classpath = sourceSets.main.compileClasspath
+        options {
+            links 'http://download.oracle.com/javase/6/docs/api/'
+            links 'http://download.oracle.com/javaee/6/api/'
+        }
+    }
+
+    jar {
+        from(rootProject.projectDir) {
+            include '*.md'
+            into 'META-INF'
+        }
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allSource
+        from(rootProject.projectDir) {
+            include '*.md'
+            into 'META-INF'
+        }
+        classifier 'sources'
+    }
+
+    task javadocJar(type: Jar) {
+        from javadoc
+        classifier 'javadoc'
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+                artifact javadocJar
+
+                pom.withXml {
+                    asNode().children().last() + {
+                        resolveStrategy = Closure.DELEGATE_FIRST
+
+                        name project.description
+                        description project.description
+                        url 'http://sody.github.io/greatage'
+                        issueManagement {
+                            system 'GitHub'
+                            url 'https://github.com/sody/greatage/issues/'
+                        }
+                        scm {
+                            url 'http://github.com/sody/greatage'
+                            connection 'scm:git:http://github.com/sody/greatage.git'
+                            developerConnection 'scm:git:git@github.com:sody/greatage.git'
+                        }
+                        licenses {
+                            license {
+                                name 'Apache Software License 2.0'
+                                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                                distribution 'repo'
+                            }
+                        }
+                        developers {
+                            developer {
+                                id 'sody'
+                                name 'Ivan Khalopik'
+                                email 'ikhalopik@gmail.com'
+                                timezone '+3'
+                                roles {
+                                    role 'Architect'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                if (project.hasProperty('sonatypeOssUsername')) {
+                    if (isSnapshot) {
+                        name 'Snapshot'
+                        url snapshotUrl
+                    } else {
+                        name 'Staging'
+                        url stagingUrl
+                    }
+                    credentials {
+                        username sonatypeOssUsername
+                        password sonatypeOssPassword
+                    }
+                } else {
+                    name 'Temporary'
+                    url "file://${rootProject.buildDir}/repo"
+                }
+            }
+        }
+    }
+
+    idea.module {
+        scopes.PROVIDED.plus += configurations.provided
+    }
+}

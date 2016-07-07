@@ -1,9 +1,0 @@
-<ul t:id="menu"
-	xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd">
-
-	<t:loop source="localeNames" value="localeName" formState="none">
-		<li t:id="menuItem">
-			<a t:id="localeLink">${localeName}</a>
-		</li>
-	</t:loop>
-</ul>

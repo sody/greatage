@@ -1,0 +1,15 @@
+description = 'GreatAge Domain API'
+
+dependencies {
+    provided "org.hibernate:hibernate-core:${versions.hibernate}"
+    provided "javax.jdo:jdo-api:${versions.jdo}"
+    provided "javax.persistence:persistence-api:${versions.jpa}"
+    provided "com.googlecode.objectify:objectify:${versions.objectify}"
+    provided "com.google.appengine:appengine-api-1.0-sdk:${versions.appengine}"
+
+    testCompile "org.dbunit:dbunit:${versions.dbunit}"
+    testCompile "com.google.appengine:appengine-testing:${versions.appengine}"
+
+    testRuntime "hsqldb:hsqldb:${versions.hsqldb}"
+    testRuntime "com.google.appengine:appengine-api-stubs:${versions.appengine}"
+}

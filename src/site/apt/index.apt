@@ -1,8 +1,0 @@
- ----
- GreatAge Project
- ----
- 
-What is GreatAge?
-
-  GreatAge Project is an open source project for building java-based back-end applications with their own IoC container,
-  security system and DAO services base architecture.

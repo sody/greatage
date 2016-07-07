@@ -9,14 +9,14 @@ import spock.lang.Shared
  */
 class HibernateJunctionCriteriaSpec extends JunctionCriteriaSpecification {
 
-	@Shared
-	private HibernateTestData data = new HibernateTestData();
+    @Shared
+    private HibernateTestData data = new HibernateTestData();
 
-	def setupSpec() {
-		repository = data.setup()
-	}
+    def setupSpec() {
+        repository = data.setup()
+    }
 
-	def cleanupSpec() {
-		repository = data.cleanup()
-	}
+    def cleanupSpec() {
+        repository = data.cleanup()
+    }
 }

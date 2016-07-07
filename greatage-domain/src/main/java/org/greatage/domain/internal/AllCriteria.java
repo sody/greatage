@@ -16,47 +16,16 @@
 
 package org.greatage.domain.internal;
 
-import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import org.greatage.domain.Query;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
-public class AllCriteria<PK extends Serializable, E extends Entity<PK>>
-		implements Repository.Criteria<PK, E> {
-	private boolean negative;
+public class AllCriteria implements Query.Criteria {
 
-	public Repository.Criteria<PK, E> and(final Repository.Criteria<PK, E> criteria) {
-		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.AND, junction(criteria));
-	}
-
-	public Repository.Criteria<PK, E> or(final Repository.Criteria<PK, E> criteria) {
-		return new JunctionCriteria<PK, E>(JunctionCriteria.Operator.OR, junction(criteria));
-	}
-
-	public Repository.Criteria<PK, E> not() {
-		negative = !negative;
-		return this;
-	}
-
-	public boolean isNegative() {
-		return negative;
-	}
-
-	private List<Repository.Criteria<PK, E>> junction(final Repository.Criteria<PK, E> criteria) {
-		final List<Repository.Criteria<PK, E>> group = new ArrayList<Repository.Criteria<PK, E>>();
-		group.add(this);
-		group.add(criteria);
-		return group;
-	}
-
-	@Override
-	public String toString() {
-		return negative ? "not 1=1" : "1=1";
-	}
+    @Override
+    public String toString() {
+        return "1=1";
+    }
 }

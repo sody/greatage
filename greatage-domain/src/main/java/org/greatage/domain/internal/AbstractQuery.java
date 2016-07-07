@@ -1,126 +1,227 @@
 package org.greatage.domain.internal;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
+import org.greatage.domain.Query;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Stack;
 
 /**
  * @author Ivan Khalopik
  * @since 1.0
  */
 public abstract class AbstractQuery<PK extends Serializable, E extends Entity<PK>>
-		implements Repository.Query<PK, E> {
+        implements Query<PK, E> {
 
-	private final Class<E> entityClass;
+    private final Class<E> entityClass;
 
-	private Repository.Criteria<PK, E> criteria;
-	private List<Repository.Property> fetches;
-	private Map<String, Repository.Property> projections;
-	private List<Sort> sorts;
+    private Criteria criteria;
+    private List<Property> fetches;
+    private List<Sort> sorts;
 
-	private int start = 0;
-	private int count = -1;
+    private int start = 0;
+    private int count = -1;
 
-	protected AbstractQuery(final Class<E> entityClass) {
-		this.entityClass = entityClass;
-	}
+    private JunctionCriteria junction;
+    private final Stack<JunctionCriteria> junctionStack = new Stack<JunctionCriteria>();
 
-	public Repository.Query<PK, E> filter(final Repository.Criteria<PK, E> criteria) {
-		this.criteria = this.criteria != null ?
-				this.criteria.and(criteria) :
-				criteria;
+    protected AbstractQuery(final Class<E> entityClass) {
+        this.entityClass = entityClass;
 
-		return this;
-	}
+        criteria = junction = new JunctionCriteria(JunctionCriteria.Operator.AND);
+    }
 
-	public Repository.Query<PK, E> fetch(final Repository.Property property) {
-		if (fetches == null) {
-			fetches = new ArrayList<Repository.Property>();
-		}
-		fetches.add(property);
+    public Query<PK, E> filter(final Criteria criteria) {
+        junction.add(criteria);
+        return this;
+    }
 
-		return this;
-	}
+    public Query<PK, E> filter(final String filter, final Object value) {
+        //TODO: implement this
+        throw new UnsupportedOperationException();
+    }
 
-	public Repository.Query<PK, E> sort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
-		if (sorts == null) {
-			sorts = new ArrayList<Sort>();
-		}
-		sorts.add(new Sort(property, ascending, ignoreCase));
+    public Query<PK, E> and() {
+        junctionStack.push(junction);
+        if (junction.getOperator() != JunctionCriteria.Operator.AND) {
+            final JunctionCriteria newJunction = new JunctionCriteria(JunctionCriteria.Operator.AND);
+            junction.add(newJunction);
+            junction = newJunction;
+        }
+        return this;
+    }
 
-		return this;
-	}
+    public Query<PK, E> or() {
+        junctionStack.push(junction);
+        if (junction.getOperator() != JunctionCriteria.Operator.OR) {
+            final JunctionCriteria newJunction = new JunctionCriteria(JunctionCriteria.Operator.OR);
+            junction.add(newJunction);
+            junction = newJunction;
+        }
+        return this;
+    }
 
-	public Repository.Query<PK, E> map(final Repository.Property property, final String key) {
-		if (projections == null) {
-			projections = new HashMap<String, Repository.Property>();
-		}
-		projections.put(key, property);
+    public Query<PK, E> end() {
+        junction = junctionStack.pop();
+        return this;
+    }
 
-		return this;
-	}
+    public Query<PK, E> fetch(final Property property) {
+        if (fetches == null) {
+            fetches = new ArrayList<Property>();
+        }
+        fetches.add(property);
+        return this;
+    }
 
-	public Repository.Query<PK, E> paginate(final int start, final int count) {
-		this.start = start;
-		this.count = count;
+    @Override
+    public Query<PK, E> fetch(final String property) {
+        return fetch(property(property));
+    }
 
-		return this;
-	}
+    public Query<PK, E> fetch(final Property property, final boolean fetch) {
+        //TODO: implement this logic
+        return fetch(property);
+    }
 
-	public Class<E> getEntityClass() {
-		return entityClass;
-	}
+    @Override
+    public Query<PK, E> fetch(final String property, final boolean fetch) {
+        return fetch(property(property), fetch);
+    }
 
-	public Repository.Criteria<PK, E> getCriteria() {
-		return criteria;
-	}
+    public Query<PK, E> sort(final Property property) {
+        return sort(property, true);
+    }
 
-	public List<Repository.Property> getFetches() {
-		return fetches;
-	}
+    @Override
+    public Query<PK, E> sort(final String property) {
+        return sort(property(property));
+    }
 
-	public Map<String, Repository.Property> getProjections() {
-		return projections;
-	}
+    public Query<PK, E> sort(final Property property, final boolean ascending) {
+        return sort(property, ascending, false);
+    }
 
-	public List<Sort> getSorts() {
-		return sorts;
-	}
+    @Override
+    public Query<PK, E> sort(final String property, final boolean ascending) {
+        return sort(property(property), ascending);
+    }
 
-	public int getStart() {
-		return start;
-	}
+    public Query<PK, E> sort(final Property property, final boolean ascending, final boolean ignoreCase) {
+        if (sorts == null) {
+            sorts = new ArrayList<Sort>();
+        }
+        sorts.add(new Sort(property, ascending, ignoreCase));
+        return this;
+    }
 
-	public int getCount() {
-		return count;
-	}
+    @Override
+    public Query<PK, E> sort(final String property, final boolean ascending, final boolean ignoreCase) {
+        return sort(property(property), ascending, ignoreCase);
+    }
 
-	class Sort {
-		private final Repository.Property property;
-		private final boolean ascending;
-		private final boolean ignoreCase;
+    public Query<PK, E> skip(final int count) {
+        this.start = count;
+        return this;
+    }
 
-		Sort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
-			this.property = property;
-			this.ascending = ascending;
-			this.ignoreCase = ignoreCase;
-		}
+    public Query<PK, E> limit(final int count) {
+        this.count = count;
+        return this;
+    }
 
-		public Repository.Property getProperty() {
-			return property;
-		}
+    public Query<PK, E> paginate(final int start, final int count) {
+        this.start = start;
+        this.count = count;
+        return this;
+    }
 
-		public boolean isAscending() {
-			return ascending;
-		}
+    public E first() {
+        //TODO: implement this
+        throw new UnsupportedOperationException();
+    }
 
-		public boolean isIgnoreCase() {
-			return ignoreCase;
-		}
-	}
+    public Iterable<E> iterate() {
+        //TODO: implement this
+        throw new UnsupportedOperationException();
+    }
+
+    public Iterable<PK> iterateKeys() {
+        //TODO: implement this
+        throw new UnsupportedOperationException();
+    }
+
+    public Class<E> getEntityClass() {
+        return entityClass;
+    }
+
+    public Criteria getCriteria() {
+        return criteria;
+    }
+
+    public List<Property> getFetches() {
+        return fetches;
+    }
+
+    public List<Sort> getSorts() {
+        return sorts;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    protected Property property(final String property) {
+        return new DefaultProperty(property);
+    }
+
+    class DefaultProperty implements Property {
+        private final String path;
+        private final String property;
+
+        DefaultProperty(final String property) {
+            this.path = null;
+            this.property = property;
+        }
+
+        @Override
+        public String getPath() {
+            return path;
+        }
+
+        @Override
+        public String getProperty() {
+            return property;
+        }
+    }
+
+    class Sort {
+        private final Property property;
+        private final boolean ascending;
+        private final boolean ignoreCase;
+
+        Sort(final Property property, final boolean ascending, final boolean ignoreCase) {
+            this.property = property;
+            this.ascending = ascending;
+            this.ignoreCase = ignoreCase;
+        }
+
+        public Property getProperty() {
+            return property;
+        }
+
+        public boolean isAscending() {
+            return ascending;
+        }
+
+        public boolean isIgnoreCase() {
+            return ignoreCase;
+        }
+    }
 }

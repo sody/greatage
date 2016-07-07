@@ -26,24 +26,24 @@ import javax.persistence.EntityManagerFactory;
  * @since 1.0
  */
 public class JPASessionManager extends AbstractSessionManager<EntityManager> {
-	private final EntityManagerFactory entityManagerFactory;
+    private final EntityManagerFactory entityManagerFactory;
 
-	public JPASessionManager(final EntityManagerFactory entityManagerFactory) {
-		this.entityManagerFactory = entityManagerFactory;
-	}
+    public JPASessionManager(final EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
+    }
 
-	@Override
-	protected EntityManager openSession() {
-		return entityManagerFactory.createEntityManager();
-	}
+    @Override
+    protected EntityManager openSession() {
+        return entityManagerFactory.createEntityManager();
+    }
 
-	@Override
-	protected void flushSession(final EntityManager session) {
-		session.flush();
-	}
+    @Override
+    protected void flushSession(final EntityManager session) {
+        session.flush();
+    }
 
-	@Override
-	protected void closeSession(final EntityManager session) {
-		session.close();
-	}
+    @Override
+    protected void closeSession(final EntityManager session) {
+        session.close();
+    }
 }

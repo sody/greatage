@@ -17,10 +17,7 @@
 package org.greatage.domain.jpa;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
+import org.greatage.domain.internal.*;
 
 import javax.persistence.Query;
 import java.io.Serializable;
@@ -30,80 +27,96 @@ import java.io.Serializable;
  * @since 1.0
  */
 public class JPAQueryVisitor<PK extends Serializable, E extends Entity<PK>>
-		extends AbstractQueryVisitor<PK, E> {
-	private final Query query;
+        extends AbstractQueryVisitor<PK, E> {
+    private final Query query;
 
-	public JPAQueryVisitor(final Query query) {
-		this.query = query;
-	}
+    public JPAQueryVisitor(final Query query) {
+        this.query = query;
+    }
 
-	@Override
-	protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitJunction(final JunctionCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        //TODO: implement it
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitChild(final ChildCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitAll(final AllCriteria criteria) {
+        //TODO: implement it
+    }
 
-	@Override
-	protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitEqual(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitNotEqual(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitGreaterThan(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitIn(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitLike(final PropertyCriteria<PK, E> criteria) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitLessThan(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitFetch(final Repository.Property fetch) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitLessOrEqual(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitProjection(final Repository.Property property, final String key) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitIn(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitNotIn(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
 
-	@Override
-	protected void visitPagination(final int start, final int count) {
-		if (start > 0) {
-			query.setFirstResult(start);
-		}
-		if (count >= 0) {
-			query.setMaxResults(count);
-		}
-	}
+    @Override
+    protected void visitLike(final PropertyCriteria criteria) {
+        //todo: implement this
+    }
+
+    @Override
+    protected void visitFetch(final org.greatage.domain.Query.Property fetch) {
+        //todo: implement this
+    }
+
+    @Override
+    protected void visitSort(final org.greatage.domain.Query.Property property, final boolean ascending, final boolean ignoreCase) {
+        //todo: implement this
+    }
+
+    @Override
+    protected void visitPagination(final int start, final int count) {
+        if (start > 0) {
+            query.setFirstResult(start);
+        }
+        if (count >= 0) {
+            query.setMaxResults(count);
+        }
+    }
 }

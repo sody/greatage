@@ -17,20 +17,12 @@
 package org.greatage.domain.hibernate;
 
 import org.greatage.domain.Entity;
-import org.greatage.domain.Repository;
-import org.greatage.domain.internal.AbstractQueryVisitor;
-import org.greatage.domain.internal.JunctionCriteria;
-import org.greatage.domain.internal.PropertyCriteria;
-import org.greatage.util.NameAllocator;
-import org.greatage.util.StringUtils;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Junction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Restrictions;
+import org.greatage.domain.Query;
+import org.greatage.domain.internal.*;
+import org.greatage.domain.internal.NameAllocator;
+import org.hibernate.criterion.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,166 +32,238 @@ import java.util.Map;
  * @since 1.0
  */
 public class HibernateQueryVisitor<PK extends Serializable, E extends Entity<PK>>
-		extends AbstractQueryVisitor<PK, E> {
+        extends AbstractQueryVisitor<PK, E> {
 
-	private final Map<String, org.hibernate.Criteria> children = new HashMap<String, org.hibernate.Criteria>();
-	private final NameAllocator names = new NameAllocator();
+    private final Map<String, org.hibernate.Criteria> children = new HashMap<String, org.hibernate.Criteria>();
+    private final NameAllocator names = new NameAllocator();
 
-	private final org.hibernate.Criteria root;
+    private final org.hibernate.Criteria root;
 
-	private Junction junction;
+    private Junction junction;
+    private boolean negative;
+    private String path;
+    private String property;
 
-	HibernateQueryVisitor(final org.hibernate.Criteria root) {
-		this.root = root;
-	}
+    HibernateQueryVisitor(final org.hibernate.Criteria root) {
+        this.root = root;
+    }
 
-	@Override
-	protected void visitJunction(final JunctionCriteria<PK, E> criteria) {
-		final Junction parent = this.junction;
-		junction = criteria.getOperator() == JunctionCriteria.Operator.AND ?
-				Restrictions.conjunction() :
-				Restrictions.disjunction();
+    @Override
+    protected void visitJunction(final JunctionCriteria criteria) {
+        // backup previous junction
+        final Junction parent = junction;
+        // backup previous negative flag
+        final boolean parentNegative = negative;
+        // create new junction
+        final Junction current = criteria.getOperator() == JunctionCriteria.Operator.AND ?
+                Restrictions.conjunction() :
+                Restrictions.disjunction();
 
-		for (Repository.Criteria<PK, E> child : criteria.getChildren()) {
-			visitCriteria(child);
-		}
+        // replace current junction
+        junction = current;
+        // reset negative flag
+        negative = false;
+        // process child criteria
+        for (Query.Criteria child : criteria.getChildren()) {
+            visitCriteria(child);
+        }
+        // restore previous junction
+        junction = parent;
+        // restore previous negative flag
+        negative = parentNegative;
 
-		final Junction temp = junction;
-		junction = parent;
+        // add junction to the criteria
+        addCriterion(current);
+    }
 
-		addCriterion(temp, criteria.isNegative());
-	}
+    @Override
+    protected void visitNegative(final NegativeCriteria criteria) {
+        // backup previous negative flag
+        final boolean parentNegative = negative;
+        // setup negative flag
+        negative = true;
+        // process child criteria
+        visitCriteria(criteria.getCriteria());
+        // restore previous negative flag
+        negative = parentNegative;
+    }
 
-	@Override
-	protected void visitEqual(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+    @Override
+    protected void visitChild(final ChildCriteria criteria) {
+        // backup previous path
+        final String parentPath = path;
+        final String parentProperty = property;
 
-		if (criteria.getValue() == null) {
-			addCriterion(property.isNull(), criteria.isNegative());
-		} else {
-			addCriterion(property.eq(criteria.getValue()), criteria.isNegative());
-		}
-	}
+        // replace current path
+        path = resolvePath(criteria.getPath());
+        property = resolveProperty(criteria.getPath(), criteria.getProperty());
+        // visit child criteria
+        visitCriteria(criteria.getCriteria());
+        // restore previous path
+        path = parentPath;
+        property = parentProperty;
+    }
 
-	@Override
-	protected void visitNotEqual(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+    @Override
+    protected void visitAll(final AllCriteria criteria) {
+        addCriterion(Restrictions.sqlRestriction("1=1"));
+    }
 
-		if (criteria.getValue() == null) {
-			addCriterion(property.isNotNull(), criteria.isNegative());
-		} else {
-			addCriterion(property.ne(criteria.getValue()), criteria.isNegative());
-		}
-	}
+    @Override
+    protected void visitEqual(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitGreaterThan(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+        if (criteria.getValue() == null) {
+            addCriterion(property.isNull());
+        } else {
+            addCriterion(property.eq(criteria.getValue()));
+        }
+    }
 
-		addCriterion(property.gt(criteria.getValue()), criteria.isNegative());
-	}
+    @Override
+    protected void visitNotEqual(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitGreaterOrEqual(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+        if (criteria.getValue() == null) {
+            addCriterion(property.isNotNull());
+        } else {
+            addCriterion(property.ne(criteria.getValue()));
+        }
+    }
 
-		addCriterion(property.ge(criteria.getValue()), criteria.isNegative());
-	}
+    @Override
+    protected void visitGreaterThan(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitLessThan(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+        addCriterion(property.gt(criteria.getValue()));
+    }
 
-		addCriterion(property.lt(criteria.getValue()), criteria.isNegative());
-	}
+    @Override
+    protected void visitGreaterOrEqual(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitLessOrEqual(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+        addCriterion(property.ge(criteria.getValue()));
+    }
 
-		addCriterion(property.le(criteria.getValue()), criteria.isNegative());
-	}
+    @Override
+    protected void visitLessThan(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitIn(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+        addCriterion(property.lt(criteria.getValue()));
+    }
 
-		final List<?> value = (List<?>) criteria.getValue();
-		if (value == null || value.isEmpty()) {
-			addCriterion(Restrictions.sqlRestriction("1=2"), criteria.isNegative());
-		} else {
-			addCriterion(property.in(value), criteria.isNegative());
-		}
-	}
+    @Override
+    protected void visitLessOrEqual(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitLike(final PropertyCriteria<PK, E> criteria) {
-		final Property property = getProperty(criteria);
+        addCriterion(property.le(criteria.getValue()));
+    }
 
-		addCriterion(property.like(criteria.getValue()), criteria.isNegative());
-	}
+    @Override
+    protected void visitIn(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitFetch(final Repository.Property fetch) {
-		//todo: implement this
-	}
+        final List<?> value = (List<?>) criteria.getValue();
+        if (value == null || value.isEmpty()) {
+            addCriterion(Restrictions.sqlRestriction("1=2"));
+        } else {
+            addCriterion(property.in(value));
+        }
+    }
 
-	@Override
-	protected void visitProjection(final Repository.Property property, final String key) {
-		//todo: implement this
-	}
+    @Override
+    protected void visitNotIn(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitSort(final Repository.Property property, final boolean ascending, final boolean ignoreCase) {
-		final Order order = ascending ?
-				Order.asc(property.getProperty()) :
-				Order.desc(property.getProperty());
+        final List<?> value = (List<?>) criteria.getValue();
+        if (value == null || value.isEmpty()) {
+            addCriterion(Restrictions.sqlRestriction("1=1"));
+        } else {
+            addCriterion(Restrictions.not(property.in(value)));
+        }
+    }
 
-		if (ignoreCase) {
-			order.ignoreCase();
-		}
-		getCriteria(property.getPath()).addOrder(order);
-	}
+    @Override
+    protected void visitLike(final PropertyCriteria criteria) {
+        final Property property = getProperty(criteria);
 
-	@Override
-	protected void visitPagination(final int start, final int count) {
-		if (start > 0) {
-			root.setFirstResult(start);
-		}
-		if (count >= 0) {
-			root.setMaxResults(count);
-		}
-	}
+        addCriterion(property.like(criteria.getValue()));
+    }
 
-	private void addCriterion(final Criterion criterion, final boolean negative) {
-		if (junction != null) {
-			junction.add(negative ? Restrictions.not(criterion) : criterion);
-		} else {
-			root.add(negative ? Restrictions.not(criterion) : criterion);
-		}
-	}
+    @Override
+    protected void visitFetch(final Query.Property fetch) {
+        //todo: implement this
+    }
 
-	private Property getProperty(final PropertyCriteria<PK, E> criteria) {
-		final String alias = getCriteria(criteria.getPath()).getAlias();
-		return Property.forName(alias + "." + criteria.getProperty());
-	}
+    @Override
+    protected void visitSort(final Query.Property property, final boolean ascending, final boolean ignoreCase) {
+        final Order order = ascending ?
+                Order.asc(property.getProperty()) :
+                Order.desc(property.getProperty());
 
-	private org.hibernate.Criteria getCriteria(final String path) {
-		if (path == null) {
-			return root;
-		}
-		if (!children.containsKey(path)) {
-			children.put(path, createCriteria(path));
-		}
-		return children.get(path);
-	}
+        if (ignoreCase) {
+            order.ignoreCase();
+        }
+        getCriteria(property.getPath()).addOrder(order);
+    }
 
-	private org.hibernate.Criteria createCriteria(final String path) {
-		if (StringUtils.isEmpty(path)) {
-			throw new IllegalArgumentException("Empty path");
-		}
-		final int i = path.lastIndexOf('.');
-		final String property = i > 0 ? path.substring(i + 1) : path;
-		return root.createCriteria(path, names.allocate(property));
-	}
+    @Override
+    protected void visitPagination(final int start, final int count) {
+        if (start > 0) {
+            root.setFirstResult(start);
+        }
+        if (count >= 0) {
+            root.setMaxResults(count);
+        }
+    }
+
+    private void addCriterion(final Criterion criterion) {
+        if (junction != null) {
+            junction.add(negative ? Restrictions.not(criterion) : criterion);
+        } else {
+            root.add(negative ? Restrictions.not(criterion) : criterion);
+        }
+    }
+
+    private Property getProperty(final PropertyCriteria criteria) {
+        final String path = resolvePath(criteria.getPath());
+        final String property = resolveProperty(criteria.getPath(), criteria.getProperty());
+        final String alias = getCriteria(path).getAlias();
+        return Property.forName(alias + "." + property);
+    }
+
+    private String resolvePath(final String path) {
+        return path != null ? join(join(this.path, this.property), path) : this.path;
+    }
+
+    private String resolveProperty(final String path, final String property) {
+        return path != null ? property : join(this.property, property);
+    }
+
+    private String join(final String path, final String property) {
+        return path != null ?
+                property != null ?
+                        path + "." + property :
+                        path :
+                property;
+    }
+
+    private org.hibernate.Criteria getCriteria(final String path) {
+        if (path == null) {
+            return root;
+        }
+        if (!children.containsKey(path)) {
+            children.put(path, createCriteria(path));
+        }
+        return children.get(path);
+    }
+
+    private org.hibernate.Criteria createCriteria(final String path) {
+        if (path == null || path.isEmpty()) {
+            throw new IllegalArgumentException("Empty path");
+        }
+        final int i = path.lastIndexOf('.');
+        final String property = i > 0 ? path.substring(i + 1) : path;
+        return root.createCriteria(path, names.allocate(property));
+    }
 }

@@ -9,14 +9,14 @@ import spock.lang.Shared
  */
 class ObjectifySortOptionSpec extends SortOptionSpecification {
 
-	@Shared
-	private ObjectifyTestData data = new ObjectifyTestData();
+    @Shared
+    private ObjectifyTestData data = new ObjectifyTestData();
 
-	def setupSpec() {
-		repository = data.setup()
-	}
+    def setupSpec() {
+        repository = data.setup()
+    }
 
-	def cleanupSpec() {
-		repository = data.cleanup()
-	}
+    def cleanupSpec() {
+        repository = data.cleanup()
+    }
 }

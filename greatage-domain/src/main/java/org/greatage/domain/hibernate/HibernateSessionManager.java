@@ -25,24 +25,24 @@ import org.hibernate.SessionFactory;
  * @since 1.0
  */
 public class HibernateSessionManager extends AbstractSessionManager<Session> {
-	private final SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
-	public HibernateSessionManager(final SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+    public HibernateSessionManager(final SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-	@Override
-	protected Session openSession() {
-		return sessionFactory.openSession();
-	}
+    @Override
+    protected Session openSession() {
+        return sessionFactory.openSession();
+    }
 
-	@Override
-	protected void flushSession(final Session session) {
-		session.flush();
-	}
+    @Override
+    protected void flushSession(final Session session) {
+        session.flush();
+    }
 
-	@Override
-	protected void closeSession(final Session session) {
-		session.close();
-	}
+    @Override
+    protected void closeSession(final Session session) {
+        session.close();
+    }
 }
