@@ -5,7 +5,7 @@ GreatAge is an open source project for building java-based back-end DAO infrastr
 ## Repository
 Repository is a main access point for API which function is to offer create, read, update and delete operations(CRUD) for persistable domain objects.
 
-- **Create**
+### Create
   Makes entities persistent by saving them within underlying storage engine. It is equal to SQL `INSERT` statement. It can be used for single entity or for more than one entity in batch.
 
   ```java
@@ -18,7 +18,7 @@ Repository is a main access point for API which function is to offer create, rea
   repository.createAll(Arrays.<Company>asList(company1, company2));
   ```
 
-- **Read**
+### Read
   Reads entities data from underlying storage engine by primary key. It is equal to SQL `SELECT ... WHERE ID=?` statement. It can be used to retrieve single entity data or to retrieve more that one entity data in batch.
 
   ```java
@@ -34,7 +34,7 @@ Repository is a main access point for API which function is to offer create, rea
   companies = repository.readAll(Arrays.<Company>asList(company1, company2));
    ```
 
-- **Update**
+### Update
   Updates entities state within underlying storage engine. It is equal to SQL `UPDATE` statement. It can be used for single entity or for more than one entity in batch.
 
 
@@ -48,7 +48,7 @@ Repository is a main access point for API which function is to offer create, rea
   repository.updateAll(Arrays.<Company>asList(company1, company2));
   ```
 
-- **Delete**
+### Delete
   Removes entities data from underlying storage engine. It is equal to SQL `DELETE` statement. It can be used for single entity or for more than one entity in batch. It can delete entities by just primary keys.
 
   ```java
@@ -69,7 +69,7 @@ Repository is a main access point for API which function is to offer create, rea
 ## Query
 It is an extension for Repository that provides more flexible way to query persistable domain objects.
 
-- **Filtering**
+### Filtering
   Controls what entries should be filtered by query. It is equal to SQL `WHERE` part of select statement. Filters can be applied for query by one of the following ways:
 
   ```java
@@ -123,7 +123,7 @@ It is an extension for Repository that provides more flexible way to query persi
   ```
 
 
-- **Fetch options**
+### Fetch options
   Defines what fields for the querying entity should be retrieved and what fields should not. In the world of RDBMS this means what columns to include and what association tables to join by select statement. This options can be defined by one of the following ways:
 
   ```java
@@ -149,7 +149,7 @@ It is an extension for Repository that provides more flexible way to query persi
       .list();
   ```
 
-- **Sort options**
+### Sort options
   Controls the order that the query returns matching entries. It is equal to using `SORT BY` in SQL databases. This options can be defined by one of the following ways:
 
   ```java
@@ -175,7 +175,7 @@ It is an extension for Repository that provides more flexible way to query persi
       .list();
   ```
 
-- **Pagination**
+### Pagination
   Defines how many entries should be skipped before retrieving result and the maximum number of etries to retrieve. It is analogous to the `LIMIT` statement in a SQL database. This options can be defined by one of the following ways:
 
   ```java
@@ -193,7 +193,7 @@ It is an extension for Repository that provides more flexible way to query persi
       .list();
   ```
 
-- **Count**
+### Count
   Counts matching entries. This query execution mode will ignore all query options except filters.
 
   ```java
@@ -203,7 +203,7 @@ It is an extension for Repository that provides more flexible way to query persi
       .count();
   ```
 
-- **Single entry retrieval**
+### Single entry retrieval
   Retrieves single matching entry. This query execution mode will ignore pagination options. It can be performed by two ways:
 
   ```java
@@ -222,7 +222,7 @@ It is an extension for Repository that provides more flexible way to query persi
       .first();
   ```
 
-- **Multiple entries retrieval**
+### Multiple entries retrieval
   Retrieves multiple matching entries as list. This query execution mode will use all query options. It can be performed by two ways:
 
   ```java
@@ -239,7 +239,7 @@ It is an extension for Repository that provides more flexible way to query persi
       .keys();
   ```
 
-- **Multiple entries lazy retrieval**
+### Multiple entries lazy retrieval
   Retrieves multiple matching entries as lazy iterable that will load entries in batches by need. This query execution mode will use all query options. Like previous mode it can be performed by two ways:
 
   ```java
