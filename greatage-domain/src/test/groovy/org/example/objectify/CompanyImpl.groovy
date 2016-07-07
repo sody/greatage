@@ -1,11 +1,11 @@
 package org.example.objectify
 
+import com.googlecode.objectify.annotation.Entity
+import com.googlecode.objectify.annotation.Id
 import org.example.model.Company
 import org.example.model.CompanyInfo
 import org.greatage.domain.internal.AbstractEntity
 
-import javax.persistence.Entity
-import javax.persistence.Id
 
 /**
  * @author Ivan Khalopik

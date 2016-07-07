@@ -18,7 +18,6 @@ package org.greatage.domain.objectify;
 
 import com.googlecode.objectify.Objectify;
 import com.googlecode.objectify.ObjectifyFactory;
-import com.googlecode.objectify.ObjectifyOpts;
 import org.greatage.domain.internal.AbstractSessionManager;
 
 /**
@@ -27,16 +26,14 @@ import org.greatage.domain.internal.AbstractSessionManager;
  */
 public class ObjectifySessionManager extends AbstractSessionManager<Objectify> {
     private final ObjectifyFactory objectifyFactory;
-    private final ObjectifyOpts options;
 
-    public ObjectifySessionManager(final ObjectifyFactory objectifyFactory, final ObjectifyOpts options) {
+    public ObjectifySessionManager(final ObjectifyFactory objectifyFactory) {
         this.objectifyFactory = objectifyFactory;
-        this.options = options;
     }
 
     @Override
     protected Objectify openSession() {
-        return objectifyFactory.begin(options);
+        return objectifyFactory.begin();
     }
 
     @Override

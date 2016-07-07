@@ -27,7 +27,7 @@ import java.io.Serializable;
  */
 public interface Entity<PK extends Serializable> extends Serializable {
 
-    public static final String ID_PROPERTY = "id";
+    String ID_PROPERTY = "id";
 
     /**
      * Gets entity unique identifier.

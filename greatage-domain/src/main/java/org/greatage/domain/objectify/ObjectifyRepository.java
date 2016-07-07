@@ -1,5 +1,6 @@
 package org.greatage.domain.objectify;
 
+import com.googlecode.objectify.Key;
 import com.googlecode.objectify.Objectify;
 import org.greatage.domain.Entity;
 import org.greatage.domain.Query;
@@ -28,7 +29,7 @@ public class ObjectifyRepository extends AbstractRepository {
     E read(final Class<E> entityClass, final PK key) {
         return sessionManager.execute(new SessionManager.Callback<E, Objectify>() {
             public E doInSession(final Objectify session) throws Exception {
-                return session.get(getImplementation(entityClass), (Long) key);
+                return session.load().key(Key.create(getImplementation(entityClass), (Long) key)).now();
             }
         });
     }
@@ -37,7 +38,7 @@ public class ObjectifyRepository extends AbstractRepository {
     void create(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
             public Object doInSession(final Objectify session) throws Exception {
-                session.put(entity);
+                session.save().entity(entity).now();
                 return null;
             }
         });
@@ -47,7 +48,7 @@ public class ObjectifyRepository extends AbstractRepository {
     void update(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
             public Object doInSession(final Objectify session) throws Exception {
-                session.put(entity);
+                session.save().entity(entity).now();
                 return null;
             }
         });
@@ -57,7 +58,7 @@ public class ObjectifyRepository extends AbstractRepository {
     void delete(final E entity) {
         sessionManager.execute(new SessionManager.Callback<Object, Objectify>() {
             public Object doInSession(final Objectify session) throws Exception {
-                session.delete(entity);
+                session.delete().entity(entity).now();
                 return null;
             }
         });
@@ -71,7 +72,7 @@ public class ObjectifyRepository extends AbstractRepository {
     T execute(final ObjectifyQuery<PK, E> query, final Callback<T, E> callback) {
         return sessionManager.execute(new SessionManager.Callback<T, Objectify>() {
             public T doInSession(final Objectify session) throws Exception {
-                final com.googlecode.objectify.Query<? extends E> signedQuery = session.query(getImplementation(query.getEntityClass()));
+                final com.googlecode.objectify.cmd.Query<? extends E> signedQuery = session.load().type(getImplementation(query.getEntityClass()));
 
                 new ObjectifyQueryVisitor<PK, E>(signedQuery).visitQuery(query);
 
@@ -83,7 +84,7 @@ public class ObjectifyRepository extends AbstractRepository {
 
     private static interface Callback<T, E> {
 
-        T doInQuery(com.googlecode.objectify.Query<? extends E> query);
+        T doInQuery(com.googlecode.objectify.cmd.Query<? extends E> query);
     }
 
     class ObjectifyQuery<PK extends Serializable, E extends Entity<PK>> extends AbstractQuery<PK, E> {
@@ -94,7 +95,7 @@ public class ObjectifyRepository extends AbstractRepository {
 
         public long count() {
             return execute(this, new Callback<Number, E>() {
-                public Number doInQuery(final com.googlecode.objectify.Query<? extends E> query) {
+                public Number doInQuery(final com.googlecode.objectify.cmd.Query<? extends E> query) {
                     return query.count();
                 }
             }).longValue();
@@ -102,7 +103,7 @@ public class ObjectifyRepository extends AbstractRepository {
 
         public List<E> list() {
             return execute(this, new Callback<List<E>, E>() {
-                public List<E> doInQuery(final com.googlecode.objectify.Query<? extends E> query) {
+                public List<E> doInQuery(final com.googlecode.objectify.cmd.Query<? extends E> query) {
                     //noinspection unchecked
                     return (List) query.list();
                 }
@@ -111,8 +112,8 @@ public class ObjectifyRepository extends AbstractRepository {
 
         public E unique() {
             return execute(this, new Callback<E, E>() {
-                public E doInQuery(final com.googlecode.objectify.Query<? extends E> query) {
-                    return query.get();
+                public E doInQuery(final com.googlecode.objectify.cmd.Query<? extends E> query) {
+                    return query.first().now();
                 }
             });
         }

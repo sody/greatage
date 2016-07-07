@@ -3,7 +3,6 @@ package org.greatage.domain.objectify
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper
 import com.googlecode.objectify.ObjectifyFactory
-import com.googlecode.objectify.ObjectifyOpts
 import org.example.model.Company
 import org.example.objectify.CompanyImpl
 import org.greatage.domain.Repository
@@ -20,7 +19,7 @@ class ObjectifyTestData {
 
         def objectifyFactory = new ObjectifyFactory()
         objectifyFactory.register(CompanyImpl.class)
-        objectifyFactory.begin().put([
+        objectifyFactory.begin().save().entities([
                 new CompanyImpl(id: 1, name: "company1"),
                 new CompanyImpl(id: 2, name: "company2", registeredAt: date("2010-10-10")),
                 new CompanyImpl(id: 3, name: "company3"),
@@ -29,7 +28,7 @@ class ObjectifyTestData {
                 new CompanyImpl(id: 6, name: "company", registeredAt: date("2001-02-02"))
         ])
 
-        return new ObjectifyRepository(new ObjectifySessionManager(objectifyFactory, new ObjectifyOpts()), [
+        return new ObjectifyRepository(new ObjectifySessionManager(objectifyFactory), [
                 (Company.class): CompanyImpl.class
         ])
     }

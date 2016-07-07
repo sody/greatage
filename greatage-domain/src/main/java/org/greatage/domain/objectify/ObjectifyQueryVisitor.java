@@ -1,6 +1,6 @@
 package org.greatage.domain.objectify;
 
-import com.googlecode.objectify.Query;
+import com.googlecode.objectify.cmd.Query;
 import org.greatage.domain.Entity;
 import org.greatage.domain.internal.*;
 

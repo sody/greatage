@@ -17,7 +17,7 @@ ext {
             hibernate: '4.0.0.CR5',
             jdo: '3.0.1',
             jpa: '1.0',
-            objectify: '3.0',
+            objectify: '5.1.13',
             appengine: '1.7.5',
 
             testng: '6.2',
